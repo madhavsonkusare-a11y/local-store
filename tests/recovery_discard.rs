@@ -180,6 +180,37 @@ fn deleting_data_is_explicit_and_takes_the_directory_with_it() {
 }
 
 #[test]
+fn final_cleanup_inspection_keeps_the_binding_after_its_file_is_deleted() {
+    let _serial = serially();
+    let (_root, project) = retained("bound-deletes-data");
+    let binding = local_store::runtime::engine::EngineBinding {
+        schema_version: 1,
+        program: "docker".into(),
+        endpoint: "unix:///owned-test.sock".into(),
+    };
+    local_store::runtime::engine::save(&project, &binding).unwrap();
+    let docker = Docker::new(vec![String::new(), String::new(), String::new()]);
+    recovery::discard_with(&docker, "memos", true).unwrap();
+    assert!(!project.exists());
+    let calls = docker.asked();
+    assert_eq!(calls.len(), 3);
+    assert!(calls
+        .iter()
+        .all(|args| args[..2] == ["--host", "unix:///owned-test.sock"]));
+}
+
+#[test]
+fn corrupt_binding_refuses_recovery_before_contacting_docker() {
+    let _serial = serially();
+    let (_root, project) = retained("corrupt-engine");
+    std::fs::write(project.join(local_store::runtime::engine::ENGINE_FILE), "{").unwrap();
+    let docker = Docker::new(vec![]);
+    assert!(recovery::discard_with(&docker, "memos", true).is_err());
+    assert!(docker.asked().is_empty());
+    assert!(project.exists());
+}
+
+#[test]
 fn containers_that_do_not_match_the_retained_files_are_left_alone() {
     let _serial = serially();
     let (_root, project) = retained("mismatch");

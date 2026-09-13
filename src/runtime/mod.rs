@@ -17,6 +17,7 @@ use std::{
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 
+pub mod engine;
 mod process;
 pub use process::{
     redact, redact_diagnostic, CancelToken, CommandSpec, ProcessError, ProcessErrorCode,
@@ -299,7 +300,22 @@ pub fn doctor_with(runner: &dyn ProcessRunner) -> DoctorReport {
     }
 }
 pub fn doctor() -> DoctorReport {
-    doctor_with(&SystemProcessRunner)
+    match engine::EngineBinding::discover(&SystemProcessRunner) {
+        Ok(binding) => doctor_with(&engine::EngineRunner {
+            inner: &SystemProcessRunner,
+            binding: Some(binding),
+        }),
+        Err(error) => DoctorReport {
+            ready: false,
+            checks: vec![DoctorCheck {
+                id: "docker",
+                label: "Docker engine",
+                ok: false,
+                detail: error.message,
+                error: None,
+            }],
+        },
+    }
 }
 
 fn compose_command(app: &InstalledApp, args: &[&str], timeout: Duration) -> AppResult<CommandSpec> {
@@ -317,7 +333,10 @@ fn compose_command(app: &InstalledApp, args: &[&str], timeout: Duration) -> AppR
                 project_name.clone(),
             ];
             all.extend(args.iter().map(|arg| (*arg).to_owned()));
-            Ok(CommandSpec::docker(all, Some(project_dir.clone()), timeout))
+            engine::project_command(
+                project_dir,
+                CommandSpec::docker(all, Some(project_dir.clone()), timeout),
+            )
         }
         RuntimeSpec::External => Err(AppError::new(
             ErrorCode::UnsupportedOperation,
@@ -851,8 +870,18 @@ pub fn install_source_with(
     root: &Path,
     now: u64,
 ) -> AppResult<InstalledApp> {
-    let runner = context.runner;
     context.report(InstallStage::CheckingSystem);
+    check_cancelled(context.cancel)?;
+    let project_dir = root.join(&source.id);
+    let binding = match engine::retained(&project_dir)? {
+        Some(binding) => Some(binding),
+        None => context.runner.engine_binding()?,
+    };
+    let selected = engine::EngineRunner {
+        inner: context.runner,
+        binding,
+    };
+    let runner: &dyn ProcessRunner = &selected;
     check_cancelled(context.cancel)?;
     let report = doctor_with(runner);
     if !report.ready {
@@ -897,6 +926,7 @@ pub fn install_source_with(
                     .find(|segment| !segment.is_empty())
             })
             .chain(std::iter::once("compose.yaml"))
+            .chain(std::iter::once(engine::ENGINE_FILE))
             .chain(source.extra_files.iter().map(|(name, _)| name.as_str()))
             .collect::<Vec<_>>();
         for entry in fs::read_dir(&project_dir).map_err(AppError::from)? {
@@ -914,8 +944,16 @@ pub fn install_source_with(
     let compose_file = project_dir.join("compose.yaml");
     let previous_compose = fs::read(&compose_file).ok();
     let install: AppResult<InstalledApp> = (|| {
+        if let Some(binding) = &selected.binding {
+            engine::save(&project_dir, binding)?;
+        }
         // Atomic: Docker must never read a half-written Compose file.
-        storage::write_file_atomically(&compose_file, source.compose.as_bytes())
+        let compose = if selected.binding.is_some() {
+            format!("{}{}", engine::COMPOSE_BINDING_MARKER, source.compose)
+        } else {
+            source.compose.clone()
+        };
+        storage::write_file_atomically(&compose_file, compose.as_bytes())
             .map_err(AppError::from)?;
         for (name, contents) in &source.extra_files {
             storage::write_file_atomically(&project_dir.join(name), contents.as_bytes())
@@ -1229,6 +1267,16 @@ fn begin_pending_install(
     progress: &(dyn Fn(InstallStage) + Send + Sync),
     install: impl FnOnce(&InstallContext<'_>, &Path, u64) -> AppResult<InstalledApp>,
 ) -> AppResult<PendingInstall> {
+    begin_pending_install_on_engine(app_id, lock, progress, None, install)
+}
+
+fn begin_pending_install_on_engine(
+    app_id: &str,
+    lock: OperationLock,
+    progress: &(dyn Fn(InstallStage) + Send + Sync),
+    binding: Option<&engine::EngineBinding>,
+    install: impl FnOnce(&InstallContext<'_>, &Path, u64) -> AppResult<InstalledApp>,
+) -> AppResult<PendingInstall> {
     if lock.app_id != app_id {
         return Err(AppError::invalid(
             "The operation lock does not match the app being installed.",
@@ -1238,12 +1286,16 @@ fn begin_pending_install(
     // Recorded before the install, which deliberately reuses a project
     // directory left behind by an uninstall that kept its data.
     let preserved_data = managed_project_exists(app_id);
-    let mut context = InstallContext::new(
-        &SystemProcessRunner,
-        &HttpHealthProbe,
-        &LocalPortProbe,
-        &cancel,
-    );
+    let selected = engine::EngineRunner {
+        inner: &SystemProcessRunner,
+        binding: binding.cloned(),
+    };
+    let runner: &dyn ProcessRunner = if binding.is_some() {
+        &selected
+    } else {
+        &SystemProcessRunner
+    };
+    let mut context = InstallContext::new(runner, &HttpHealthProbe, &LocalPortProbe, &cancel);
     context.progress = Some(progress);
     let app = install(
         &context,
@@ -1274,6 +1326,25 @@ pub fn install_template(
 pub fn install_recipe(recipe: &Recipe) -> AppResult<InstalledApp> {
     let lock = lock_operation(&recipe.id)?;
     begin_install(recipe, lock, &|_| {})?.commit(&|_| {})
+}
+
+pub(crate) fn install_template_on_engine(
+    template: &PlanTemplate,
+    display_name: &str,
+    answers: &std::collections::BTreeMap<String, String>,
+    binding: &engine::EngineBinding,
+) -> AppResult<InstalledApp> {
+    let lock = lock_operation(&template.plan.id)?;
+    begin_pending_install_on_engine(
+        &template.plan.id,
+        lock,
+        &|_| {},
+        Some(binding),
+        |context, root, now| {
+            install_template_with(context, template, display_name, answers, root, now)
+        },
+    )?
+    .commit(&|_| {})
 }
 
 pub fn uninstall_with(
@@ -1464,6 +1535,57 @@ mod tests {
         }
     }
     struct Ready(bool);
+    #[test]
+    fn install_and_lifecycle_use_the_saved_alternate_engine() {
+        let root = std::env::temp_dir().join(format!(
+            "engine-install-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let fake = FakeRunner::passing(20);
+        let binding = engine::EngineBinding {
+            schema_version: 1,
+            program: "alternate-docker".into(),
+            endpoint: "unix:///owned.sock".into(),
+        };
+        let selected = engine::EngineRunner {
+            inner: &fake,
+            binding: Some(binding.clone()),
+        };
+        let template = crate::offerings::offering("memos")
+            .unwrap()
+            .plan_template(None)
+            .unwrap();
+        let app = install_template_with(
+            &context(&selected, &Ready(true), &Ports(true), &CancelToken::new()),
+            &template,
+            "Memos",
+            &Default::default(),
+            &root,
+            1,
+        )
+        .unwrap();
+        assert_eq!(
+            engine::retained(&root.join("memos")).unwrap(),
+            Some(binding)
+        );
+        stop_with(&fake, &app).unwrap();
+        start_with(&fake, &app).unwrap();
+        logs_with(&fake, &app).unwrap();
+        let calls = fake.calls.lock().unwrap();
+        assert!(calls.len() >= 7);
+        assert!(calls.iter().all(|call| call.program == "alternate-docker"
+            && call.args[..2] == ["--host", "unix:///owned.sock"]));
+        let count = calls.len();
+        drop(calls);
+        fs::remove_file(root.join("memos").join(engine::ENGINE_FILE)).unwrap();
+        assert!(start_with(&fake, &app).is_err());
+        assert_eq!(fake.calls.lock().unwrap().len(), count);
+        fs::remove_dir_all(root).unwrap();
+    }
     impl HealthProbe for Ready {
         fn ready(&self, _: &str) -> bool {
             self.0

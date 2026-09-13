@@ -45,6 +45,14 @@ that does not settle broad distribution rights. Shrimply remains excluded.
   128-package inventory are in `docs/evidence/engine-*-development-2026-09-13.*`.
   Local artifacts: `.cache/engine/build-4c6cb9c7590146799bcec6e000d231bf/`.
   The rootfs is unsigned and has never booted in WSL. No app uses this engine yet.
+- E02: `src/runtime/engine.rs` persists local Docker endpoint bindings beside
+  Compose files. New installs, lifecycle, rollback, qualification and recovery
+  use the saved endpoint and clear child context overrides. Missing marked or
+  corrupt bindings refuse fallback. Legacy unmarked apps are not migrated.
+  Real Memos restart/reinstall/cleanup passed after its test process context was
+  made invalid; evidence is `docs/evidence/engine-binding-memos-2026-09-13.json`.
+  Default Rust suite and strict Clippy passed; final runtime tests (47), recovery
+  tests and the real Memos regression also passed.
 - Q01: evidence schema 1 distinguishes the stronger harness. Historical missing
   versions deserialize as 0; batch resume reruns old/unknown versions. Full
   source/plan/engine/probe identity is still required; schema alone is not proof.
@@ -58,6 +66,7 @@ that does not settle broad distribution rights. Shrimply remains excluded.
   test; the restricted sandbox cannot read that directory. The first real run
   exposed Docker's absent `State.Health` field; the format now uses optional
   lookup. Keep that real regression when changing the inspection format.
+- CI for checkpoint `70070bc` passed all jobs (run 34742504481).
 - The previous main CI failure was a stale mandatory `00_Design_Notes.md` path
   in `tests/brand_strings.rs`; the current docs remain recursively scanned.
 - A separate local `CHANGELOG.md` edit was present and excluded from this batch.
@@ -67,10 +76,11 @@ that does not settle broad distribution rights. Shrimply remains excluded.
 ## Next bounded implementation batch
 
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
-source review. Then E02 must persist engine identity per install and retained
-project, including interrupted recovery. Qualification has direct Docker calls
-in addition to the runtime constructor: all must use the selected engine.
-A new default context must never silently relocate existing apps.
+source review. E02 now binds new local-engine installs; next define explicit
+legacy adoption and the WSL broker variant with path translation. Preserve
+`local-store-engine.json` and its Compose marker when keeping app data. Do not
+rewrite bindings to adopt a new default; engine migration requires its own flow.
+The saved endpoint is not yet Q01's full daemon/plan/probe identity.
 
 Use the development payload for the E03 boot experiment only after defining the
 owned distro/data layout and path translation. Systemd alone does not keep WSL

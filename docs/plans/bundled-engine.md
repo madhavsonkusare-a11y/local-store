@@ -46,21 +46,31 @@ project licenses alone do not cover the complete distro's distribution duties.
 
 ## E02 — One selected engine for every operation
 
-`CommandSpec::docker` in `src/runtime/process.rs` is a useful constructor seam,
-but qualification also constructs Docker commands directly, and recovery has
-independent calls. Audit every caller before declaring the seam complete.
+New production installs now capture the effective local Docker endpoint into
+`local-store-engine.json` beside `compose.yaml`. A Compose header marks bound
+projects so deleting the binding file cannot silently restore ambient behavior.
+Corrupt, unsupported and unreadable binding files refuse operations.
 
-Persist engine identity with each installation and its retained project, so a
-restart, reinstall or interrupted-install recovery cannot follow a changed Docker
-context. Define explicit adoption for old records whose engine is unknown.
-Discovery of an available engine is separate from selecting or migrating to it.
+`src/runtime/engine.rs` routes commands with an explicit `--host` and removes
+Docker context/host/TLS environment overrides in child processes. Install,
+lifecycle, rollback and recovery reuse the saved endpoint. Qualification captures
+one binding before starting and uses it for pulls, install/reinstall, service
+inspection, bystander checks and cleanup. Recovery retains the selection in
+memory across delete-data so its final check uses the same engine.
 
-A WSL program prefix alone is insufficient: define distro and user selection,
-working directory, Compose file translation and bind paths. Preserve argument
-arrays, cancellation, deadlines and bounded output. Use the selected backend for
-install, doctor, qualification, probes, rollback, recovery and resource cleanup.
-Tests must use a different executable/context and detect every fallback to the
-ambient Docker context. No engine selector is wired into production yet.
+Fake alternate-executable tests and a [real Memos regression](../evidence/engine-binding-memos-2026-09-13.json)
+cover routing and refusal. The real test invalidates its process's ambient
+Docker context after installation; restart, reinstall and cleanup still pass.
+It proves routing on an existing local daemon, not a managed WSL bootstrap.
+
+E02 remains partial. Unmarked legacy projects retain their previous behavior;
+explicit adoption/migration is still needed. The current binding supports local
+Unix sockets and Windows named pipes. Remote TCP/SSH and the future WSL broker
+are not implemented. No existing app is automatically migrated to another engine.
+A WSL backend still needs distro/user selection, working-directory and Compose/
+bind-path translation, plus conformance tests. Keep discovery separate from
+migration; preserving a socket endpoint does not prove the daemon's immutable
+identity or its future image/probe freshness (Q01).
 
 ## E03 — Bootstrap and payload integrity
 

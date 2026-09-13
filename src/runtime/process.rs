@@ -78,6 +78,7 @@ pub struct CommandSpec {
     pub args: Vec<String>,
     pub cwd: Option<PathBuf>,
     pub timeout: Duration,
+    pub remove_env: Vec<String>,
 }
 impl CommandSpec {
     pub fn new(
@@ -91,6 +92,7 @@ impl CommandSpec {
             args,
             cwd,
             timeout,
+            remove_env: Vec::new(),
         }
     }
     pub(crate) fn docker(args: Vec<String>, cwd: Option<PathBuf>, timeout: Duration) -> Self {
@@ -138,6 +140,9 @@ impl std::fmt::Display for ProcessError {
 impl std::error::Error for ProcessError {}
 
 pub trait ProcessRunner: Send + Sync {
+    fn engine_binding(&self) -> crate::error::AppResult<Option<super::engine::EngineBinding>> {
+        Ok(None)
+    }
     /// Run `command`, abandoning it when `cancel` is set or the deadline passes.
     fn run_cancellable(
         &self,
@@ -154,12 +159,18 @@ pub trait ProcessRunner: Send + Sync {
 pub struct SystemProcessRunner;
 
 impl ProcessRunner for SystemProcessRunner {
+    fn engine_binding(&self) -> crate::error::AppResult<Option<super::engine::EngineBinding>> {
+        super::engine::EngineBinding::discover(self).map(Some)
+    }
     fn run_cancellable(
         &self,
         spec: &CommandSpec,
         cancel: &CancelToken,
     ) -> Result<ProcessOutput, ProcessError> {
         let mut command = Command::new(&spec.program);
+        for key in &spec.remove_env {
+            command.env_remove(key);
+        }
         command
             .args(&spec.args)
             .stdin(Stdio::null())

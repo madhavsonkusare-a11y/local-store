@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "kind": "engine_binding_regression",
+  "recorded_at": "2026-09-13",
+  "scope": "Existing local Docker endpoint; not the development WSL payload",
+  "assertions": [
+    "saved binding verified at first install, restart and reinstall",
+    "invalid DOCKER_CONTEXT set inside the test process after install",
+    "subsequent lifecycle, service inspection and cleanup still pass",
+    "unrelated containers survive"
+  ],
+  "limitations": [
+    "No bundled WSL bootstrap or migration tested",
+    "No note creation or other useful app task claimed",
+    "Legacy installations without binding files retain legacy behavior"
+  ],
+  "source_sha256": {
+    "src/runtime/engine.rs": "ad3fc8b317bff16f3aa0355c2c43aacd2da2f48129c5eba6c97b8739fe3c5f4b",
+    "src/runtime/mod.rs": "35ae31bfd8561dde205b2097ca42a8ffbf0037d9c8a6ad1b23dd005342dbedf1",
+    "src/runtime/process.rs": "f375321beff81fa1f39d3a76a72c715105e514ed156b58df92120d732043851e",
+    "src/recovery.rs": "3ab5a6284a50f22e4d7f2c58d89b1b3f1edef4d0bc3a20b05e85cfe56a995ed2",
+    "src/qualification.rs": "5bbdca7781edee32966621a0f5c6098bf9e9a8caeb16c09501d28250a4983475",
+    "tests/engine_binding.rs": "64046f376c16b14acd7fc9e0e83db8713a8f89a3634536ebb74849dd87cba27d"
+  },
+  "qualification_evidence": {
+    "schema_version": 1,
+    "app": "memos",
+    "passed": true,
+    "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
+    "promotion": "recipe",
+    "source_revision": "",
+    "images": [
+      "neosmemo/memos:0.30.0"
+    ],
+    "image_ids": {
+      "neosmemo/memos:0.30.0": "sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327"
+    },
+    "first_use": "saved engine binding survives a deliberately invalid ambient Docker context",
+    "steps": [
+      {
+        "step": "pull neosmemo/memos:0.30.0",
+        "passed": true
+      },
+      {
+        "step": "installs with one action",
+        "passed": true
+      },
+      {
+        "step": "answers on its address",
+        "passed": true
+      },
+      {
+        "step": "all services are ready after install",
+        "passed": true
+      },
+      {
+        "step": "is usable first install",
+        "passed": true
+      },
+      {
+        "step": "survives a restart",
+        "passed": true
+      },
+      {
+        "step": "is usable after restart",
+        "passed": true
+      },
+      {
+        "step": "all services are ready after restart",
+        "passed": true
+      },
+      {
+        "step": "reinstalls over data it kept",
+        "passed": true
+      },
+      {
+        "step": "generates no credentials, so there are none to lose",
+        "passed": true
+      },
+      {
+        "step": "all services are ready after reinstall",
+        "passed": true
+      },
+      {
+        "step": "is usable after a keep-data reinstall",
+        "passed": true
+      },
+      {
+        "step": "removes everything it created",
+        "passed": true
+      },
+      {
+        "step": "leaves other containers alone",
+        "passed": true
+      }
+    ]
+  }
+}

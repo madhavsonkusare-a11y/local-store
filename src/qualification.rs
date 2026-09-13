@@ -588,7 +588,12 @@ pub fn qualify_template(
     // Taken first so it is released last, after every container this run
     // made is gone.
     let _slot = take_qualification_slot(scratch)?;
-    let runner = crate::runtime::SystemProcessRunner;
+    let binding =
+        crate::runtime::engine::EngineBinding::discover(&crate::runtime::SystemProcessRunner)?;
+    let runner = crate::runtime::engine::EngineRunner {
+        inner: &crate::runtime::SystemProcessRunner,
+        binding: Some(binding.clone()),
+    };
     let probe = crate::runtime::HttpHealthProbe;
     let health = health_allowance(template.first_start);
     let mut template = template;
@@ -633,7 +638,7 @@ pub fn qualify_template(
     }
 
     let installed = steps.run("installs with one action", || {
-        crate::runtime::install_template(&template, &display_name, answers)
+        crate::runtime::install_template_on_engine(&template, &display_name, answers, &binding)
             .map_err(|error| error.message)
     });
     let Some(installed) = installed else {
@@ -670,8 +675,9 @@ pub fn qualify_template(
 
     let again = steps.run("reinstalls over data it kept", || {
         crate::runtime::uninstall_and_remove(&installed, false).map_err(|error| error.message)?;
-        let again = crate::runtime::install_template(&template, &display_name, answers)
-            .map_err(|error| error.message)?;
+        let again =
+            crate::runtime::install_template_on_engine(&template, &display_name, answers, &binding)
+                .map_err(|error| error.message)?;
         answered(&probe, &again.launch_url, health)?;
         Ok(again)
     });

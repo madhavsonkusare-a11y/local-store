@@ -38,9 +38,16 @@ pub enum OwnershipStatus {
 pub fn verify_with(candidate: &mut RecoveryCandidate, runner: &dyn ProcessRunner) -> AppResult<()> {
     candidate.docker_ownership_verified = false;
     candidate.ownership_status = OwnershipStatus::NotChecked;
+    let project_dir = candidate
+        .compose_file
+        .parent()
+        .ok_or_else(|| AppError::invalid("Recovery files have no project directory."))?;
     let query = |args: Vec<String>| -> AppResult<String> {
         let output = runner
-            .run(&CommandSpec::new("docker", args, None, DIAGNOSTIC_TIMEOUT))
+            .run(&crate::runtime::engine::project_command(
+                project_dir,
+                CommandSpec::new("docker", args, None, DIAGNOSTIC_TIMEOUT),
+            )?)
             .map_err(AppError::from)?;
         if !output.success || output.truncated {
             return Err(AppError::invalid(
@@ -240,6 +247,13 @@ pub fn discard_with(
             )
         })?;
 
+    let selected = crate::runtime::engine::EngineRunner {
+        inner: runner,
+        binding: crate::runtime::engine::retained(&apps.join(recipe_id))?,
+    };
+    let runner: &dyn ProcessRunner = &selected;
+    // Retain this binding even after delete-data removes its file: the final
+    // ownership check must still inspect the engine used for cleanup.
     // A snapshot taken before the lock proves nothing about now.
     verify_with(&mut candidate, runner)?;
     let containers = match candidate.ownership_status {
@@ -406,6 +420,11 @@ pub fn adopt_with(
             )
         })?;
 
+    let selected = crate::runtime::engine::EngineRunner {
+        inner: runner,
+        binding: crate::runtime::engine::retained(&apps.join(recipe_id))?,
+    };
+    let runner: &dyn ProcessRunner = &selected;
     // The offering is what says who this app is. Adopting an id nothing offers
     // would put an app in My Apps that no review stands behind.
     let offering = crate::offerings::offering(recipe_id).ok_or_else(|| {
