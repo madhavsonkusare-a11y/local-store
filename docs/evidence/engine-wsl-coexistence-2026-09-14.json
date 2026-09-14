@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-14T16:37:23.1585915Z",
+  "status": "verified_real_host_engine_and_compose",
+  "host": {
+    "windows": "10.0.26200.9445",
+    "wsl": "2.6.3.0",
+    "existing_distro": "docker-desktop",
+    "clean_machine": false
+  },
+  "engine": {
+    "distro": "local-store-engine-v1",
+    "wsl_version": 2,
+    "rootfs_sha256": "4f00c037c3fc34c8cb1a26782f376bbde7b848924e6e9f47bd266fc948ae45eb",
+    "rootfs_bytes": 464494592,
+    "docker": "29.8.0",
+    "compose": "5.5.1",
+    "ownership_token_match": true,
+    "journal_state": "verified",
+    "memos_pinned_image": "neosmemo/memos:0.30.0@sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327",
+    "projected_compose_healthy": true,
+    "windows_loopback_http": 200,
+    "restart_recovered": true,
+    "owned_cleanup_complete": true
+  },
+  "component_versions": {
+    "containerd.io": "2.3.5-1~ubuntu.24.04~noble",
+    "docker-buildx-plugin": "0.37.1-1~ubuntu.24.04~noble",
+    "docker-ce": "5:29.8.0-1~ubuntu.24.04~noble",
+    "docker-ce-cli": "5:29.8.0-1~ubuntu.24.04~noble",
+    "docker-compose-plugin": "5.5.1-1~ubuntu.24.04~noble"
+  },
+  "limitations": [
+    "This host already had Docker Desktop and is not clean-machine proof.",
+    "Product bootstrap and managed selection are not yet wired."
+  ]
+}

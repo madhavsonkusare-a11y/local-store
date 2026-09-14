@@ -169,6 +169,16 @@ comparison of the external and in-distro ownership tokens; it never executes or
 deletes app data. Twelve focused tests and strict Clippy pass. Next add Windows
 prerequisite/elevation reporting and wire bootstrap recovery into product state.
 
+Real managed-engine checkpoint: the cached rootfs matched its recorded
+464,494,592-byte SHA-256 and was imported as the fixed WSL2 distro alongside
+Docker Desktop. External/in-distro tokens matched, all five locked components
+matched, Docker 29.8.0 and Compose 5.5.1 were ready. Pinned Memos then passed a
+projected bind mount, health wait, Windows loopback HTTP 200, stop/start recovery
+and exact-project cleanup. See `evidence/engine-wsl-coexistence-2026-09-14.json`.
+The proof distro remains installed and its untracked journal/data live under
+`.cache/engine/real-wsl-proof`. This is coexistence proof, not the required clean
+machine run. Product bootstrap/selection and prerequisite UX remain open.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02's WSL code is experimental until owned bootstrap and real
 proof pass. Preserve
