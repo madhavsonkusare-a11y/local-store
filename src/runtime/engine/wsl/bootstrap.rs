@@ -5,6 +5,7 @@
 use super::DISTRO;
 use crate::{
     error::{AppError, AppResult},
+    runtime::{CommandSpec, ProcessRunner, DIAGNOSTIC_TIMEOUT},
     storage,
 };
 use serde::{Deserialize, Serialize};
@@ -16,6 +17,7 @@ use std::{
 
 pub const JOURNAL_FILE: &str = "bootstrap.json";
 const MAX_JOURNAL_BYTES: u64 = 16 * 1024;
+const MAX_DISTRO_LIST_CHARS: usize = 64 * 1024;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -158,6 +160,75 @@ pub fn reserve(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
     Ok(())
 }
 
+/// Decode the bounded `wsl.exe --list --quiet` capture. On Windows its UTF-16LE
+/// output reaches the shared text runner as ASCII characters separated by NULs.
+/// Ambiguous or lossy output refuses so it cannot conceal a name collision.
+pub fn parse_distro_names(output: &str) -> AppResult<Vec<String>> {
+    if output.chars().count() > MAX_DISTRO_LIST_CHARS
+        || output.contains('\u{fffd}')
+        || output
+            .chars()
+            .any(|c| c.is_control() && !matches!(c, '\0' | '\r' | '\n' | '\t'))
+    {
+        return Err(AppError::invalid(
+            "WSL returned an invalid or incomplete distro inventory.",
+        ));
+    }
+    let decoded = if !output.contains('\0') {
+        output.to_owned()
+    } else {
+        let chars: Vec<_> = output.chars().collect();
+        if !chars
+            .chunks(2)
+            .all(|pair| pair.len() == 2 && pair[1] == '\0' && pair[0].is_ascii())
+        {
+            return Err(AppError::invalid(
+                "WSL distro inventory encoding is ambiguous.",
+            ));
+        }
+        chars.into_iter().step_by(2).collect()
+    };
+    let mut names = Vec::new();
+    for line in decoded.lines() {
+        let name = line.trim().trim_start_matches('*').trim();
+        if name.is_empty() {
+            continue;
+        }
+        if name.len() > 256 || name.chars().any(char::is_control) {
+            return Err(AppError::invalid("WSL returned an invalid distro name."));
+        }
+        names.push(name.to_owned());
+    }
+    Ok(names)
+}
+
+/// Read-only collision gate. It never imports, terminates or unregisters WSL.
+pub fn preflight(runner: &dyn ProcessRunner, install_dir: &Path) -> AppResult<()> {
+    if install_dir.exists() {
+        return Err(AppError::invalid("The managed-engine data directory already exists; inspect or recover it before bootstrap."));
+    }
+    let mut spec = CommandSpec::new(
+        "wsl.exe",
+        vec!["--list".into(), "--quiet".into()],
+        None,
+        DIAGNOSTIC_TIMEOUT,
+    );
+    spec.remove_env.push("WSLENV".into());
+    let output = runner.run(&spec)?;
+    if !output.success || output.truncated {
+        return Err(AppError::invalid(
+            "WSL distro inventory failed or was incomplete.",
+        ));
+    }
+    if parse_distro_names(&output.stdout)?
+        .iter()
+        .any(|name| name.eq_ignore_ascii_case(DISTRO))
+    {
+        return Err(AppError::invalid("The reserved Local Store WSL distro name already exists; bootstrap will not replace it."));
+    }
+    Ok(())
+}
+
 pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
     journal.validate()?;
     let previous = load(directory)?
@@ -181,6 +252,8 @@ pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::runtime::{CancelToken, ProcessError, ProcessOutput};
+    use std::sync::Mutex;
     fn temp() -> PathBuf {
         std::env::temp_dir().join(format!(
             "local-store-bootstrap-{}-{}",
@@ -249,5 +322,77 @@ mod tests {
         .unwrap();
         assert!(load(&root).is_err());
         fs::remove_dir_all(root).unwrap();
+    }
+
+    struct Inventory {
+        output: ProcessOutput,
+        calls: Mutex<Vec<CommandSpec>>,
+    }
+    impl ProcessRunner for Inventory {
+        fn run_cancellable(
+            &self,
+            spec: &CommandSpec,
+            _: &CancelToken,
+        ) -> Result<ProcessOutput, ProcessError> {
+            self.calls.lock().unwrap().push(spec.clone());
+            Ok(self.output.clone())
+        }
+    }
+    fn inventory(stdout: &str) -> Inventory {
+        Inventory {
+            output: ProcessOutput {
+                success: true,
+                stdout: stdout.into(),
+                stderr: String::new(),
+                truncated: false,
+            },
+            calls: Mutex::new(Vec::new()),
+        }
+    }
+
+    #[test]
+    fn utf8_and_utf16le_shaped_inventories_are_bounded_and_equivalent() {
+        let utf8 = "docker-desktop\r\nUbuntu\r\n";
+        let utf16_shape: String = utf8.chars().flat_map(|c| [c, '\0']).collect();
+        assert_eq!(
+            parse_distro_names(utf8).unwrap(),
+            vec!["docker-desktop", "Ubuntu"]
+        );
+        assert_eq!(
+            parse_distro_names(&utf16_shape).unwrap(),
+            vec!["docker-desktop", "Ubuntu"]
+        );
+        for invalid in [
+            "docker\0desktop",
+            "docker\u{fffd}desktop",
+            "docker\u{0007}desktop",
+        ] {
+            assert!(parse_distro_names(invalid).is_err());
+        }
+        assert!(parse_distro_names(&"x".repeat(MAX_DISTRO_LIST_CHARS + 1)).is_err());
+    }
+
+    #[test]
+    fn preflight_refuses_name_or_directory_collision_without_mutation() {
+        let parent = temp();
+        let target = parent.join("engine-v1");
+        let collision = inventory(&format!("docker-desktop\r\n{}\r\n", DISTRO.to_uppercase()));
+        assert!(preflight(&collision, &target).is_err());
+        assert!(!target.exists());
+        let clear = inventory("docker-desktop\r\n");
+        preflight(&clear, &target).unwrap();
+        let calls = clear.calls.lock().unwrap();
+        assert_eq!(calls.len(), 1);
+        assert_eq!(calls[0].program, "wsl.exe");
+        assert_eq!(calls[0].args, ["--list", "--quiet"]);
+        assert!(calls[0].remove_env.contains(&"WSLENV".into()));
+        drop(calls);
+        fs::create_dir_all(&target).unwrap();
+        fs::write(target.join("foreign.txt"), "keep").unwrap();
+        let untouched = inventory("");
+        assert!(preflight(&untouched, &target).is_err());
+        assert!(target.join("foreign.txt").is_file());
+        assert!(untouched.calls.lock().unwrap().is_empty());
+        fs::remove_dir_all(parent).unwrap();
     }
 }

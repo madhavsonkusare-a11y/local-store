@@ -116,6 +116,15 @@ UTF-16LE inventory reader and prove that the fixed distro name and data director
 are both unused before reservation/import. A journal alone does not prove that a
 registered distro belongs to Local Store.
 
+E03 preflight follow-up: the same module now accepts bounded UTF-8 or the
+UTF-16LE-as-captured shape observed from `wsl.exe`, and rejects replacement
+characters, malformed NUL placement, controls, oversized inventories and long
+names. `preflight` invokes only `wsl.exe --list --quiet`, clears `WSLENV`, refuses
+the reserved name case-insensitively, and refuses any existing target directory
+before executing WSL. Four focused tests and strict Clippy passed. Next stage the
+payload into a fresh sibling temporary file, verify its locked length/SHA-256,
+reserve the journal, then issue one bounded `--import ... --version 2` command.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02's WSL code is experimental until owned bootstrap and real
 proof pass. Preserve

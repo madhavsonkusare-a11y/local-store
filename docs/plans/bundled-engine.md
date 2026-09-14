@@ -124,6 +124,17 @@ availability, then reserve before import. Recovery may unregister only when the
 journal identity and imported distro identity both match; absence of either must
 refuse deletion.
 
+That inventory slice is now implemented. It parses bounded UTF-8 and the
+NUL-separated ASCII shape produced when this project's current text runner
+captures WSL's UTF-16LE output. Lossy replacement characters, malformed NUL
+placement, control characters, oversized inventories and invalid names refuse.
+The read-only preflight removes `WSLENV`, runs exactly `wsl.exe --list --quiet`,
+checks the reserved name case-insensitively and refuses any pre-existing target
+directory before invoking WSL. Tests prove collision paths create and remove
+nothing. Non-ASCII distro output currently refuses because the lossy text runner
+cannot prove its original bytes; a future raw-byte process result can broaden
+this without weakening collision detection for the fixed ASCII name.
+
 ### E02 integration follow-up — September 14, 2026
 
 The diagnostic-only checkpoint above is now extended by experimental schema-2
