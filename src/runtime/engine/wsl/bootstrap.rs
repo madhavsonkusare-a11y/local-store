@@ -315,7 +315,11 @@ pub fn prepare_import(
     preflight(runner, &journal.install_dir)?;
     verify_rootfs(rootfs, rootfs_bytes, &journal.rootfs_sha256)?;
     reserve(state_dir, journal)?;
-    Ok(wsl_command(
+    Ok(import_command(journal, rootfs))
+}
+
+fn import_command(journal: &BootstrapJournal, rootfs: &Path) -> CommandSpec {
+    wsl_command(
         vec![
             "--import".into(),
             DISTRO.into(),
@@ -325,7 +329,26 @@ pub fn prepare_import(
             "2".into(),
         ],
         crate::runtime::PROVISION_TIMEOUT,
-    ))
+    )
+}
+
+fn finish_import(
+    runner: &dyn ProcessRunner,
+    state_dir: &Path,
+    journal: &BootstrapJournal,
+    command: &CommandSpec,
+) -> AppResult<BootstrapJournal> {
+    let output = runner.run(command).map_err(|error| {
+        let error = AppError::from(error);
+        AppError::new(error.code, format!("WSL import did not complete: {} The ownership reservation was retained for recovery.", error.message))
+    })?;
+    if !output.success || output.truncated {
+        return Err(AppError::invalid("WSL import failed or returned incomplete output. The ownership reservation was retained for recovery."));
+    }
+    let mut imported = journal.clone();
+    imported.advance(BootstrapState::Imported)?;
+    save(state_dir, &imported)?;
+    Ok(imported)
 }
 
 /// Execute the prepared import transaction. Any failure leaves `Reserved`
@@ -339,17 +362,7 @@ pub fn import(
     rootfs_bytes: u64,
 ) -> AppResult<BootstrapJournal> {
     let command = prepare_import(runner, state_dir, journal, rootfs, rootfs_bytes)?;
-    let output = runner.run(&command).map_err(|error| {
-        let error = AppError::from(error);
-        AppError::new(error.code, format!("WSL import did not complete: {} The ownership reservation was retained for recovery.", error.message))
-    })?;
-    if !output.success || output.truncated {
-        return Err(AppError::invalid("WSL import failed or returned incomplete output. The ownership reservation was retained for recovery."));
-    }
-    let mut imported = journal.clone();
-    imported.advance(BootstrapState::Imported)?;
-    save(state_dir, &imported)?;
-    Ok(imported)
+    finish_import(runner, state_dir, journal, &command)
 }
 
 const COMPONENTS: [(&str, &str); 5] = [
@@ -515,6 +528,70 @@ pub fn classify_recovery(
         BootstrapState::Verified if distro_exists && directory_exists => RecoveryDisposition::Ready,
         BootstrapState::Imported | BootstrapState::Verified => RecoveryDisposition::ManualReview,
     })
+}
+
+/// Retry only the one unambiguous recovery case: an existing Reserved journal
+/// with neither the fixed distro nor its data directory present. The payload is
+/// verified again and the original identity is never replaced.
+pub fn retry_import(
+    runner: &dyn ProcessRunner,
+    state_dir: &Path,
+    rootfs: &Path,
+    rootfs_bytes: u64,
+) -> AppResult<BootstrapJournal> {
+    let journal = load(state_dir)?
+        .ok_or_else(|| AppError::invalid("Managed-engine bootstrap journal is missing."))?;
+    if classify_recovery(runner, state_dir)? != RecoveryDisposition::RetryImport {
+        return Err(AppError::invalid(
+            "Managed-engine import cannot be retried because its footprint is uncertain.",
+        ));
+    }
+    verify_rootfs(rootfs, rootfs_bytes, &journal.rootfs_sha256)?;
+    finish_import(
+        runner,
+        state_dir,
+        &journal,
+        &import_command(&journal, rootfs),
+    )
+}
+
+/// Prepare the destructive WSL unregister command only after the external
+/// Verified journal, fixed distro footprint and in-distro token all agree.
+/// The caller still owns the explicit user decision and execution.
+pub fn authorize_unregistration(
+    runner: &dyn ProcessRunner,
+    state_dir: &Path,
+) -> AppResult<CommandSpec> {
+    let journal = load(state_dir)?
+        .ok_or_else(|| AppError::invalid("Managed-engine bootstrap journal is missing."))?;
+    if journal.state != BootstrapState::Verified
+        || classify_recovery(runner, state_dir)? != RecoveryDisposition::Ready
+    {
+        return Err(AppError::invalid(
+            "Managed-engine removal requires a complete verified ownership footprint.",
+        ));
+    }
+    let token = state_dir.join(TOKEN_FILE).canonicalize()?;
+    let windows = crate::folders::docker_path(&token);
+    let source = super::windows_drive_path(
+        windows
+            .to_str()
+            .ok_or_else(|| AppError::invalid("Ownership-token path must be Unicode."))?,
+    )?;
+    successful(
+        runner,
+        &inside(vec![
+            "/usr/bin/cmp".into(),
+            "--silent".into(),
+            source,
+            "/usr/share/local-store/ownership-token".into(),
+        ]),
+        "removal ownership verification",
+    )?;
+    Ok(wsl_command(
+        vec!["--unregister".into(), DISTRO.into()],
+        crate::runtime::PROVISION_TIMEOUT,
+    ))
 }
 
 pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
@@ -972,6 +1049,64 @@ mod tests {
             classify_recovery(&inventory(&format!("{DISTRO}\n{DISTRO}\n")), &state).unwrap(),
             RecoveryDisposition::ManualReview
         );
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn retry_reuses_reservation_and_only_advances_after_success() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let state = parent.join("state");
+        let rootfs = parent.join("rootfs.tar");
+        fs::write(&rootfs, b"payload").unwrap();
+        let journal = BootstrapJournal::new(
+            parent.join("data"),
+            format!("{:x}", Sha256::digest(b"payload")),
+            "01234567-89ab-cdef-0123-456789abcdef".into(),
+        )
+        .unwrap();
+        reserve(&state, &journal).unwrap();
+        let runner = Sequence {
+            outputs: Mutex::new(VecDeque::from([ok("docker-desktop\n"), ok("")])),
+        };
+        assert_eq!(
+            retry_import(&runner, &state, &rootfs, 7).unwrap().state,
+            BootstrapState::Imported
+        );
+        assert_eq!(
+            load(&state).unwrap().unwrap().ownership_token,
+            journal.ownership_token
+        );
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn removal_is_only_prepared_after_verified_token_proof() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let (state, mut journal) = imported_fixture(&parent);
+        fs::create_dir_all(&journal.install_dir).unwrap();
+        journal.advance(BootstrapState::Verified).unwrap();
+        save(&state, &journal).unwrap();
+        let runner = Sequence {
+            outputs: Mutex::new(VecDeque::from([ok(&format!("{DISTRO}\n")), ok("")])),
+        };
+        let command = authorize_unregistration(&runner, &state).unwrap();
+        assert_eq!(command.program, PathBuf::from("wsl.exe"));
+        assert_eq!(command.args, ["--unregister", DISTRO]);
+
+        let denied = Sequence {
+            outputs: Mutex::new(VecDeque::from([
+                ok(&format!("{DISTRO}\n")),
+                Ok(ProcessOutput {
+                    success: false,
+                    stdout: String::new(),
+                    stderr: String::new(),
+                    truncated: false,
+                }),
+            ])),
+        };
+        assert!(authorize_unregistration(&denied, &state).is_err());
         fs::remove_dir_all(parent).unwrap();
     }
 }

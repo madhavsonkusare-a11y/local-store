@@ -161,6 +161,14 @@ never invokes unregister. Ten focused bootstrap tests and strict Clippy pass.
 Next implement retry from the existing immutable reservation and define removal
 authorization requiring matching external and in-distro tokens.
 
+E03 retry/removal follow-up: `retry_import` accepts only the classifier's clean
+Reserved case, streams the locked rootfs again, reuses the original identity and
+retains Reserved on uncertain execution. `authorize_unregistration` returns the
+fixed unregister command only for a complete Verified footprint after a direct
+comparison of the external and in-distro ownership tokens; it never executes or
+deletes app data. Twelve focused tests and strict Clippy pass. Next add Windows
+prerequisite/elevation reporting and wire bootstrap recovery into product state.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02's WSL code is experimental until owned bootstrap and real
 proof pass. Preserve

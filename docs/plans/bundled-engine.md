@@ -217,6 +217,13 @@ Windows x64 host without Docker Desktop, including consent/restart cases. Check
 loopback forwarding, bind permissions, all Compose dependency conditions and
 coexistence with an existing Docker Desktop installation.
 
+Interrupted import retry is limited to the clean Reserved disposition and
+verifies the locked rootfs again before executing the fixed command. Removal
+authorization requires a Verified journal, one exact distro, the expected data
+directory and a successful external-to-in-distro ownership-token comparison.
+It only returns the fixed unregister command; execution and app-data deletion
+remain separate explicit operations.
+
 ## E04 — Background apps, repair and updates
 
 Systemd services alone do not keep a WSL instance alive. Design and test an owned
