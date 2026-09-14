@@ -143,6 +143,16 @@ Clippy pass. This path was tested with fake runners only; no distro was imported
 Next implement post-import identity creation/verification and the explicit
 Reserved recovery decision before calling this from product UI or CLI.
 
+E03 verification follow-up: reservation now writes a separate ownership-token
+source file. `verify_imported` requires one exact distro inventory row ending in
+WSL version 2, copies that token into `/usr/share/local-store` using direct
+`install` arguments, verifies it with direct `cmp`, checks the exact versions of
+the five locked dpkg packages, and requires Docker/Compose doctor readiness.
+Only then does Imported advance to Verified. Failures retain Imported. Nine
+focused tests and strict Clippy pass; all WSL execution is still fake-runner only.
+Next add the explicit Reserved recovery classifier and deletion authorization;
+never infer ownership from the distro name or install directory alone.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02's WSL code is experimental until owned bootstrap and real
 proof pass. Preserve

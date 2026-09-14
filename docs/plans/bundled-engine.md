@@ -156,6 +156,16 @@ because the external state may be uncertain; it neither retries nor unregisters.
 Fake-runner tests cover each result. This still is not exposed to users and no
 real distro has been imported. Imported is explicitly weaker than Verified.
 
+Post-import verification is now implemented behind the unexposed coordinator.
+Reservation writes a separate ownership-token source beside the journal. The
+verifier requires exactly one fixed-name inventory row reporting WSL 2, installs
+the token into `/usr/share/local-store/ownership-token` without a shell, compares
+source and destination, verifies exact dpkg versions for all five locked engine
+packages, and requires the Docker daemon and Compose plugin doctor checks. Only
+then does Imported become Verified; every failure retains Imported for repair.
+Tests cover wrong WSL version, token command failure, component drift and daemon
+failure. No real WSL command was run by these tests.
+
 ### E02 integration follow-up — September 14, 2026
 
 The diagnostic-only checkpoint above is now extended by experimental schema-2

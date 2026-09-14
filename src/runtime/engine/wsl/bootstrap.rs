@@ -17,6 +17,7 @@ use std::{
 };
 
 pub const JOURNAL_FILE: &str = "bootstrap.json";
+pub const TOKEN_FILE: &str = "ownership-token";
 const MAX_JOURNAL_BYTES: u64 = 16 * 1024;
 const MAX_DISTRO_LIST_CHARS: usize = 64 * 1024;
 const MAX_ROOTFS_BYTES: u64 = 4 * 1024 * 1024 * 1024;
@@ -159,6 +160,10 @@ pub fn reserve(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
         // load will reject it. Never erase evidence another process may own.
         return Err(error.into());
     }
+    storage::write_file_atomically(
+        &directory.join(TOKEN_FILE),
+        journal.ownership_token.as_bytes(),
+    )?;
     Ok(())
 }
 
@@ -166,30 +171,7 @@ pub fn reserve(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
 /// output reaches the shared text runner as ASCII characters separated by NULs.
 /// Ambiguous or lossy output refuses so it cannot conceal a name collision.
 pub fn parse_distro_names(output: &str) -> AppResult<Vec<String>> {
-    if output.chars().count() > MAX_DISTRO_LIST_CHARS
-        || output.contains('\u{fffd}')
-        || output
-            .chars()
-            .any(|c| c.is_control() && !matches!(c, '\0' | '\r' | '\n' | '\t'))
-    {
-        return Err(AppError::invalid(
-            "WSL returned an invalid or incomplete distro inventory.",
-        ));
-    }
-    let decoded = if !output.contains('\0') {
-        output.to_owned()
-    } else {
-        let chars: Vec<_> = output.chars().collect();
-        if !chars
-            .chunks(2)
-            .all(|pair| pair.len() == 2 && pair[1] == '\0' && pair[0].is_ascii())
-        {
-            return Err(AppError::invalid(
-                "WSL distro inventory encoding is ambiguous.",
-            ));
-        }
-        chars.into_iter().step_by(2).collect()
-    };
+    let decoded = decode_wsl_text(output)?;
     let mut names = Vec::new();
     for line in decoded.lines() {
         let name = line.trim().trim_start_matches('*').trim();
@@ -204,18 +186,45 @@ pub fn parse_distro_names(output: &str) -> AppResult<Vec<String>> {
     Ok(names)
 }
 
+fn decode_wsl_text(output: &str) -> AppResult<String> {
+    if output.chars().count() > MAX_DISTRO_LIST_CHARS
+        || output.contains('\u{fffd}')
+        || output
+            .chars()
+            .any(|c| c.is_control() && !matches!(c, '\0' | '\r' | '\n' | '\t'))
+    {
+        return Err(AppError::invalid(
+            "WSL returned an invalid or incomplete distro inventory.",
+        ));
+    }
+    if !output.contains('\0') {
+        Ok(output.to_owned())
+    } else {
+        let chars: Vec<_> = output.chars().collect();
+        if !chars
+            .chunks(2)
+            .all(|pair| pair.len() == 2 && pair[1] == '\0' && pair[0].is_ascii())
+        {
+            return Err(AppError::invalid(
+                "WSL distro inventory encoding is ambiguous.",
+            ));
+        }
+        Ok(chars.into_iter().step_by(2).collect())
+    }
+}
+
+fn wsl_command(args: Vec<String>, timeout: std::time::Duration) -> CommandSpec {
+    let mut spec = CommandSpec::new("wsl.exe", args, None, timeout);
+    spec.remove_env.push("WSLENV".into());
+    spec
+}
+
 /// Read-only collision gate. It never imports, terminates or unregisters WSL.
 pub fn preflight(runner: &dyn ProcessRunner, install_dir: &Path) -> AppResult<()> {
     if install_dir.exists() {
         return Err(AppError::invalid("The managed-engine data directory already exists; inspect or recover it before bootstrap."));
     }
-    let mut spec = CommandSpec::new(
-        "wsl.exe",
-        vec!["--list".into(), "--quiet".into()],
-        None,
-        DIAGNOSTIC_TIMEOUT,
-    );
-    spec.remove_env.push("WSLENV".into());
+    let spec = wsl_command(vec!["--list".into(), "--quiet".into()], DIAGNOSTIC_TIMEOUT);
     let output = runner.run(&spec)?;
     if !output.success || output.truncated {
         return Err(AppError::invalid(
@@ -297,8 +306,7 @@ pub fn prepare_import(
     preflight(runner, &journal.install_dir)?;
     verify_rootfs(rootfs, rootfs_bytes, &journal.rootfs_sha256)?;
     reserve(state_dir, journal)?;
-    let mut spec = CommandSpec::new(
-        "wsl.exe",
+    Ok(wsl_command(
         vec![
             "--import".into(),
             DISTRO.into(),
@@ -307,11 +315,8 @@ pub fn prepare_import(
             "--version".into(),
             "2".into(),
         ],
-        None,
         crate::runtime::PROVISION_TIMEOUT,
-    );
-    spec.remove_env.push("WSLENV".into());
-    Ok(spec)
+    ))
 }
 
 /// Execute the prepared import transaction. Any failure leaves `Reserved`
@@ -336,6 +341,135 @@ pub fn import(
     imported.advance(BootstrapState::Imported)?;
     save(state_dir, &imported)?;
     Ok(imported)
+}
+
+const COMPONENTS: [(&str, &str); 5] = [
+    ("containerd.io", "2.3.5-1~ubuntu.24.04~noble"),
+    ("docker-buildx-plugin", "0.37.1-1~ubuntu.24.04~noble"),
+    ("docker-ce", "5:29.8.0-1~ubuntu.24.04~noble"),
+    ("docker-ce-cli", "5:29.8.0-1~ubuntu.24.04~noble"),
+    ("docker-compose-plugin", "5.5.1-1~ubuntu.24.04~noble"),
+];
+
+fn inside(args: Vec<String>) -> CommandSpec {
+    let mut all = vec![
+        "--distribution".into(),
+        DISTRO.into(),
+        "--user".into(),
+        "root".into(),
+        "--exec".into(),
+    ];
+    all.extend(args);
+    wsl_command(all, DIAGNOSTIC_TIMEOUT)
+}
+
+fn successful(runner: &dyn ProcessRunner, spec: &CommandSpec, label: &str) -> AppResult<String> {
+    let output = runner.run(spec)?;
+    if !output.success || output.truncated {
+        return Err(AppError::invalid(format!(
+            "Managed-engine {label} failed or returned incomplete output."
+        )));
+    }
+    Ok(output.stdout)
+}
+
+/// Establish the facts required for a Verified journal. It never changes any
+/// other distro. Imported remains durable on every failure for explicit repair.
+pub fn verify_imported(
+    runner: &dyn ProcessRunner,
+    state_dir: &Path,
+) -> AppResult<BootstrapJournal> {
+    let mut journal = load(state_dir)?
+        .ok_or_else(|| AppError::invalid("Managed-engine bootstrap journal is missing."))?;
+    if journal.state != BootstrapState::Imported {
+        return Err(AppError::invalid(
+            "Only an imported managed engine can be verified.",
+        ));
+    }
+    let verbose = successful(
+        runner,
+        &wsl_command(
+            vec!["--list".into(), "--verbose".into()],
+            DIAGNOSTIC_TIMEOUT,
+        ),
+        "WSL inventory",
+    )?;
+    let decoded = decode_wsl_text(&verbose)?;
+    let matching: Vec<_> = decoded
+        .lines()
+        .filter_map(|line| {
+            let fields: Vec<_> = line
+                .trim()
+                .trim_start_matches('*')
+                .split_whitespace()
+                .collect();
+            (fields
+                .first()
+                .is_some_and(|name| name.eq_ignore_ascii_case(DISTRO)))
+            .then_some(fields)
+        })
+        .collect();
+    if matching.len() != 1 || matching[0].last() != Some(&"2") {
+        return Err(AppError::invalid(
+            "The imported Local Store distro is missing, duplicated, or not WSL 2.",
+        ));
+    }
+    let token = state_dir.join(TOKEN_FILE).canonicalize()?;
+    let windows = crate::folders::docker_path(&token);
+    let source = super::windows_drive_path(
+        windows
+            .to_str()
+            .ok_or_else(|| AppError::invalid("Ownership-token path must be Unicode."))?,
+    )?;
+    successful(
+        runner,
+        &inside(vec![
+            "/usr/bin/install".into(),
+            "--mode=0400".into(),
+            source.clone(),
+            "/usr/share/local-store/ownership-token".into(),
+        ]),
+        "ownership installation",
+    )?;
+    successful(
+        runner,
+        &inside(vec![
+            "/usr/bin/cmp".into(),
+            "--silent".into(),
+            source,
+            "/usr/share/local-store/ownership-token".into(),
+        ]),
+        "ownership verification",
+    )?;
+    let mut args = vec![
+        "/usr/bin/dpkg-query".into(),
+        "-W".into(),
+        "-f=${Package}\\t${Version}\\n".into(),
+    ];
+    args.extend(COMPONENTS.iter().map(|(name, _)| (*name).into()));
+    let packages = successful(runner, &inside(args), "component inventory")?;
+    let found: std::collections::BTreeMap<_, _> = packages
+        .lines()
+        .filter_map(|line| line.split_once('\t'))
+        .collect();
+    if found.len() != COMPONENTS.len()
+        || COMPONENTS
+            .iter()
+            .any(|(name, version)| found.get(name) != Some(version))
+    {
+        return Err(AppError::invalid(
+            "Managed-engine component versions differ from the locked payload.",
+        ));
+    }
+    let doctor = crate::runtime::doctor_with(&super::DiagnosticRunner { inner: runner });
+    if !doctor.ready {
+        return Err(AppError::invalid(
+            "Managed-engine Docker daemon or Compose plugin is not ready.",
+        ));
+    }
+    journal.advance(BootstrapState::Verified)?;
+    save(state_dir, &journal)?;
+    Ok(journal)
 }
 
 pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
@@ -650,5 +784,100 @@ mod tests {
             BootstrapState::Imported
         );
         fs::remove_dir_all(parent).unwrap();
+    }
+
+    fn imported_fixture(parent: &Path) -> (PathBuf, BootstrapJournal) {
+        let state = parent.join("state");
+        let mut journal = BootstrapJournal::new(
+            parent.join("data"),
+            "a".repeat(64),
+            "01234567-89ab-cdef-0123-456789abcdef".into(),
+        )
+        .unwrap();
+        reserve(&state, &journal).unwrap();
+        journal.advance(BootstrapState::Imported).unwrap();
+        save(&state, &journal).unwrap();
+        (state, journal)
+    }
+    fn package_output() -> String {
+        COMPONENTS
+            .iter()
+            .map(|(name, version)| format!("{name}\t{version}\n"))
+            .collect()
+    }
+
+    #[test]
+    fn verification_requires_wsl2_token_components_and_ready_daemon() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let (state, _) = imported_fixture(&parent);
+        let outputs = [
+            ok(&format!("  NAME STATE VERSION\r\n* {DISTRO} Running 2\r\n")),
+            ok(""),
+            ok(""),
+            ok(&package_output()),
+            ok("29.8.0\n"),
+            ok("5.5.1\n"),
+        ];
+        let runner = Sequence {
+            outputs: Mutex::new(VecDeque::from(outputs)),
+        };
+        assert_eq!(
+            verify_imported(&runner, &state).unwrap().state,
+            BootstrapState::Verified
+        );
+        assert_eq!(
+            load(&state).unwrap().unwrap().state,
+            BootstrapState::Verified
+        );
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn failed_identity_or_components_never_claims_verified() {
+        for outputs in [
+            vec![ok(&format!("{DISTRO} Stopped 1\n"))],
+            vec![
+                ok(&format!("{DISTRO} Running 2\n")),
+                Ok(ProcessOutput {
+                    success: false,
+                    stdout: String::new(),
+                    stderr: String::new(),
+                    truncated: false,
+                }),
+            ],
+            vec![
+                ok(&format!("{DISTRO} Running 2\n")),
+                ok(""),
+                ok(""),
+                ok("docker-ce\twrong\n"),
+            ],
+            vec![
+                ok(&format!("{DISTRO} Running 2\n")),
+                ok(""),
+                ok(""),
+                ok(&package_output()),
+                ok("29.8.0"),
+                Ok(ProcessOutput {
+                    success: false,
+                    stdout: String::new(),
+                    stderr: String::new(),
+                    truncated: false,
+                }),
+            ],
+        ] {
+            let parent = temp();
+            fs::create_dir_all(&parent).unwrap();
+            let (state, _) = imported_fixture(&parent);
+            let runner = Sequence {
+                outputs: Mutex::new(outputs.into()),
+            };
+            assert!(verify_imported(&runner, &state).is_err());
+            assert_eq!(
+                load(&state).unwrap().unwrap().state,
+                BootstrapState::Imported
+            );
+            fs::remove_dir_all(parent).unwrap();
+        }
     }
 }
