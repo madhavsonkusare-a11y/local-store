@@ -573,6 +573,14 @@ impl DeploymentPlan {
 
     /// Render the Compose file this plan describes.
     pub fn to_compose(&self) -> Result<String, String> {
+        self.to_compose_with_mounts(|mount| Ok(format!("      - {}\n", mount.rendered())))
+    }
+
+    /// Share the complete renderer with engine-specific mount projection.
+    pub(crate) fn to_compose_with_mounts(
+        &self,
+        mut render_mount: impl FnMut(&PlanMount) -> Result<String, String>,
+    ) -> Result<String, String> {
         self.validate()?;
         let mut out = String::from("services:\n");
         for service in &self.services {
@@ -621,7 +629,7 @@ impl DeploymentPlan {
             if !service.mounts.is_empty() {
                 out.push_str("    volumes:\n");
                 for mount in &service.mounts {
-                    out.push_str(&format!("      - {}\n", mount.rendered()));
+                    out.push_str(&render_mount(mount)?);
                 }
             }
             if !service.depends_on.is_empty() {

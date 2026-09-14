@@ -645,6 +645,8 @@ pub struct InstallSource {
     /// Second addresses, checked the same way.
     pub companion_ports: Vec<u16>,
     pub compose: String,
+    /// Validated resolved structure for backend-specific Compose projection.
+    pub resolved_plan: Option<crate::plan::DeploymentPlan>,
     /// Created inside the project directory before the containers start.
     pub data_directories: Vec<String>,
     /// Written beside the Compose file, and permitted to already exist when a
@@ -670,6 +672,7 @@ impl Recipe {
             host_port: self.host_port,
             companion_ports: Vec::new(),
             compose: self.compose.clone(),
+            resolved_plan: crate::plan::plan_for_recipe(self).ok(),
             data_directories: self.data_directories.clone(),
             extra_files: Vec::new(),
             seed_files: Vec::new(),
@@ -820,6 +823,7 @@ pub fn install_template_with(
         host_port,
         companion_ports: taken[1..].to_vec(),
         compose,
+        resolved_plan: Some(plan.clone()),
         data_directories: plan
             .data_directories()
             .into_iter()
@@ -882,6 +886,38 @@ pub fn install_source_with(
         binding,
     };
     let runner: &dyn ProcessRunner = &selected;
+    // Resolve every backend artifact before touching disk or contacting WSL.
+    let projection = if selected
+        .binding
+        .as_ref()
+        .is_some_and(|binding| binding.is_wsl())
+    {
+        let plan = source.resolved_plan.as_ref().ok_or_else(|| {
+            AppError::invalid("WSL installation requires a resolved deployment plan.")
+        })?;
+        if plan.to_compose().map_err(AppError::invalid)? != source.compose {
+            return Err(AppError::invalid(
+                "The resolved plan does not match the reviewed Compose source.",
+            ));
+        }
+        let seeds: Vec<_> = source
+            .seed_files
+            .iter()
+            .map(|(path, content)| crate::setup::SeedFile {
+                path: path.clone(),
+                content: content.clone(),
+            })
+            .collect();
+        Some(engine::wsl::project_plan(
+            plan,
+            project_dir
+                .to_str()
+                .ok_or_else(|| AppError::invalid("Project path must be Unicode."))?,
+            &seeds,
+        )?)
+    } else {
+        None
+    };
     check_cancelled(context.cancel)?;
     let report = doctor_with(runner);
     if !report.ready {
@@ -927,6 +963,7 @@ pub fn install_source_with(
             })
             .chain(std::iter::once("compose.yaml"))
             .chain(std::iter::once(engine::ENGINE_FILE))
+            .chain(projection.as_ref().map(|_| engine::wsl::COMPOSE_FILE))
             .chain(source.extra_files.iter().map(|(name, _)| name.as_str()))
             .collect::<Vec<_>>();
         for entry in fs::read_dir(&project_dir).map_err(AppError::from)? {
@@ -943,6 +980,12 @@ pub fn install_source_with(
     fs::create_dir_all(&project_dir).map_err(AppError::from)?;
     let compose_file = project_dir.join("compose.yaml");
     let previous_compose = fs::read(&compose_file).ok();
+    let projected_file = project_dir.join(engine::wsl::COMPOSE_FILE);
+    let previous_projection = if projection.is_some() {
+        fs::read(&projected_file).ok()
+    } else {
+        None
+    };
     let install: AppResult<InstalledApp> = (|| {
         if let Some(binding) = &selected.binding {
             engine::save(&project_dir, binding)?;
@@ -955,6 +998,9 @@ pub fn install_source_with(
         };
         storage::write_file_atomically(&compose_file, compose.as_bytes())
             .map_err(AppError::from)?;
+        if let Some(projection) = &projection {
+            storage::write_file_atomically(&projected_file, projection.compose.as_bytes())?;
+        }
         for (name, contents) in &source.extra_files {
             storage::write_file_atomically(&project_dir.join(name), contents.as_bytes())
                 .map_err(AppError::from)?;
@@ -1074,6 +1120,22 @@ pub fn install_source_with(
             }
         };
         cleanup.map_err(|cleanup| AppError::rollback(&original, cleanup))?;
+        if !created_project && projection.is_some() {
+            let restore = if let Some(previous) = previous_projection {
+                storage::write_file_atomically(&projected_file, &previous).map_err(AppError::from)
+            } else {
+                fs::remove_file(&projected_file)
+                    .or_else(|error| {
+                        if error.kind() == std::io::ErrorKind::NotFound {
+                            Ok(())
+                        } else {
+                            Err(error)
+                        }
+                    })
+                    .map_err(AppError::from)
+            };
+            restore.map_err(|cleanup| AppError::rollback(&original, cleanup))?;
+        }
         return Err(original);
     }
     install
@@ -1590,6 +1652,101 @@ mod tests {
         fn ready(&self, _: &str) -> bool {
             self.0
         }
+    }
+
+    #[test]
+    #[cfg(windows)]
+    fn wsl_install_and_lifecycle_reuse_projected_files_and_saved_selection() {
+        let root = scratch_root("wsl-install");
+        let fake = FakeRunner::passing(30);
+        let binding = engine::EngineBinding::managed_wsl();
+        let selected = engine::EngineRunner {
+            inner: &fake,
+            binding: Some(binding.clone()),
+        };
+        let template = crate::offerings::offering("memos")
+            .unwrap()
+            .plan_template(None)
+            .unwrap();
+        let app = install_template_with(
+            &context(&selected, &Ready(true), &Ports(true), &CancelToken::new()),
+            &template,
+            "Memos",
+            &Default::default(),
+            &root,
+            1,
+        )
+        .unwrap();
+        let project = root.join("memos");
+        assert_eq!(engine::retained(&project).unwrap(), Some(binding));
+        let projected = project.join(engine::wsl::COMPOSE_FILE);
+        let original_projection = fs::read(&projected).unwrap();
+        let original_compose = fs::read(project.join("compose.yaml")).unwrap();
+        stop_with(&fake, &app).unwrap();
+        start_with(&fake, &app).unwrap();
+        logs_with(&fake, &app).unwrap();
+        // A later runner advertises no binding; reinstall must retain WSL.
+        install_template_with(
+            &context(&fake, &Ready(true), &Ports(true), &CancelToken::new()),
+            &template,
+            "Memos",
+            &Default::default(),
+            &root,
+            2,
+        )
+        .unwrap();
+        assert_eq!(fs::read(&projected).unwrap(), original_projection);
+        assert_eq!(
+            fs::read(project.join("compose.yaml")).unwrap(),
+            original_compose
+        );
+        let failed = FakeRunner::passing(5);
+        failed.outputs.lock().unwrap()[2] = Ok(ProcessOutput {
+            success: false,
+            stdout: String::new(),
+            stderr: "invalid projected compose".into(),
+            truncated: false,
+        });
+        let mut changed = template.clone();
+        changed.plan.services[0]
+            .environment
+            .push(("PROJECTION_TEST".into(), "changed".into()));
+        assert!(install_template_with(
+            &context(&failed, &Ready(true), &Ports(true), &CancelToken::new()),
+            &changed,
+            "Memos",
+            &Default::default(),
+            &root,
+            3
+        )
+        .is_err());
+        assert_eq!(fs::read(&projected).unwrap(), original_projection);
+        assert_eq!(
+            fs::read(project.join("compose.yaml")).unwrap(),
+            original_compose
+        );
+        assert!(failed
+            .calls
+            .lock()
+            .unwrap()
+            .iter()
+            .any(|call| call.program == "wsl.exe"
+                && call.args.last().is_some_and(|arg| arg == "down")));
+        let calls = fake.calls.lock().unwrap();
+        assert!(calls.iter().all(|call| call.program == "wsl.exe"));
+        assert!(calls
+            .iter()
+            .filter(|call| call.args.iter().any(|arg| arg == "-f"))
+            .all(|call| call
+                .args
+                .iter()
+                .any(|arg| arg.ends_with("/compose.wsl.yaml"))));
+        let count = calls.len();
+        drop(calls);
+        fs::remove_file(&projected).unwrap();
+        assert!(start_with(&fake, &app).is_err());
+        assert_eq!(fake.calls.lock().unwrap().len(), count);
+        fs::remove_dir_all(root).unwrap();
     }
     struct Ports(bool);
     impl PortProbe for Ports {
@@ -2258,6 +2415,7 @@ mod tests {
 
         let source = InstallSource {
             id: "nested-app".into(),
+            resolved_plan: None,
             display_name: "Nested".into(),
             catalog_id: None,
             launch_url: "http://localhost:11434".into(),

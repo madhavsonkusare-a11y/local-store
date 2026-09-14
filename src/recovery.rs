@@ -94,7 +94,6 @@ pub fn verify_with(candidate: &mut RecoveryCandidate, runner: &dyn ProcessRunner
         .lines()
         .filter(|line| !line.trim().is_empty())
         .collect();
-    let expected = candidate.compose_file.canonicalize()?;
     let matches = lines.len() == ids.len()
         && lines.iter().all(|line| {
             let Ok(labels) =
@@ -108,10 +107,13 @@ pub fn verify_with(candidate: &mut RecoveryCandidate, runner: &dyn ProcessRunner
             get("com.docker.compose.project") == candidate.project_name
                 && get("com.docker.compose.service") == candidate.recipe_id
                 && get("com.docker.compose.oneoff").eq_ignore_ascii_case("false")
-                && Path::new(config).is_absolute()
-                && Path::new(working).is_absolute()
-                && Path::new(config).canonicalize().ok().as_ref() == Some(&expected)
-                && Path::new(working).canonicalize().ok().as_deref() == expected.parent()
+                && crate::runtime::engine::ownership_paths_match(
+                    project_dir,
+                    &candidate.compose_file,
+                    config,
+                    working,
+                )
+                .unwrap_or(false)
         });
     candidate.docker_ownership_verified = matches;
     candidate.ownership_status = if matches {

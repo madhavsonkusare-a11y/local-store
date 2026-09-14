@@ -23,7 +23,24 @@ pub struct EngineBinding {
 }
 
 impl EngineBinding {
+    /// Reserved experimental backend. Bootstrap must establish ownership before
+    /// callers explicitly select it; ambient discovery never chooses WSL.
+    pub fn managed_wsl() -> Self {
+        Self {
+            schema_version: 2,
+            program: "wsl.exe".into(),
+            endpoint: format!("wsl://{}", wsl::DISTRO),
+        }
+    }
+
+    pub fn is_wsl(&self) -> bool {
+        self == &Self::managed_wsl()
+    }
+
     pub fn validate(&self) -> AppResult<()> {
+        if self.is_wsl() {
+            return Ok(());
+        }
         let local = self
             .endpoint
             .strip_prefix("unix:///")
@@ -86,6 +103,9 @@ impl EngineBinding {
 
     pub fn command(&self, spec: &CommandSpec) -> AppResult<CommandSpec> {
         self.validate()?;
+        if self.is_wsl() {
+            return wsl::runtime_command(spec);
+        }
         let mut command = spec.clone();
         command.program = self.program.clone();
         if command.args.first().is_some_and(|a| a == "--host") {
@@ -111,6 +131,33 @@ impl EngineBinding {
         }
         Ok(command)
     }
+}
+
+/// Compare daemon-side ownership labels using the saved backend's path view.
+pub(crate) fn ownership_paths_match(
+    project: &Path,
+    compose: &Path,
+    config: &str,
+    working: &str,
+) -> AppResult<bool> {
+    let expected = compose.canonicalize()?;
+    if retained(project)?.is_some_and(|binding| binding.is_wsl()) {
+        let windows = crate::folders::docker_path(
+            expected
+                .parent()
+                .ok_or_else(|| AppError::invalid("Compose has no project directory."))?,
+        );
+        let linux = wsl::windows_drive_path(
+            windows
+                .to_str()
+                .ok_or_else(|| AppError::invalid("Project path must be Unicode."))?,
+        )?;
+        return Ok(working == linux && config == format!("{linux}/{}", wsl::COMPOSE_FILE));
+    }
+    Ok(Path::new(config).is_absolute()
+        && Path::new(working).is_absolute()
+        && Path::new(config).canonicalize().ok().as_ref() == Some(&expected)
+        && Path::new(working).canonicalize().ok().as_deref() == expected.parent())
 }
 
 pub fn retained(project: &Path) -> AppResult<Option<EngineBinding>> {
@@ -237,6 +284,16 @@ mod tests {
 
     #[test]
     fn unsupported_bindings_are_not_used_as_remote_fallbacks() {
+        let wsl = EngineBinding::managed_wsl();
+        wsl.validate().unwrap();
+        assert!(
+            serde_json::from_str::<EngineBinding>(&serde_json::to_string(&wsl).unwrap())
+                .unwrap()
+                .is_wsl()
+        );
+        let mut foreign = wsl.clone();
+        foreign.endpoint = "wsl://someone-elses-distro".into();
+        assert!(foreign.validate().is_err());
         for endpoint in [
             "tcp://remote:2375",
             "ssh://user@host",
@@ -297,5 +354,39 @@ mod tests {
         };
         let report = crate::runtime::doctor_with(&runner);
         assert!(report.ready, "{report:?}");
+    }
+
+    #[test]
+    #[cfg(windows)]
+    fn wsl_ownership_labels_require_the_projected_artifact_in_the_same_project() {
+        let project = std::env::temp_dir().join(format!("wsl-ownership-{}", std::process::id()));
+        fs::create_dir_all(&project).unwrap();
+        let compose = project.join("compose.yaml");
+        fs::write(&compose, "services: {}\n").unwrap();
+        save(&project, &EngineBinding::managed_wsl()).unwrap();
+        let windows = crate::folders::docker_path(&project.canonicalize().unwrap());
+        let linux = wsl::windows_drive_path(windows.to_str().unwrap()).unwrap();
+        assert!(ownership_paths_match(
+            &project,
+            &compose,
+            &format!("{linux}/compose.wsl.yaml"),
+            &linux
+        )
+        .unwrap());
+        assert!(!ownership_paths_match(
+            &project,
+            &compose,
+            &format!("{linux}/compose.yaml"),
+            &linux
+        )
+        .unwrap());
+        assert!(!ownership_paths_match(
+            &project,
+            &compose,
+            &format!("{linux}/compose.wsl.yaml"),
+            "/mnt/c/foreign"
+        )
+        .unwrap());
+        fs::remove_dir_all(project).unwrap();
     }
 }

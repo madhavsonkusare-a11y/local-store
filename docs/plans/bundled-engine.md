@@ -111,6 +111,39 @@ Do not simply rewrite `-f`: Windows paths embedded inside YAML also need mapping
 
 ## E03 — Bootstrap and payload integrity
 
+### E02 integration follow-up — September 14, 2026
+
+The diagnostic-only checkpoint above is now extended by experimental schema-2
+bindings (`wsl.exe`, `wsl://local-store-engine-v1`). Default discovery still picks
+the existing local engine. `InstallSource` retains the resolved typed plan; a WSL
+install requires that it exactly reproduces the original Compose source before
+any file write or WSL call. The shared renderer projects bind sources into
+`compose.wsl.yaml`, keeping named volumes, container paths, service configuration
+and seed contents. Bind mounts use long syntax with `create_host_path: false`.
+Quoted dollar signs are separately escaped for Compose interpolation.
+
+Lifecycle maps the original Compose command to this required artifact; missing
+or escaping artifacts refuse execution. Reinstall permits the companion file;
+failed-install rollback restores both Compose versions. Recovery matches Linux
+project/config labels and keeps its captured engine after deleting project files.
+Windows fake-runner tests exercise install, lifecycle, reinstall, rollback and
+post-deletion recovery. A real Docker Compose parser test checks a two-service
+projection including named volume, host share, seed bind, Unicode and literal
+dollars. This does not prove mounts, WSL boot, background operation or app tasks.
+
+The initial parser assertion expected a single dollar in JSON; upstream
+`docker/compose` `cmd/compose/config.go` deliberately re-escapes dollars when
+exporting interpolated config. The regression now checks that exported form.
+See [Compose volumes](https://docs.docker.com/reference/compose-file/services/#volumes)
+and [interpolation](https://docs.docker.com/reference/compose-file/interpolation/).
+
+Do not expose WSL selection until bootstrap verifies ownership. A distro name is
+not ownership proof. An E03 journal must bind the reserved name, absolute data
+directory, payload digest and registration identity, refuse collisions, and
+retain enough information to recover an interrupted import. Add managed-engine
+selection to qualification only with this verified bootstrap state. No WSL
+distro was launched or imported for the integration tests.
+
 Define an owned distro/data-disk layout and explicit Windows/WSL support matrix.
 Verify available disk, virtualization and WSL before downloading. Verify an
 authenticated manifest and payload digest before import; checksum equality alone

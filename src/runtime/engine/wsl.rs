@@ -8,6 +8,8 @@ use crate::{
 };
 
 pub const DISTRO: &str = "local-store-engine-v1";
+mod projection;
+pub use projection::{project_plan, PathPair, ProjectedPlan, ProjectedSeed, COMPOSE_FILE};
 
 /// Lexical mapping for the owned distro's required /mnt drive automount layout.
 /// This does not establish existence, ownership, mount availability or access.
@@ -59,6 +61,10 @@ pub fn diagnostic_command(spec: &CommandSpec) -> AppResult<CommandSpec> {
     if spec.program != "docker" || spec.cwd.is_some() || !supported {
         return Err(AppError::invalid("WSL transport currently supports engine diagnostics only; app operations require Compose and bind-path projection."));
     }
+    Ok(wrap(spec, "/", spec.args.clone()))
+}
+
+fn wrap(spec: &CommandSpec, cwd: &str, args: Vec<String>) -> CommandSpec {
     let mut command = CommandSpec::new(
         "wsl.exe",
         vec![
@@ -67,7 +73,7 @@ pub fn diagnostic_command(spec: &CommandSpec) -> AppResult<CommandSpec> {
             "--user".into(),
             "root".into(),
             "--cd".into(),
-            "/".into(),
+            cwd.into(),
             "--exec".into(),
             "/usr/bin/env".into(),
             "-i".into(),
@@ -81,7 +87,7 @@ pub fn diagnostic_command(spec: &CommandSpec) -> AppResult<CommandSpec> {
         None,
         spec.timeout,
     );
-    command.args.extend(spec.args.clone());
+    command.args.extend(args);
     command.remove_env = spec.remove_env.clone();
     for key in [
         "WSLENV",
@@ -94,7 +100,56 @@ pub fn diagnostic_command(spec: &CommandSpec) -> AppResult<CommandSpec> {
             command.remove_env.push(key.into());
         }
     }
-    Ok(command)
+    command
+}
+
+/// Route existing runtime commands through a saved WSL binding. Only the
+/// generated companion Compose file can be used; arbitrary -f paths refuse.
+pub(crate) fn runtime_command(spec: &CommandSpec) -> AppResult<CommandSpec> {
+    if diagnostic_command(spec).is_ok() {
+        return diagnostic_command(spec);
+    }
+    if spec.program != "docker" {
+        return Err(AppError::invalid("WSL binding requires a Docker command."));
+    }
+    if spec.args.first().is_some_and(|a| a == "compose") {
+        let project = spec.cwd.as_ref().ok_or_else(|| {
+            AppError::invalid("WSL Compose requires its managed project directory.")
+        })?;
+        let args = &spec.args;
+        if args.len() < 6
+            || args[1] != "-f"
+            || std::path::Path::new(&args[2]).canonicalize()?
+                != project.join("compose.yaml").canonicalize()?
+            || args[3] != "-p"
+            || !args[4].starts_with("local-store-")
+        {
+            return Err(AppError::invalid("Unsupported WSL Compose invocation."));
+        }
+        let projected = project.join(COMPOSE_FILE);
+        if !projected.is_file()
+            || projected.canonicalize()?.parent() != Some(project.canonicalize()?.as_path())
+        {
+            return Err(AppError::invalid("The WSL Compose artifact is missing or outside its project; restore it before operating on this app."));
+        }
+        let canonical_project = crate::folders::docker_path(&project.canonicalize()?);
+        let linux = windows_drive_path(
+            canonical_project
+                .to_str()
+                .ok_or_else(|| AppError::invalid("Project path must be Unicode."))?,
+        )?;
+        let mut translated = args.clone();
+        translated[2] = format!("{linux}/{COMPOSE_FILE}");
+        return Ok(wrap(spec, &linux, translated));
+    }
+    if spec.cwd.is_some()
+        || !spec.args.first().is_some_and(|a| {
+            ["pull", "inspect", "image", "container", "network", "volume"].contains(&a.as_str())
+        })
+    {
+        return Err(AppError::invalid("Unsupported WSL engine command."));
+    }
+    Ok(wrap(spec, "/", spec.args.clone()))
 }
 
 /// Reuses the bounded process runner; construction does not launch WSL. Calling

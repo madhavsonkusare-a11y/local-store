@@ -83,16 +83,33 @@ that does not settle broad distribution rights. Shrimply remains excluded.
 
 ## Next bounded implementation batch
 
-September 14 WSL checkpoint: `src/runtime/engine/wsl.rs` contains the diagnostic
-transport and lexical Windows drive-path mapper. Three focused tests and strict
-all-target/all-feature Clippy passed. It is deliberately not selectable by apps;
-Compose operations refuse until projection exists. No WSL distro was launched.
-See the transport contract in `docs/plans/bundled-engine.md`. Next implement a
-Linux Compose artifact from the typed plan (including bind and seed paths), then
-persist WSL selection and extend ownership checks for dual path identities.
+September 14 WSL integration checkpoint: `engine/wsl/projection.rs` shares the
+plan renderer, translating binds into long syntax with missing-path creation
+disabled. Seed paths have Windows/Linux identities; contents stay unchanged.
+`EngineBinding::managed_wsl()` reserves schema 2 for the fixed experimental distro.
+Install writes `compose.wsl.yaml`, lifecycle selects it, keep-data reinstall
+retains it, failed-install rollback restores it, and recovery compares Linux
+Compose labels. No launcher selection or ambient default chooses WSL yet.
+
+Validation: 273 library tests passed (two opt-in tests skipped), plus CLI and
+integration checks. The full run caught a missing mocked ownership-count reply
+in the new WSL recovery fixture; after correction, all recovery tests and the
+remaining registry/shared-folder/projection tests passed. Strict all-target,
+all-feature Clippy passed. Real Compose parsing starts no containers. Keep the
+Windows-only fake install/rollback/recovery tests in the Windows CI matrix.
+
+Next implement a bootstrap ownership journal before enabling selection: reserve
+the distro and data directory, refuse collisions, verify the rootfs digest,
+record registration identity and recover interrupted imports without deleting
+foreign state. Then expose explicit managed-engine qualification and run real
+WSL lifecycle/conformance. The host has WSL 2.6.3 and only `docker-desktop`
+registered; no Local Store distro was imported or started in this batch.
+Its management CLI returned UTF-16LE output. Bootstrap inventory parsing needs
+explicit decoding rather than assuming the existing UTF-8 command capture.
 
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
-source review. E02 now binds new installs and explicitly adopts legacy projects. Next implement the WSL broker variant with path translation. Preserve
+source review. E02's WSL code is experimental until owned bootstrap and real
+proof pass. Preserve
 `local-store-engine.json` and its Compose marker when keeping app data. Do not
 rewrite bindings to adopt a new default; engine migration requires its own flow.
 The saved endpoint is not yet Q01's full daemon/plan/probe identity.

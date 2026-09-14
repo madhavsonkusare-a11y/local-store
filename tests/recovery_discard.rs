@@ -211,6 +211,60 @@ fn corrupt_binding_refuses_recovery_before_contacting_docker() {
 }
 
 #[test]
+#[cfg(windows)]
+fn wsl_recovery_keeps_its_engine_after_deleting_the_project() {
+    use local_store::runtime::engine::{self, wsl};
+    let _serial = serially();
+    let (_root, project) = retained("wsl-delete-data");
+    engine::save(&project, &engine::EngineBinding::managed_wsl()).unwrap();
+    std::fs::write(project.join(wsl::COMPOSE_FILE), "services: {}\n").unwrap();
+    let windows = local_store::folders::docker_path(&project.canonicalize().unwrap());
+    let linux = wsl::windows_drive_path(windows.to_str().unwrap()).unwrap();
+    let labels = serde_json::json!({
+        "com.docker.compose.project": "local-store-memos",
+        "com.docker.compose.service": "memos",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project.config_files": format!("{linux}/compose.wsl.yaml"),
+        "com.docker.compose.project.working_dir": linux,
+    })
+    .to_string();
+    struct Wsl(Docker);
+    impl ProcessRunner for Wsl {
+        fn run_cancellable(
+            &self,
+            spec: &CommandSpec,
+            _: &local_store::runtime::CancelToken,
+        ) -> Result<ProcessOutput, ProcessError> {
+            assert_eq!(spec.program, "wsl.exe");
+            assert!(spec.args.iter().any(|arg| arg == wsl::DISTRO));
+            let at = spec
+                .args
+                .iter()
+                .position(|arg| arg == "/usr/bin/docker")
+                .unwrap();
+            let mut docker = spec.clone();
+            docker.program = "docker".into();
+            docker.args = spec.args[at + 3..].to_vec();
+            if docker.args.first().is_some_and(|arg| arg == "compose") {
+                assert!(docker.args[2].ends_with("/compose.wsl.yaml"));
+            }
+            self.0.run(&docker)
+        }
+    }
+    let runner = Wsl(Docker::new(vec![
+        "a".repeat(64),
+        labels,
+        "a".repeat(64),
+        String::new(),
+        String::new(),
+    ]));
+    let done = recovery::discard_with(&runner, "memos", true).unwrap();
+    assert_eq!(done.containers_removed, 1);
+    assert!(done.data_deleted && !project.exists());
+    assert_eq!(runner.0.asked().len(), 5);
+}
+
+#[test]
 fn containers_that_do_not_match_the_retained_files_are_left_alone() {
     let _serial = serially();
     let (_root, project) = retained("mismatch");
