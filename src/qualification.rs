@@ -958,6 +958,27 @@ impl Batch {
             .collect()
     }
 
+    /// Schedule against the identity the caller intends to prove now. A result
+    /// for the same app but different inputs is stale and must run again.
+    pub fn remaining_current<'a>(
+        &self,
+        subjects: &'a [(String, EvidenceIdentity)],
+        resume: Resume,
+    ) -> Vec<&'a String> {
+        subjects
+            .iter()
+            .filter(
+                |(app, identity)| match (self.recorded_current(app, identity), resume) {
+                    (None, _) => true,
+                    (Some(_), Resume::SkipRecorded) => false,
+                    (Some(evidence), Resume::RetryFailures) => !evidence.passed,
+                    (Some(_), Resume::RunAnyway) => true,
+                },
+            )
+            .map(|(app, _)| app)
+            .collect()
+    }
+
     /// Every result recorded so far, for a summary of where a batch got to.
     pub fn results(&self) -> Vec<Evidence> {
         let mut found: Vec<Evidence> = std::fs::read_dir(&self.dir)
@@ -1415,6 +1436,36 @@ ccc",
         changed.probe_sha256 = "4".repeat(64);
         assert!(batch.recorded_current("example", &changed).is_none());
         std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn batch_scheduling_reruns_stale_identity_but_keeps_current_passes() {
+        let dir = scratch("identity-schedule");
+        let batch = Batch::open(&dir).unwrap();
+        batch.record(&evidence_for("one", true)).unwrap();
+        batch.record(&evidence_for("two", false)).unwrap();
+        let current = sample_identity();
+        let mut stale = current.clone();
+        stale.engine = crate::runtime::engine::EngineBinding::managed_wsl();
+        let subjects = vec![
+            ("one".into(), current.clone()),
+            ("two".into(), current),
+            ("three".into(), stale.clone()),
+        ];
+        assert_eq!(
+            batch.remaining_current(&subjects, Resume::SkipRecorded),
+            vec![&"three".to_owned()]
+        );
+        assert_eq!(
+            batch.remaining_current(&subjects, Resume::RetryFailures),
+            vec![&"two".to_owned(), &"three".to_owned()]
+        );
+        let changed = vec![("one".into(), stale)];
+        assert_eq!(
+            batch.remaining_current(&changed, Resume::SkipRecorded),
+            vec![&"one".to_owned()]
+        );
+        std::fs::remove_dir_all(dir).ok();
     }
 
     #[test]

@@ -206,6 +206,12 @@ architecture and probe. Nineteen focused tests and strict Clippy pass. Next wire
 the current identity into batch scheduling and add explicit age limits for
 time-sensitive upstream/image metadata.
 
+Q01 scheduling follow-up: `Batch::remaining_current` now takes each app with the
+identity the caller intends to prove. A current pass is retained, a current
+failure follows the selected retry policy, and any identity mismatch reruns.
+Twenty focused qualification tests and strict Clippy pass. The remaining Q01
+gap is explicit expiry policy for time-sensitive upstream/image observations.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with
