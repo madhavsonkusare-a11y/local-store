@@ -196,6 +196,16 @@ Complete Q01 identity/freshness and Q02 RAM/disk/startup measurements before Q03
 V3 and owner/provider signing credentials remain external inputs. No signing key,
 account, spending or release publication was created by this batch.
 
+Q01 schema follow-up: new qualification output is schema 2 and includes an
+`EvidenceIdentity` covering source kind/revision, normalized Compose-plan hash,
+requested and resolved images, host OS/architecture, selected engine, Compose
+version, first-use probe hash and evidence level. Schema 0/1/future files remain
+readable history but cannot suppress current runs. `recorded_current` requires
+exact identity equality, with regression tests for changed plan, Compose,
+architecture and probe. Nineteen focused tests and strict Clippy pass. Next wire
+the current identity into batch scheduling and add explicit age limits for
+time-sensitive upstream/image metadata.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

@@ -199,6 +199,25 @@ pub struct Evidence {
     pub image_ids: BTreeMap<String, String>,
     pub first_use: String,
     pub steps: Vec<StepResult>,
+    /// Immutable inputs and runtime facts that determine what this pass proves.
+    #[serde(default)]
+    pub identity: Option<EvidenceIdentity>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EvidenceIdentity {
+    pub source_kind: String,
+    pub source_revision: String,
+    pub plan_sha256: String,
+    pub requested_images: Vec<String>,
+    pub resolved_image_ids: BTreeMap<String, String>,
+    pub host_os: String,
+    pub host_arch: String,
+    pub engine: crate::runtime::engine::EngineBinding,
+    pub compose_version: String,
+    pub probe_sha256: String,
+    pub level: String,
 }
 
 impl Evidence {
@@ -210,6 +229,10 @@ impl Evidence {
 
     pub fn to_json(&self) -> String {
         serde_json::to_string_pretty(self).expect("evidence is plain data")
+    }
+
+    pub fn is_current(&self, identity: &EvidenceIdentity) -> bool {
+        self.schema_version == 2 && self.identity.as_ref() == Some(identity)
     }
 }
 
@@ -594,6 +617,17 @@ pub fn qualify_template(
         inner: &crate::runtime::SystemProcessRunner,
         binding: Some(binding.clone()),
     };
+    let compose_version = runner
+        .run(&CommandSpec::new(
+            "docker",
+            vec!["compose".into(), "version".into(), "--short".into()],
+            None,
+            DIAGNOSTIC_TIMEOUT,
+        ))
+        .ok()
+        .filter(|output| output.success && !output.truncated)
+        .map(|output| output.stdout.trim().to_owned())
+        .unwrap_or_default();
     let probe = crate::runtime::HttpHealthProbe;
     let health = health_allowance(template.first_start);
     let mut template = template;
@@ -642,7 +676,14 @@ pub fn qualify_template(
             .map_err(|error| error.message)
     });
     let Some(installed) = installed else {
-        return Ok(finish(about, images, BTreeMap::new(), first_use, steps));
+        return Ok(finish(
+            about,
+            (&template, &binding, &compose_version),
+            images,
+            BTreeMap::new(),
+            first_use,
+            steps,
+        ));
     };
 
     steps.run("answers on its address", || {
@@ -732,7 +773,14 @@ pub fn qualify_template(
         bystanders.survived(&runner)
     });
 
-    Ok(finish(about, images, image_ids, first_use, steps))
+    Ok(finish(
+        about,
+        (&template, &binding, &compose_version),
+        images,
+        image_ids,
+        first_use,
+        steps,
+    ))
 }
 
 /// Container image ids for what this run actually ran, so evidence names the
@@ -781,14 +829,34 @@ fn resolved_images(runner: &dyn ProcessRunner, project: &str) -> BTreeMap<String
 
 fn finish(
     about: &Subject,
+    runtime: (&PlanTemplate, &crate::runtime::engine::EngineBinding, &str),
     images: Vec<String>,
     image_ids: BTreeMap<String, String>,
     first_use: &dyn FirstUse,
     steps: Steps,
 ) -> Evidence {
+    let (template, binding, compose_version) = runtime;
     let results = steps.into_results();
+    let digest = |value: &[u8]| {
+        use sha2::{Digest, Sha256};
+        format!("{:x}", Sha256::digest(value))
+    };
+    let plan = template.plan.to_compose().unwrap_or_default();
+    let identity = EvidenceIdentity {
+        source_kind: about.kind.to_owned(),
+        source_revision: about.source_revision.clone(),
+        plan_sha256: digest(plan.as_bytes()),
+        requested_images: images.clone(),
+        resolved_image_ids: image_ids.clone(),
+        host_os: std::env::consts::OS.to_owned(),
+        host_arch: std::env::consts::ARCH.to_owned(),
+        engine: binding.clone(),
+        compose_version: compose_version.to_owned(),
+        probe_sha256: digest(first_use.describes().as_bytes()),
+        level: "lifecycle_and_first_use".into(),
+    };
     Evidence {
-        schema_version: 1,
+        schema_version: 2,
         app: about.app.clone(),
         passed: results.iter().all(|step| step.passed),
         scope: format!(
@@ -801,6 +869,7 @@ fn finish(
         image_ids,
         first_use: first_use.describes().to_owned(),
         steps: results,
+        identity: Some(identity),
     }
 }
 
@@ -851,7 +920,14 @@ impl Batch {
         // Keep old JSON readable for history, but never resume a stronger
         // harness from evidence that did not run its checks. Unknown future
         // versions also require an explicit migration instead of a guess.
-        (evidence.schema_version == 1 && evidence.app == app).then_some(evidence)
+        (evidence.schema_version == 2 && evidence.app == app && evidence.identity.is_some())
+            .then_some(evidence)
+    }
+
+    /// Return evidence only when every proof-defining input still matches.
+    pub fn recorded_current(&self, app: &str, identity: &EvidenceIdentity) -> Option<Evidence> {
+        self.recorded(app)
+            .filter(|evidence| evidence.is_current(identity))
     }
 
     /// Write a result, atomically, so an interruption cannot leave a half file
@@ -964,7 +1040,7 @@ mod tests {
     #[test]
     fn evidence_is_deterministic_and_names_its_failing_step() {
         let evidence = Evidence {
-            schema_version: 1,
+            schema_version: 2,
             app: "example".into(),
             passed: false,
             scope: "one host".into(),
@@ -987,6 +1063,7 @@ mod tests {
                     detail: Some("no answer".into()),
                 },
             ],
+            identity: None,
         };
         assert_eq!(
             evidence.failure().map(|step| step.step.as_str()),
@@ -1206,7 +1283,7 @@ ccc",
 
     fn evidence_for(app: &str, passed: bool) -> Evidence {
         Evidence {
-            schema_version: 1,
+            schema_version: 2,
             app: app.into(),
             passed,
             scope: "one host".into(),
@@ -1220,6 +1297,27 @@ ccc",
                 passed,
                 detail: (!passed).then(|| "it did not install".to_owned()),
             }],
+            identity: Some(sample_identity()),
+        }
+    }
+
+    fn sample_identity() -> EvidenceIdentity {
+        EvidenceIdentity {
+            source_kind: "reviewed mapping".into(),
+            source_revision: "0".repeat(40),
+            plan_sha256: "1".repeat(64),
+            requested_images: vec!["example/app:1.0".into()],
+            resolved_image_ids: BTreeMap::new(),
+            host_os: "windows".into(),
+            host_arch: "x86_64".into(),
+            engine: crate::runtime::engine::EngineBinding {
+                schema_version: 1,
+                program: "docker".into(),
+                endpoint: "npipe:////./pipe/docker_engine".into(),
+            },
+            compose_version: "5.5.1".into(),
+            probe_sha256: "2".repeat(64),
+            level: "lifecycle_and_first_use".into(),
         }
     }
 
@@ -1241,7 +1339,7 @@ ccc",
         let dir = scratch("evidence-version");
         let batch = Batch::open(&dir).unwrap();
         let mut evidence = evidence_for("example", true);
-        for version in [0, 2] {
+        for version in [0, 1, 3] {
             evidence.schema_version = version;
             batch.record(&evidence).unwrap();
             assert!(batch.recorded("example").is_none());
@@ -1292,6 +1390,30 @@ ccc",
         let all = batch.results();
         assert_eq!(all.len(), 2);
         assert_eq!(all[0].app, "one");
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn changed_proof_identity_cannot_reuse_a_previous_pass() {
+        let dir = scratch("identity-change");
+        let batch = Batch::open(&dir).unwrap();
+        let evidence = evidence_for("example", true);
+        batch.record(&evidence).unwrap();
+        let current = evidence.identity.clone().unwrap();
+        assert!(batch.recorded_current("example", &current).is_some());
+
+        let mut changed = current.clone();
+        changed.plan_sha256 = "3".repeat(64);
+        assert!(batch.recorded_current("example", &changed).is_none());
+        let mut changed = current.clone();
+        changed.compose_version = "6.0.0".into();
+        assert!(batch.recorded_current("example", &changed).is_none());
+        let mut changed = current.clone();
+        changed.host_arch = "aarch64".into();
+        assert!(batch.recorded_current("example", &changed).is_none());
+        let mut changed = current;
+        changed.probe_sha256 = "4".repeat(64);
+        assert!(batch.recorded_current("example", &changed).is_none());
         std::fs::remove_dir_all(&dir).ok();
     }
 
