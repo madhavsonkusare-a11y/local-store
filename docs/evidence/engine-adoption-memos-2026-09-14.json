@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "kind": "legacy_engine_adoption_regression",
+  "recorded_at": "2026-09-14",
+  "scope": "Isolated legacy-shaped Memos fixture on existing local Docker; not bundled WSL",
+  "assertions": [
+    "Removed binding and marker only from the qualification fixture before explicit adoption",
+    "Verified adopted endpoint and exact restored Compose content",
+    "Invalidated the test process Docker context after adoption",
+    "Restart, reinstall, service health, cleanup and bystander preservation passed"
+  ],
+  "limitations": [
+    "Synthetic legacy fixture, not an old user installation",
+    "Single-service Memos real proof; multi-service adoption has fixture tests only",
+    "No WSL bootstrap, cross-engine data migration or useful in-app task proved"
+  ],
+  "source_sha256": {
+    "src/runtime/engine.rs": "7efc6ad08c19ae6de454bc6b433fc9f4d74ea6878344b4214c7ba731c38be1d3",
+    "src/runtime/engine/adoption.rs": "799b7b9a355c9543820a124b86912c187a2ce674eac985d21b850f5d9a92fb4e",
+    "src/runtime/mod.rs": "35ae31bfd8561dde205b2097ca42a8ffbf0037d9c8a6ad1b23dd005342dbedf1",
+    "src/runtime/process.rs": "eb306f5dc914b6ad8a060d546d032d845eef6cdc91b6e3c05120c230bf897b9b",
+    "src/qualification.rs": "5bbdca7781edee32966621a0f5c6098bf9e9a8caeb16c09501d28250a4983475",
+    "tests/engine_adoption.rs": "bf48ac59c0440f2a0be162a78e993bccbd9b97fcfccd97888359e3a231817733"
+  },
+  "qualification_evidence": {
+    "schema_version": 1,
+    "app": "memos",
+    "passed": true,
+    "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
+    "promotion": "recipe",
+    "source_revision": "",
+    "images": [
+      "neosmemo/memos:0.30.0"
+    ],
+    "image_ids": {
+      "neosmemo/memos:0.30.0": "sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327"
+    },
+    "first_use": "legacy engine adoption survives restart and reinstall with an invalid ambient Docker context",
+    "steps": [
+      {
+        "step": "pull neosmemo/memos:0.30.0",
+        "passed": true
+      },
+      {
+        "step": "installs with one action",
+        "passed": true
+      },
+      {
+        "step": "answers on its address",
+        "passed": true
+      },
+      {
+        "step": "all services are ready after install",
+        "passed": true
+      },
+      {
+        "step": "is usable first install",
+        "passed": true
+      },
+      {
+        "step": "survives a restart",
+        "passed": true
+      },
+      {
+        "step": "is usable after restart",
+        "passed": true
+      },
+      {
+        "step": "all services are ready after restart",
+        "passed": true
+      },
+      {
+        "step": "reinstalls over data it kept",
+        "passed": true
+      },
+      {
+        "step": "generates no credentials, so there are none to lose",
+        "passed": true
+      },
+      {
+        "step": "all services are ready after reinstall",
+        "passed": true
+      },
+      {
+        "step": "is usable after a keep-data reinstall",
+        "passed": true
+      },
+      {
+        "step": "removes everything it created",
+        "passed": true
+      },
+      {
+        "step": "leaves other containers alone",
+        "passed": true
+      }
+    ]
+  }
+}

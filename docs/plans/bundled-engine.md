@@ -77,8 +77,7 @@ The saved binding and Compose marker are preserved on retry; a previously saved
 endpoint wins over a new ambient default. A marker-write failure reports the
 saved state and can be retried. This is endpoint adoption, not data migration or
 a claim of immutable daemon identity. No existing user app was adopted during
-development; coverage uses isolated fixtures, with real legacy adoption still
-to exercise before release.
+development. A [real legacy-shaped Memos fixture](../evidence/engine-adoption-memos-2026-09-14.json) passed adoption, restart, reinstall, all-service checks and cleanup after its ambient context was invalidated. Multi-service adoption has fake-runner coverage; this does not prove WSL or cross-engine migration.
 
 A WSL backend still needs distro/user selection, working-directory and Compose/
 bind-path translation, plus conformance tests. Keep discovery separate from

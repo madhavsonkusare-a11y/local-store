@@ -58,7 +58,9 @@ that does not settle broad distribution rights. Shrimply remains excluded.
 - September 14 adoption batch: full `cargo test --locked -q` and strict
   all-target/all-feature Clippy passed. New fixtures cover multi-service
   ownership, repeat adoption and refusals without changing legacy files.
-  Real Docker legacy adoption remains a separate pending proof.
+  The subsequent real legacy-shaped Memos regression passed all 14 lifecycle
+  steps; see `docs/evidence/engine-adoption-memos-2026-09-14.json`.
+  The new test also passed strict Clippy. No existing user app was adopted.
 - Q01: evidence schema 1 distinguishes the stronger harness. Historical missing
   versions deserialize as 0; batch resume reruns old/unknown versions. Full
   source/plan/engine/probe identity is still required; schema alone is not proof.
@@ -82,9 +84,7 @@ that does not settle broad distribution rights. Shrimply remains excluded.
 ## Next bounded implementation batch
 
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
-source review. E02 now binds new local-engine installs; next prove legacy
-adoption on an isolated real Docker fixture and implement the WSL broker variant
-with path translation. Preserve
+source review. E02 now binds new installs and explicitly adopts legacy projects. Next implement the WSL broker variant with path translation. Preserve
 `local-store-engine.json` and its Compose marker when keeping app data. Do not
 rewrite bindings to adopt a new default; engine migration requires its own flow.
 The saved endpoint is not yet Q01's full daemon/plan/probe identity.
