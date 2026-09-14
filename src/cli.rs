@@ -37,7 +37,7 @@ pub(crate) fn ensure_console() {
 pub(crate) fn ensure_console() {}
 
 fn usage() -> String {
-    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} version")
+    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} version")
 }
 fn get_flag(args: &[String], flag: &str) -> Option<String> {
     args.iter()
@@ -225,6 +225,25 @@ pub fn run_cli() -> i32 {
                             "Its setup files and data were kept."
                         }
                     );
+                    0
+                }
+                Err(error) => {
+                    eprintln!("{error}");
+                    1
+                }
+            }
+        }
+        "bind-engine" => {
+            let app = match find_app(&args[1]) {
+                Ok(app) => app,
+                Err(error) => {
+                    eprintln!("{error}");
+                    return 1;
+                }
+            };
+            match runtime::engine::adopt_current_engine(&app.id) {
+                Ok(binding) => {
+                    println!("App bound to {}.", binding.endpoint);
                     0
                 }
                 Err(error) => {
@@ -489,6 +508,7 @@ fn normalize_action_args(args: Vec<String>) -> Result<Vec<String>, String> {
         return Ok(args);
     };
     if ![
+        "bind-engine",
         "add",
         "install",
         "open",
@@ -567,6 +587,8 @@ mod tests {
             args(&["add", "My notes", "--url", "https://example.com"])
         );
         for values in [
+            vec!["bind-engine"],
+            vec!["bind-engine", "memos", "--force"],
             vec!["uninstall", "memos", "--delete-dtaa"],
             vec!["remove", "memos", "--delete-data"],
             vec!["stop", "one", "two"],

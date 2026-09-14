@@ -1,6 +1,6 @@
 # Agent handoff
 
-Updated September 13, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
+Updated September 14, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
 
 ## Current work and checkout
@@ -48,11 +48,17 @@ that does not settle broad distribution rights. Shrimply remains excluded.
 - E02: `src/runtime/engine.rs` persists local Docker endpoint bindings beside
   Compose files. New installs, lifecycle, rollback, qualification and recovery
   use the saved endpoint and clear child context overrides. Missing marked or
-  corrupt bindings refuse fallback. Legacy unmarked apps are not migrated.
+  corrupt bindings refuse fallback. Legacy unmarked apps are not automatically
+  migrated. Explicit `bind-engine`
+  adoption now verifies container ownership under the app lock before binding.
   Real Memos restart/reinstall/cleanup passed after its test process context was
   made invalid; evidence is `docs/evidence/engine-binding-memos-2026-09-13.json`.
   Default Rust suite and strict Clippy passed; final runtime tests (47), recovery
   tests and the real Memos regression also passed.
+- September 14 adoption batch: full `cargo test --locked -q` and strict
+  all-target/all-feature Clippy passed. New fixtures cover multi-service
+  ownership, repeat adoption and refusals without changing legacy files.
+  Real Docker legacy adoption remains a separate pending proof.
 - Q01: evidence schema 1 distinguishes the stronger harness. Historical missing
   versions deserialize as 0; batch resume reruns old/unknown versions. Full
   source/plan/engine/probe identity is still required; schema alone is not proof.
@@ -66,7 +72,7 @@ that does not settle broad distribution rights. Shrimply remains excluded.
   test; the restricted sandbox cannot read that directory. The first real run
   exposed Docker's absent `State.Health` field; the format now uses optional
   lookup. Keep that real regression when changing the inspection format.
-- CI for checkpoint `70070bc` passed all jobs (run 34742504481).
+- CI for checkpoint `c05206c` passed all jobs (run 34754367417).
 - The previous main CI failure was a stale mandatory `00_Design_Notes.md` path
   in `tests/brand_strings.rs`; the current docs remain recursively scanned.
 - A separate local `CHANGELOG.md` edit was present and excluded from this batch.
@@ -76,8 +82,9 @@ that does not settle broad distribution rights. Shrimply remains excluded.
 ## Next bounded implementation batch
 
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
-source review. E02 now binds new local-engine installs; next define explicit
-legacy adoption and the WSL broker variant with path translation. Preserve
+source review. E02 now binds new local-engine installs; next prove legacy
+adoption on an isolated real Docker fixture and implement the WSL broker variant
+with path translation. Preserve
 `local-store-engine.json` and its Compose marker when keeping app data. Do not
 rewrite bindings to adopt a new default; engine migration requires its own flow.
 The saved endpoint is not yet Q01's full daemon/plan/probe identity.

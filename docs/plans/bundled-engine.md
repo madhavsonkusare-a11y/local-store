@@ -64,9 +64,22 @@ Docker context after installation; restart, reinstall and cleanup still pass.
 It proves routing on an existing local daemon, not a managed WSL bootstrap.
 
 E02 remains partial. Unmarked legacy projects retain their previous behavior;
-explicit adoption/migration is still needed. The current binding supports local
+explicit adoption is now available with `local-store bind-engine <id-or-name>`.
+The current binding supports local
 Unix sockets and Windows named pipes. Remote TCP/SSH and the future WSL broker
 are not implemented. No existing app is automatically migrated to another engine.
+Adoption reloads the registered app under its operation lock and verifies existing
+containers on the selected local endpoint against the exact Compose file,
+working directory and project labels. Multi-service projects are supported;
+empty, duplicate-ID, truncated, foreign or one-off inventories refuse binding.
+It runs only container listing/inspection, never retained Compose commands.
+The saved binding and Compose marker are preserved on retry; a previously saved
+endpoint wins over a new ambient default. A marker-write failure reports the
+saved state and can be retried. This is endpoint adoption, not data migration or
+a claim of immutable daemon identity. No existing user app was adopted during
+development; coverage uses isolated fixtures, with real legacy adoption still
+to exercise before release.
+
 A WSL backend still needs distro/user selection, working-directory and Compose/
 bind-path translation, plus conformance tests. Keep discovery separate from
 migration; preserving a socket endpoint does not prove the daemon's immutable

@@ -10,6 +10,9 @@ use std::{fs, io::Read, path::Path};
 pub const ENGINE_FILE: &str = "local-store-engine.json";
 pub const COMPOSE_BINDING_MARKER: &str = "# local-store-engine-binding: 1\n";
 
+mod adoption;
+pub use adoption::adopt_current_engine;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct EngineBinding {
