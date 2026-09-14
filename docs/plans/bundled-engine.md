@@ -79,10 +79,35 @@ saved state and can be retried. This is endpoint adoption, not data migration or
 a claim of immutable daemon identity. No existing user app was adopted during
 development. A [real legacy-shaped Memos fixture](../evidence/engine-adoption-memos-2026-09-14.json) passed adoption, restart, reinstall, all-service checks and cleanup after its ambient context was invalidated. Multi-service adoption has fake-runner coverage; this does not prove WSL or cross-engine migration.
 
-A WSL backend still needs distro/user selection, working-directory and Compose/
-bind-path translation, plus conformance tests. Keep discovery separate from
+A WSL backend still needs persisted selection, working-directory and Compose/
+bind-path projection, plus real conformance tests. Keep discovery separate from
 migration; preserving a socket endpoint does not prove the daemon's immutable
 identity or its future image/probe freshness (Q01).
+
+### WSL transport contract — September 14, 2026
+
+`src/runtime/engine/wsl.rs` adds a diagnostic-only transport through the existing
+bounded `ProcessRunner`. It names `local-store-engine-v1`, root, `/`, the Docker
+binary and Unix socket explicitly; `--exec` avoids a shell. A clean Linux
+environment and removal of Windows `WSLENV` prevent ambient Docker context
+overrides. Only the existing doctor's two commands are admitted. It is not wired
+to discovery or installation and has not launched any distro. Bootstrap must
+prove ownership before using it; a matching distro name alone is not ownership.
+
+The lexical drive-path translator handles drive letters, spaces, Unicode and
+extended Windows drive paths. It refuses UNC/device/relative/traversal paths.
+It assumes the owned distro's verified `/mnt/<drive>` layout; it does not prove
+mount existence, permissions or confinement. Sources checked September 14:
+[Microsoft WSL commands](https://learn.microsoft.com/en-us/windows/wsl/basic-commands)
+and [automount configuration](https://learn.microsoft.com/en-us/windows/wsl/wsl-config).
+
+Three focused tests and strict all-target/all-feature Clippy passed. This is a
+preparatory seam, not an operational WSL backend. Next project the existing typed
+plan into a separate Linux Compose artifact: translate host bind sources and
+seed-file paths, preserve container targets and named volumes, and retain both
+Windows and Linux path identities for recovery label checks. Then add versioned
+WSL binding persistence and route lifecycle/qualification through that artifact.
+Do not simply rewrite `-f`: Windows paths embedded inside YAML also need mapping.
 
 ## E03 — Bootstrap and payload integrity
 

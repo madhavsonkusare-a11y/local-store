@@ -12,6 +12,7 @@ pub const COMPOSE_BINDING_MARKER: &str = "# local-store-engine-binding: 1\n";
 
 mod adoption;
 pub use adoption::adopt_current_engine;
+pub mod wsl;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

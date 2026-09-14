@@ -83,6 +83,14 @@ that does not settle broad distribution rights. Shrimply remains excluded.
 
 ## Next bounded implementation batch
 
+September 14 WSL checkpoint: `src/runtime/engine/wsl.rs` contains the diagnostic
+transport and lexical Windows drive-path mapper. Three focused tests and strict
+all-target/all-feature Clippy passed. It is deliberately not selectable by apps;
+Compose operations refuse until projection exists. No WSL distro was launched.
+See the transport contract in `docs/plans/bundled-engine.md`. Next implement a
+Linux Compose artifact from the typed plan (including bind and seed paths), then
+persist WSL selection and extend ownership checks for dual path identities.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02 now binds new installs and explicitly adopts legacy projects. Next implement the WSL broker variant with path translation. Preserve
 `local-store-engine.json` and its Compose marker when keeping app data. Do not
