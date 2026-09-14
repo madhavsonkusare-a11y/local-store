@@ -314,6 +314,30 @@ pub fn prepare_import(
     Ok(spec)
 }
 
+/// Execute the prepared import transaction. Any failure leaves `Reserved`
+/// durable because a timeout can mean WSL changed state after our observation.
+/// Recovery must inventory it; this function never unregisters or retries.
+pub fn import(
+    runner: &dyn ProcessRunner,
+    state_dir: &Path,
+    journal: &BootstrapJournal,
+    rootfs: &Path,
+    rootfs_bytes: u64,
+) -> AppResult<BootstrapJournal> {
+    let command = prepare_import(runner, state_dir, journal, rootfs, rootfs_bytes)?;
+    let output = runner.run(&command).map_err(|error| {
+        let error = AppError::from(error);
+        AppError::new(error.code, format!("WSL import did not complete: {} The ownership reservation was retained for recovery.", error.message))
+    })?;
+    if !output.success || output.truncated {
+        return Err(AppError::invalid("WSL import failed or returned incomplete output. The ownership reservation was retained for recovery."));
+    }
+    let mut imported = journal.clone();
+    imported.advance(BootstrapState::Imported)?;
+    save(state_dir, &imported)?;
+    Ok(imported)
+}
+
 pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
     journal.validate()?;
     let previous = load(directory)?
@@ -338,7 +362,7 @@ pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
 mod tests {
     use super::*;
     use crate::runtime::{CancelToken, ProcessError, ProcessOutput};
-    use std::sync::Mutex;
+    use std::{collections::VecDeque, sync::Mutex};
     fn temp() -> PathBuf {
         std::env::temp_dir().join(format!(
             "local-store-bootstrap-{}-{}",
@@ -538,6 +562,93 @@ mod tests {
                 .unwrap();
         assert!(prepare_import(&inventory(DISTRO), &state, &journal, &rootfs, 7).is_err());
         assert!(!state.exists());
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    struct Sequence {
+        outputs: Mutex<VecDeque<Result<ProcessOutput, ProcessError>>>,
+    }
+    impl ProcessRunner for Sequence {
+        fn run_cancellable(
+            &self,
+            _: &CommandSpec,
+            _: &CancelToken,
+        ) -> Result<ProcessOutput, ProcessError> {
+            self.outputs.lock().unwrap().pop_front().unwrap()
+        }
+    }
+    fn ok(stdout: &str) -> Result<ProcessOutput, ProcessError> {
+        Ok(ProcessOutput {
+            success: true,
+            stdout: stdout.into(),
+            stderr: String::new(),
+            truncated: false,
+        })
+    }
+
+    #[test]
+    fn import_advances_only_after_a_successful_bounded_command() {
+        for outcome in [
+            Ok(ProcessOutput {
+                success: false,
+                stdout: String::new(),
+                stderr: "failed".into(),
+                truncated: false,
+            }),
+            Ok(ProcessOutput {
+                success: true,
+                stdout: String::new(),
+                stderr: String::new(),
+                truncated: true,
+            }),
+            Err(ProcessError::new(
+                crate::runtime::ProcessErrorCode::TimedOut,
+                "uncertain timeout",
+            )),
+        ] {
+            let parent = temp();
+            fs::create_dir_all(&parent).unwrap();
+            let rootfs = parent.join("rootfs.tar");
+            fs::write(&rootfs, b"payload").unwrap();
+            let journal = BootstrapJournal::new(
+                parent.join("data"),
+                format!("{:x}", Sha256::digest(b"payload")),
+                "01234567-89ab-cdef-0123-456789abcdef".into(),
+            )
+            .unwrap();
+            let runner = Sequence {
+                outputs: Mutex::new(VecDeque::from([ok("docker-desktop\r\n"), outcome])),
+            };
+            assert!(import(&runner, &parent.join("state"), &journal, &rootfs, 7).is_err());
+            assert_eq!(
+                load(&parent.join("state")).unwrap().unwrap().state,
+                BootstrapState::Reserved
+            );
+            fs::remove_dir_all(parent).unwrap();
+        }
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let rootfs = parent.join("rootfs.tar");
+        fs::write(&rootfs, b"payload").unwrap();
+        let journal = BootstrapJournal::new(
+            parent.join("data"),
+            format!("{:x}", Sha256::digest(b"payload")),
+            "01234567-89ab-cdef-0123-456789abcdef".into(),
+        )
+        .unwrap();
+        let runner = Sequence {
+            outputs: Mutex::new(VecDeque::from([ok("docker-desktop\r\n"), ok("")])),
+        };
+        assert_eq!(
+            import(&runner, &parent.join("state"), &journal, &rootfs, 7)
+                .unwrap()
+                .state,
+            BootstrapState::Imported
+        );
+        assert_eq!(
+            load(&parent.join("state")).unwrap().unwrap().state,
+            BootstrapState::Imported
+        );
         fs::remove_dir_all(parent).unwrap();
     }
 }

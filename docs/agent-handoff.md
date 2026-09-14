@@ -135,6 +135,14 @@ a direct pinned dependency; Cargo.lock reused its existing transitive version.
 Next execute via a coordinator, record Imported only after success, then verify
 WSL2, in-distro ownership, components and daemon before recording Verified.
 
+E03 import follow-up: `bootstrap::import` now executes the prepared command and
+advances the immutable journal to Imported only on a complete zero exit. Nonzero,
+truncated and runner-error/timeout outcomes retain Reserved, report recovery is
+needed, and never retry or unregister. Seven focused bootstrap tests and strict
+Clippy pass. This path was tested with fake runners only; no distro was imported.
+Next implement post-import identity creation/verification and the explicit
+Reserved recovery decision before calling this from product UI or CLI.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02's WSL code is experimental until owned bootstrap and real
 proof pass. Preserve

@@ -149,6 +149,13 @@ token inside it, verify WSL2, pinned components and daemon readiness, then advan
 the journal. Unregister is permitted only when external and in-distro identities
 both match.
 
+The coordinator now executes the prepared command with the existing bounded
+runner. A complete successful exit advances the immutable journal to Imported.
+Nonzero exit, truncated output, spawn failure or timeout leaves Reserved intact
+because the external state may be uncertain; it neither retries nor unregisters.
+Fake-runner tests cover each result. This still is not exposed to users and no
+real distro has been imported. Imported is explicitly weaker than Verified.
+
 ### E02 integration follow-up — September 14, 2026
 
 The diagnostic-only checkpoint above is now extended by experimental schema-2
