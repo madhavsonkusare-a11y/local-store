@@ -8,6 +8,7 @@ use crate::{
 };
 
 pub const DISTRO: &str = "local-store-engine-v1";
+pub mod bootstrap;
 mod projection;
 pub use projection::{project_plan, PathPair, ProjectedPlan, ProjectedSeed, COMPOSE_FILE};
 

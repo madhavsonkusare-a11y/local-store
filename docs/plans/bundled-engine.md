@@ -111,6 +111,19 @@ Do not simply rewrite `-f`: Windows paths embedded inside YAML also need mapping
 
 ## E03 — Bootstrap and payload integrity
 
+The first E03 implementation slice is a durable ownership journal in
+`runtime/engine/wsl/bootstrap.rs`. It binds the fixed distro name, absolute local
+data directory, exact lowercase rootfs SHA-256 and a caller-generated ownership
+token. Reservation uses exclusive file creation; existing, corrupt, oversized or
+conflicting state is never overwritten. Only reserved → imported → verified is
+accepted. This is transaction state only and performs no WSL operation.
+
+The next slice must decode `wsl.exe` inventory output explicitly (UTF-16LE was
+observed on the development host), verify both distro-name and data-directory
+availability, then reserve before import. Recovery may unregister only when the
+journal identity and imported distro identity both match; absence of either must
+refuse deletion.
+
 ### E02 integration follow-up — September 14, 2026
 
 The diagnostic-only checkpoint above is now extended by experimental schema-2

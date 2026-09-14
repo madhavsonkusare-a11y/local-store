@@ -107,6 +107,15 @@ registered; no Local Store distro was imported or started in this batch.
 Its management CLI returned UTF-16LE output. Bootstrap inventory parsing needs
 explicit decoding rather than assuming the existing UTF-8 command capture.
 
+E03 journal checkpoint: `runtime/engine/wsl/bootstrap.rs` now records the fixed
+distro, absolute data directory, exact rootfs SHA-256, caller-generated ownership
+token and state. Reservation uses exclusive creation; corrupt/oversized/existing
+state is retained and refused. Identity fields cannot change, and state can only
+advance reserved → imported → verified. It makes no WSL calls. Next add a bounded
+UTF-16LE inventory reader and prove that the fixed distro name and data directory
+are both unused before reservation/import. A journal alone does not prove that a
+registered distro belongs to Local Store.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02's WSL code is experimental until owned bootstrap and real
 proof pass. Preserve
