@@ -135,6 +135,20 @@ nothing. Non-ASCII distro output currently refuses because the lossy text runner
 cannot prove its original bytes; a future raw-byte process result can broaden
 this without weakening collision detection for the fixed ASCII name.
 
+Payload preparation is implemented without executing an import. The rootfs is
+streamed through exact locked length and lowercase SHA-256, with a 4-GiB ceiling
+and change-during-read checks. Only after collision preflight and verification
+does `prepare_import` reserve the external journal and return the fixed bounded
+`wsl.exe --import <name> <data> <rootfs> --version 2` command. State must live
+outside the install directory because WSL creates that directory. `sha2` is
+pinned directly to the version already present in Cargo.lock.
+
+The next coordinator must distinguish definite command failure from uncertain
+termination, inventory the distro after success, write and read the ownership
+token inside it, verify WSL2, pinned components and daemon readiness, then advance
+the journal. Unregister is permitted only when external and in-distro identities
+both match.
+
 ### E02 integration follow-up — September 14, 2026
 
 The diagnostic-only checkpoint above is now extended by experimental schema-2

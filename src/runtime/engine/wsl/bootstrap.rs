@@ -9,6 +9,7 @@ use crate::{
     storage,
 };
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::{
     fs,
     io::Read,
@@ -18,6 +19,7 @@ use std::{
 pub const JOURNAL_FILE: &str = "bootstrap.json";
 const MAX_JOURNAL_BYTES: u64 = 16 * 1024;
 const MAX_DISTRO_LIST_CHARS: usize = 64 * 1024;
+const MAX_ROOTFS_BYTES: u64 = 4 * 1024 * 1024 * 1024;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -229,6 +231,89 @@ pub fn preflight(runner: &dyn ProcessRunner, install_dir: &Path) -> AppResult<()
     Ok(())
 }
 
+pub fn verify_rootfs(path: &Path, expected_bytes: u64, expected_sha256: &str) -> AppResult<()> {
+    if expected_bytes == 0
+        || expected_bytes > MAX_ROOTFS_BYTES
+        || expected_sha256.len() != 64
+        || !expected_sha256
+            .bytes()
+            .all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase())
+    {
+        return Err(AppError::invalid("Invalid expected WSL rootfs identity."));
+    }
+    let metadata = fs::metadata(path)?;
+    if !metadata.is_file() || metadata.len() != expected_bytes {
+        return Err(AppError::invalid(
+            "WSL rootfs length does not match its locked identity.",
+        ));
+    }
+    let mut file = fs::File::open(path)?;
+    let mut digest = Sha256::new();
+    let mut buffer = [0_u8; 1024 * 1024];
+    let mut read = 0_u64;
+    loop {
+        let count = file.read(&mut buffer)?;
+        if count == 0 {
+            break;
+        }
+        read = read
+            .checked_add(count as u64)
+            .ok_or_else(|| AppError::invalid("WSL rootfs length overflow."))?;
+        if read > expected_bytes {
+            return Err(AppError::invalid(
+                "WSL rootfs changed while it was being verified.",
+            ));
+        }
+        digest.update(&buffer[..count]);
+    }
+    let actual = format!("{:x}", digest.finalize());
+    if read != expected_bytes || actual != expected_sha256 {
+        return Err(AppError::invalid(
+            "WSL rootfs SHA-256 does not match its locked identity.",
+        ));
+    }
+    Ok(())
+}
+
+/// Prepare, but deliberately do not execute, the only import command. The
+/// ownership journal lives outside `install_dir`, which must remain absent for
+/// WSL to create. A reservation is durable before the command is returned.
+pub fn prepare_import(
+    runner: &dyn ProcessRunner,
+    state_dir: &Path,
+    journal: &BootstrapJournal,
+    rootfs: &Path,
+    rootfs_bytes: u64,
+) -> AppResult<CommandSpec> {
+    journal.validate()?;
+    if state_dir == journal.install_dir
+        || state_dir.starts_with(&journal.install_dir)
+        || journal.install_dir.starts_with(state_dir)
+    {
+        return Err(AppError::invalid(
+            "Bootstrap ownership state must be outside the WSL data directory.",
+        ));
+    }
+    preflight(runner, &journal.install_dir)?;
+    verify_rootfs(rootfs, rootfs_bytes, &journal.rootfs_sha256)?;
+    reserve(state_dir, journal)?;
+    let mut spec = CommandSpec::new(
+        "wsl.exe",
+        vec![
+            "--import".into(),
+            DISTRO.into(),
+            journal.install_dir.to_string_lossy().into_owned(),
+            rootfs.to_string_lossy().into_owned(),
+            "--version".into(),
+            "2".into(),
+        ],
+        None,
+        crate::runtime::PROVISION_TIMEOUT,
+    );
+    spec.remove_env.push("WSLENV".into());
+    Ok(spec)
+}
+
 pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
     journal.validate()?;
     let previous = load(directory)?
@@ -393,6 +478,66 @@ mod tests {
         assert!(preflight(&untouched, &target).is_err());
         assert!(target.join("foreign.txt").is_file());
         assert!(untouched.calls.lock().unwrap().is_empty());
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn payload_is_streamed_and_import_is_prepared_only_after_reservation() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let rootfs = parent.join("rootfs.tar");
+        fs::write(&rootfs, b"reviewed payload").unwrap();
+        let digest = format!("{:x}", Sha256::digest(b"reviewed payload"));
+        let install = parent.join("engine-data");
+        let journal = BootstrapJournal::new(
+            install.clone(),
+            digest.clone(),
+            "01234567-89ab-cdef-0123-456789abcdef".into(),
+        )
+        .unwrap();
+        let state = parent.join("bootstrap-state");
+        let clear = inventory("docker-desktop\r\n");
+        let command = prepare_import(&clear, &state, &journal, &rootfs, 16).unwrap();
+        assert_eq!(command.program, "wsl.exe");
+        assert_eq!(command.args[0], "--import");
+        assert_eq!(command.args[1], DISTRO);
+        assert_eq!(command.args[2], install.to_string_lossy());
+        assert_eq!(command.args[3], rootfs.to_string_lossy());
+        assert_eq!(&command.args[4..], ["--version", "2"]);
+        assert_eq!(command.timeout, crate::runtime::PROVISION_TIMEOUT);
+        assert_eq!(load(&state).unwrap(), Some(journal));
+        assert!(!install.exists());
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn payload_mismatch_or_collision_never_reserves_or_returns_import() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let rootfs = parent.join("rootfs.tar");
+        fs::write(&rootfs, b"payload").unwrap();
+        let state = parent.join("state");
+        let install = parent.join("data");
+        for (bytes, digest) in [
+            (6, "a".repeat(64)),
+            (7, "a".repeat(64)),
+            (7, format!("{:x}", Sha256::digest(b"different"))),
+        ] {
+            let journal = BootstrapJournal::new(
+                install.clone(),
+                digest,
+                "01234567-89ab-cdef-0123-456789abcdef".into(),
+            )
+            .unwrap();
+            assert!(prepare_import(&inventory(""), &state, &journal, &rootfs, bytes).is_err());
+            assert!(!state.exists() && !install.exists());
+        }
+        let good = format!("{:x}", Sha256::digest(b"payload"));
+        let journal =
+            BootstrapJournal::new(install, good, "01234567-89ab-cdef-0123-456789abcdef".into())
+                .unwrap();
+        assert!(prepare_import(&inventory(DISTRO), &state, &journal, &rootfs, 7).is_err());
+        assert!(!state.exists());
         fs::remove_dir_all(parent).unwrap();
     }
 }

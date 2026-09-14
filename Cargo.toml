@@ -32,6 +32,9 @@ fs4 = "=1.1.0"
 getrandom = "=0.4.3"
 # Already present through Tauri; bounded regex validation for imported fields.
 regex = "=1.13.1"
+# Stream payload verification before WSL import. Already present transitively;
+# direct use makes the authenticated bootstrap boundary explicit.
+sha2 = "=0.10.9"
 
 # Process-group signalling for the bounded runtime process runner. `libc` is
 # already in the dependency graph through Tauri; its MSRV is far below the

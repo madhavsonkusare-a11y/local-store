@@ -125,6 +125,16 @@ before executing WSL. Four focused tests and strict Clippy passed. Next stage th
 payload into a fresh sibling temporary file, verify its locked length/SHA-256,
 reserve the journal, then issue one bounded `--import ... --version 2` command.
 
+E03 payload follow-up: `verify_rootfs` streams the exact locked length through
+SHA-256 and refuses non-files, invalid expectations, size drift or digest
+mismatch. `prepare_import` requires separate state/install paths, runs preflight,
+verifies payload, reserves ownership, then returns (without executing) exactly
+`wsl.exe --import <fixed-name> <data> <rootfs> --version 2` with the provision
+timeout and `WSLENV` removed. Six focused tests and strict Clippy pass. `sha2` is
+a direct pinned dependency; Cargo.lock reused its existing transitive version.
+Next execute via a coordinator, record Imported only after success, then verify
+WSL2, in-distro ownership, components and daemon before recording Verified.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02's WSL code is experimental until owned bootstrap and real
 proof pass. Preserve
