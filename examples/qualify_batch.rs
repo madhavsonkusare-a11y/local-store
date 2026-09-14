@@ -581,6 +581,12 @@ fn main() {
             // passing run from reading like an approval.
             promotion: "not reviewed".to_owned(),
             source_revision: candidate.revision.clone(),
+            source_adapter: "candidate-import".into(),
+            source_locator: candidate.id.clone(),
+            // Candidate imports have no reviewed observation dates. Their
+            // evidence remains useful history but cannot suppress a later run.
+            source_observed_on: String::new(),
+            images_observed_on: String::new(),
         };
         println!("{}: running…", candidate.id);
         // The App Store standard, applied to every app the same way: it has to

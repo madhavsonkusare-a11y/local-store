@@ -219,6 +219,15 @@ future refuse. Batch scheduling inherits this gate through `recorded_current`.
 Twenty-one focused tests and strict Clippy pass. Next distinguish the age of
 upstream/image observations from the age of the qualification execution itself.
 
+Q01 completion: evidence identity now includes the exact source locator and
+adapter as well as revision. Reviewed offering dates flow into distinct source
+and image observations. Qualification execution expires after 30 days, source
+review after 90 days and the oldest image audit after 30 days; invalid, absent
+or future dates cannot be reused. Candidate-only runs deliberately carry no
+review dates and therefore remain history rather than reusable certification.
+All Q01 ledger identity and freshness fields are implemented; twenty-two
+focused tests and strict Clippy pass.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

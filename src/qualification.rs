@@ -209,7 +209,11 @@ pub struct Evidence {
 #[serde(deny_unknown_fields)]
 pub struct EvidenceIdentity {
     pub source_kind: String,
+    pub source_adapter: String,
+    pub source_locator: String,
     pub source_revision: String,
+    pub source_observed_on: String,
+    pub images_observed_on: String,
     pub plan_sha256: String,
     pub requested_images: Vec<String>,
     pub resolved_image_ids: BTreeMap<String, String>,
@@ -223,6 +227,8 @@ pub struct EvidenceIdentity {
 
 impl Evidence {
     pub const MAX_REUSE_AGE_SECS: u64 = 30 * 24 * 60 * 60;
+    pub const MAX_SOURCE_AGE_DAYS: i64 = 90;
+    pub const MAX_IMAGE_AGE_DAYS: i64 = 30;
     const MAX_FUTURE_SKEW_SECS: u64 = 24 * 60 * 60;
 
     /// The failing step, if any. A run stops at the first failure, so this is
@@ -245,7 +251,81 @@ impl Evidence {
             && self.recorded_at_unix > 0
             && self.recorded_at_unix <= now_unix.saturating_add(Self::MAX_FUTURE_SKEW_SECS)
             && now_unix.saturating_sub(self.recorded_at_unix) <= Self::MAX_REUSE_AGE_SECS
+            && observation_is_fresh(
+                &identity.source_observed_on,
+                now_unix,
+                Self::MAX_SOURCE_AGE_DAYS,
+            )
+            && observation_is_fresh(
+                &identity.images_observed_on,
+                now_unix,
+                Self::MAX_IMAGE_AGE_DAYS,
+            )
     }
+}
+
+fn observation_is_fresh(date: &str, now_unix: u64, max_age_days: i64) -> bool {
+    let parts: Vec<_> = date.split('-').collect();
+    if parts.len() != 3 {
+        return false;
+    }
+    let Ok(year) = parts[0].parse::<i64>() else {
+        return false;
+    };
+    let Ok(month) = parts[1].parse::<i64>() else {
+        return false;
+    };
+    let Ok(day) = parts[2].parse::<i64>() else {
+        return false;
+    };
+    let leap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+    let month_days = [
+        31,
+        if leap { 29 } else { 28 },
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+    ];
+    if !(1970..=9999).contains(&year)
+        || !(1..=12).contains(&month)
+        || day < 1
+        || day > month_days[(month - 1) as usize]
+    {
+        return false;
+    }
+    let adjusted_year = year - i64::from(month <= 2);
+    let era = adjusted_year.div_euclid(400);
+    let year_of_era = adjusted_year - era * 400;
+    let shifted_month = month + if month > 2 { -3 } else { 9 };
+    let day_of_year = (153 * shifted_month + 2) / 5 + day - 1;
+    let day_of_era = year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year;
+    let observed = era * 146_097 + day_of_era - 719_468;
+    let today = (now_unix / 86_400) as i64;
+    observed <= today + 1 && today.saturating_sub(observed) <= max_age_days
+}
+
+#[cfg(test)]
+fn date_for_unix(unix: u64) -> String {
+    let days = (unix / 86_400) as i64;
+    let shifted = days + 719_468;
+    let era = shifted.div_euclid(146_097);
+    let day_of_era = shifted - era * 146_097;
+    let year_of_era =
+        (day_of_era - day_of_era / 1_460 + day_of_era / 36_524 - day_of_era / 146_096) / 365;
+    let mut year = year_of_era + era * 400;
+    let day_of_year = day_of_era - (365 * year_of_era + year_of_era / 4 - year_of_era / 100);
+    let shifted_month = (5 * day_of_year + 2) / 153;
+    let day = day_of_year - (153 * shifted_month + 2) / 5 + 1;
+    let month = shifted_month + if shifted_month < 10 { 3 } else { -9 };
+    year += i64::from(month <= 2);
+    format!("{year:04}-{month:02}-{day:02}")
 }
 
 fn unix_now() -> u64 {
@@ -539,6 +619,27 @@ pub fn qualify(
         .ok_or_else(|| AppError::invalid(format!("{app} is not offered, so it cannot be run")))?;
     let reviewed = crate::templates::reviewed_template(app);
     let template = offering.plan_template(None)?;
+    let (source_adapter, source_locator, source_observed_on, images_observed_on) = match &offering {
+        crate::offerings::Offering::Recipe(recipe) => (
+            "recipe".to_owned(),
+            recipe.source_url.clone(),
+            recipe.verified_at.clone(),
+            recipe.requirements.image_audit.checked_at.clone(),
+        ),
+        crate::offerings::Offering::Template(template) => (
+            template.origin.importer.clone(),
+            format!("{}#{}", template.origin.repository, template.origin.path),
+            template.verified_at.clone(),
+            template
+                .requirements
+                .images
+                .iter()
+                .map(|audit| audit.checked_at.as_str())
+                .min()
+                .unwrap_or_default()
+                .to_owned(),
+        ),
+    };
     let about = Subject {
         app: app.to_owned(),
         kind: if offering.is_recipe() {
@@ -554,6 +655,10 @@ pub fn qualify(
             .as_ref()
             .map(|reviewed| reviewed.origin.revision.clone())
             .unwrap_or_default(),
+        source_adapter,
+        source_locator,
+        source_observed_on,
+        images_observed_on,
     };
     qualify_template(&about, template, answers, first_use, scratch)
 }
@@ -570,6 +675,10 @@ pub struct Subject {
     pub kind: &'static str,
     pub promotion: String,
     pub source_revision: String,
+    pub source_adapter: String,
+    pub source_locator: String,
+    pub source_observed_on: String,
+    pub images_observed_on: String,
 }
 
 /// Qualify a template that has already been built.
@@ -863,7 +972,11 @@ fn finish(
     let plan = template.plan.to_compose().unwrap_or_default();
     let identity = EvidenceIdentity {
         source_kind: about.kind.to_owned(),
+        source_adapter: about.source_adapter.clone(),
+        source_locator: about.source_locator.clone(),
         source_revision: about.source_revision.clone(),
+        source_observed_on: about.source_observed_on.clone(),
+        images_observed_on: about.images_observed_on.clone(),
         plan_sha256: digest(plan.as_bytes()),
         requested_images: images.clone(),
         resolved_image_ids: image_ids.clone(),
@@ -1345,9 +1458,14 @@ ccc",
     }
 
     fn sample_identity() -> EvidenceIdentity {
+        let today = date_for_unix(unix_now());
         EvidenceIdentity {
             source_kind: "reviewed mapping".into(),
+            source_adapter: "runtipi".into(),
+            source_locator: "https://example.test/store#apps/example/docker-compose.json".into(),
             source_revision: "0".repeat(40),
+            source_observed_on: today.clone(),
+            images_observed_on: today,
             plan_sha256: "1".repeat(64),
             requested_images: vec!["example/app:1.0".into()],
             resolved_image_ids: BTreeMap::new(),
@@ -1492,9 +1610,12 @@ ccc",
 
     #[test]
     fn expired_missing_or_future_dated_proof_is_never_current() {
-        let identity = sample_identity();
         let now = 2_000_000_000;
+        let mut identity = sample_identity();
+        identity.source_observed_on = date_for_unix(now);
+        identity.images_observed_on = date_for_unix(now);
         let mut evidence = evidence_for("example", true);
+        evidence.identity = Some(identity.clone());
         evidence.recorded_at_unix = now - Evidence::MAX_REUSE_AGE_SECS;
         assert!(evidence.is_current_at(&identity, now));
         evidence.recorded_at_unix -= 1;
@@ -1502,6 +1623,29 @@ ccc",
         evidence.recorded_at_unix = 0;
         assert!(!evidence.is_current_at(&identity, now));
         evidence.recorded_at_unix = now + Evidence::MAX_FUTURE_SKEW_SECS + 1;
+        assert!(!evidence.is_current_at(&identity, now));
+    }
+
+    #[test]
+    fn source_and_image_observations_expire_independently() {
+        let now = 2_000_000_000;
+        let today = date_for_unix(now);
+        let old_source = date_for_unix(now - (Evidence::MAX_SOURCE_AGE_DAYS as u64 + 1) * 86_400);
+        let old_image = date_for_unix(now - (Evidence::MAX_IMAGE_AGE_DAYS as u64 + 1) * 86_400);
+        let mut evidence = evidence_for("example", true);
+        evidence.recorded_at_unix = now;
+        let mut identity = evidence.identity.clone().unwrap();
+        identity.source_observed_on = today.clone();
+        identity.images_observed_on = today.clone();
+        evidence.identity = Some(identity.clone());
+        assert!(evidence.is_current_at(&identity, now));
+
+        identity.source_observed_on = old_source;
+        evidence.identity = Some(identity.clone());
+        assert!(!evidence.is_current_at(&identity, now));
+        identity.source_observed_on = today;
+        identity.images_observed_on = old_image;
+        evidence.identity = Some(identity.clone());
         assert!(!evidence.is_current_at(&identity, now));
     }
 
