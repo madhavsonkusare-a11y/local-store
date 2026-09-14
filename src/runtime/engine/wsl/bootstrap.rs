@@ -30,6 +30,15 @@ pub enum BootstrapState {
     Verified,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RecoveryDisposition {
+    RetryImport,
+    ResumeVerification,
+    Ready,
+    ManualReview,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BootstrapJournal {
@@ -472,6 +481,42 @@ pub fn verify_imported(
     Ok(journal)
 }
 
+/// Read-only recovery classification. A Reserved transaction with any external
+/// WSL footprint is intentionally ambiguous: import may have timed out after
+/// mutation, and no in-distro token has yet been proven. Nothing is deleted.
+pub fn classify_recovery(
+    runner: &dyn ProcessRunner,
+    state_dir: &Path,
+) -> AppResult<RecoveryDisposition> {
+    let journal = load(state_dir)?
+        .ok_or_else(|| AppError::invalid("Managed-engine bootstrap journal is missing."))?;
+    let output = successful(
+        runner,
+        &wsl_command(vec!["--list".into(), "--quiet".into()], DIAGNOSTIC_TIMEOUT),
+        "WSL recovery inventory",
+    )?;
+    let count = parse_distro_names(&output)?
+        .iter()
+        .filter(|name| name.eq_ignore_ascii_case(DISTRO))
+        .count();
+    if count > 1 {
+        return Ok(RecoveryDisposition::ManualReview);
+    }
+    let distro_exists = count == 1;
+    let directory_exists = journal.install_dir.exists();
+    Ok(match journal.state {
+        BootstrapState::Reserved if !distro_exists && !directory_exists => {
+            RecoveryDisposition::RetryImport
+        }
+        BootstrapState::Reserved => RecoveryDisposition::ManualReview,
+        BootstrapState::Imported if distro_exists && directory_exists => {
+            RecoveryDisposition::ResumeVerification
+        }
+        BootstrapState::Verified if distro_exists && directory_exists => RecoveryDisposition::Ready,
+        BootstrapState::Imported | BootstrapState::Verified => RecoveryDisposition::ManualReview,
+    })
+}
+
 pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
     journal.validate()?;
     let previous = load(directory)?
@@ -879,5 +924,54 @@ mod tests {
             );
             fs::remove_dir_all(parent).unwrap();
         }
+    }
+
+    #[test]
+    fn recovery_classification_never_treats_uncertain_footprints_as_owned() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let state = parent.join("state");
+        let mut journal = BootstrapJournal::new(
+            parent.join("data"),
+            "a".repeat(64),
+            "01234567-89ab-cdef-0123-456789abcdef".into(),
+        )
+        .unwrap();
+        reserve(&state, &journal).unwrap();
+        assert_eq!(
+            classify_recovery(&inventory("docker-desktop\n"), &state).unwrap(),
+            RecoveryDisposition::RetryImport
+        );
+        fs::create_dir_all(&journal.install_dir).unwrap();
+        assert_eq!(
+            classify_recovery(&inventory("docker-desktop\n"), &state).unwrap(),
+            RecoveryDisposition::ManualReview
+        );
+        assert_eq!(
+            classify_recovery(&inventory(&format!("{DISTRO}\n")), &state).unwrap(),
+            RecoveryDisposition::ManualReview
+        );
+        journal.advance(BootstrapState::Imported).unwrap();
+        save(&state, &journal).unwrap();
+        assert_eq!(
+            classify_recovery(&inventory(&format!("{DISTRO}\n")), &state).unwrap(),
+            RecoveryDisposition::ResumeVerification
+        );
+        journal.advance(BootstrapState::Verified).unwrap();
+        save(&state, &journal).unwrap();
+        assert_eq!(
+            classify_recovery(&inventory(&format!("{DISTRO}\n")), &state).unwrap(),
+            RecoveryDisposition::Ready
+        );
+        fs::remove_dir_all(&journal.install_dir).unwrap();
+        assert_eq!(
+            classify_recovery(&inventory(&format!("{DISTRO}\n")), &state).unwrap(),
+            RecoveryDisposition::ManualReview
+        );
+        assert_eq!(
+            classify_recovery(&inventory(&format!("{DISTRO}\n{DISTRO}\n")), &state).unwrap(),
+            RecoveryDisposition::ManualReview
+        );
+        fs::remove_dir_all(parent).unwrap();
     }
 }

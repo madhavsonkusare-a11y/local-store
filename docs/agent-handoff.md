@@ -153,6 +153,14 @@ focused tests and strict Clippy pass; all WSL execution is still fake-runner onl
 Next add the explicit Reserved recovery classifier and deletion authorization;
 never infer ownership from the distro name or install directory alone.
 
+E03 recovery follow-up: `classify_recovery` reads only the journal, fixed-name
+inventory and data-directory presence. A clean Reserved state permits retry;
+Imported with both footprints resumes verification; Verified with both is ready.
+Every partial, duplicated or uncertain combination requires manual review. It
+never invokes unregister. Ten focused bootstrap tests and strict Clippy pass.
+Next implement retry from the existing immutable reservation and define removal
+authorization requiring matching external and in-distro tokens.
+
 Finish E01's complete dependency lock/signed-index provenance and rootfs notice/
 source review. E02's WSL code is experimental until owned bootstrap and real
 proof pass. Preserve

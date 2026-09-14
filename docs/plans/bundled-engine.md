@@ -166,6 +166,13 @@ then does Imported become Verified; every failure retains Imported for repair.
 Tests cover wrong WSL version, token command failure, component drift and daemon
 failure. No real WSL command was run by these tests.
 
+Read-only recovery classification now maps a clean Reserved transaction to retry,
+an Imported transaction with both expected footprints to resume verification,
+and a complete Verified footprint to ready. Any partial footprint, duplicate
+fixed-name inventory or uncertain Reserved footprint requires manual review. The
+classifier never unregisters anything and never treats name plus directory as
+ownership proof.
+
 ### E02 integration follow-up — September 14, 2026
 
 The diagnostic-only checkpoint above is now extended by experimental schema-2
