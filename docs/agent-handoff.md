@@ -212,6 +212,13 @@ failure follows the selected retry policy, and any identity mismatch reruns.
 Twenty focused qualification tests and strict Clippy pass. The remaining Q01
 gap is explicit expiry policy for time-sensitive upstream/image observations.
 
+Q01 freshness follow-up: schema-2 evidence records its qualification timestamp.
+Exact-identity evidence is reusable for at most 30 days; the boundary is
+inclusive, while missing timestamps and timestamps more than one day in the
+future refuse. Batch scheduling inherits this gate through `recorded_current`.
+Twenty-one focused tests and strict Clippy pass. Next distinguish the age of
+upstream/image observations from the age of the qualification execution itself.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

@@ -179,15 +179,16 @@ pub struct StepResult {
 
 /// What a qualification run concluded.
 ///
-/// Deliberately free of timestamps and durations: the same app in the same
-/// state has to produce the same bytes, or a diff cannot tell a real change
-/// from a re-run.
+/// Runtime duration stays out of evidence, while `recorded_at_unix` provides
+/// the bounded freshness needed to decide whether a pass may be reused.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Evidence {
     /// Version 0 is historical unversioned evidence. Version 1 adds mandatory
     /// all-service checks; neither version certifies the future managed engine.
     #[serde(default)]
     pub schema_version: u32,
+    #[serde(default)]
+    pub recorded_at_unix: u64,
     pub app: String,
     pub passed: bool,
     pub scope: String,
@@ -221,6 +222,9 @@ pub struct EvidenceIdentity {
 }
 
 impl Evidence {
+    pub const MAX_REUSE_AGE_SECS: u64 = 30 * 24 * 60 * 60;
+    const MAX_FUTURE_SKEW_SECS: u64 = 24 * 60 * 60;
+
     /// The failing step, if any. A run stops at the first failure, so this is
     /// the reason the whole thing failed.
     pub fn failure(&self) -> Option<&StepResult> {
@@ -232,8 +236,23 @@ impl Evidence {
     }
 
     pub fn is_current(&self, identity: &EvidenceIdentity) -> bool {
-        self.schema_version == 2 && self.identity.as_ref() == Some(identity)
+        self.is_current_at(identity, unix_now())
     }
+
+    pub fn is_current_at(&self, identity: &EvidenceIdentity, now_unix: u64) -> bool {
+        self.schema_version == 2
+            && self.identity.as_ref() == Some(identity)
+            && self.recorded_at_unix > 0
+            && self.recorded_at_unix <= now_unix.saturating_add(Self::MAX_FUTURE_SKEW_SECS)
+            && now_unix.saturating_sub(self.recorded_at_unix) <= Self::MAX_REUSE_AGE_SECS
+    }
+}
+
+fn unix_now() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|duration| duration.as_secs())
+        .unwrap_or_default()
 }
 
 /// Records steps in order and refuses to keep going once one has failed.
@@ -857,6 +876,7 @@ fn finish(
     };
     Evidence {
         schema_version: 2,
+        recorded_at_unix: unix_now(),
         app: about.app.clone(),
         passed: results.iter().all(|step| step.passed),
         scope: format!(
@@ -1062,6 +1082,7 @@ mod tests {
     fn evidence_is_deterministic_and_names_its_failing_step() {
         let evidence = Evidence {
             schema_version: 2,
+            recorded_at_unix: unix_now(),
             app: "example".into(),
             passed: false,
             scope: "one host".into(),
@@ -1305,6 +1326,7 @@ ccc",
     fn evidence_for(app: &str, passed: bool) -> Evidence {
         Evidence {
             schema_version: 2,
+            recorded_at_unix: unix_now(),
             app: app.into(),
             passed,
             scope: "one host".into(),
@@ -1466,6 +1488,21 @@ ccc",
             vec![&"one".to_owned()]
         );
         std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn expired_missing_or_future_dated_proof_is_never_current() {
+        let identity = sample_identity();
+        let now = 2_000_000_000;
+        let mut evidence = evidence_for("example", true);
+        evidence.recorded_at_unix = now - Evidence::MAX_REUSE_AGE_SECS;
+        assert!(evidence.is_current_at(&identity, now));
+        evidence.recorded_at_unix -= 1;
+        assert!(!evidence.is_current_at(&identity, now));
+        evidence.recorded_at_unix = 0;
+        assert!(!evidence.is_current_at(&identity, now));
+        evidence.recorded_at_unix = now + Evidence::MAX_FUTURE_SKEW_SECS + 1;
+        assert!(!evidence.is_current_at(&identity, now));
     }
 
     #[test]
