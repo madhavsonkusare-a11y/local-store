@@ -24,6 +24,7 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
+mod resource_usage;
 mod service_health;
 
 /// Where in an app's life a first-use check is being run.
@@ -199,10 +200,65 @@ pub struct Evidence {
     /// a tag that may since have moved.
     pub image_ids: BTreeMap<String, String>,
     pub first_use: String,
+    /// Runtime measurements from the same lifecycle run. Older evidence stays
+    /// readable but cannot satisfy the stronger resource-aware gate.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub measurements: Option<ResourceMeasurements>,
     pub steps: Vec<StepResult>,
     /// Immutable inputs and runtime facts that determine what this pass proves.
     #[serde(default)]
     pub identity: Option<EvidenceIdentity>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ResourceMeasurements {
+    pub first_start_millis: u64,
+    pub samples: u32,
+    pub idle_memory_bytes: BTreeMap<String, u64>,
+    pub peak_memory_bytes: BTreeMap<String, u64>,
+    pub peak_total_memory_bytes: u64,
+}
+
+impl ResourceMeasurements {
+    fn new(first_start_millis: u64) -> Self {
+        Self {
+            first_start_millis,
+            samples: 0,
+            idle_memory_bytes: BTreeMap::new(),
+            peak_memory_bytes: BTreeMap::new(),
+            peak_total_memory_bytes: 0,
+        }
+    }
+
+    fn observe(&mut self, sample: BTreeMap<String, u64>) {
+        if self.samples == 0 {
+            self.idle_memory_bytes = sample.clone();
+        }
+        let total = sample
+            .values()
+            .try_fold(0_u64, |total, bytes| total.checked_add(*bytes))
+            .unwrap_or(u64::MAX);
+        self.peak_total_memory_bytes = self.peak_total_memory_bytes.max(total);
+        for (container, bytes) in sample {
+            self.peak_memory_bytes
+                .entry(container)
+                .and_modify(|peak| *peak = (*peak).max(bytes))
+                .or_insert(bytes);
+        }
+        self.samples = self.samples.saturating_add(1);
+    }
+
+    fn reusable(&self) -> bool {
+        self.first_start_millis > 0
+            && self.samples >= 3
+            && !self.idle_memory_bytes.is_empty()
+            && self
+                .idle_memory_bytes
+                .keys()
+                .all(|name| self.peak_memory_bytes.contains_key(name))
+            && self.peak_total_memory_bytes
+                >= self.peak_memory_bytes.values().copied().max().unwrap_or(0)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -248,6 +304,10 @@ impl Evidence {
     pub fn is_current_at(&self, identity: &EvidenceIdentity, now_unix: u64) -> bool {
         self.schema_version == 2
             && self.identity.as_ref() == Some(identity)
+            && self
+                .measurements
+                .as_ref()
+                .is_some_and(ResourceMeasurements::reusable)
             && self.recorded_at_unix > 0
             && self.recorded_at_unix <= now_unix.saturating_add(Self::MAX_FUTURE_SKEW_SECS)
             && now_unix.saturating_sub(self.recorded_at_unix) <= Self::MAX_REUSE_AGE_SECS
@@ -799,6 +859,7 @@ pub fn qualify_template(
         });
     }
 
+    let first_start = std::time::Instant::now();
     let installed = steps.run("installs with one action", || {
         crate::runtime::install_template_on_engine(&template, &display_name, answers, &binding)
             .map_err(|error| error.message)
@@ -809,17 +870,31 @@ pub fn qualify_template(
             (&template, &binding, &compose_version),
             images,
             BTreeMap::new(),
+            None,
             first_use,
             steps,
         ));
     };
 
-    steps.run("answers on its address", || {
+    let answered_on_first_start = steps.run("answers on its address", || {
         answered(&probe, &installed.launch_url, health)
     });
+    let mut measurements =
+        answered_on_first_start.map(|()| {
+            ResourceMeasurements::new(
+                first_start.elapsed().as_millis().min(u128::from(u64::MAX)) as u64
+            )
+        });
     steps.run("all services are ready after install", || {
         service_health::wait(&runner, &template.plan, &isolation.project, health)
     });
+    if let Some(sample) = steps.run("measures resources after install", || {
+        resource_usage::snapshot(&runner, &isolation.project)
+    }) {
+        if let Some(measurements) = &mut measurements {
+            measurements.observe(sample);
+        }
+    }
     steps.run(format!("is usable {}", Phase::FirstInstall.label()), || {
         first_use.exercise(Phase::FirstInstall, &installed.launch_url)
     });
@@ -841,6 +916,13 @@ pub fn qualify_template(
     steps.run("all services are ready after restart", || {
         service_health::wait(&runner, &template.plan, &isolation.project, health)
     });
+    if let Some(sample) = steps.run("measures resources after restart", || {
+        resource_usage::snapshot(&runner, &isolation.project)
+    }) {
+        if let Some(measurements) = &mut measurements {
+            measurements.observe(sample);
+        }
+    }
 
     let again = steps.run("reinstalls over data it kept", || {
         crate::runtime::uninstall_and_remove(&installed, false).map_err(|error| error.message)?;
@@ -879,6 +961,13 @@ pub fn qualify_template(
         steps.run("all services are ready after reinstall", || {
             service_health::wait(&runner, &template.plan, &isolation.project, health)
         });
+        if let Some(sample) = steps.run("measures resources after reinstall", || {
+            resource_usage::snapshot(&runner, &isolation.project)
+        }) {
+            if let Some(measurements) = &mut measurements {
+                measurements.observe(sample);
+            }
+        }
         steps.run(
             format!("is usable {}", Phase::AfterReinstall.label()),
             || first_use.exercise(Phase::AfterReinstall, &again.launch_url),
@@ -906,6 +995,7 @@ pub fn qualify_template(
         (&template, &binding, &compose_version),
         images,
         image_ids,
+        measurements,
         first_use,
         steps,
     ))
@@ -960,6 +1050,7 @@ fn finish(
     runtime: (&PlanTemplate, &crate::runtime::engine::EngineBinding, &str),
     images: Vec<String>,
     image_ids: BTreeMap<String, String>,
+    measurements: Option<ResourceMeasurements>,
     first_use: &dyn FirstUse,
     steps: Steps,
 ) -> Evidence {
@@ -1001,6 +1092,7 @@ fn finish(
         images,
         image_ids,
         first_use: first_use.describes().to_owned(),
+        measurements,
         steps: results,
         identity: Some(identity),
     }
@@ -1206,6 +1298,7 @@ mod tests {
                 .into_iter()
                 .collect(),
             first_use: "it opens".into(),
+            measurements: None,
             steps: vec![
                 StepResult {
                     step: "install".into(),
@@ -1448,6 +1541,13 @@ ccc",
             images: vec!["example/app:1.0".into()],
             image_ids: BTreeMap::new(),
             first_use: "it opens".into(),
+            measurements: Some(ResourceMeasurements {
+                first_start_millis: 1_000,
+                samples: 3,
+                idle_memory_bytes: [("example-1".into(), 1_024)].into_iter().collect(),
+                peak_memory_bytes: [("example-1".into(), 2_048)].into_iter().collect(),
+                peak_total_memory_bytes: 2_048,
+            }),
             steps: vec![StepResult {
                 step: "install".into(),
                 passed,
@@ -1562,6 +1662,9 @@ ccc",
         batch.record(&evidence).unwrap();
         let current = evidence.identity.clone().unwrap();
         assert!(batch.recorded_current("example", &current).is_some());
+        let mut without_measurements = evidence.clone();
+        without_measurements.measurements = None;
+        assert!(!without_measurements.is_current(&current));
 
         let mut changed = current.clone();
         changed.plan_sha256 = "3".repeat(64);

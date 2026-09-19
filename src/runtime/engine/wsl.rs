@@ -145,7 +145,16 @@ pub(crate) fn runtime_command(spec: &CommandSpec) -> AppResult<CommandSpec> {
     }
     if spec.cwd.is_some()
         || !spec.args.first().is_some_and(|a| {
-            ["pull", "inspect", "image", "container", "network", "volume"].contains(&a.as_str())
+            [
+                "pull",
+                "inspect",
+                "image",
+                "container",
+                "network",
+                "volume",
+                "stats",
+            ]
+            .contains(&a.as_str())
         })
     {
         return Err(AppError::invalid("Unsupported WSL engine command."));
@@ -283,5 +292,20 @@ mod tests {
             DIAGNOSTIC_TIMEOUT
         ))
         .is_err());
+    }
+
+    #[test]
+    fn project_scoped_stats_use_the_owned_engine_without_a_shell() {
+        let command = runtime_command(&CommandSpec::new(
+            "docker",
+            vec!["stats".into(), "--no-stream".into(), "abc123".into()],
+            None,
+            DIAGNOSTIC_TIMEOUT,
+        ))
+        .unwrap();
+        assert_eq!(command.program, "wsl.exe");
+        assert!(command.args.iter().any(|arg| arg == "stats"));
+        assert!(command.args.iter().any(|arg| arg == "abc123"));
+        assert!(!command.args.iter().any(|arg| arg == "sh"));
     }
 }

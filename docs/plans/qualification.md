@@ -72,9 +72,11 @@ already offered.
 before installing, and the store cannot answer it. Kotaemon's 15.9 GB image
 is known only because somebody looked it up by hand.
 
-**Change.** Sample `docker stats --no-stream` during the usable phases; add a
-`measurements` field to `Evidence` (`src/qualification.rs`) holding idle and
-peak memory per container and the measured first-start seconds. Have
+**Checkpoint.** Qualification now samples project-scoped
+`docker stats --no-stream` after install, restart and reinstall. Evidence holds
+time-to-first-answer, the first idle sample, peak memory per container and peak
+total memory. Missing samples make older evidence ineligible for reuse. Image
+and persistent-disk measurements plus explicit limits remain. Have
 `scripts/generate-first-party.py` and `scripts/generate-template.py` turn it
 into a risk note ("Needs about N GB of memory with every service running").
 

@@ -415,7 +415,7 @@ fn ownership_token_source(state_dir: &Path) -> AppResult<String> {
     #[cfg(all(test, not(windows)))]
     {
         let _ = state_dir;
-        return Ok("/mnt/c/local-store-test/ownership-token".into());
+        Ok("/mnt/c/local-store-test/ownership-token".into())
     }
     #[cfg(not(all(test, not(windows))))]
     {

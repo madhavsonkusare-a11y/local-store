@@ -187,7 +187,17 @@ path is Windows-only. Test journals now use Windows-shaped install paths, and
 the test-only token-source adapter keeps Linux temporary paths out of the
 production Windows path translator. The runtime path still translates only a
 canonical local Windows path. The prior assertion also now compares the command
-program as a string on every host. Re-run the full workflow after this commit.
+program as a string on every host. The minimum-Rust job passed; Linux strict
+Clippy then found one needless return in its test-only branch, which is removed
+in the Q02 measurement batch. Re-run the full workflow after that commit.
+
+Q02 measurement checkpoint: qualification evidence now records measured
+time-to-first-answer and project-scoped memory after install, restart and
+reinstall. The first sample is the idle baseline; per-container and total peaks
+are retained across phases. Missing or incomplete measurements cannot suppress
+a later run. WSL routing admits the same shell-free `docker stats` command, so
+the bundled engine uses one evidence path. Disk/image size limits and a real
+managed-engine measurement remain next.
 
 Real managed-engine checkpoint: the cached rootfs matched its recorded
 464,494,592-byte SHA-256 and was imported as the fixed WSL2 distro alongside
