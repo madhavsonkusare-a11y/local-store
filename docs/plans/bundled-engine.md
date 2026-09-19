@@ -212,6 +212,13 @@ authenticated manifest and payload digest before import; checksum equality alone
 does not authenticate a remotely supplied manifest. Downloads and imports need
 bounded execution, progress, cancellation and resumable failures.
 
+The launcher status now performs a read-only, bounded `wsl.exe --status`
+probe. It classifies command absence and a rejected status without parsing
+localized output, and tells the UI that future remediation needs administrator
+elevation and may need a restart. It does not enable Windows features, elevate,
+download, import or change a default distro. Disk and virtualization-specific
+checks plus the consented setup action remain.
+
 An existing WSL installation is not a clean-machine test. Prove bootstrap on a
 Windows x64 host without Docker Desktop, including consent/restart cases. Check
 loopback forwarding, bind permissions, all Compose dependency conditions and

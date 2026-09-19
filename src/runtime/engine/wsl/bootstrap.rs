@@ -5,7 +5,7 @@
 use super::DISTRO;
 use crate::{
     error::{AppError, AppResult},
-    runtime::{CommandSpec, ProcessRunner, DIAGNOSTIC_TIMEOUT},
+    runtime::{CommandSpec, ProcessErrorCode, ProcessRunner, DIAGNOSTIC_TIMEOUT},
     storage,
 };
 use serde::{Deserialize, Serialize};
@@ -49,6 +49,37 @@ pub enum BootstrapStatus {
         phase: BootstrapState,
         disposition: RecoveryDisposition,
     },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WslPrerequisiteState {
+    Ready,
+    SetupRequired,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WslPrerequisiteReason {
+    CommandMissing,
+    StatusRejected,
+}
+
+/// A stable launcher contract for Windows setup. Human-readable `wsl.exe`
+/// output is localized, so only process availability and exit status are used.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub struct WslPrerequisites {
+    pub state: WslPrerequisiteState,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason: Option<WslPrerequisiteReason>,
+    pub setup_requires_elevation: bool,
+    pub restart_may_be_required: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub struct ManagedEngineStatus {
+    pub bootstrap: BootstrapStatus,
+    pub prerequisites: WslPrerequisites,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -238,6 +269,42 @@ fn wsl_command(args: Vec<String>, timeout: std::time::Duration) -> CommandSpec {
     let mut spec = CommandSpec::new("wsl.exe", args, None, timeout);
     spec.remove_env.push("WSLENV".into());
     spec
+}
+
+/// Read-only Windows prerequisite probe. It never enables a feature, requests
+/// elevation, installs WSL, changes the default distro, or starts an import.
+pub fn prerequisites(runner: &dyn ProcessRunner) -> AppResult<WslPrerequisites> {
+    let output = match runner.run(&wsl_command(vec!["--status".into()], DIAGNOSTIC_TIMEOUT)) {
+        Ok(output) => output,
+        Err(error) if error.code == ProcessErrorCode::ProcessUnavailable => {
+            return Ok(WslPrerequisites {
+                state: WslPrerequisiteState::SetupRequired,
+                reason: Some(WslPrerequisiteReason::CommandMissing),
+                setup_requires_elevation: true,
+                restart_may_be_required: true,
+            });
+        }
+        Err(error) => return Err(error.into()),
+    };
+    if output.truncated {
+        return Err(AppError::invalid(
+            "WSL prerequisite status returned incomplete output.",
+        ));
+    }
+    if !output.success {
+        return Ok(WslPrerequisites {
+            state: WslPrerequisiteState::SetupRequired,
+            reason: Some(WslPrerequisiteReason::StatusRejected),
+            setup_requires_elevation: true,
+            restart_may_be_required: true,
+        });
+    }
+    Ok(WslPrerequisites {
+        state: WslPrerequisiteState::Ready,
+        reason: None,
+        setup_requires_elevation: false,
+        restart_may_be_required: false,
+    })
 }
 
 /// Read-only collision gate. It never imports, terminates or unregisters WSL.
@@ -567,6 +634,14 @@ pub fn inspect(runner: &dyn ProcessRunner, state_dir: &Path) -> AppResult<Bootst
     Ok(BootstrapStatus::Recovery {
         phase: journal.state,
         disposition: classify_recovery(runner, state_dir)?,
+    })
+}
+
+/// Compose the read-only Windows setup and recovery state for the launcher.
+pub fn status(runner: &dyn ProcessRunner, state_dir: &Path) -> AppResult<ManagedEngineStatus> {
+    Ok(ManagedEngineStatus {
+        bootstrap: inspect(runner, state_dir)?,
+        prerequisites: prerequisites(runner)?,
     })
 }
 
@@ -919,6 +994,74 @@ mod tests {
             stderr: String::new(),
             truncated: false,
         })
+    }
+
+    #[test]
+    fn prerequisites_report_windows_action_without_parsing_localized_text() {
+        let ready = inventory("localized output is deliberately ignored");
+        assert_eq!(
+            prerequisites(&ready).unwrap(),
+            WslPrerequisites {
+                state: WslPrerequisiteState::Ready,
+                reason: None,
+                setup_requires_elevation: false,
+                restart_may_be_required: false,
+            }
+        );
+        let calls = ready.calls.lock().unwrap();
+        assert_eq!(calls.len(), 1);
+        assert_eq!(calls[0].program, "wsl.exe");
+        assert_eq!(calls[0].args, ["--status"]);
+        assert!(calls[0].remove_env.contains(&"WSLENV".into()));
+        drop(calls);
+
+        let rejected = Inventory {
+            output: ProcessOutput {
+                success: false,
+                stderr: "localized failure".into(),
+                ..ProcessOutput::default()
+            },
+            calls: Mutex::new(Vec::new()),
+        };
+        assert_eq!(
+            prerequisites(&rejected).unwrap(),
+            WslPrerequisites {
+                state: WslPrerequisiteState::SetupRequired,
+                reason: Some(WslPrerequisiteReason::StatusRejected),
+                setup_requires_elevation: true,
+                restart_may_be_required: true,
+            }
+        );
+
+        let missing = Sequence {
+            outputs: Mutex::new(VecDeque::from([Err(ProcessError::new(
+                ProcessErrorCode::ProcessUnavailable,
+                "wsl.exe is absent",
+            ))])),
+        };
+        assert_eq!(
+            prerequisites(&missing).unwrap().reason,
+            Some(WslPrerequisiteReason::CommandMissing)
+        );
+    }
+
+    #[test]
+    fn launcher_status_combines_prerequisites_without_mutating_bootstrap() {
+        let root = temp();
+        let ready = inventory("");
+        assert_eq!(
+            status(&ready, &root).unwrap(),
+            ManagedEngineStatus {
+                bootstrap: BootstrapStatus::NotConfigured,
+                prerequisites: WslPrerequisites {
+                    state: WslPrerequisiteState::Ready,
+                    reason: None,
+                    setup_requires_elevation: false,
+                    restart_may_be_required: false,
+                },
+            }
+        );
+        assert!(!root.exists());
     }
 
     #[test]

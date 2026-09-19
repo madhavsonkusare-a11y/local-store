@@ -36,6 +36,9 @@ V1 release gate. The new signing requirement supersedes its earlier deferral.
 Windows x64 is now the only active build and certification target. The existing
 macOS/Linux implementation and release-staging code are retained for later;
 do not spend current V1 work or CI capacity extending or certifying them.
+The first Windows-only quality run exposed Python's inherited cp1252 decoding
+of Cargo's captured output. The MSRV, licence and advisory gates now parse JSON
+as UTF-8 bytes and use replacement decoding only for failure diagnostics.
 V2 is reference material; do not start its production integration while V3 is
 being designed.
 
@@ -184,6 +187,13 @@ missing state makes no WSL call. The state is kept under machine-local app data,
 not roaming profile data. Thirteen focused bootstrap tests pass. Explicit setup
 consent, prerequisite/elevation guidance and every destructive recovery action
 remain unimplemented.
+
+Windows prerequisite follow-up: the same launcher command now wraps bootstrap
+state with a bounded `wsl.exe --status` result. It uses only availability and
+exit status, never localized output, and reports whether future remediation
+requires elevation and may require restart. It performs no setup mutation.
+Consent, elevated execution, disk/virtualization checks and recovery actions
+remain.
 
 CI fixture follow-up: Linux jobs compile the WSL module even though the product
 path is Windows-only. Test journals now use Windows-shaped install paths, and
