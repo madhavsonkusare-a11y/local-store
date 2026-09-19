@@ -12,7 +12,7 @@ agents controlled access to the store and installed apps.
 
 | Decision | Source / consequence |
 | --- | --- |
-| 100 distinct tested or verified offerings, selected for reach and diversity | Owner decision recorded September 10 in the backend plan; retained. 52 currently offered is a milestone, not a revised target. |
+| 50 managed-engine-verified apps for V1 | Owner decision recorded September 19. Select the release roster from today's 52 offerings; the frozen 100-app roster remains a future research and replacement pool, not a V1 release gate. |
 | Bundled engine required | Owner confirmed September 12. WSL prerequisites may still require consent, administrator access or restart; do not promise zero prerequisites. |
 | V3 frontend | Owner is developing V3. Do not implement V2 as the final UI. Its approved assets and interaction findings remain reference material. |
 | Signed Windows delivery and automatic updater required | Owner confirmed September 12, superseding the September 8 deferral. Code signing and updater signatures are separate requirements. |
@@ -60,7 +60,7 @@ Use one bounded batch at a time. Do not run concurrent Docker qualifications.
 | --- | --- | --- | --- |
 | R01 | DONE | PRs #3–#6 merged; main `7d9e0d3` matches tested head `720ce23` exactly. Remaining feature/design branches removed after ancestry verification. Archive tag and saved drafts preserved; no open PRs. | — |
 | R02 | DONE | Published this sole ledger, [documentation index](README.md) and short [handoff](agent-handoff.md). Retired seven superseded documents, organized plans/research, retained evidence and frozen V2 assets, and checked local links. | — |
-| R03 | DONE | Froze [100 canonical apps](v1-app-roster.md) with [full acceptance matrix](../catalog/v1-roster.json), explicit membership and upstream snapshots. Offline generator validates 52 baseline + 48 candidates and input drift. Resources, managed-engine proof and agent access remain pending, not implied by selection. | R02 |
+| R03 | DONE | Froze a [100-app planning roster](v1-app-roster.md) with [full acceptance matrix](../catalog/v1-roster.json), explicit membership and upstream snapshots. Offline generator validates 52 baseline + 48 candidates and input drift. It is a future sourcing and replacement pool; V1 release requires 50 verified selections from the current 52 offerings. Resources, managed-engine proof and agent access remain pending, not implied by selection. | R02 |
 
 ## 1 — Runtime foundation and proof contract
 
@@ -104,7 +104,7 @@ Architecture: [backend coverage](backend-app-coverage-plan.md).
 | --- | --- | --- | --- |
 | C01 | PARTIAL | Refresh candidate/ranking reports after importer changes and screen source/image maintenance before costly runs. Existing generators work; remeasure for the V1 roster and preserve alternate definitions. No sum of overlapping source counts becomes a unique-app total. | R03 |
 | C02 | TODO | Add only capabilities needed by the selected roster, reusing existing definitions and normalized plans. Each change needs refusal tests, measured incremental coverage and one real proof. Nextcloud's program files need named storage; avoid broad binary-seed work just to force Calibre-Web through. | C01, E02 |
-| C03 | PARTIAL | Reach 100 distinct accepted offerings: at least 48 additions from today's 52, plus replacements for any demotions. Every release offering passes the new managed-engine lifecycle and setup gates; separately list zero-input, setup-assisted and meaningful-task verification counts. | Q03, Q04, C02 |
+| C03 | PARTIAL | Release 50 selected offerings from today's 52 baseline. Every release offering passes managed-engine lifecycle, setup and meaningful-task verification gates; separately list zero-input, setup-assisted and verified-task counts. Replace a demotion only through a reviewed promotion from the frozen planning roster. | Q03, Q04, C02 |
 | C04 | TODO | Resolve a public GitHub URL to a known approved app first; otherwise inspect bounded, commit-pinned deployment metadata and return a reviewable candidate/reason. Demonstrate known match, supported new candidate, redirects/invalid input and unsupported repo. Never run README commands. | A01, C01 |
 | C05 | TODO | Show evidence-derived install/proof/agent capabilities in V3. Do not confuse catalog presence, image-platform metadata, lifecycle testing or agent tool presence with successful first use. External keys/accounts/GPU needs must appear before download. | Q01, A01, F01 |
 
@@ -145,14 +145,15 @@ keys, submit applications, incur costs or publish a release.
 1. Finish R01 and commit this documentation cleanup (R02).
 2. E01/E02 + Q01/Q02: choose engine packaging, add the seam and evidence contract.
    In the same planning batch, establish A01 so proof records cover agent access.
-3. E03/E04 and Q03: prove the managed engine before spending time qualifying 48+
-   more apps against the old runtime. Start S01/S03 enrollment in parallel with
+3. E03/E04 and Q03: prove the managed engine before the 50-app qualification
+   campaign. Start S01/S03 enrollment in parallel with
    owner work because credentials and providers have external lead time.
 4. A02–A05 and Q04/Q05: demonstrate store control and three distinct app-access
    methods with meaningful tasks, permissions and recovery.
-5. C01–C05 and A06: expand in bounded, reviewed batches toward 100, with agent
-   access measured alongside installation. Do not schedule a second proof run
-   over the same host while one is active.
+5. C01–C05 and A06: qualify the selected 50 in bounded, reviewed batches, with
+   agent access measured alongside installation. Use the planning roster only
+   to replace a demotion. Do not schedule a second proof run over the same host
+   while one is active.
 6. Integrate F02 contracts as needed; F03/F04 start only after V3 approval.
 7. Finish security, signing/update proof and the actual Windows release gate.
 
@@ -170,5 +171,6 @@ in a research paper or prototype.
 [The reconciled Hermes ledger](upgrade-status.md) records the original work.
 It is a historical traceability table, not a second queue. The former signed
 update deferral is revoked by the current owner decision; tasks 29–31/33 must
-be re-proven for the actual signed V1 candidate. The 100-app goal, managed
-engine, agent gateway and V3 work are additional requirements.
+be re-proven for the actual signed V1 candidate. The managed engine, agent
+gateway and V3 work are additional requirements; the 100-app roster is retained
+for future expansion rather than required for V1 release.

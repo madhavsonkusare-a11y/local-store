@@ -11,7 +11,7 @@ Only the master ledger owns task status and release scope. Updated September 12,
 | Detailed plans | [Managed engine](plans/bundled-engine.md), [qualification](plans/qualification.md), [agent access](plans/agent-access.md) | Implementation detail subordinate to the master ledger |
 | Product design | [Design index](design/README.md), [V2 reference handoff](design/v2/HANDOFF.md) | V3 is owner-led and pending; V2 is an approved reference, not the current implementation target |
 | Operations | [CLI](cli.md), [recovery](interrupted-install-recovery.md), [security/privacy](security-and-privacy.md) | Current behavior and supported actions |
-| V1 roster | [100-app roster](v1-app-roster.md), [acceptance matrix](../catalog/v1-roster.json) | Frozen membership and per-app gaps; planning is not qualification |
+| V1 roster | [100-app planning roster](v1-app-roster.md), [acceptance matrix](../catalog/v1-roster.json) | Future sourcing and replacement pool; planning is not qualification |
 | Catalog | [Contribution guide](catalog.md), [recipe requirements](recipe-requirements.md) | Reproduction, sources, image and manifest requirements |
 | Generated reports | [Queue baseline](candidate-queue-baseline.md), [ranking](candidate-ranking.md), [CapRover imports](caprover-import-report.md), [Runtipi imports](runtipi-import-report.md), [CapRover setup](caprover-setup-report.md), [source audit](caprover-source-audit.md) | Measurements at pinned revisions; regenerate through their scripts, never edit counts by hand |
 | Evidence | [Recipe lifecycle](recipe-lifecycle-proof.md), `evidence/*.json`, [lessons](lessons.md) | Dated evidence and hard-won implementation constraints; not proof of an untested future release |

@@ -37,7 +37,9 @@ Worth saying plainly, because the store does not yet say it:
 
 The integration baseline has 52 offerings. The old twelve-app batch is finished
 in its manifests; it is not the next task. V1 now requires the bundled engine,
-100 offerings, V3, signed updates and agent access across the release roster.
+50 verified release apps, V3, signed updates and agent access across the
+release roster. The frozen 100-app planning roster remains available for future
+expansion and reviewed replacements.
 Task ownership and dependencies are Q01–Q05/C03/A06 in
 [V1_TASKS.md](../V1_TASKS.md). The detail below explains the proof requirements.
 Historical Memos upgrade evidence exists; it does not prove template upgrades.

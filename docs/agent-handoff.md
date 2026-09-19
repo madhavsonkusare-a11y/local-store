@@ -1,6 +1,6 @@
 # Agent handoff
 
-Updated September 14, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
+Updated September 19, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
 
 ## Current work and checkout
@@ -28,11 +28,13 @@ consolidated V1 documentation plus the frozen 100-app planning roster.
 
 ## Owner decisions to carry forward
 
-V1 requires 100 distinct tested/verified offerings (existing target), a bundled
-engine, owner-led V3 frontend, signed Windows delivery, an automatic updater,
-and agents managing the store and accessing every offered app. The new signing
-requirement supersedes its earlier deferral. V2 is reference material; do not
-start its production integration while V3 is being designed.
+V1 requires 50 managed-engine-verified apps selected from the 52 current
+offerings, a bundled engine, owner-led V3 frontend, signed Windows delivery, an
+automatic updater, and agents managing the store and accessing every offered
+app. The frozen 100-app roster is a future sourcing and replacement pool, not a
+V1 release gate. The new signing requirement supersedes its earlier deferral.
+V2 is reference material; do not start its production integration while V3 is
+being designed.
 
 Source-available apps remain allowed with accurate notices. The eight Umbrel
 icons remain under the owner's existing retain-with-NOASSERTION decision;
@@ -75,8 +77,11 @@ that does not settle broad distribution rights. Shrimply remains excluded.
   exposed Docker's absent `State.Health` field; the format now uses optional
   lookup. Keep that real regression when changing the inspection format.
 - CI for checkpoint `c05206c` passed all jobs (run 34754367417).
-- The previous main CI failure was a stale mandatory `00_Design_Notes.md` path
-  in `tests/brand_strings.rs`; the current docs remain recursively scanned.
+- Main quality CI failure in run 34872950783 was traced to Linux fixtures using
+  `/tmp` install paths while the production journal correctly requires a Windows
+  path. The test helper now uses a Windows-shaped path on non-Windows CI and a
+  real temporary path on Windows. Focused bootstrap tests and format check pass;
+  push and confirm the full workflow before closing the incident.
 - A separate local `CHANGELOG.md` edit was present and excluded from this batch.
 - No historical app evidence or promotion was rewritten. Schema 1 still does
   not mean V1 qualified, resource-measured, or agent-accessible.
@@ -191,8 +196,8 @@ owned distro/data layout and path translation. Systemd alone does not keep WSL
 alive; E04 must prove background operation and coexistence. Never shut down all
 WSL distros or remove a distro owned by another product.
 
-Complete Q01 identity/freshness and Q02 RAM/disk/startup measurements before Q03's
-52-app requalification. Do not call Docker Desktop fixtures managed-engine proof.
+Complete Q01 identity/freshness and Q02 RAM/disk/startup measurements before the
+50-app release qualification. Do not call Docker Desktop fixtures managed-engine proof.
 V3 and owner/provider signing credentials remain external inputs. No signing key,
 account, spending or release publication was created by this batch.
 

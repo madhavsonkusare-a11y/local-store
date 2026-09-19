@@ -629,6 +629,21 @@ mod tests {
                 .as_nanos()
         ))
     }
+    /// Journals model a Windows-owned directory. Linux CI needs a valid
+    /// Windows-shaped fixture while Windows uses a live temporary directory.
+    fn fixture_install_dir(parent: &Path) -> PathBuf {
+        #[cfg(windows)]
+        {
+            parent.join("data")
+        }
+        #[cfg(not(windows))]
+        {
+            PathBuf::from(format!(
+                r"C:\local-store-bootstrap-{}",
+                parent.file_name().unwrap().to_string_lossy()
+            ))
+        }
+    }
     fn journal() -> BootstrapJournal {
         BootstrapJournal::new(
             PathBuf::from(r"C:\ProgramData\Local Store\engine-v1"),
@@ -797,7 +812,7 @@ mod tests {
         let rootfs = parent.join("rootfs.tar");
         fs::write(&rootfs, b"payload").unwrap();
         let state = parent.join("state");
-        let install = parent.join("data");
+        let install = fixture_install_dir(&parent);
         for (bytes, digest) in [
             (6, "a".repeat(64)),
             (7, "a".repeat(64)),
@@ -867,7 +882,7 @@ mod tests {
             let rootfs = parent.join("rootfs.tar");
             fs::write(&rootfs, b"payload").unwrap();
             let journal = BootstrapJournal::new(
-                parent.join("data"),
+                fixture_install_dir(&parent),
                 format!("{:x}", Sha256::digest(b"payload")),
                 "01234567-89ab-cdef-0123-456789abcdef".into(),
             )
@@ -887,7 +902,7 @@ mod tests {
         let rootfs = parent.join("rootfs.tar");
         fs::write(&rootfs, b"payload").unwrap();
         let journal = BootstrapJournal::new(
-            parent.join("data"),
+            fixture_install_dir(&parent),
             format!("{:x}", Sha256::digest(b"payload")),
             "01234567-89ab-cdef-0123-456789abcdef".into(),
         )
@@ -911,7 +926,7 @@ mod tests {
     fn imported_fixture(parent: &Path) -> (PathBuf, BootstrapJournal) {
         let state = parent.join("state");
         let mut journal = BootstrapJournal::new(
-            parent.join("data"),
+            fixture_install_dir(parent),
             "a".repeat(64),
             "01234567-89ab-cdef-0123-456789abcdef".into(),
         )
@@ -1009,7 +1024,7 @@ mod tests {
         fs::create_dir_all(&parent).unwrap();
         let state = parent.join("state");
         let mut journal = BootstrapJournal::new(
-            parent.join("data"),
+            fixture_install_dir(&parent),
             "a".repeat(64),
             "01234567-89ab-cdef-0123-456789abcdef".into(),
         )
@@ -1060,7 +1075,7 @@ mod tests {
         let rootfs = parent.join("rootfs.tar");
         fs::write(&rootfs, b"payload").unwrap();
         let journal = BootstrapJournal::new(
-            parent.join("data"),
+            fixture_install_dir(&parent),
             format!("{:x}", Sha256::digest(b"payload")),
             "01234567-89ab-cdef-0123-456789abcdef".into(),
         )

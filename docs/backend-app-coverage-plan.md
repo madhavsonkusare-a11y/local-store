@@ -2,8 +2,9 @@
 
 Current execution status is in [V1_TASKS.md](V1_TASKS.md). This document
 replaces the stale B1–B9/V1–V6 queues with the architecture they established.
-The owner's V1 target remains 100 distinct tested or verified apps, in native
-windows, now with a managed engine and agent access.
+V1 targets 50 managed-engine-verified apps in native windows, with agent
+access. The frozen 100-app roster is retained as a research and replacement
+pool; roster membership does not make an app a V1 release candidate.
 
 ## Reuse the existing pipeline
 
@@ -27,7 +28,7 @@ Keep a single installer and operation/registry locking scheme.
 
 1. Rank canonical apps by reach and diversity, then choose the best supported
    definition for each. Do not add overlapping source totals or count variants
-   as progress toward 100.
+   as progress toward the 50-app release roster.
 2. Screen image freshness, supported platforms, license/setup requirements and
    upstream deployment before a costly run. Registry metadata is not a security
    review and a recent rebuild is not proof of a current app version.
