@@ -217,6 +217,14 @@ pub struct ResourceMeasurements {
     pub idle_memory_bytes: BTreeMap<String, u64>,
     pub peak_memory_bytes: BTreeMap<String, u64>,
     pub peak_total_memory_bytes: u64,
+    #[serde(default)]
+    pub idle_managed_storage_bytes: u64,
+    #[serde(default)]
+    pub peak_managed_storage_bytes: u64,
+    /// Virtual size per immutable image id. Shared layers make summing these
+    /// unsuitable as physical host usage, but each value is stable evidence.
+    #[serde(default)]
+    pub image_virtual_bytes: BTreeMap<String, u64>,
 }
 
 impl ResourceMeasurements {
@@ -227,19 +235,27 @@ impl ResourceMeasurements {
             idle_memory_bytes: BTreeMap::new(),
             peak_memory_bytes: BTreeMap::new(),
             peak_total_memory_bytes: 0,
+            idle_managed_storage_bytes: 0,
+            peak_managed_storage_bytes: 0,
+            image_virtual_bytes: BTreeMap::new(),
         }
     }
 
-    fn observe(&mut self, sample: BTreeMap<String, u64>) {
+    fn observe(&mut self, sample: resource_usage::Snapshot) {
         if self.samples == 0 {
-            self.idle_memory_bytes = sample.clone();
+            self.idle_memory_bytes = sample.memory_bytes.clone();
+            self.idle_managed_storage_bytes = sample.managed_storage_bytes;
         }
         let total = sample
+            .memory_bytes
             .values()
             .try_fold(0_u64, |total, bytes| total.checked_add(*bytes))
             .unwrap_or(u64::MAX);
         self.peak_total_memory_bytes = self.peak_total_memory_bytes.max(total);
-        for (container, bytes) in sample {
+        self.peak_managed_storage_bytes = self
+            .peak_managed_storage_bytes
+            .max(sample.managed_storage_bytes);
+        for (container, bytes) in sample.memory_bytes {
             self.peak_memory_bytes
                 .entry(container)
                 .and_modify(|peak| *peak = (*peak).max(bytes))
@@ -252,6 +268,7 @@ impl ResourceMeasurements {
         self.first_start_millis > 0
             && self.samples >= 3
             && !self.idle_memory_bytes.is_empty()
+            && !self.image_virtual_bytes.is_empty()
             && self
                 .idle_memory_bytes
                 .keys()
@@ -889,7 +906,7 @@ pub fn qualify_template(
         service_health::wait(&runner, &template.plan, &isolation.project, health)
     });
     if let Some(sample) = steps.run("measures resources after install", || {
-        resource_usage::snapshot(&runner, &isolation.project)
+        resource_usage::snapshot(&runner, &isolation.project, &isolation.project_dir())
     }) {
         if let Some(measurements) = &mut measurements {
             measurements.observe(sample);
@@ -917,7 +934,7 @@ pub fn qualify_template(
         service_health::wait(&runner, &template.plan, &isolation.project, health)
     });
     if let Some(sample) = steps.run("measures resources after restart", || {
-        resource_usage::snapshot(&runner, &isolation.project)
+        resource_usage::snapshot(&runner, &isolation.project, &isolation.project_dir())
     }) {
         if let Some(measurements) = &mut measurements {
             measurements.observe(sample);
@@ -962,7 +979,7 @@ pub fn qualify_template(
             service_health::wait(&runner, &template.plan, &isolation.project, health)
         });
         if let Some(sample) = steps.run("measures resources after reinstall", || {
-            resource_usage::snapshot(&runner, &isolation.project)
+            resource_usage::snapshot(&runner, &isolation.project, &isolation.project_dir())
         }) {
             if let Some(measurements) = &mut measurements {
                 measurements.observe(sample);
@@ -975,6 +992,13 @@ pub fn qualify_template(
     }
 
     let image_ids = resolved_images(&runner, &isolation.project);
+    if let Some(sizes) = steps.run("measures resolved image sizes", || {
+        resource_usage::image_sizes(&runner, &image_ids)
+    }) {
+        if let Some(measurements) = &mut measurements {
+            measurements.image_virtual_bytes = sizes;
+        }
+    }
 
     steps.run("removes everything it created", || {
         let target = again.as_ref().unwrap_or(&installed);
@@ -1547,6 +1571,9 @@ ccc",
                 idle_memory_bytes: [("example-1".into(), 1_024)].into_iter().collect(),
                 peak_memory_bytes: [("example-1".into(), 2_048)].into_iter().collect(),
                 peak_total_memory_bytes: 2_048,
+                idle_managed_storage_bytes: 4_096,
+                peak_managed_storage_bytes: 8_192,
+                image_virtual_bytes: [("sha256:abc".into(), 16_384)].into_iter().collect(),
             }),
             steps: vec![StepResult {
                 step: "install".into(),

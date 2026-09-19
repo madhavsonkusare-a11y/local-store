@@ -196,8 +196,11 @@ time-to-first-answer and project-scoped memory after install, restart and
 reinstall. The first sample is the idle baseline; per-container and total peaks
 are retained across phases. Missing or incomplete measurements cannot suppress
 a later run. WSL routing admits the same shell-free `docker stats` command, so
-the bundled engine uses one evidence path. Disk/image size limits and a real
-managed-engine measurement remain next.
+the bundled engine uses one evidence path. A follow-up records bounded managed
+bind-storage bytes at the same three points and virtual bytes for every unique
+resolved image id in one inspection. It rejects symlinks, overflow, excessive
+entry counts, malformed ids and partial image output. Named-volume measurement,
+explicit limits and a real managed-engine measurement remain next.
 
 Real managed-engine checkpoint: the cached rootfs matched its recorded
 464,494,592-byte SHA-256 and was imported as the fixed WSL2 distro alongside

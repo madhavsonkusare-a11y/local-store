@@ -75,8 +75,10 @@ is known only because somebody looked it up by hand.
 **Checkpoint.** Qualification now samples project-scoped
 `docker stats --no-stream` after install, restart and reinstall. Evidence holds
 time-to-first-answer, the first idle sample, peak memory per container and peak
-total memory. Missing samples make older evidence ineligible for reuse. Image
-and persistent-disk measurements plus explicit limits remain. Have
+total memory. The same samples measure bounded managed bind storage, and one
+batched image inspection records virtual bytes per deduplicated immutable image
+ID. Missing samples make older evidence ineligible for reuse. Named-volume
+measurement and explicit limits remain. Have
 `scripts/generate-first-party.py` and `scripts/generate-template.py` turn it
 into a risk note ("Needs about N GB of memory with every service running").
 

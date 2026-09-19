@@ -1,5 +1,6 @@
-//! Bounded, project-scoped memory sampling for qualification evidence.
+//! Bounded, project-scoped resource sampling for qualification evidence.
 use super::*;
+use std::path::Path;
 
 const STATS_FORMAT: &str = "{{.Name}}\t{{.MemUsage}}";
 
@@ -51,10 +52,49 @@ fn bytes(value: &str) -> Result<u64, String> {
         .ok_or_else(|| "memory usage overflowed".to_owned())
 }
 
+pub(super) struct Snapshot {
+    pub memory_bytes: BTreeMap<String, u64>,
+    pub managed_storage_bytes: u64,
+}
+
+fn directory_bytes(root: &Path) -> Result<u64, String> {
+    const MAX_ENTRIES: usize = 1_000_000;
+    let mut pending = vec![root.to_path_buf()];
+    let mut entries = 0_usize;
+    let mut total = 0_u64;
+    while let Some(directory) = pending.pop() {
+        let children = std::fs::read_dir(&directory)
+            .map_err(|_| "managed storage could not be read".to_owned())?;
+        for child in children {
+            let child = child.map_err(|_| "managed storage could not be read".to_owned())?;
+            entries += 1;
+            if entries > MAX_ENTRIES {
+                return Err("managed storage had too many entries to measure safely".into());
+            }
+            let metadata = child
+                .path()
+                .symlink_metadata()
+                .map_err(|_| "managed storage metadata could not be read".to_owned())?;
+            if metadata.file_type().is_symlink() {
+                return Err("managed storage contained a symbolic link".into());
+            }
+            if metadata.is_dir() {
+                pending.push(child.path());
+            } else if metadata.is_file() {
+                total = total
+                    .checked_add(metadata.len())
+                    .ok_or_else(|| "managed storage size overflowed".to_owned())?;
+            }
+        }
+    }
+    Ok(total)
+}
+
 pub(super) fn snapshot(
     runner: &dyn ProcessRunner,
     project: &str,
-) -> Result<BTreeMap<String, u64>, String> {
+    project_dir: &Path,
+) -> Result<Snapshot, String> {
     let listed = runner
         .run(&CommandSpec::new(
             "docker",
@@ -111,7 +151,56 @@ pub(super) fn snapshot(
     if sample.len() != ids.len() {
         return Err("container memory usage omitted or duplicated a container".into());
     }
-    Ok(sample)
+    Ok(Snapshot {
+        memory_bytes: sample,
+        managed_storage_bytes: directory_bytes(project_dir)?,
+    })
+}
+
+pub(super) fn image_sizes(
+    runner: &dyn ProcessRunner,
+    image_ids: &BTreeMap<String, String>,
+) -> Result<BTreeMap<String, u64>, String> {
+    let ids: std::collections::BTreeSet<_> = image_ids.values().cloned().collect();
+    if ids.is_empty()
+        || ids.iter().any(|id| {
+            !id.strip_prefix("sha256:").is_some_and(|digest| {
+                digest.len() == 64 && digest.bytes().all(|byte| byte.is_ascii_hexdigit())
+            })
+        })
+    {
+        return Err("resolved image ids were empty or invalid".into());
+    }
+    let mut args = vec![
+        "image".into(),
+        "inspect".into(),
+        "--format".into(),
+        "{{.Id}}\t{{.Size}}".into(),
+    ];
+    args.extend(ids.iter().cloned());
+    let output = runner
+        .run(&CommandSpec::new("docker", args, None, DIAGNOSTIC_TIMEOUT))
+        .map_err(|_| "resolved image sizes could not be read".to_owned())?;
+    if !output.success || output.truncated {
+        return Err("resolved image sizes failed or were truncated".into());
+    }
+    let mut sizes = BTreeMap::new();
+    for line in output.stdout.lines() {
+        let (id, size) = line
+            .split_once('\t')
+            .ok_or_else(|| "resolved image sizes had an invalid row".to_owned())?;
+        if !ids.contains(id) || sizes.contains_key(id) {
+            return Err("resolved image sizes named an unexpected image".into());
+        }
+        let size = size
+            .parse::<u64>()
+            .map_err(|_| "resolved image size was not an integer".to_owned())?;
+        sizes.insert(id.to_owned(), size);
+    }
+    if sizes.len() != ids.len() {
+        return Err("resolved image sizes omitted or duplicated an image".into());
+    }
+    Ok(sizes)
 }
 
 #[cfg(test)]
@@ -152,18 +241,53 @@ mod tests {
 
     #[test]
     fn a_snapshot_is_scoped_and_refuses_missing_rows() {
+        let root = std::env::temp_dir().join(format!(
+            "local-store-resource-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(root.join("data")).unwrap();
+        std::fs::write(root.join("data/item"), b"12345").unwrap();
         let runner = Sequence(Mutex::new(VecDeque::from([
             output("abc123\ndef456\n"),
             output("owned-web-1\t12.25MiB / 1GiB\nowned-db-1\t1.5KiB / 1GiB\n"),
         ])));
-        let sample = snapshot(&runner, "owned").unwrap();
-        assert_eq!(sample["owned-web-1"], 12_845_056);
-        assert_eq!(sample["owned-db-1"], 1_536);
+        let sample = snapshot(&runner, "owned", &root).unwrap();
+        assert_eq!(sample.memory_bytes["owned-web-1"], 12_845_056);
+        assert_eq!(sample.memory_bytes["owned-db-1"], 1_536);
+        assert_eq!(sample.managed_storage_bytes, 5);
 
         let missing = Sequence(Mutex::new(VecDeque::from([
             output("abc123\ndef456\n"),
             output("owned-web-1\t1MiB / 1GiB\n"),
         ])));
-        assert!(snapshot(&missing, "owned").is_err());
+        assert!(snapshot(&missing, "owned", &root).is_err());
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn image_sizes_are_deduplicated_and_exact() {
+        let a = format!("sha256:{}", "a".repeat(64));
+        let b = format!("sha256:{}", "b".repeat(64));
+        let runner = Sequence(Mutex::new(VecDeque::from([output(&format!(
+            "{a}\t123\n{b}\t456\n"
+        ))])));
+        let sizes = image_sizes(
+            &runner,
+            &[
+                ("web".into(), a.clone()),
+                ("worker".into(), a.clone()),
+                ("db".into(), b.clone()),
+            ]
+            .into_iter()
+            .collect(),
+        )
+        .unwrap();
+        assert_eq!(sizes.len(), 2);
+        assert_eq!(sizes[&a], 123);
+        assert_eq!(sizes[&b], 456);
     }
 }
