@@ -174,6 +174,14 @@ comparison of the external and in-distro ownership tokens; it never executes or
 deletes app data. Twelve focused tests and strict Clippy pass. Next add Windows
 prerequisite/elevation reporting and wire bootstrap recovery into product state.
 
+E03 status follow-up: `managed_engine_status` is now a launcher-only, read-only
+backend command. It reports either `not_configured` or a recovery phase and safe
+disposition without exposing an ownership token, payload digest or data path;
+missing state makes no WSL call. The state is kept under machine-local app data,
+not roaming profile data. Thirteen focused bootstrap tests pass. Explicit setup
+consent, prerequisite/elevation guidance and every destructive recovery action
+remain unimplemented.
+
 Real managed-engine checkpoint: the cached rootfs matched its recorded
 464,494,592-byte SHA-256 and was imported as the fixed WSL2 distro alongside
 Docker Desktop. External/in-distro tokens matched, all five locked components

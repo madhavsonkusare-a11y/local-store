@@ -108,6 +108,19 @@ pub fn managed_apps_root() -> PathBuf {
     registry_config_root().join(CONFIG_SLUG).join("apps")
 }
 
+/// Per-machine managed-engine state. This deliberately uses LOCALAPPDATA when
+/// available: a WSL distribution is local to this Windows installation and
+/// must not follow a roaming APPDATA profile to another machine.
+pub fn managed_engine_state_root() -> PathBuf {
+    std::env::var_os("LOCALAPPDATA")
+        .filter(|value| !value.is_empty())
+        .map(PathBuf::from)
+        .unwrap_or_else(registry_config_root)
+        .join(CONFIG_SLUG)
+        .join("engine")
+        .join("wsl-state")
+}
+
 fn config_base() -> String {
     std::env::var("APPDATA")
         .ok()

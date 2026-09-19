@@ -173,6 +173,7 @@ fn main() {
             commands::search_catalog,
             commands::open_project,
             commands::doctor,
+            commands::managed_engine_status,
             commands::inspect_recovery,
             commands::recipe_details,
             commands::install_app,

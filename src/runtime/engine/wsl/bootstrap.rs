@@ -39,6 +39,18 @@ pub enum RecoveryDisposition {
     ManualReview,
 }
 
+/// The only launcher-facing view of an existing bootstrap transaction. It
+/// deliberately omits the ownership token, data directory and payload digest.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(tag = "status", rename_all = "snake_case")]
+pub enum BootstrapStatus {
+    NotConfigured,
+    Recovery {
+        phase: BootstrapState,
+        disposition: RecoveryDisposition,
+    },
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BootstrapJournal {
@@ -530,6 +542,18 @@ pub fn classify_recovery(
     })
 }
 
+/// Inspect an existing transaction without reserving, importing, retrying, or
+/// unregistering a distro. A missing journal is the normal first-launch state.
+pub fn inspect(runner: &dyn ProcessRunner, state_dir: &Path) -> AppResult<BootstrapStatus> {
+    let Some(journal) = load(state_dir)? else {
+        return Ok(BootstrapStatus::NotConfigured);
+    };
+    Ok(BootstrapStatus::Recovery {
+        phase: journal.state,
+        disposition: classify_recovery(runner, state_dir)?,
+    })
+}
+
 /// Retry only the one unambiguous recovery case: an existing Reserved journal
 /// with neither the fixed distro nor its data directory present. The payload is
 /// verified again and the original identity is never replaced.
@@ -773,6 +797,36 @@ mod tests {
         assert!(preflight(&untouched, &target).is_err());
         assert!(target.join("foreign.txt").is_file());
         assert!(untouched.calls.lock().unwrap().is_empty());
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn inspection_is_read_only_and_exposes_only_safe_recovery_state() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let state = parent.join("state");
+        let missing = inventory("");
+        assert_eq!(
+            inspect(&missing, &state).unwrap(),
+            BootstrapStatus::NotConfigured
+        );
+        assert!(missing.calls.lock().unwrap().is_empty());
+
+        let journal = BootstrapJournal::new(
+            fixture_install_dir(&parent),
+            "a".repeat(64),
+            "01234567-89ab-cdef-0123-456789abcdef".into(),
+        )
+        .unwrap();
+        reserve(&state, &journal).unwrap();
+        assert_eq!(
+            inspect(&inventory("docker-desktop\r\n"), &state).unwrap(),
+            BootstrapStatus::Recovery {
+                phase: BootstrapState::Reserved,
+                disposition: RecoveryDisposition::RetryImport,
+            }
+        );
+        assert_eq!(load(&state).unwrap(), Some(journal));
         fs::remove_dir_all(parent).unwrap();
     }
 

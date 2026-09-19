@@ -190,6 +190,24 @@ pub async fn doctor(window: tauri::WebviewWindow) -> AppResult<DoctorReport> {
         .await
         .map_err(AppError::internal)
 }
+
+/// Read-only managed-engine setup state for the launcher. Bootstrap actions
+/// remain unavailable until the product's explicit consent/elevation flow is
+/// implemented.
+#[tauri::command]
+pub async fn managed_engine_status(
+    window: tauri::WebviewWindow,
+) -> AppResult<runtime::engine::wsl::bootstrap::BootstrapStatus> {
+    require_launcher(&window)?;
+    tauri::async_runtime::spawn_blocking(|| {
+        runtime::engine::wsl::bootstrap::inspect(
+            &runtime::SystemProcessRunner,
+            &storage::managed_engine_state_root(),
+        )
+    })
+    .await
+    .map_err(AppError::internal)?
+}
 /// The template a reviewed recipe corresponds to.
 ///
 /// One function so the setup a person reviews and the setup an install
