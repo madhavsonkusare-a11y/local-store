@@ -407,6 +407,28 @@ fn successful(runner: &dyn ProcessRunner, spec: &CommandSpec, label: &str) -> Ap
     Ok(output.stdout)
 }
 
+fn ownership_token_source(state_dir: &Path) -> AppResult<String> {
+    // WSL is a Windows-only product path. Library tests also run on Linux,
+    // where a temporary file cannot have a Windows drive identity; command
+    // tests use this fixed, non-existent WSL source rather than weakening the
+    // production path translator.
+    #[cfg(all(test, not(windows)))]
+    {
+        let _ = state_dir;
+        return Ok("/mnt/c/local-store-test/ownership-token".into());
+    }
+    #[cfg(not(all(test, not(windows))))]
+    {
+        let token = state_dir.join(TOKEN_FILE).canonicalize()?;
+        let windows = crate::folders::docker_path(&token);
+        super::windows_drive_path(
+            windows
+                .to_str()
+                .ok_or_else(|| AppError::invalid("Ownership-token path must be Unicode."))?,
+        )
+    }
+}
+
 /// Establish the facts required for a Verified journal. It never changes any
 /// other distro. Imported remains durable on every failure for explicit repair.
 pub fn verify_imported(
@@ -448,13 +470,7 @@ pub fn verify_imported(
             "The imported Local Store distro is missing, duplicated, or not WSL 2.",
         ));
     }
-    let token = state_dir.join(TOKEN_FILE).canonicalize()?;
-    let windows = crate::folders::docker_path(&token);
-    let source = super::windows_drive_path(
-        windows
-            .to_str()
-            .ok_or_else(|| AppError::invalid("Ownership-token path must be Unicode."))?,
-    )?;
+    let source = ownership_token_source(state_dir)?;
     successful(
         runner,
         &inside(vec![
@@ -595,13 +611,7 @@ pub fn authorize_unregistration(
             "Managed-engine removal requires a complete verified ownership footprint.",
         ));
     }
-    let token = state_dir.join(TOKEN_FILE).canonicalize()?;
-    let windows = crate::folders::docker_path(&token);
-    let source = super::windows_drive_path(
-        windows
-            .to_str()
-            .ok_or_else(|| AppError::invalid("Ownership-token path must be Unicode."))?,
-    )?;
+    let source = ownership_token_source(state_dir)?;
     successful(
         runner,
         &inside(vec![
@@ -837,7 +847,7 @@ mod tests {
         let rootfs = parent.join("rootfs.tar");
         fs::write(&rootfs, b"reviewed payload").unwrap();
         let digest = format!("{:x}", Sha256::digest(b"reviewed payload"));
-        let install = parent.join("engine-data");
+        let install = fixture_install_dir(&parent);
         let journal = BootstrapJournal::new(
             install.clone(),
             digest.clone(),
@@ -1161,7 +1171,7 @@ mod tests {
             outputs: Mutex::new(VecDeque::from([ok(&format!("{DISTRO}\n")), ok("")])),
         };
         let command = authorize_unregistration(&runner, &state).unwrap();
-        assert_eq!(command.program, PathBuf::from("wsl.exe"));
+        assert_eq!(command.program, "wsl.exe");
         assert_eq!(command.args, ["--unregister", DISTRO]);
 
         let denied = Sequence {

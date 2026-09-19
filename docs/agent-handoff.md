@@ -182,6 +182,13 @@ not roaming profile data. Thirteen focused bootstrap tests pass. Explicit setup
 consent, prerequisite/elevation guidance and every destructive recovery action
 remain unimplemented.
 
+CI fixture follow-up: Linux jobs compile the WSL module even though the product
+path is Windows-only. Test journals now use Windows-shaped install paths, and
+the test-only token-source adapter keeps Linux temporary paths out of the
+production Windows path translator. The runtime path still translates only a
+canonical local Windows path. The prior assertion also now compares the command
+program as a string on every host. Re-run the full workflow after this commit.
+
 Real managed-engine checkpoint: the cached rootfs matched its recorded
 464,494,592-byte SHA-256 and was imported as the fixed WSL2 distro alongside
 Docker Desktop. External/in-distro tokens matched, all five locked components
