@@ -22,6 +22,7 @@ fn main() {
             "search_catalog",
             "open_project",
             "doctor",
+            "managed_engine_status",
             "inspect_recovery",
             "recipe_details",
             "install_app",

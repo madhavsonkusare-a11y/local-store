@@ -202,6 +202,11 @@ resolved image id in one inspection. It rejects symlinks, overflow, excessive
 entry counts, malformed ids and partial image output. Named-volume measurement,
 explicit limits and a real managed-engine measurement remain next.
 
+CI follow-up: the read-only `managed_engine_status` command is now declared in
+the Tauri build manifest and granted only to the launcher capability. The
+capability parity test caught the missing generated permission after the
+command was registered; keep that test in the full workflow.
+
 Real managed-engine checkpoint: the cached rootfs matched its recorded
 464,494,592-byte SHA-256 and was imported as the fixed WSL2 distro alongside
 Docker Desktop. External/in-distro tokens matched, all five locked components

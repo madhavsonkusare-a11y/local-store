@@ -31,6 +31,7 @@
             "allow-search-catalog",
             "allow-open-project",
             "allow-doctor",
+            "allow-managed-engine-status",
             "allow-inspect-recovery",
             "allow-recipe-details",
             "allow-install-app",
