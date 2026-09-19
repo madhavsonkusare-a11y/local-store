@@ -17,7 +17,7 @@ agents controlled access to the store and installed apps.
 | V3 frontend | Owner is developing V3. Do not implement V2 as the final UI. Its approved assets and interaction findings remain reference material. |
 | Signed Windows delivery and automatic updater required | Owner confirmed September 12, superseding the September 8 deferral. Code signing and updater signatures are separate requirements. |
 | Agents can manage the store and access every offered app | Owner confirmed September 12. Use a shared access layer with multiple backends; prove a useful access path per app rather than promise universal API coverage. |
-| Windows x64 is the shipping target | Existing decision retained. macOS/Linux CI builds are not native support certification. |
+| Windows x64 is the only active shipping target | Owner reconfirmed September 19. CI validation and packaging run on Windows. Existing macOS/Linux code and staging support remain intact for later scope, without active certification work. |
 | Source-available apps allowed, with accurate license information | Existing owner decision retained. This does not establish redistribution rights for every image or asset. |
 | Dark mode only, native per-app windows, reuse existing code | Existing product direction retained. No replacement installer or custom language build system. |
 

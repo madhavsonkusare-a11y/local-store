@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   quality:
-    runs-on: ubuntu-latest
+    runs-on: windows-2022
     permissions:
       contents: read
     steps:
@@ -21,11 +21,6 @@ jobs:
           # First-party catalog provenance uses the commit that last changed
           # each definition; a shallow checkout reports the merge commit.
           fetch-depth: 0
-      - name: Install Tauri Linux dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev \
-            librsvg2-dev patchelf libssl-dev
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
@@ -52,7 +47,7 @@ jobs:
           python scripts/catalog_pipeline.py --check
           python scripts/cache-catalog-icons.py --check
           node scripts/generate-brand.mjs --check
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install chromium
       # `rust-version` is a promise Cargo never checks against the dependency
       # graph, so a stale value passes every test on a newer toolchain. This
       # compares it to what the graph needs; the MSRV job below then proves our
@@ -95,20 +90,18 @@ jobs:
   # Builds on the exact version the manifest promises, bypassing
   # rust-toolchain.toml, so the claim is tested rather than asserted.
   minimum-rust:
-    runs-on: ubuntu-latest
+    runs-on: windows-2022
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v5
-      - name: Install Tauri Linux dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev             librsvg2-dev patchelf libssl-dev
       - name: Read the declared minimum from Cargo.toml
         id: msrv
+        shell: pwsh
         run: |
-          version=$(grep -m1 '^rust-version' Cargo.toml | cut -d '"' -f2)
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          $match = Select-String -Path Cargo.toml -Pattern '^rust-version\s*=\s*"([^"]+)"'
+          if (-not $match) { throw 'Cargo.toml has no rust-version' }
+          "version=$($match.Matches[0].Groups[1].Value)" >> $env:GITHUB_OUTPUT
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ steps.msrv.outputs.version }}
@@ -125,20 +118,9 @@ jobs:
         include:
           - platform: windows-2022
             target: x86_64-pc-windows-msvc
-          - platform: macos-15
-            target: aarch64-apple-darwin
-          - platform: ubuntu-24.04
-            target: x86_64-unknown-linux-gnu
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v5
-
-      - name: Install Linux deps
-        if: matrix.target == 'x86_64-unknown-linux-gnu'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev \
-            librsvg2-dev patchelf libssl-dev
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -152,18 +134,15 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
 
-      # Linux runs the whole suite in `quality`. These two targets are the
-      # platform-specific ones: CLI stdout and exit codes, and the job-object
-      # and process-group termination behind the bounded process runner.
+      # These cover Windows CLI stdout/exit codes and job-object termination
+      # behind the bounded process runner.
       - name: Test CLI and bounded process execution
-        if: matrix.target != 'x86_64-unknown-linux-gnu'
         run: |
           cargo test --locked --target ${{ matrix.target }} --test cli_queries
           cargo test --locked --target ${{ matrix.target }} --test process_runner
 
       # The shipped Windows binary is a GUI-subsystem image and behaves
-      # differently from the console binary every debug test uses, so the CLI
-      # contract is verified against the release image on every platform.
+      # differently from the console binary every debug test uses.
       - name: Test the packaged CLI
         run: cargo test --locked --release --target ${{ matrix.target }} --test cli_packaged
 
@@ -185,9 +164,8 @@ jobs:
           path: dist/${{ matrix.target }}/*
           if-no-files-found: error
 
-  # Single publish job: collects installers from every platform and creates the
-  # GitHub Release once, avoiding the softprops/action-gh-release concurrency
-  # race that happens when each matrix job publishes to the same tag at once.
+  # This job does not build or certify another platform. Its Linux runner only
+  # attests and publishes the Windows artifact.
   release:
     if: startsWith(github.ref, 'refs/tags/')
     needs: build

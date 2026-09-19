@@ -1,22 +1,22 @@
 # Release checklist
 
 The GitHub repository and release automation are already connected. A pushed
-version tag triggers CI builds for Windows, macOS, and Linux and publishes the
-installers to the matching GitHub Release. Builds depend on both quality and
+version tag triggers the Windows CI build and publishes its installer to the
+matching GitHub Release. Builds depend on both quality and
 the minimum-Rust job; a failed MSRV check blocks publication.
 
 ## Build targets and integrity metadata
 
-| Runner | Rust target | Intended artifact architecture |
+| Active runner | Rust target | Intended artifact architecture |
 | --- | --- | --- |
 | `windows-2022` | `x86_64-pc-windows-msvc` | Windows x64 |
-| `macos-15` | `aarch64-apple-darwin` | macOS Apple Silicon |
-| `ubuntu-24.04` | `x86_64-unknown-linux-gnu` | Linux x64 |
 
 Runner architectures follow [GitHub's runner image list](https://github.com/actions/runner-images#available-images).
-This matrix does not provide native Intel macOS, Windows ARM or Linux ARM
-installers. Tests and Tauri builds use the same explicit target. Tauri CLI is
-pinned to 2.11.4. Confirm all target jobs on GitHub before claiming coverage.
+macOS and Linux staging support remains in the repository for later scope, but
+V1 does not build, certify or publish those artifacts. The Linux release job is
+only a platform-neutral coordinator for Windows provenance and publication.
+Tests and Tauri builds use the explicit Windows target. Tauri CLI is pinned to
+2.11.4. Confirm the Windows job on GitHub before claiming coverage.
 
 `scripts/prepare-release.py` stages the platform installers and a standalone CLI
 named `local-store-<target>` (plus `.exe` on Windows). It refuses a missing CLI,

@@ -33,6 +33,9 @@ offerings, a bundled engine, owner-led V3 frontend, signed Windows delivery, an
 automatic updater, and agents managing the store and accessing every offered
 app. The frozen 100-app roster is a future sourcing and replacement pool, not a
 V1 release gate. The new signing requirement supersedes its earlier deferral.
+Windows x64 is now the only active build and certification target. The existing
+macOS/Linux implementation and release-staging code are retained for later;
+do not spend current V1 work or CI capacity extending or certifying them.
 V2 is reference material; do not start its production integration while V3 is
 being designed.
 
