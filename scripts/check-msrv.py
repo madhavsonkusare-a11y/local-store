@@ -28,10 +28,10 @@ def metadata():
         ["cargo", "metadata", "--format-version", "1", "--locked"],
         cwd=ROOT,
         capture_output=True,
-        text=True,
     )
     if result.returncode != 0:
-        raise SystemExit(f"cargo metadata failed:\n{result.stderr.strip()}")
+        detail = result.stderr.decode("utf-8", errors="replace").strip()
+        raise SystemExit(f"cargo metadata failed:\n{detail}")
     return json.loads(result.stdout)
 
 

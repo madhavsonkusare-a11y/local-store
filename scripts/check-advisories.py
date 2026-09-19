@@ -50,9 +50,10 @@ def main():
     command = ["cargo", "audit", "--json"]
     if not args.refresh:
         command.append("--no-fetch")
-    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+    result = subprocess.run(command, cwd=ROOT, capture_output=True)
     if not result.stdout.strip():
-        raise SystemExit(f"cargo audit produced no report:\n{result.stderr}")
+        detail = result.stderr.decode("utf-8", errors="replace")
+        raise SystemExit(f"cargo audit produced no report:\n{detail}")
     report = json.loads(result.stdout)
 
     findings = []
