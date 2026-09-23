@@ -370,13 +370,10 @@ One failed attempt exposed WSL localhost forwarding holding the just-released
 port briefly; the qualification loop now waits up to 30 seconds for that exact
 port to become bindable. The passing run left no containers. This proves the
 Memos runtime path and resource sampler, not a meaningful Memos task or a named
-volume (Memos has none). A separate opt-in n8n run measured 5,688,952 bytes in
-its real named volume after install, then failed at restart: its page did not
-answer within the existing 120-second allowance. Evidence is
-`docs/evidence/n8n-managed-resource-2026-09-23.json`; cleanup left no containers
-or volumes. Do not count n8n as managed-engine verified. Next diagnose its
-restart, apply measured limits, then wire product engine selection and consented
-setup.
+volume (Memos has none). The first n8n run failed at restart after measuring
+its named volume; the later isolated rerun passed. Both remain lifecycle-only
+proofs. Next add real first-use probes, apply measured limits, then wire
+product engine selection and consented setup.
 
 September 23 C01 refresh: `python scripts/build-candidate-queue.py` replayed
 606 source definitions from the two checksum-pinned archives through the actual
@@ -408,6 +405,16 @@ above. Documentation changes after that head are not covered by that CI run.
 
 Reuse `src/importers`, `src/plan.rs`, `src/setup`, `src/runtime`,
 `src/qualification.rs`, `src/offerings.rs` and existing frontend state modules.
+September 23 Q02/Q03 follow-up: the isolated n8n managed-WSL qualification
+passed on rerun: 18 lifecycle/resource steps, three samples, named-volume
+measurement, restart, keep-data reinstall and exact cleanup. The earlier
+120-second restart failure did not recur. The updated evidence file is
+`docs/evidence/n8n-managed-resource-2026-09-23.json`. Along with Memos, this
+makes two managed-engine lifecycle passes, but neither has a meaningful app
+task probe; the 50-app release gate remains far away. WSL calls require
+outside-sandbox execution on this host (`wsl.exe --status` otherwise reports
+Access denied), so a sandbox-only readiness result is not host evidence.
+
 September 23 E04 first slice: managed-engine status now exposes a daemon state
 only after the journal and in-distro token agree. Explicit `engine repair` CLI
 holds a cross-process operation lock, starts `docker.service` in the fixed

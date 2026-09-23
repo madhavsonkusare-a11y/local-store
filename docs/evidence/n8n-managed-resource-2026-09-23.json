@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790161694,
+  "recorded_at_unix": 1790184544,
   "app": "n8n",
-  "passed": false,
+  "passed": true,
   "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
   "promotion": "recipe",
   "source_revision": "",
@@ -14,24 +14,26 @@
   },
   "first_use": "the app answers on its address (no first-use check was supplied)",
   "measurements": {
-    "first_start_millis": 8934,
-    "samples": 1,
+    "first_start_millis": 9833,
+    "samples": 3,
     "idle_memory_bytes": {
-      "local-store-n8n-qualify-13072-1790161491324734800-n8n": 389860556
+      "local-store-n8n-qualify-18816-1790184494913534400-n8n": 474900070
     },
     "peak_memory_bytes": {
-      "local-store-n8n-qualify-13072-1790161491324734800-n8n": 389860556
+      "local-store-n8n-qualify-18816-1790184494913534400-n8n": 1151051235
     },
-    "peak_total_memory_bytes": 389860556,
+    "peak_total_memory_bytes": 1151051235,
     "idle_managed_storage_bytes": 1024,
     "peak_managed_storage_bytes": 1024,
     "idle_named_volume_bytes": {
-      "n8n-data": 5688952
+      "n8n-data": 5689024
     },
     "peak_named_volume_bytes": {
-      "n8n-data": 5688952
+      "n8n-data": 5689024
     },
-    "image_virtual_bytes": {}
+    "image_virtual_bytes": {
+      "sha256:307d6065be25619aa24cfc63a7c2f04ca56d084a08c05c8e9f189a89f353b1ec": 2465586723
+    }
   },
   "steps": [
     {
@@ -60,8 +62,51 @@
     },
     {
       "step": "survives a restart",
-      "passed": false,
-      "detail": "the app did not answer at http://localhost:52409 within 120s"
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "generates no credentials, so there are none to lose",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
     }
   ],
   "identity": {
@@ -71,7 +116,7 @@
     "source_revision": "",
     "source_observed_on": "2026-09-05",
     "images_observed_on": "2026-09-07",
-    "plan_sha256": "7b597549e346931788be2abe85f6d1d1ae22823e2e305e2c4a682fd79940bc9c",
+    "plan_sha256": "bf302813592aa5b569d9c8f4c019cb98887c8a75cb95315215b4864f93db785d",
     "requested_images": [
       "docker.n8n.io/n8nio/n8n:2.37.10"
     ],
