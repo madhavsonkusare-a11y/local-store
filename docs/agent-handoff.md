@@ -1,6 +1,6 @@
 # Agent handoff
 
-Updated September 19, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
+Updated September 23, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
 
 ## Current work and checkout
@@ -200,7 +200,10 @@ advisories, format, Clippy and 296 library tests, then failed in the debug CLI
 doctor integration test. The runner has Docker despite the test clearing PATH;
 the test now checks that the exit status matches actual readiness, as the
 packaged CLI test already does. The fake-runner unit test retains deterministic
-coverage for absent Docker. Confirm the full Windows workflow after this fix.
+coverage for absent Docker. Commit `a090278` passed the full Windows-only
+[workflow 35818879007](https://github.com/madhavsonkusare-a11y/local-store/actions/runs/35818879007):
+minimum Rust, quality, browser UI tests, packaged CLI, release build and
+artifact staging. The release publication job was correctly skipped on main.
 
 CI fixture follow-up: Linux jobs compile the WSL module even though the product
 path is Windows-only. Test journals now use Windows-shaped install paths, and
