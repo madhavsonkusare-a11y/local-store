@@ -408,6 +408,14 @@ above. Documentation changes after that head are not covered by that CI run.
 
 Reuse `src/importers`, `src/plan.rs`, `src/setup`, `src/runtime`,
 `src/qualification.rs`, `src/offerings.rs` and existing frontend state modules.
+September 23 E04 first slice: managed-engine status now exposes a daemon state
+only after the journal and in-distro token agree. An internal bounded repair
+starts `docker.service` in the fixed Local Store distro only if the daemon is
+unresponsive, then rechecks both Docker and Compose. It is not wired to a
+launcher action yet: add owner intent and an operation lock before exposing it.
+Fixture tests cover healthy, unresponsive and ownership-refusal cases. Real
+sleep/wake, crash/restart, coexistence and removal proof remain.
+
 September 23 A02 first slice: `src/agent_policy.rs` provides in-process scoped
 grants, expiry/revocation, OS-random one-use approvals for write/destructive
 actions, and metadata-only audit records. `agent_access::call_app_tool` now

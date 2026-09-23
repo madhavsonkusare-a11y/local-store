@@ -80,9 +80,19 @@ pub struct WslPrerequisites {
 pub struct ManagedEngineStatus {
     pub bootstrap: BootstrapStatus,
     pub prerequisites: WslPrerequisites,
+    /// Checked only after the external and in-distro ownership tokens agree.
+    pub daemon: ManagedDaemonState,
     /// Free bytes available to this user on the planned WSL data volume.
     /// None means the volume could not be measured, not that it has no space.
     pub disk_available_bytes: Option<u64>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ManagedDaemonState {
+    NotChecked,
+    Responsive,
+    Unresponsive,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -713,11 +723,59 @@ pub fn status(
     let data_dir = load(state_dir)?
         .map(|journal| journal.install_dir)
         .unwrap_or_else(|| planned_data_dir.to_path_buf());
+    let bootstrap = inspect(runner, state_dir)?;
+    let prerequisites = prerequisites(runner)?;
+    let daemon = if matches!(
+        bootstrap,
+        BootstrapStatus::Recovery {
+            disposition: RecoveryDisposition::Ready,
+            ..
+        }
+    ) && prerequisites.state == WslPrerequisiteState::Ready
+    {
+        if crate::runtime::doctor_with(&super::DiagnosticRunner { inner: runner }).ready {
+            ManagedDaemonState::Responsive
+        } else {
+            ManagedDaemonState::Unresponsive
+        }
+    } else {
+        ManagedDaemonState::NotChecked
+    };
     Ok(ManagedEngineStatus {
-        bootstrap: inspect(runner, state_dir)?,
-        prerequisites: prerequisites(runner)?,
+        bootstrap,
+        prerequisites,
+        daemon,
         disk_available_bytes: available_disk_bytes(&data_dir),
     })
+}
+
+/// Start Docker only inside the verified Local Store distro when its daemon
+/// is unresponsive. This never terminates WSL or touches other distros.
+/// The caller must obtain explicit owner intent and an operation lock before
+/// exposing this as a launcher action.
+pub fn repair_daemon(runner: &dyn ProcessRunner, state_dir: &Path) -> AppResult<bool> {
+    if classify_recovery(runner, state_dir)? != RecoveryDisposition::Ready {
+        return Err(AppError::invalid(
+            "Managed-engine repair requires verified ownership.",
+        ));
+    }
+    let diagnostic = super::DiagnosticRunner { inner: runner };
+    if crate::runtime::doctor_with(&diagnostic).ready {
+        return Ok(false);
+    }
+    let mut command = inside(vec![
+        "/usr/bin/systemctl".into(),
+        "start".into(),
+        "docker.service".into(),
+    ]);
+    command.timeout = crate::runtime::PROVISION_TIMEOUT;
+    successful(runner, &command, "daemon repair")?;
+    if !crate::runtime::doctor_with(&diagnostic).ready {
+        return Err(AppError::invalid(
+            "Managed-engine Docker did not become ready after repair.",
+        ));
+    }
+    Ok(true)
 }
 
 /// Retry only the one unambiguous recovery case: an existing Reserved journal
@@ -1134,6 +1192,7 @@ mod tests {
         let ready = inventory("");
         let result = status(&ready, &root, &root.join("data")).unwrap();
         assert_eq!(result.bootstrap, BootstrapStatus::NotConfigured);
+        assert_eq!(result.daemon, ManagedDaemonState::NotChecked);
         assert_eq!(
             result.prerequisites,
             WslPrerequisites {
@@ -1148,6 +1207,136 @@ mod tests {
         #[cfg(not(windows))]
         assert_eq!(result.disk_available_bytes, None);
         assert!(!root.exists());
+    }
+
+    #[test]
+    fn launcher_checks_daemon_only_after_verified_ownership() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let (state, mut journal) = imported_fixture(&parent);
+        fs::create_dir_all(&journal.install_dir).unwrap();
+        fs::write(state.join(TOKEN_FILE), journal.ownership_token.as_bytes()).unwrap();
+        journal.advance(BootstrapState::Verified).unwrap();
+        save(&state, &journal).unwrap();
+
+        for (daemon_output, expected) in [
+            (ok("29.8.0"), ManagedDaemonState::Responsive),
+            (
+                Ok(crate::runtime::ProcessOutput {
+                    success: false,
+                    ..crate::runtime::ProcessOutput::default()
+                }),
+                ManagedDaemonState::Unresponsive,
+            ),
+        ] {
+            let runner = Sequence {
+                outputs: Mutex::new(VecDeque::from([
+                    ok(&format!("{DISTRO}\n")),
+                    ok(""),
+                    ok(""),
+                    daemon_output,
+                    ok("5.5.1"),
+                ])),
+            };
+            let result = status(&runner, &state, &journal.install_dir).unwrap();
+            assert_eq!(result.daemon, expected);
+            assert_eq!(
+                result.bootstrap,
+                BootstrapStatus::Recovery {
+                    phase: BootstrapState::Verified,
+                    disposition: RecoveryDisposition::Ready,
+                }
+            );
+            assert!(runner.outputs.lock().unwrap().is_empty());
+        }
+        fs::write(state.join(TOKEN_FILE), b"not-owned").unwrap();
+        let runner = Sequence {
+            outputs: Mutex::new(VecDeque::from([ok(&format!("{DISTRO}\n")), ok("")])),
+        };
+        assert_eq!(
+            status(&runner, &state, &journal.install_dir)
+                .unwrap()
+                .daemon,
+            ManagedDaemonState::NotChecked
+        );
+        assert!(runner.outputs.lock().unwrap().is_empty());
+        fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn repair_targets_only_an_owned_distro_and_rechecks_readiness() {
+        struct RecordingSequence {
+            outputs: Mutex<VecDeque<Result<ProcessOutput, ProcessError>>>,
+            calls: Mutex<Vec<CommandSpec>>,
+        }
+        impl ProcessRunner for RecordingSequence {
+            fn run_cancellable(
+                &self,
+                spec: &CommandSpec,
+                _: &CancelToken,
+            ) -> Result<ProcessOutput, ProcessError> {
+                self.calls.lock().unwrap().push(spec.clone());
+                self.outputs.lock().unwrap().pop_front().unwrap()
+            }
+        }
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let (state, mut journal) = imported_fixture(&parent);
+        fs::create_dir_all(&journal.install_dir).unwrap();
+        fs::write(state.join(TOKEN_FILE), journal.ownership_token.as_bytes()).unwrap();
+        journal.advance(BootstrapState::Verified).unwrap();
+        save(&state, &journal).unwrap();
+        let failed = Ok(ProcessOutput {
+            success: false,
+            ..ProcessOutput::default()
+        });
+        let runner = RecordingSequence {
+            outputs: Mutex::new(VecDeque::from([
+                ok(&format!("{DISTRO}\n")),
+                ok(""),
+                failed,
+                ok("5.5.1"),
+                ok(""),
+                ok("29.8.0"),
+                ok("5.5.1"),
+            ])),
+            calls: Mutex::new(Vec::new()),
+        };
+        assert!(repair_daemon(&runner, &state).unwrap());
+        let calls = runner.calls.lock().unwrap();
+        assert_eq!(calls.len(), 7);
+        assert_eq!(calls[4].program, "wsl.exe");
+        assert_eq!(
+            &calls[4].args[..5],
+            ["--distribution", DISTRO, "--user", "root", "--exec"]
+        );
+        assert_eq!(
+            &calls[4].args[5..],
+            ["/usr/bin/systemctl", "start", "docker.service"]
+        );
+        assert_eq!(calls[4].timeout, crate::runtime::PROVISION_TIMEOUT);
+        drop(calls);
+
+        let already_ready = RecordingSequence {
+            outputs: Mutex::new(VecDeque::from([
+                ok(&format!("{DISTRO}\n")),
+                ok(""),
+                ok("29.8.0"),
+                ok("5.5.1"),
+            ])),
+            calls: Mutex::new(Vec::new()),
+        };
+        assert!(!repair_daemon(&already_ready, &state).unwrap());
+        assert_eq!(already_ready.calls.lock().unwrap().len(), 4);
+
+        fs::write(state.join(TOKEN_FILE), b"wrong-token").unwrap();
+        let refused = RecordingSequence {
+            outputs: Mutex::new(VecDeque::from([ok(&format!("{DISTRO}\n"))])),
+            calls: Mutex::new(Vec::new()),
+        };
+        assert!(repair_daemon(&refused, &state).is_err());
+        assert_eq!(refused.calls.lock().unwrap().len(), 1);
+        fs::remove_dir_all(parent).unwrap();
     }
 
     #[test]
