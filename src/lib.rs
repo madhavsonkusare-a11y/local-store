@@ -1,5 +1,6 @@
 pub mod activation;
 pub mod agent_access;
+pub mod agent_policy;
 pub mod brand;
 pub mod catalog;
 mod catalog_schema;

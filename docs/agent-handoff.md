@@ -408,6 +408,14 @@ above. Documentation changes after that head are not covered by that CI run.
 
 Reuse `src/importers`, `src/plan.rs`, `src/setup`, `src/runtime`,
 `src/qualification.rs`, `src/offerings.rs` and existing frontend state modules.
+September 23 A02 first slice: `src/agent_policy.rs` provides in-process scoped
+grants, expiry/revocation, OS-random one-use approvals for write/destructive
+actions, and metadata-only audit records. `agent_access::call_app_tool` now
+requires policy authorization before status dispatch. Focused policy/access
+tests and strict Clippy pass. This is not an external agent gateway: identity
+authentication, durable grant/audit storage, broker-held credentials and
+owner approval UI remain. Do not expose owner mutation methods to MCP/IPC.
+
 September 23 C04 follow-up: GitHub repository lookup now checks the pinned
 candidate queue after approved-offering matching. Only an exact
 `reviewed_repository_match` identity returns source ID, definition path,

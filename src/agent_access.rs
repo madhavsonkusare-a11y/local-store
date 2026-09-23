@@ -2,6 +2,7 @@
 //! This module is internal Rust API; it grants no agent or WebView access.
 
 use crate::{
+    agent_policy::{AgentAction, AgentPolicy},
     error::{AppError, AppResult, ErrorCode},
     model::InstalledApp,
     offerings::offerings,
@@ -186,11 +187,47 @@ pub fn list_app_tools(app_id: &str) -> AppResult<Vec<StoreTool>> {
     Ok(describe_app(app_id)?.management_tools)
 }
 
-/// The typed invocation seam. An external transport must first authenticate
-/// and authorize its caller (A02); this function is not registered as IPC/MCP.
-pub fn call_app_tool(app_id: &str, tool: StoreTool) -> AppResult<ToolResult> {
+/// The typed invocation seam. An external transport must authenticate its
+/// caller; no IPC/MCP command exposes this function yet.
+pub fn call_app_tool(
+    policy: &mut AgentPolicy,
+    client_id: &str,
+    app_id: &str,
+    tool: StoreTool,
+    now_unix: u64,
+) -> AppResult<ToolResult> {
     let registry = storage::load_or_migrate_registry().map_err(AppError::from)?;
-    call_with(&registry, app_id, tool, runtime::status)
+    call_authorized_with(
+        &registry,
+        policy,
+        client_id,
+        app_id,
+        tool,
+        now_unix,
+        runtime::status,
+    )
+}
+
+fn call_authorized_with(
+    registry: &RegistryV2,
+    policy: &mut AgentPolicy,
+    client_id: &str,
+    app_id: &str,
+    tool: StoreTool,
+    now_unix: u64,
+    status: impl FnOnce(&InstalledApp) -> AppResult<AppStatus>,
+) -> AppResult<ToolResult> {
+    if !registry.apps.iter().any(|app| app.id == app_id) {
+        return Err(AppError::new(
+            ErrorCode::NotFound,
+            "That app is not installed.",
+        ));
+    }
+    let action = match tool {
+        StoreTool::GetStatus => AgentAction::Status,
+    };
+    policy.authorize(client_id, app_id, action, None, now_unix)?;
+    call_with(registry, app_id, tool, status)
 }
 
 fn call_with(
@@ -274,5 +311,21 @@ mod tests {
                 status: AppStatus::Running
             }
         );
+    }
+
+    #[test]
+    fn typed_invocation_refuses_an_unauthorized_client_before_dispatch() {
+        let registry = RegistryV2::new(vec![installed("memos", true)]);
+        let mut policy = AgentPolicy::default();
+        let result = call_authorized_with(
+            &registry,
+            &mut policy,
+            "client",
+            "memos",
+            StoreTool::GetStatus,
+            100,
+            |_| panic!("dispatched without a grant"),
+        );
+        assert_eq!(result.unwrap_err().code, ErrorCode::Forbidden);
     }
 }
