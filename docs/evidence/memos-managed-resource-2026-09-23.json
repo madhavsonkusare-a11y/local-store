@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790161247,
+  "recorded_at_unix": 1790185003,
   "app": "memos",
   "passed": true,
   "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
@@ -12,15 +12,15 @@
   "image_ids": {
     "neosmemo/memos:0.30.0": "sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327"
   },
-  "first_use": "the app answers on its address (no first-use check was supplied)",
+  "first_use": "an admin signs in, creates a private memo, and reads the same content after restart and reinstall",
   "measurements": {
-    "first_start_millis": 5078,
+    "first_start_millis": 5196,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-memos-qualify-10504-1790161225180803600-memos": 15917383
+      "local-store-memos-qualify-20800-1790184979187124100-memos": 15917383
     },
     "peak_memory_bytes": {
-      "local-store-memos-qualify-10504-1790161225180803600-memos": 15917383
+      "local-store-memos-qualify-20800-1790184979187124100-memos": 15917383
     },
     "peak_total_memory_bytes": 15917383,
     "idle_managed_storage_bytes": 165800,
@@ -112,7 +112,7 @@
     "source_revision": "",
     "source_observed_on": "2026-09-05",
     "images_observed_on": "2026-09-07",
-    "plan_sha256": "3a279879d6c8ffdbd28b259248d51dafe97cce035d2331829ad2ba13d8bfc3d3",
+    "plan_sha256": "4d4f4f4fb84913287ead410ad66b38481796d33042d9d80e256b7646b21ceeee",
     "requested_images": [
       "neosmemo/memos:0.30.0"
     ],
@@ -127,7 +127,7 @@
       "endpoint": "wsl://local-store-engine-v1"
     },
     "compose_version": "5.5.1",
-    "probe_sha256": "4168447b5050a71b12ed2b8044d0871409c1d9c441c8ab109130d45de66c68c4",
+    "probe_sha256": "b0a44d926dc9922ebb8632c8f3e0d42b5894538ce5a37d20a0780e4f769109be",
     "level": "lifecycle_and_first_use"
   }
 }

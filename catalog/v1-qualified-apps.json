@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "target": 50,
+  "apps": [
+    {
+      "id": "memos",
+      "manifest": "src/recipes/memos.json",
+      "manifest_sha256": "6ecab572f38fabe0337121cca07b60418c29b36af511d249a9958ba974246916",
+      "evidence": "docs/evidence/memos-managed-resource-2026-09-23.json",
+      "evidence_sha256": "639710ed14fc8c75a9a8dbf08c1605715c126e8564569a0d60f03078484d4285",
+      "probe": "scripts/memos-content-probe.mjs",
+      "task": "an admin signs in, creates a private memo, and reads the same content after restart and reinstall"
+    }
+  ]
+}

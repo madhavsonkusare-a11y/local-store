@@ -59,6 +59,12 @@ pub trait FirstUse {
     /// What this check proves, in the words the evidence will use.
     fn describes(&self) -> &str;
 
+    /// Bytes that identify the check being run. A script probe includes its
+    /// actual source; a changed script must invalidate retained evidence.
+    fn fingerprint_material(&self) -> Vec<u8> {
+        self.describes().as_bytes().to_vec()
+    }
+
     /// Exercise the app. `Ok(())` means a person could use it; `Err` says why
     /// not, in text safe to record.
     fn exercise(&self, phase: Phase, address: &str) -> Result<(), String>;
@@ -132,6 +138,16 @@ fn probe_failure(stderr: &str) -> String {
 impl FirstUse for ScriptProbe {
     fn describes(&self) -> &str {
         &self.describes
+    }
+
+    fn fingerprint_material(&self) -> Vec<u8> {
+        let mut material = self.describes.as_bytes().to_vec();
+        material.extend_from_slice(b"\0script-source:");
+        match std::fs::read(&self.script) {
+            Ok(source) => material.extend(source),
+            Err(_) => material.extend_from_slice(b"unreadable-script"),
+        }
+        material
     }
     fn exercise(&self, phase: Phase, address: &str) -> Result<(), String> {
         let mut args = vec![
@@ -1256,7 +1272,7 @@ fn finish(
         host_arch: std::env::consts::ARCH.to_owned(),
         engine: binding.clone(),
         compose_version: compose_version.to_owned(),
-        probe_sha256: digest(first_use.describes().as_bytes()),
+        probe_sha256: digest(&first_use.fingerprint_material()),
         level: "lifecycle_and_first_use".into(),
     };
     Evidence {
@@ -2029,5 +2045,21 @@ ccc",
         assert!(AnswersOnly
             .exercise(Phase::FirstInstall, "http://localhost:1")
             .is_ok());
+    }
+
+    #[test]
+    fn script_probe_fingerprint_changes_with_script_source() {
+        use sha2::{Digest, Sha256};
+        let root = scratch("probe-fingerprint");
+        std::fs::create_dir_all(&root).unwrap();
+        let script = root.join("probe.mjs");
+        std::fs::write(&script, "console.log('one')").unwrap();
+        let probe = ScriptProbe::new(&script, "creates content");
+        let first = Sha256::digest(probe.fingerprint_material());
+        std::fs::write(&script, "console.log('two')").unwrap();
+        let second = Sha256::digest(probe.fingerprint_material());
+        assert_ne!(first, second);
+        assert_eq!(probe.describes(), "creates content");
+        std::fs::remove_dir_all(root).unwrap();
     }
 }

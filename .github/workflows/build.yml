@@ -43,6 +43,8 @@ jobs:
           python scripts/check-template-platforms.py
           python scripts/test_release.py
           python scripts/test_engine_payload.py
+          python -m unittest discover -s tests -p test_v1_qualified.py
+          python scripts/check-v1-qualified.py
           python scripts/build-engine-payload.py
           python scripts/catalog_pipeline.py --check
           python scripts/cache-catalog-icons.py --check

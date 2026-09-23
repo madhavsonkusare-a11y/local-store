@@ -369,11 +369,11 @@ and cleanup; evidence is `docs/evidence/memos-managed-resource-2026-09-23.json`.
 One failed attempt exposed WSL localhost forwarding holding the just-released
 port briefly; the qualification loop now waits up to 30 seconds for that exact
 port to become bindable. The passing run left no containers. This proves the
-Memos runtime path and resource sampler, not a meaningful Memos task or a named
-volume (Memos has none). The first n8n run failed at restart after measuring
-its named volume; the later isolated rerun passed. Both remain lifecycle-only
-proofs. Next add real first-use probes, apply measured limits, then wire
-product engine selection and consented setup.
+Memos runtime path and resource sampler, not a named volume (Memos has none).
+The first n8n run failed at restart after measuring its named volume; the later
+isolated rerun passed. The later Memos first-use run below supersedes the
+answers-only Memos claim. Next apply measured limits, then wire product engine
+selection and consented setup.
 
 September 23 C01 refresh: `python scripts/build-candidate-queue.py` replayed
 606 source definitions from the two checksum-pinned archives through the actual
@@ -410,10 +410,24 @@ passed on rerun: 18 lifecycle/resource steps, three samples, named-volume
 measurement, restart, keep-data reinstall and exact cleanup. The earlier
 120-second restart failure did not recur. The updated evidence file is
 `docs/evidence/n8n-managed-resource-2026-09-23.json`. Along with Memos, this
-makes two managed-engine lifecycle passes, but neither has a meaningful app
-task probe; the 50-app release gate remains far away. WSL calls require
+makes two managed-engine lifecycle passes; n8n remains answers-only. WSL calls require
 outside-sandbox execution on this host (`wsl.exe --status` otherwise reports
 Access denied), so a sandbox-only readiness result is not host evidence.
+
+September 23 Q01/Q04 follow-up: `scripts/memos-content-probe.mjs` uses the
+pinned Memos 0.30 API to create the first admin and a private memo, then sign in
+and read the exact memo after restart and keep-data reinstall. The real owned
+WSL rerun passed all 18 steps; evidence is updated in
+`docs/evidence/memos-managed-resource-2026-09-23.json`. The disposable proof
+state is removed after qualification. `ScriptProbe` evidence now hashes script
+source as well as its description, so changed probe code changes proof identity.
+One of 50 release apps now has task-level proof; n8n has lifecycle proof only.
+`catalog/v1-qualified-apps.json` curates only Memos today. Run
+`python scripts/check-v1-qualified.py` to validate manifest, evidence and
+probe hashes plus engine/freshness/task steps; CI runs it. `--release-gate`
+intentionally exits nonzero at 1/50. Add an app only after a real managed-engine
+task proof and review its exact evidence. The gate validates recorded evidence,
+not an app's entire behavior or the signed release artifact.
 
 September 23 E04 first slice: managed-engine status now exposes a daemon state
 only after the journal and in-distro token agree. Explicit `engine repair` CLI
