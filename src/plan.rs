@@ -157,10 +157,27 @@ pub struct PlanOverrides {
     /// for a fast, clean shutdown; the default SIGTERM makes it wait for every
     /// client to leave, and Docker kills it before it does.
     pub stop_signal: Option<String>,
+    /// Explicit container ceilings, set after qualification has measured the
+    /// app on the managed engine. None preserves the reviewed definition.
+    pub memory_limit_bytes: Option<u64>,
+    pub cpu_limit_millicores: Option<u32>,
+    pub pids_limit: Option<u32>,
 }
 
 impl PlanOverrides {
     fn validate(&self) -> Result<(), String> {
+        if self
+            .memory_limit_bytes
+            .is_some_and(|bytes| bytes < 6 * 1024 * 1024)
+        {
+            return Err("memory limit must be at least 6 MiB".into());
+        }
+        if self.cpu_limit_millicores == Some(0) {
+            return Err("CPU limit must be greater than zero".into());
+        }
+        if self.pids_limit == Some(0) {
+            return Err("PID limit must be greater than zero".into());
+        }
         if let Some(check) = &self.healthcheck {
             check.validate()?;
         }
@@ -203,6 +220,19 @@ impl PlanOverrides {
     }
 
     fn render(&self, out: &mut String) {
+        if let Some(bytes) = self.memory_limit_bytes {
+            out.push_str(&format!("    mem_limit: {bytes}\n"));
+        }
+        if let Some(millicores) = self.cpu_limit_millicores {
+            out.push_str(&format!(
+                "    cpus: \"{}.{:03}\"\n",
+                millicores / 1000,
+                millicores % 1000
+            ));
+        }
+        if let Some(pids) = self.pids_limit {
+            out.push_str(&format!("    pids_limit: {pids}\n"));
+        }
         if let Some(check) = &self.healthcheck {
             check.render(out);
         }
@@ -1084,6 +1114,33 @@ NEWLINE",
             assert_eq!(service.name, recipe.id);
             assert_eq!(plan.data_directories(), recipe.data_directories);
         }
+    }
+
+    #[test]
+    fn resource_ceilings_render_only_when_explicit_and_reject_zero() {
+        let mut plan = plan_with_environment("PORT", "80");
+        let defaults = plan.to_compose().unwrap();
+        assert!(!defaults.contains("mem_limit:"));
+        assert!(!defaults.contains("cpus:"));
+        assert!(!defaults.contains("pids_limit:"));
+
+        let limits = &mut plan.services[0].overrides;
+        limits.memory_limit_bytes = Some(512 * 1024 * 1024);
+        limits.cpu_limit_millicores = Some(1250);
+        limits.pids_limit = Some(256);
+        let compose = plan.to_compose().unwrap();
+        assert!(compose.contains("    mem_limit: 536870912\n"));
+        assert!(compose.contains("    cpus: \"1.250\"\n"));
+        assert!(compose.contains("    pids_limit: 256\n"));
+
+        plan.services[0].overrides.memory_limit_bytes = Some(0);
+        assert!(plan.validate().is_err());
+        plan.services[0].overrides.memory_limit_bytes = None;
+        plan.services[0].overrides.cpu_limit_millicores = Some(0);
+        assert!(plan.validate().is_err());
+        plan.services[0].overrides.cpu_limit_millicores = None;
+        plan.services[0].overrides.pids_limit = Some(0);
+        assert!(plan.validate().is_err());
     }
 
     fn web() -> PlanService {

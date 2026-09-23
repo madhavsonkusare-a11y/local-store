@@ -1892,7 +1892,8 @@ ccc",
     fn recording_a_result_leaves_no_partial_file_behind() {
         let dir = scratch("atomic");
         let batch = Batch::open(&dir).unwrap();
-        batch.record(&evidence_for("one", true)).unwrap();
+        let evidence = evidence_for("one", true);
+        batch.record(&evidence).unwrap();
         let stray: Vec<_> = std::fs::read_dir(&dir)
             .unwrap()
             .flatten()
@@ -1900,7 +1901,7 @@ ccc",
             .filter(|name| !name.ends_with(".json"))
             .collect();
         assert!(stray.is_empty(), "{stray:?}");
-        assert_eq!(batch.recorded("one").unwrap(), evidence_for("one", true));
+        assert_eq!(batch.recorded("one").unwrap(), evidence);
         std::fs::remove_dir_all(&dir).ok();
     }
 

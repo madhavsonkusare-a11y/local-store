@@ -335,6 +335,21 @@ Windows workflow before this change passed.
 Next prove the sampler on the real owned distro, then add explicit resource
 limits and repeat Q02 across release apps. Do not claim 50 verified apps yet.
 
+September 23 follow-up: the Windows quality run for the volume sampler exposed
+a clock-boundary flaky test in qualification's atomic evidence round trip. The
+test now compares the same recorded evidence value instead of creating a new
+timestamp in a later second. The normalized plan now accepts optional per-service
+memory bytes, CPU millicores and PID ceilings and renders Compose `mem_limit`,
+`cpus` and `pids_limit`; unset fields leave existing recipes unchanged. These
+are mechanism only: no release app has a measured ceiling assigned yet. Next
+select ceilings from real managed-engine resource samples, apply them to release
+apps and confirm Docker enforces them. The earlier volume sampler also still
+needs real managed-engine proof before Q02 can close.
+The full `cargo test --locked` suite, formatting check and strict all-target,
+all-feature Clippy pass locally. A home-folder test now skips when this
+sandbox denies canonicalization of the profile path, which the validator also
+requires; that removed an environment-only test failure.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

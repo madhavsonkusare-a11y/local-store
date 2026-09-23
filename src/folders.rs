@@ -234,7 +234,9 @@ mod tests {
         let Some(home) = home_directory() else {
             return;
         };
-        if !home.is_dir() {
+        // Some sandboxed runners can stat a profile directory while denying
+        // canonicalization. The share path cannot pass its first check there.
+        if home.canonicalize().is_err() {
             return;
         }
         let error = share_folder(home.to_str().unwrap(), false, &managed())
