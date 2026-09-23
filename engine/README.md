@@ -26,6 +26,10 @@ All five Docker package URLs, versions, lengths and SHA-256 values are locked in
 Hashes were selected from Docker's HTTPS package index. They pin observed bytes;
 this first version does not independently verify Docker's signed index. Ubuntu
 dependencies are installed through apt's signed repository metadata.
+The full observed 128-package result is frozen in [packages.lock.tsv](packages.lock.tsv).
+The Dockerfile and exporter refuse a build if the installed inventory differs
+byte-for-byte from this lock. This prevents silent dependency drift, but old
+package versions may disappear from Ubuntu's moving repositories.
 
 We inspected Rancher Desktop at `515877cd5f92af42089c9128fc3c7402c0fbbb6c`:
 its WSL downloader verifies an expected rootfs checksum. Its separate distro
@@ -44,9 +48,10 @@ records the versions, rootfs hash and measured size (464,494,592 bytes,
 uncompressed). The [128-package inventory](../docs/evidence/engine-packages-development-2026-09-13.tsv)
 records the exact installed versions. These are observed development artifacts.
 
-Ubuntu transitive packages are **not fully locked** yet. Rebuilding later can
-resolve different dependency versions even though the five engine packages and
-base are pinned. Lock/cache the complete package set and signed index provenance
+The complete installed-package inventory is now locked using the exact bytes
+measured in the original development build. A post-lock export has not run
+because Docker was unavailable at this checkpoint. Cache or mirror every
+transitive package with signed index provenance, then prove a clean rebuild
 before claiming a reproducible release build. The export preserves license files
 inside the rootfs and a separate notices tar, but distributing a rootfs also
 requires reviewing source obligations for the complete package set.

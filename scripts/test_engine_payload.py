@@ -54,6 +54,21 @@ class PayloadTests(unittest.TestCase):
             with patch.object(payload.urllib.request, "urlopen", side_effect=AssertionError("network")):
                 payload.fetch_package(package, target)
 
+    def test_full_inventory_lock_refuses_drift_and_malformed_rows(self):
+        locked = payload.PACKAGE_LOCK.read_bytes()
+        self.assertGreaterEqual(len(payload.parse_inventory(locked)), 100)
+        for changed in [
+            locked.replace(b"docker-ce\t5:29.8.0", b"docker-ce\t5:29.7.0"),
+            locked.replace(b"\n", b"\r\n"),
+            locked + locked.splitlines(keepends=True)[0],
+        ]:
+            with self.subTest(changed=changed[:40]), tempfile.TemporaryDirectory() as directory:
+                replacement = Path(directory) / "packages.lock.tsv"
+                replacement.write_bytes(changed)
+                with patch.object(payload, "PACKAGE_LOCK", replacement):
+                    with self.assertRaises(ValueError):
+                        payload.validate(self.lock)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -48,7 +48,7 @@
     }
   ],
   "limitations": [
-    "Ubuntu transitive dependencies resolve from signed apt metadata at build time; inventory records exact result but this is not a reproducible full dependency lock.",
+    "Ubuntu transitive dependencies resolve from signed apt metadata at build time; the full installed inventory is locked and drift refuses, but transitive package bytes and index provenance are not yet frozen for a reproducible release build.",
     "Rootfs notices are retained; redistribution/source obligations need release review.",
     "No WSL bootstrap or clean-machine qualification is implied."
   ]

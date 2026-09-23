@@ -300,6 +300,18 @@ The next release-critical work is consented product setup with an authenticated
 payload and clean Windows proof, followed by supervision. Do not count this
 hardening as a completed engine install flow.
 
+September 23 E01 payload-lock follow-up: `engine/packages.lock.tsv` freezes the
+exact 128-package inventory from the recorded development export (SHA-256
+`1f0011d3aadb90d950c3125fdaba92327f38195c19fab44acf57e5844fb430db`).
+The Dockerfile compares the installed inventory against it before export, and
+the Python exporter independently checks exact bytes and includes the lock in
+build-input evidence. Offline pin validation and four refusal tests pass.
+Docker was unavailable locally, so no post-lock build or new WSL proof was run.
+E01 remains partial: transitive package bytes/index provenance, clean rebuild,
+notices/source review and the Windows support matrix still block distribution.
+Next obtain a repeatable clean payload build, then wire consented product setup
+to an authenticated payload rather than a development tarball.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

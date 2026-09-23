@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ENGINE = ROOT / "engine"
 EXPECTED = {"docker-ce", "docker-ce-cli", "containerd.io",
             "docker-compose-plugin", "docker-buildx-plugin"}
+PACKAGE_LOCK = ENGINE / "packages.lock.tsv"
 
 
 def digest(path):
@@ -43,6 +44,31 @@ def validate(lock):
                 or not re.fullmatch(r"[0-9a-f]{64}", p["sha256"])
                 or not 0 < p["size_bytes"] <= 250_000_000):
             raise ValueError("Invalid engine package pin")
+    inventory = parse_inventory(PACKAGE_LOCK.read_bytes())
+    if len(inventory) < 100:
+        raise ValueError("Engine package inventory is unexpectedly small")
+    for package in packages:
+        if inventory.get(package["name"]) != (package["version"], package["architecture"]):
+            raise ValueError("Engine package inventory disagrees with component pins")
+
+
+def parse_inventory(data):
+    if not data or b"\r" in data or not data.endswith(b"\n") or len(data) > 128 * 1024:
+        raise ValueError("Invalid engine package inventory encoding")
+    inventory = {}
+    previous = ""
+    for raw in data.decode("utf-8").splitlines():
+        parts = raw.split("\t")
+        if len(parts) != 3:
+            raise ValueError("Invalid engine package inventory row")
+        name, version, architecture = parts
+        if (not re.fullmatch(r"[a-z0-9][a-z0-9+.-]*", name)
+                or name <= previous or not version or any(c.isspace() for c in version)
+                or architecture not in {"all", "amd64"}):
+            raise ValueError("Invalid or unordered engine package inventory")
+        inventory[name] = (version, architecture)
+        previous = name
+    return inventory
 
 
 def fetch_package(package, target):
@@ -84,7 +110,8 @@ def build(lock):
     for p in lock["packages"]:
         print("Checking package:", p["name"], p["version"], flush=True)
         fetch_package(p, packages / (p["name"] + ".deb"))
-    for name in ("Dockerfile", "wsl.conf", "daemon.json", "components.lock.json"):
+    for name in ("Dockerfile", "wsl.conf", "daemon.json", "components.lock.json",
+                 "packages.lock.tsv"):
         # Windows Git checkouts may use CRLF; Dockerfile continuation/config
         # bytes must not depend on the builder's host line-ending preference.
         (context / name).write_bytes((ENGINE / name).read_bytes().replace(b"\r\n", b"\n"))
@@ -105,9 +132,12 @@ def build(lock):
         with (output / "notices.tar").open("wb") as notices:
             subprocess.run(["docker", "cp", container + ":/usr/share/doc", "-"],
                            stdout=notices, check=True, timeout=120)
-        inventory = dict(line.split("\t")[:2] for line in (output / "packages.tsv").read_text().splitlines())
+        observed = (output / "packages.tsv").read_bytes()
+        if observed != (context / "packages.lock.tsv").read_bytes():
+            raise ValueError("Installed package inventory differs from the reviewed full lock")
+        inventory = parse_inventory(observed)
         for p in lock["packages"]:
-            if inventory.get(p["name"]) != p["version"]:
+            if inventory.get(p["name"]) != (p["version"], p["architecture"]):
                 raise ValueError("Installed package version differs from lock: " + p["name"])
         versions = {}
         for name, args in {"engine": ["dockerd", "--version"], "cli": ["docker", "--version"],
@@ -119,10 +149,12 @@ def build(lock):
         evidence = {"schema_version": 1, "status": "development_build_only",
                     "component_lock_sha256": digest(context / "components.lock.json"),
                     "build_inputs_sha256": {name: digest(context / name) for name in
-                                            ("Dockerfile", "wsl.conf", "daemon.json", "components.lock.json")},
+                                            ("Dockerfile", "wsl.conf", "daemon.json",
+                                             "components.lock.json", "packages.lock.tsv")},
                     "image_id": image, "platform": lock["platform"], "versions": versions,
                     "rootfs_sha256": digest(archive), "rootfs_bytes": archive.stat().st_size,
                     "packages_sha256": digest(output / "packages.tsv"),
+                    "package_lock_sha256": digest(context / "packages.lock.tsv"),
                     "notices_sha256": digest(output / "notices.tar"),
                     "package_count": len(inventory), "wsl_boot_tested": False,
                     "daemon_started": False, "signed": False,
