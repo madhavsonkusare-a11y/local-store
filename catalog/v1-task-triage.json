@@ -1,0 +1,896 @@
+{
+  "schema_version": 1,
+  "meaning": "triage suggestions only; never release proof",
+  "roster_sha256": "555f2c2192e88a45ef7556c6398517e9d2601a60583a667223172e57d8363bbb",
+  "generated_at": "2026-09-23T18:00:21.908798+00:00",
+  "models": [
+    "jev-1.13.0"
+  ],
+  "api_tokens": 23563,
+  "apps": [
+    {
+      "id": "adminer",
+      "acceptance_task": "Connect to an isolated database and read a synthetic table.",
+      "suggested_fixture": "database_client",
+      "confidence": 1.0,
+      "probabilities": {
+        "monitoring": 0.0,
+        "external_fixture": 0.0,
+        "workflow_run": 0.0,
+        "database_client": 1.0,
+        "content_roundtrip": 0.0,
+        "other": 0.0,
+        "admin_setup": 0.0,
+        "file_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "anythingllm",
+      "acceptance_task": "Ingest a synthetic document and receive a controlled model response.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.8,
+      "probabilities": {
+        "monitoring": 0.0,
+        "external_fixture": 0.82,
+        "workflow_run": 0.05,
+        "database_client": 0.0,
+        "content_roundtrip": 0.09,
+        "other": 0.03,
+        "admin_setup": 0.0,
+        "file_roundtrip": 0.01
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "beszel",
+      "acceptance_task": "Pair an isolated agent and inspect reported host metrics.",
+      "suggested_fixture": "monitoring",
+      "confidence": 0.98,
+      "probabilities": {
+        "monitoring": 0.98,
+        "external_fixture": 0.01,
+        "workflow_run": 0.0,
+        "database_client": 0.0,
+        "content_roundtrip": 0.0,
+        "other": 0.01,
+        "admin_setup": 0.0,
+        "file_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "big-agi",
+      "acceptance_task": "Send a prompt to a controlled provider and export/reopen a conversation.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.92,
+      "probabilities": {
+        "monitoring": 0.0,
+        "external_fixture": 0.93,
+        "workflow_run": 0.01,
+        "database_client": 0.0,
+        "content_roundtrip": 0.05,
+        "other": 0.0,
+        "admin_setup": 0.0,
+        "file_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "changedetection",
+      "acceptance_task": "Track a local fixture change and retrieve the detected difference.",
+      "suggested_fixture": "monitoring",
+      "confidence": 0.91,
+      "probabilities": {
+        "monitoring": 0.93,
+        "external_fixture": 0.0,
+        "workflow_run": 0.07,
+        "database_client": 0.0,
+        "content_roundtrip": 0.0,
+        "other": 0.0,
+        "admin_setup": 0.0,
+        "file_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "dify",
+      "acceptance_task": "Create and run a minimal app against a controlled model provider.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.58,
+      "probabilities": {
+        "monitoring": 0.0,
+        "external_fixture": 0.64,
+        "workflow_run": 0.36,
+        "database_client": 0.0,
+        "content_roundtrip": 0.0,
+        "other": 0.0,
+        "admin_setup": 0.0,
+        "file_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "docmost",
+      "acceptance_task": "Create, search and reopen a page.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.99,
+      "probabilities": {
+        "monitoring": 0.0,
+        "external_fixture": 0.0,
+        "workflow_run": 0.0,
+        "database_client": 0.0,
+        "content_roundtrip": 0.99,
+        "other": 0.01,
+        "admin_setup": 0.0,
+        "file_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "flatnotes",
+      "acceptance_task": "Write, tag and search a note after restart.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 1.0,
+      "probabilities": {
+        "monitoring": 0.0,
+        "external_fixture": 0.0,
+        "workflow_run": 0.0,
+        "database_client": 0.0,
+        "content_roundtrip": 1.0,
+        "other": 0.0,
+        "admin_setup": 0.0,
+        "file_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "flowise",
+      "acceptance_task": "Create and execute a minimal flow against a controlled provider.",
+      "suggested_fixture": "workflow_run",
+      "confidence": 0.81,
+      "probabilities": {
+        "external_fixture": 0.16,
+        "workflow_run": 0.84,
+        "file_roundtrip": 0.0,
+        "monitoring": 0.0,
+        "database_client": 0.0,
+        "admin_setup": 0.0,
+        "other": 0.0,
+        "content_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "ghostfolio",
+      "acceptance_task": "Record a synthetic portfolio transaction and inspect its resulting position.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.62,
+      "probabilities": {
+        "workflow_run": 0.02,
+        "external_fixture": 0.01,
+        "file_roundtrip": 0.0,
+        "monitoring": 0.0,
+        "database_client": 0.21,
+        "other": 0.09,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.67
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "gitea",
+      "acceptance_task": "Create a repository, push a commit and clone it back.",
+      "suggested_fixture": "file_roundtrip",
+      "confidence": 0.51,
+      "probabilities": {
+        "workflow_run": 0.0,
+        "external_fixture": 0.05,
+        "file_roundtrip": 0.58,
+        "monitoring": 0.0,
+        "database_client": 0.0,
+        "admin_setup": 0.0,
+        "other": 0.24,
+        "content_roundtrip": 0.13
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "glance",
+      "acceptance_task": "Configure a local feed/widget and verify its rendered content.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.47,
+      "probabilities": {
+        "workflow_run": 0.02,
+        "external_fixture": 0.53,
+        "file_roundtrip": 0.0,
+        "monitoring": 0.04,
+        "database_client": 0.0,
+        "admin_setup": 0.12,
+        "other": 0.16,
+        "content_roundtrip": 0.13
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "grafana",
+      "acceptance_task": "Connect a fixture datasource and save/read a dashboard.",
+      "suggested_fixture": "database_client",
+      "confidence": 0.34,
+      "probabilities": {
+        "workflow_run": 0.01,
+        "external_fixture": 0.05,
+        "file_roundtrip": 0.0,
+        "monitoring": 0.32,
+        "database_client": 0.42,
+        "admin_setup": 0.01,
+        "other": 0.03,
+        "content_roundtrip": 0.16
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "grocy",
+      "acceptance_task": "Create stock, consume some, and verify the remaining quantity.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.27,
+      "probabilities": {
+        "workflow_run": 0.05,
+        "external_fixture": 0.01,
+        "file_roundtrip": 0.0,
+        "monitoring": 0.0,
+        "database_client": 0.24,
+        "other": 0.34,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.36
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "homer",
+      "acceptance_task": "Configure an app tile and verify its link after restart.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.74,
+      "probabilities": {
+        "workflow_run": 0.01,
+        "external_fixture": 0.01,
+        "file_roundtrip": 0.02,
+        "monitoring": 0.0,
+        "database_client": 0.0,
+        "admin_setup": 0.15,
+        "other": 0.05,
+        "content_roundtrip": 0.76
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "huginn",
+      "acceptance_task": "Run an agent against a controlled fixture and read its event.",
+      "suggested_fixture": "workflow_run",
+      "confidence": 0.96,
+      "probabilities": {
+        "workflow_run": 0.97,
+        "external_fixture": 0.0,
+        "file_roundtrip": 0.0,
+        "monitoring": 0.03,
+        "database_client": 0.0,
+        "other": 0.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "immich",
+      "acceptance_task": "Upload a photo, wait for processing and retrieve/search it.",
+      "suggested_fixture": "file_roundtrip",
+      "confidence": 0.71,
+      "probabilities": {
+        "file_roundtrip": 0.76,
+        "other": 0.05,
+        "external_fixture": 0.0,
+        "workflow_run": 0.0,
+        "database_client": 0.0,
+        "monitoring": 0.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.19
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "jellyfin",
+      "acceptance_task": "Import owned sample media and verify playback.",
+      "suggested_fixture": "other",
+      "confidence": 0.56,
+      "probabilities": {
+        "file_roundtrip": 0.12,
+        "other": 0.62,
+        "external_fixture": 0.12,
+        "workflow_run": 0.08,
+        "database_client": 0.0,
+        "admin_setup": 0.01,
+        "monitoring": 0.01,
+        "content_roundtrip": 0.04
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "joplin",
+      "acceptance_task": "Synchronize a note between isolated clients and verify retained content.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.8,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "other": 0.14,
+        "external_fixture": 0.03,
+        "workflow_run": 0.0,
+        "database_client": 0.0,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "content_roundtrip": 0.83
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "kanboard",
+      "acceptance_task": "Create a project/task, move it and read its new state.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.41,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "other": 0.42,
+        "external_fixture": 0.0,
+        "workflow_run": 0.07,
+        "database_client": 0.02,
+        "monitoring": 0.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.49
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "khoj",
+      "acceptance_task": "Index synthetic content and answer a query using a controlled provider.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.89,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "workflow_run": 0.02,
+        "external_fixture": 0.91,
+        "other": 0.02,
+        "database_client": 0.0,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "content_roundtrip": 0.05
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "kotaemon",
+      "acceptance_task": "Ingest a document and answer a retrieval query with a controlled provider.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.69,
+      "probabilities": {
+        "file_roundtrip": 0.02,
+        "other": 0.04,
+        "external_fixture": 0.73,
+        "workflow_run": 0.03,
+        "database_client": 0.0,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "content_roundtrip": 0.18
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "langflow",
+      "acceptance_task": "Build and run a minimal flow with controlled dependencies.",
+      "suggested_fixture": "workflow_run",
+      "confidence": 0.99,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "other": 0.0,
+        "external_fixture": 0.0,
+        "workflow_run": 1.0,
+        "database_client": 0.0,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "content_roundtrip": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "librechat",
+      "acceptance_task": "Create an account and complete a controlled model conversation.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.92,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "other": 0.03,
+        "external_fixture": 0.93,
+        "workflow_run": 0.01,
+        "database_client": 0.0,
+        "admin_setup": 0.02,
+        "monitoring": 0.0,
+        "content_roundtrip": 0.01
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "lobehub",
+      "acceptance_task": "Create a conversation and verify an uploaded file in its object storage.",
+      "suggested_fixture": "file_roundtrip",
+      "confidence": 0.85,
+      "probabilities": {
+        "workflow_run": 0.01,
+        "monitoring": 0.0,
+        "external_fixture": 0.04,
+        "file_roundtrip": 0.86,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.04,
+        "other": 0.05,
+        "database_client": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "maxun",
+      "acceptance_task": "Scrape a controlled local page and retrieve structured results.",
+      "suggested_fixture": "other",
+      "confidence": 0.32,
+      "probabilities": {
+        "workflow_run": 0.17,
+        "monitoring": 0.0,
+        "external_fixture": 0.4,
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.01,
+        "other": 0.4,
+        "database_client": 0.01
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "memos",
+      "acceptance_task": "Create an account/note and retrieve the note after restart.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 1.0,
+      "probabilities": {
+        "workflow_run": 0.0,
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "external_fixture": 0.0,
+        "content_roundtrip": 1.0,
+        "other": 0.0,
+        "database_client": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "metabase",
+      "acceptance_task": "Query a fixture database and save/read a question.",
+      "suggested_fixture": "database_client",
+      "confidence": 0.83,
+      "probabilities": {
+        "workflow_run": 0.01,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "external_fixture": 0.0,
+        "file_roundtrip": 0.0,
+        "content_roundtrip": 0.13,
+        "other": 0.01,
+        "database_client": 0.85
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "monica",
+      "acceptance_task": "Create a synthetic contact and retrieve its activity.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.6,
+      "probabilities": {
+        "workflow_run": 0.0,
+        "monitoring": 0.0,
+        "external_fixture": 0.0,
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.66,
+        "other": 0.04,
+        "database_client": 0.3
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "n8n",
+      "acceptance_task": "Run a harmless workflow and read its output after restart.",
+      "suggested_fixture": "workflow_run",
+      "confidence": 1.0,
+      "probabilities": {
+        "workflow_run": 1.0,
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "external_fixture": 0.0,
+        "content_roundtrip": 0.0,
+        "other": 0.0,
+        "database_client": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "navidrome",
+      "acceptance_task": "Import owned sample audio and verify playback/playlist persistence.",
+      "suggested_fixture": "file_roundtrip",
+      "confidence": 0.64,
+      "probabilities": {
+        "workflow_run": 0.01,
+        "file_roundtrip": 0.68,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "external_fixture": 0.02,
+        "content_roundtrip": 0.2,
+        "other": 0.08,
+        "database_client": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "nodered",
+      "acceptance_task": "Deploy and execute a harmless flow and read its output.",
+      "suggested_fixture": "workflow_run",
+      "confidence": 1.0,
+      "probabilities": {
+        "workflow_run": 1.0,
+        "external_fixture": 0.0,
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "content_roundtrip": 0.0,
+        "other": 0.0,
+        "database_client": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "ntfy",
+      "acceptance_task": "Publish a synthetic message and receive it through a subscribed client.",
+      "suggested_fixture": "other",
+      "confidence": 0.2,
+      "probabilities": {
+        "other": 0.31,
+        "content_roundtrip": 0.09,
+        "admin_setup": 0.0,
+        "external_fixture": 0.28,
+        "monitoring": 0.28,
+        "file_roundtrip": 0.0,
+        "database_client": 0.0,
+        "workflow_run": 0.04
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "open-webui",
+      "acceptance_task": "Create an account and obtain a response from a controlled provider.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.79,
+      "probabilities": {
+        "other": 0.07,
+        "workflow_run": 0.03,
+        "admin_setup": 0.06,
+        "content_roundtrip": 0.01,
+        "monitoring": 0.0,
+        "file_roundtrip": 0.0,
+        "database_client": 0.0,
+        "external_fixture": 0.83
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "pairdrop",
+      "acceptance_task": "Transfer a synthetic file between two isolated sessions.",
+      "suggested_fixture": "file_roundtrip",
+      "confidence": 0.83,
+      "probabilities": {
+        "other": 0.13,
+        "workflow_run": 0.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.0,
+        "monitoring": 0.0,
+        "file_roundtrip": 0.86,
+        "database_client": 0.0,
+        "external_fixture": 0.01
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "paperclip",
+      "acceptance_task": "Create a test project/task and run a harmless controlled agent action.",
+      "suggested_fixture": "workflow_run",
+      "confidence": 0.96,
+      "probabilities": {
+        "other": 0.01,
+        "content_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "external_fixture": 0.01,
+        "monitoring": 0.0,
+        "file_roundtrip": 0.0,
+        "database_client": 0.0,
+        "workflow_run": 0.98
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "penpot",
+      "acceptance_task": "Create a design file and read/edit it through the approved access method.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.86,
+      "probabilities": {
+        "other": 0.04,
+        "workflow_run": 0.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.88,
+        "monitoring": 0.0,
+        "file_roundtrip": 0.08,
+        "database_client": 0.0,
+        "external_fixture": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "privatebin",
+      "acceptance_task": "Create an encrypted paste and reopen it with its client-held key.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.95,
+      "probabilities": {
+        "other": 0.02,
+        "workflow_run": 0.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.96,
+        "monitoring": 0.0,
+        "file_roundtrip": 0.02,
+        "database_client": 0.0,
+        "external_fixture": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "sillytavern",
+      "acceptance_task": "Send a conversation turn to a controlled provider and preserve the chat.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.39,
+      "probabilities": {
+        "other": 0.04,
+        "workflow_run": 0.03,
+        "external_fixture": 0.46,
+        "admin_setup": 0.0,
+        "monitoring": 0.0,
+        "file_roundtrip": 0.0,
+        "database_client": 0.0,
+        "content_roundtrip": 0.47
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "sim",
+      "acceptance_task": "Execute a harmless workflow and verify its recorded result.",
+      "suggested_fixture": "workflow_run",
+      "confidence": 1.0,
+      "probabilities": {
+        "other": 0.0,
+        "workflow_run": 1.0,
+        "admin_setup": 0.0,
+        "content_roundtrip": 0.0,
+        "monitoring": 0.0,
+        "file_roundtrip": 0.0,
+        "database_client": 0.0,
+        "external_fixture": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "tandoor",
+      "acceptance_task": "Create a recipe and shopping list and retrieve them.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.93,
+      "probabilities": {
+        "database_client": 0.01,
+        "monitoring": 0.0,
+        "content_roundtrip": 0.94,
+        "workflow_run": 0.0,
+        "file_roundtrip": 0.0,
+        "external_fixture": 0.0,
+        "admin_setup": 0.0,
+        "other": 0.05
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "tautulli",
+      "acceptance_task": "Connect a test media-server fixture and read playback/history data.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.85,
+      "probabilities": {
+        "database_client": 0.09,
+        "monitoring": 0.02,
+        "content_roundtrip": 0.0,
+        "workflow_run": 0.0,
+        "file_roundtrip": 0.0,
+        "external_fixture": 0.88,
+        "admin_setup": 0.0,
+        "other": 0.01
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "trilium",
+      "acceptance_task": "Create and search a note after restart.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 1.0,
+      "probabilities": {
+        "database_client": 0.0,
+        "monitoring": 0.0,
+        "content_roundtrip": 1.0,
+        "workflow_run": 0.0,
+        "file_roundtrip": 0.0,
+        "external_fixture": 0.0,
+        "admin_setup": 0.0,
+        "other": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "umami-analytics",
+      "acceptance_task": "Record a synthetic local event and query its report.",
+      "suggested_fixture": "monitoring",
+      "confidence": 0.98,
+      "probabilities": {
+        "database_client": 0.01,
+        "monitoring": 0.98,
+        "content_roundtrip": 0.01,
+        "workflow_run": 0.0,
+        "file_roundtrip": 0.0,
+        "other": 0.0,
+        "admin_setup": 0.0,
+        "external_fixture": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "uptime-kuma",
+      "acceptance_task": "Create a fixture monitor, change its health and verify reported state.",
+      "suggested_fixture": "monitoring",
+      "confidence": 1.0,
+      "probabilities": {
+        "database_client": 0.0,
+        "monitoring": 1.0,
+        "content_roundtrip": 0.0,
+        "workflow_run": 0.0,
+        "file_roundtrip": 0.0,
+        "external_fixture": 0.0,
+        "admin_setup": 0.0,
+        "other": 0.0
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "vane",
+      "acceptance_task": "Search controlled sources and produce a controlled model answer.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.86,
+      "probabilities": {
+        "database_client": 0.0,
+        "monitoring": 0.01,
+        "content_roundtrip": 0.0,
+        "workflow_run": 0.05,
+        "file_roundtrip": 0.0,
+        "external_fixture": 0.89,
+        "admin_setup": 0.0,
+        "other": 0.05
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "vaultwarden",
+      "acceptance_task": "Create/unlock a synthetic vault and retrieve an item through an approved user-authorized path.",
+      "suggested_fixture": "other",
+      "confidence": 0.23,
+      "probabilities": {
+        "database_client": 0.05,
+        "monitoring": 0.0,
+        "content_roundtrip": 0.3,
+        "workflow_run": 0.03,
+        "file_roundtrip": 0.0,
+        "other": 0.34,
+        "admin_setup": 0.21,
+        "external_fixture": 0.07
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "vikunja",
+      "acceptance_task": "Create a project/task and retrieve its completion state.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.8,
+      "probabilities": {
+        "database_client": 0.01,
+        "monitoring": 0.01,
+        "content_roundtrip": 0.82,
+        "workflow_run": 0.01,
+        "file_roundtrip": 0.0,
+        "external_fixture": 0.01,
+        "admin_setup": 0.0,
+        "other": 0.14
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "wallos",
+      "acceptance_task": "Create a synthetic subscription and verify the total.",
+      "suggested_fixture": "other",
+      "confidence": 0.34,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.01,
+        "workflow_run": 0.1,
+        "external_fixture": 0.05,
+        "monitoring": 0.01,
+        "database_client": 0.14,
+        "content_roundtrip": 0.27,
+        "other": 0.42
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "wekan",
+      "acceptance_task": "Create a board/card and move/read it after restart.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.99,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "external_fixture": 0.0,
+        "workflow_run": 0.0,
+        "monitoring": 0.0,
+        "database_client": 0.0,
+        "content_roundtrip": 0.99,
+        "other": 0.01
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "whoogle",
+      "acceptance_task": "Search through a controlled upstream and verify result handling.",
+      "suggested_fixture": "external_fixture",
+      "confidence": 0.98,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "workflow_run": 0.0,
+        "external_fixture": 0.99,
+        "monitoring": 0.0,
+        "database_client": 0.0,
+        "content_roundtrip": 0.0,
+        "other": 0.01
+      },
+      "review": "unreviewed"
+    },
+    {
+      "id": "wordpress",
+      "acceptance_task": "Create a post and read its published local page.",
+      "suggested_fixture": "content_roundtrip",
+      "confidence": 0.98,
+      "probabilities": {
+        "file_roundtrip": 0.0,
+        "admin_setup": 0.0,
+        "workflow_run": 0.0,
+        "external_fixture": 0.0,
+        "monitoring": 0.0,
+        "database_client": 0.0,
+        "content_roundtrip": 0.98,
+        "other": 0.02
+      },
+      "review": "unreviewed"
+    }
+  ]
+}

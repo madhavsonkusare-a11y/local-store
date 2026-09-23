@@ -458,6 +458,21 @@ at a time, use private roots/project labels and never prune unrelated resources.
 Choose the source explicitly where alternate definitions differ. Rebuild the
 CLI before proving changed manifests. Pulling by digest does not restore a tag.
 
+September 23 qualification scaling pivot: TypeSafe skill installed into Codex;
+`scripts/triage-v1-tasks.py` used the owner-provided Jev key from outside the
+repository to classify only public roster metadata. Its unreviewed 52-row
+output is `catalog/v1-task-triage.json` (seven requests, 23,563 API tokens).
+Read [qualification-at-scale.md](plans/qualification-at-scale.md) before more
+per-app probes: build reusable fixture drivers and batch the existing managed
+lifecycle harness. Jev is a planning/semantic aid, never release proof. The
+offline `python scripts/qualification-preflight.py` queue shows 49/52 clean
+metadata preflights; Adminer, Grafana and Vaultwarden have stale image reviews.
+Those counts do not mean 49 installed or usable apps. The
+Uptime Kuma experiment passed first-use setup but failed on a restart login
+selector; its failed evidence and bespoke probe were removed. Counts remain
+one task-qualified app of 50, two managed lifecycle passes. The owner's
+uncommitted `CHANGELOG.md` remains untouched.
+
 ```text
 cargo fmt --all -- --check
 cargo clippy --all-targets --all-features --locked -- -D warnings
