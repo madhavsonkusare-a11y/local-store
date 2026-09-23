@@ -20,6 +20,7 @@ fn main() {
             "create_shortcut",
             "remove_app_cmd",
             "search_catalog",
+            "resolve_github_source",
             "open_project",
             "doctor",
             "managed_engine_status",

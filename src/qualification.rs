@@ -716,6 +716,40 @@ pub fn qualify(
     first_use: &dyn FirstUse,
     scratch: &Path,
 ) -> AppResult<Evidence> {
+    let binding =
+        crate::runtime::engine::EngineBinding::discover(&crate::runtime::SystemProcessRunner)?;
+    qualify_on_engine(app, answers, first_use, scratch, &binding)
+}
+
+/// Run a qualification against an explicitly selected engine. The managed
+/// WSL engine must still have a verified ownership footprint before use.
+pub fn qualify_on_engine(
+    app: &str,
+    answers: &BTreeMap<String, String>,
+    first_use: &dyn FirstUse,
+    scratch: &Path,
+    binding: &crate::runtime::engine::EngineBinding,
+) -> AppResult<Evidence> {
+    qualify_on_engine_at(
+        app,
+        answers,
+        first_use,
+        scratch,
+        binding,
+        &crate::storage::managed_engine_state_root(),
+    )
+}
+
+/// Development proof may use a separately owned journal. The exact journal
+/// path is explicit; the same external and in-distro token checks still run.
+pub fn qualify_on_engine_at(
+    app: &str,
+    answers: &BTreeMap<String, String>,
+    first_use: &dyn FirstUse,
+    scratch: &Path,
+    binding: &crate::runtime::engine::EngineBinding,
+    managed_state_dir: &Path,
+) -> AppResult<Evidence> {
     let offering = crate::offerings::offering(app)
         .ok_or_else(|| AppError::invalid(format!("{app} is not offered, so it cannot be run")))?;
     let reviewed = crate::templates::reviewed_template(app);
@@ -761,7 +795,15 @@ pub fn qualify(
         source_observed_on,
         images_observed_on,
     };
-    qualify_template(&about, template, answers, first_use, scratch)
+    qualify_template_on_engine_at(
+        &about,
+        template,
+        answers,
+        first_use,
+        scratch,
+        binding,
+        managed_state_dir,
+    )
 }
 
 /// What a run is about, for the evidence it writes.
@@ -836,12 +878,65 @@ pub fn qualify_template(
     first_use: &dyn FirstUse,
     scratch: &Path,
 ) -> AppResult<Evidence> {
+    let binding =
+        crate::runtime::engine::EngineBinding::discover(&crate::runtime::SystemProcessRunner)?;
+    qualify_template_on_engine(about, template, answers, first_use, scratch, &binding)
+}
+
+pub fn qualify_template_on_engine(
+    about: &Subject,
+    template: PlanTemplate,
+    answers: &BTreeMap<String, String>,
+    first_use: &dyn FirstUse,
+    scratch: &Path,
+    binding: &crate::runtime::engine::EngineBinding,
+) -> AppResult<Evidence> {
+    qualify_template_on_engine_at(
+        about,
+        template,
+        answers,
+        first_use,
+        scratch,
+        binding,
+        &crate::storage::managed_engine_state_root(),
+    )
+}
+
+pub fn qualify_template_on_engine_at(
+    about: &Subject,
+    template: PlanTemplate,
+    answers: &BTreeMap<String, String>,
+    first_use: &dyn FirstUse,
+    scratch: &Path,
+    binding: &crate::runtime::engine::EngineBinding,
+    managed_state_dir: &Path,
+) -> AppResult<Evidence> {
     let app = about.app.as_str();
     // Taken first so it is released last, after every container this run
     // made is gone.
     let _slot = take_qualification_slot(scratch)?;
-    let binding =
-        crate::runtime::engine::EngineBinding::discover(&crate::runtime::SystemProcessRunner)?;
+    binding.validate()?;
+    if binding.is_wsl() {
+        use crate::runtime::engine::wsl::bootstrap::{
+            BootstrapState, BootstrapStatus, RecoveryDisposition,
+        };
+        let status = crate::runtime::engine::wsl::bootstrap::inspect(
+            &crate::runtime::SystemProcessRunner,
+            managed_state_dir,
+        )?;
+        if !matches!(
+            status,
+            BootstrapStatus::Recovery {
+                phase: BootstrapState::Verified,
+                disposition: RecoveryDisposition::Ready
+            }
+        ) {
+            return Err(AppError::invalid(
+                "The managed WSL engine has no verified ownership footprint.",
+            ));
+        }
+    }
+    let binding = binding.clone();
     let runner = crate::runtime::engine::EngineRunner {
         inner: &crate::runtime::SystemProcessRunner,
         binding: Some(binding.clone()),
@@ -977,6 +1072,29 @@ pub fn qualify_template(
 
     let again = steps.run("reinstalls over data it kept", || {
         crate::runtime::uninstall_and_remove(&installed, false).map_err(|error| error.message)?;
+        // WSL localhost forwarding can hold the just-unpublished Windows port
+        // briefly after Compose has removed the container. Reuse the same
+        // chosen address only after the host can bind it again.
+        let ports = std::iter::once(template.plan.published().map(|(_, port)| port.host))
+            .flatten()
+            .chain(
+                template
+                    .plan
+                    .companions()
+                    .into_iter()
+                    .map(|(_, port)| port.host),
+            );
+        for port in ports {
+            let deadline = std::time::Instant::now() + Duration::from_secs(30);
+            while !crate::runtime::PortProbe::available(&crate::runtime::LocalPortProbe, port) {
+                if std::time::Instant::now() >= deadline {
+                    return Err(format!(
+                        "port {port} stayed occupied after this run removed its container"
+                    ));
+                }
+                std::thread::sleep(Duration::from_millis(250));
+            }
+        }
         let again =
             crate::runtime::install_template_on_engine(&template, &display_name, answers, &binding)
                 .map_err(|error| error.message)?;

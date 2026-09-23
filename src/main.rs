@@ -171,6 +171,7 @@ fn main() {
             create_shortcut,
             commands::remove_app_cmd,
             commands::search_catalog,
+            commands::resolve_github_source,
             commands::open_project,
             commands::doctor,
             commands::managed_engine_status,

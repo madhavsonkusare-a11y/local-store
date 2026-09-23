@@ -350,6 +350,34 @@ all-feature Clippy pass locally. A home-folder test now skips when this
 sandbox denies canonicalization of the profile path, which the validator also
 requires; that removed an environment-only test failure.
 
+September 23 A01/C04/E02/Q02 batch: `catalog/agent-access.json` now covers all
+52 approved offerings with explicit unverified content access. `src/agent_access.rs`
+consumes it, ties discovery to registry installs, reports unavailable grants
+and unknown login state, and dispatches one typed in-process status tool for an
+installed ID. It is not an externally callable agent gateway; A02 identity and
+grants must precede MCP or IPC exposure. `src/github_source.rs` plus the
+launcher-only `resolve_github_source` command maps a strict HTTPS GitHub repo URL
+to an exact approved offering or a review-needed/ambiguous result. Unknown
+repos are not inspected or installed yet, so C04 remains partial.
+
+Qualification now accepts an explicit engine binding and verifies a managed
+WSL journal, distro and in-distro ownership token before use. The opt-in
+`tests/managed_qualification.rs` used the development proof journal under
+`.cache/engine/real-wsl-proof/state`, not a product-installed journal. Memos
+passed 18 lifecycle/resource steps, three samples, restart, keep-data reinstall
+and cleanup; evidence is `docs/evidence/memos-managed-resource-2026-09-23.json`.
+One failed attempt exposed WSL localhost forwarding holding the just-released
+port briefly; the qualification loop now waits up to 30 seconds for that exact
+port to become bindable. The passing run left no containers. This proves the
+Memos runtime path and resource sampler, not a meaningful Memos task or a named
+volume (Memos has none). A separate opt-in n8n run measured 5,688,952 bytes in
+its real named volume after install, then failed at restart: its page did not
+answer within the existing 120-second allowance. Evidence is
+`docs/evidence/n8n-managed-resource-2026-09-23.json`; cleanup left no containers
+or volumes. Do not count n8n as managed-engine verified. Next diagnose its
+restart, apply measured limits, then wire product engine selection and consented
+setup.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

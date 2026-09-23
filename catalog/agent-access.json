@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "apps": [
+    {
+      "offering_id": "adminer",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "anythingllm",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "beszel",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "big-agi",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "changedetection",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "dify",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "docmost",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "flatnotes",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "flowise",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "ghostfolio",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "gitea",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "glance",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "grafana",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "grocy",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "homer",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "huginn",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "immich",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "jellyfin",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "joplin",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "kanboard",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "khoj",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "kotaemon",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "langflow",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "librechat",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "lobehub",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "maxun",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "memos",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "metabase",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "monica",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "n8n",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "navidrome",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "nodered",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "ntfy",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "open-webui",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "pairdrop",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "paperclip",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "penpot",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "privatebin",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "sillytavern",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "sim",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "tandoor",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "tautulli",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "trilium",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "umami-analytics",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "uptime-kuma",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "vane",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "vaultwarden",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "vikunja",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "wallos",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "wekan",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "whoogle",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
+      "offering_id": "wordpress",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    }
+  ]
+}

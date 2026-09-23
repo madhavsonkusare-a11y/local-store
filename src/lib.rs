@@ -1,10 +1,12 @@
 pub mod activation;
+pub mod agent_access;
 pub mod brand;
 pub mod catalog;
 mod catalog_schema;
 pub mod commands;
 pub mod error;
 pub mod folders;
+pub mod github_source;
 pub mod importers;
 pub mod model;
 pub mod native;

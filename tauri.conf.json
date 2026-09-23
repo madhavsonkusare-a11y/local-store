@@ -29,6 +29,7 @@
             "allow-create-shortcut",
             "allow-remove-app-cmd",
             "allow-search-catalog",
+            "allow-resolve-github-source",
             "allow-open-project",
             "allow-doctor",
             "allow-managed-engine-status",

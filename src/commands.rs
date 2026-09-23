@@ -191,6 +191,15 @@ pub async fn doctor(window: tauri::WebviewWindow) -> AppResult<DoctorReport> {
         .map_err(AppError::internal)
 }
 
+#[tauri::command]
+pub fn resolve_github_source(
+    window: tauri::WebviewWindow,
+    url: String,
+) -> AppResult<crate::github_source::GithubResolution> {
+    require_launcher(&window)?;
+    crate::github_source::resolve(&url).map_err(AppError::invalid)
+}
+
 /// Read-only managed-engine setup and Windows prerequisite state for the
 /// launcher. Bootstrap actions remain unavailable until explicit consent and
 /// elevation execution are implemented.

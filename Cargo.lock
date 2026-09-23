@@ -2079,6 +2079,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-deep-link",
  "tauri-plugin-single-instance",
+ "url",
  "windows-sys 0.61.2",
 ]
 

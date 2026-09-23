@@ -1,0 +1,133 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790161247,
+  "app": "memos",
+  "passed": true,
+  "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "recipe",
+  "source_revision": "",
+  "images": [
+    "neosmemo/memos:0.30.0"
+  ],
+  "image_ids": {
+    "neosmemo/memos:0.30.0": "sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327"
+  },
+  "first_use": "the app answers on its address (no first-use check was supplied)",
+  "measurements": {
+    "first_start_millis": 5078,
+    "samples": 3,
+    "idle_memory_bytes": {
+      "local-store-memos-qualify-10504-1790161225180803600-memos": 15917383
+    },
+    "peak_memory_bytes": {
+      "local-store-memos-qualify-10504-1790161225180803600-memos": 15917383
+    },
+    "peak_total_memory_bytes": 15917383,
+    "idle_managed_storage_bytes": 165800,
+    "peak_managed_storage_bytes": 165800,
+    "idle_named_volume_bytes": {},
+    "peak_named_volume_bytes": {},
+    "image_virtual_bytes": {
+      "sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327": 94949679
+    }
+  },
+  "steps": [
+    {
+      "step": "pull neosmemo/memos:0.30.0",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "generates no credentials, so there are none to lose",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed recipe",
+    "source_adapter": "recipe",
+    "source_locator": "https://github.com/usememos/memos",
+    "source_revision": "",
+    "source_observed_on": "2026-09-05",
+    "images_observed_on": "2026-09-07",
+    "plan_sha256": "3a279879d6c8ffdbd28b259248d51dafe97cce035d2331829ad2ba13d8bfc3d3",
+    "requested_images": [
+      "neosmemo/memos:0.30.0"
+    ],
+    "resolved_image_ids": {
+      "neosmemo/memos:0.30.0": "sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "4168447b5050a71b12ed2b8044d0871409c1d9c441c8ab109130d45de66c68c4",
+    "level": "lifecycle_and_first_use"
+  }
+}

@@ -33,6 +33,7 @@ fs4 = "=1.1.0"
 getrandom = "=0.4.3"
 # Already present through Tauri; bounded regex validation for imported fields.
 regex = "=1.13.1"
+url = "=2.5.8"
 # Stream payload verification before WSL import. Already present transitively;
 # direct use makes the authenticated bootstrap boundary explicit.
 sha2 = "=0.10.9"
