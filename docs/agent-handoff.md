@@ -195,6 +195,13 @@ requires elevation and may require restart. It performs no setup mutation.
 Consent, elevated execution, disk/virtualization checks and recovery actions
 remain.
 
+September 23 Windows CI follow-up: run 35458423558 passed MSRV, metadata,
+advisories, format, Clippy and 296 library tests, then failed in the debug CLI
+doctor integration test. The runner has Docker despite the test clearing PATH;
+the test now checks that the exit status matches actual readiness, as the
+packaged CLI test already does. The fake-runner unit test retains deterministic
+coverage for absent Docker. Confirm the full Windows workflow after this fix.
+
 CI fixture follow-up: Linux jobs compile the WSL module even though the product
 path is Windows-only. Test journals now use Windows-shaped install paths, and
 the test-only token-source adapter keeps Linux temporary paths out of the

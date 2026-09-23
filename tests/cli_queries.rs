@@ -5,7 +5,7 @@ use std::process::{Command, Output};
 fn run(args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_local-store"))
         .args(args)
-        .env("PATH", "") // Missing Docker is intentional and deterministic.
+        .env("PATH", "") // Keep the CLI test independent of user PATH entries.
         .output()
         .expect("CLI must start")
 }
@@ -91,18 +91,21 @@ fn catalog_preview_filter_preserves_the_recipe_allowlist() {
 }
 
 #[test]
-fn doctor_reports_missing_docker_as_json_with_failure_exit() {
+fn doctor_reports_json_with_exit_matching_readiness() {
     let output = run(&["doctor", "--json"]);
-    assert_eq!(output.status.code(), Some(1));
     assert!(output.stderr.is_empty());
     let report: Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(report["ready"], false);
+    let ready = report["ready"].as_bool().unwrap();
+    assert_eq!(output.status.code(), Some(if ready { 0 } else { 1 }));
     let checks = report["checks"].as_array().unwrap();
     assert_eq!(checks.len(), 2);
-    assert!(checks.iter().all(|check| check["ok"] == false));
     for check in checks {
-        assert_eq!(check["error"]["code"], "process_unavailable");
-        assert_eq!(check["error"]["message"], check["detail"]);
+        assert!(check["ok"].is_boolean());
+        if check["ok"] == false {
+            assert_eq!(check["error"]["message"], check["detail"]);
+        } else {
+            assert!(check.get("error").is_none());
+        }
     }
     assert!(checks
         .iter()
