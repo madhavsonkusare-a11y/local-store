@@ -496,6 +496,22 @@ fn ownership_token_source(state_dir: &Path) -> AppResult<String> {
     }
 }
 
+fn checked_ownership_token_source(
+    state_dir: &Path,
+    journal: &BootstrapJournal,
+) -> AppResult<String> {
+    let mut bytes = Vec::new();
+    fs::File::open(state_dir.join(TOKEN_FILE))?
+        .take(129)
+        .read_to_end(&mut bytes)?;
+    if bytes != journal.ownership_token.as_bytes() {
+        return Err(AppError::invalid(
+            "Managed-engine external ownership token does not match its journal.",
+        ));
+    }
+    ownership_token_source(state_dir)
+}
+
 /// Establish the facts required for a Verified journal. It never changes any
 /// other distro. Imported remains durable on every failure for explicit repair.
 pub fn verify_imported(
@@ -537,7 +553,7 @@ pub fn verify_imported(
             "The imported Local Store distro is missing, duplicated, or not WSL 2.",
         ));
     }
-    let source = ownership_token_source(state_dir)?;
+    let source = checked_ownership_token_source(state_dir, &journal)?;
     successful(
         runner,
         &inside(vec![
@@ -620,7 +636,27 @@ pub fn classify_recovery(
         BootstrapState::Imported if distro_exists && directory_exists => {
             RecoveryDisposition::ResumeVerification
         }
-        BootstrapState::Verified if distro_exists && directory_exists => RecoveryDisposition::Ready,
+        BootstrapState::Verified if distro_exists && directory_exists => {
+            let owned = checked_ownership_token_source(state_dir, &journal)
+                .and_then(|source| {
+                    successful(
+                        runner,
+                        &inside(vec![
+                            "/usr/bin/cmp".into(),
+                            "--silent".into(),
+                            source,
+                            "/usr/share/local-store/ownership-token".into(),
+                        ]),
+                        "ownership verification",
+                    )
+                })
+                .is_ok();
+            if owned {
+                RecoveryDisposition::Ready
+            } else {
+                RecoveryDisposition::ManualReview
+            }
+        }
         BootstrapState::Imported | BootstrapState::Verified => RecoveryDisposition::ManualReview,
     })
 }
@@ -686,7 +722,7 @@ pub fn authorize_unregistration(
             "Managed-engine removal requires a complete verified ownership footprint.",
         ));
     }
-    let source = ownership_token_source(state_dir)?;
+    let source = checked_ownership_token_source(state_dir, &journal)?;
     successful(
         runner,
         &inside(vec![
@@ -1262,6 +1298,25 @@ mod tests {
             classify_recovery(&inventory(&format!("{DISTRO}\n")), &state).unwrap(),
             RecoveryDisposition::Ready
         );
+        fs::write(state.join(TOKEN_FILE), b"wrong-token").unwrap();
+        assert_eq!(
+            classify_recovery(&inventory(&format!("{DISTRO}\n")), &state).unwrap(),
+            RecoveryDisposition::ManualReview
+        );
+        fs::write(state.join(TOKEN_FILE), journal.ownership_token.as_bytes()).unwrap();
+        let mismatched_distro = Sequence {
+            outputs: Mutex::new(VecDeque::from([
+                ok(&format!("{DISTRO}\n")),
+                Ok(ProcessOutput {
+                    success: false,
+                    ..ProcessOutput::default()
+                }),
+            ])),
+        };
+        assert_eq!(
+            classify_recovery(&mismatched_distro, &state).unwrap(),
+            RecoveryDisposition::ManualReview
+        );
         fs::remove_dir_all(&journal.install_dir).unwrap();
         assert_eq!(
             classify_recovery(&inventory(&format!("{DISTRO}\n")), &state).unwrap(),
@@ -1311,7 +1366,7 @@ mod tests {
         journal.advance(BootstrapState::Verified).unwrap();
         save(&state, &journal).unwrap();
         let runner = Sequence {
-            outputs: Mutex::new(VecDeque::from([ok(&format!("{DISTRO}\n")), ok("")])),
+            outputs: Mutex::new(VecDeque::from([ok(&format!("{DISTRO}\n")), ok(""), ok("")])),
         };
         let command = authorize_unregistration(&runner, &state).unwrap();
         assert_eq!(command.program, "wsl.exe");
@@ -1329,6 +1384,8 @@ mod tests {
             ])),
         };
         assert!(authorize_unregistration(&denied, &state).is_err());
+        fs::write(state.join(TOKEN_FILE), b"forged-token").unwrap();
+        assert!(authorize_unregistration(&inventory(&format!("{DISTRO}\n")), &state).is_err());
         fs::remove_dir_all(parent).unwrap();
     }
 }

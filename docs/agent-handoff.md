@@ -289,6 +289,17 @@ review dates and therefore remain history rather than reusable certification.
 All Q01 ledger identity and freshness fields are implemented; twenty-two
 focused tests and strict Clippy pass.
 
+September 23 E03 recovery safety follow-up: Verified bootstrap status now
+compares the bounded external token with the journal and directly compares it
+with the in-distro token before reporting Ready. Import verification and
+unregistration authorization also reject a modified external token. Mismatch
+or an unavailable comparison returns ManualReview without deleting anything.
+Fifteen focused bootstrap tests pass. This read-only comparison may start the
+owned WSL distro when status is requested; it does not import or unregister.
+The next release-critical work is consented product setup with an authenticated
+payload and clean Windows proof, followed by supervision. Do not count this
+hardening as a completed engine install flow.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with
