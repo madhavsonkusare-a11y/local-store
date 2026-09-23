@@ -3,7 +3,7 @@
 //! turn a repository link into an immediately installable app.
 
 use crate::offerings::{offerings, Offering};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use url::Url;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -21,6 +21,64 @@ pub enum GithubResolution {
     NeedsReview {
         repository: String,
     },
+    ReviewCandidates {
+        repository: String,
+        candidates: Vec<CandidateReference>,
+    },
+}
+
+/// A pinned upstream-catalog definition, not an approved install recipe.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct CandidateReference {
+    pub source: String,
+    pub id: String,
+    pub revision: String,
+    pub path: String,
+    pub structurally_importable: bool,
+}
+
+#[derive(Deserialize)]
+struct CandidateQueue {
+    candidates: Vec<QueuedCandidate>,
+}
+
+#[derive(Deserialize)]
+struct QueuedCandidate {
+    source: String,
+    id: String,
+    identity: String,
+    identity_status: String,
+    importable: bool,
+    provenance: CandidateProvenance,
+}
+
+#[derive(Deserialize)]
+struct CandidateProvenance {
+    revision: String,
+    path: String,
+}
+
+fn reviewed_candidates(repository: &str) -> Result<Vec<CandidateReference>, String> {
+    let queue: CandidateQueue =
+        serde_json::from_str(include_str!("../catalog/candidate-queue.json"))
+            .map_err(|_| "The pinned candidate index is unavailable.")?;
+    let identity = repository.replacen("https://github.com/", "github:", 1);
+    let mut matches = queue
+        .candidates
+        .into_iter()
+        .filter(|row| {
+            row.identity_status == "reviewed_repository_match" && row.identity == identity
+        })
+        .map(|row| CandidateReference {
+            source: row.source,
+            id: row.id,
+            revision: row.provenance.revision,
+            path: row.provenance.path,
+            structurally_importable: row.importable,
+        })
+        .collect::<Vec<_>>();
+    matches.sort_by(|a, b| (&a.source, &a.id).cmp(&(&b.source, &b.id)));
+    Ok(matches)
 }
 
 fn repository(url: &str) -> Result<String, String> {
@@ -77,7 +135,17 @@ fn resolve_from(url: &str, approved: &[Offering]) -> Result<GithubResolution, St
         .collect::<Vec<_>>();
     matches.sort();
     Ok(match matches.as_slice() {
-        [] => GithubResolution::NeedsReview { repository },
+        [] => {
+            let candidates = reviewed_candidates(&repository)?;
+            if candidates.is_empty() {
+                GithubResolution::NeedsReview { repository }
+            } else {
+                GithubResolution::ReviewCandidates {
+                    repository,
+                    candidates,
+                }
+            }
+        }
         [(offering_id, display_name)] => GithubResolution::ApprovedMatch {
             repository,
             offering_id: offering_id.clone(),
@@ -116,6 +184,19 @@ mod tests {
                 repository: "https://github.com/example/unreviewed".into()
             }
         );
+    }
+
+    #[test]
+    fn reviewed_but_unapproved_repository_returns_pinned_definition_only() {
+        let result = resolve("https://github.com/sissbruecker/linkding").unwrap();
+        let GithubResolution::ReviewCandidates { candidates, .. } = result else {
+            panic!("expected reviewed candidate");
+        };
+        assert_eq!(candidates.len(), 1);
+        assert_eq!(candidates[0].source, "caprover");
+        assert_eq!(candidates[0].id, "linkding");
+        assert_eq!(candidates[0].revision.len(), 40);
+        assert!(candidates[0].structurally_importable);
     }
 
     #[test]

@@ -408,6 +408,14 @@ above. Documentation changes after that head are not covered by that CI run.
 
 Reuse `src/importers`, `src/plan.rs`, `src/setup`, `src/runtime`,
 `src/qualification.rs`, `src/offerings.rs` and existing frontend state modules.
+September 23 C04 follow-up: GitHub repository lookup now checks the pinned
+candidate queue after approved-offering matching. Only an exact
+`reviewed_repository_match` identity returns source ID, definition path,
+revision and structural import status. This is review metadata, not install
+approval or proof of first use. The linkding CapRover candidate test passes;
+next add bounded live metadata inspection and a review/preview UI before any
+new GitHub source can become installable.
+
 Read [lessons.md](lessons.md) before Docker work. Run only one qualification
 at a time, use private roots/project labels and never prune unrelated resources.
 Choose the source explicitly where alternate definitions differ. Rebuild the
