@@ -18,6 +18,7 @@ windows-sys = { version = "0.61", features = [
     "Win32_Security",
     "Win32_System_Console",
     "Win32_System_JobObjects",
+    "Win32_Storage_FileSystem",
 ] }
 pico-args = { version = "=0.5.0", features = ["eq-separator"] }
 tauri-plugin-single-instance = { version = "=2.4.4", features = ["deep-link"] }

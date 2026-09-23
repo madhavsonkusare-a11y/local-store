@@ -80,6 +80,9 @@ pub struct WslPrerequisites {
 pub struct ManagedEngineStatus {
     pub bootstrap: BootstrapStatus,
     pub prerequisites: WslPrerequisites,
+    /// Free bytes available to this user on the planned WSL data volume.
+    /// None means the volume could not be measured, not that it has no space.
+    pub disk_available_bytes: Option<u64>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -673,11 +676,47 @@ pub fn inspect(runner: &dyn ProcessRunner, state_dir: &Path) -> AppResult<Bootst
     })
 }
 
+/// Read the user-available space on the volume that would hold the WSL virtual
+/// disk. This is informational until a measured release minimum is established.
+#[cfg(windows)]
+fn available_disk_bytes(path: &Path) -> Option<u64> {
+    use std::os::windows::ffi::OsStrExt;
+    use windows_sys::Win32::Storage::FileSystem::GetDiskFreeSpaceExW;
+
+    let existing = path.ancestors().find(|candidate| candidate.is_dir())?;
+    let wide: Vec<u16> = existing.as_os_str().encode_wide().chain(Some(0)).collect();
+    let mut free = 0_u64;
+    // SAFETY: `wide` is NUL-terminated and remains live for the call; `free`
+    // is a writable u64, and the unused output pointers are allowed to be null.
+    let success = unsafe {
+        GetDiskFreeSpaceExW(
+            wide.as_ptr(),
+            &mut free,
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+        )
+    };
+    (success != 0).then_some(free)
+}
+
+#[cfg(not(windows))]
+fn available_disk_bytes(_path: &Path) -> Option<u64> {
+    None
+}
+
 /// Compose the read-only Windows setup and recovery state for the launcher.
-pub fn status(runner: &dyn ProcessRunner, state_dir: &Path) -> AppResult<ManagedEngineStatus> {
+pub fn status(
+    runner: &dyn ProcessRunner,
+    state_dir: &Path,
+    planned_data_dir: &Path,
+) -> AppResult<ManagedEngineStatus> {
+    let data_dir = load(state_dir)?
+        .map(|journal| journal.install_dir)
+        .unwrap_or_else(|| planned_data_dir.to_path_buf());
     Ok(ManagedEngineStatus {
         bootstrap: inspect(runner, state_dir)?,
         prerequisites: prerequisites(runner)?,
+        disk_available_bytes: available_disk_bytes(&data_dir),
     })
 }
 
@@ -763,15 +802,23 @@ pub fn save(directory: &Path, journal: &BootstrapJournal) -> AppResult<()> {
 mod tests {
     use super::*;
     use crate::runtime::{CancelToken, ProcessError, ProcessOutput};
-    use std::{collections::VecDeque, sync::Mutex};
+    use std::{
+        collections::VecDeque,
+        sync::{
+            atomic::{AtomicU64, Ordering},
+            Mutex,
+        },
+    };
+    static NEXT_TEMP_ID: AtomicU64 = AtomicU64::new(0);
     fn temp() -> PathBuf {
         std::env::temp_dir().join(format!(
-            "local-store-bootstrap-{}-{}",
+            "local-store-bootstrap-{}-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
-                .as_nanos()
+                .as_nanos(),
+            NEXT_TEMP_ID.fetch_add(1, Ordering::Relaxed)
         ))
     }
     /// Journals model a Windows-owned directory. Linux CI needs a valid
@@ -1085,18 +1132,21 @@ mod tests {
     fn launcher_status_combines_prerequisites_without_mutating_bootstrap() {
         let root = temp();
         let ready = inventory("");
+        let result = status(&ready, &root, &root.join("data")).unwrap();
+        assert_eq!(result.bootstrap, BootstrapStatus::NotConfigured);
         assert_eq!(
-            status(&ready, &root).unwrap(),
-            ManagedEngineStatus {
-                bootstrap: BootstrapStatus::NotConfigured,
-                prerequisites: WslPrerequisites {
-                    state: WslPrerequisiteState::Ready,
-                    reason: None,
-                    setup_requires_elevation: false,
-                    restart_may_be_required: false,
-                },
+            result.prerequisites,
+            WslPrerequisites {
+                state: WslPrerequisiteState::Ready,
+                reason: None,
+                setup_requires_elevation: false,
+                restart_may_be_required: false,
             }
         );
+        #[cfg(windows)]
+        assert!(result.disk_available_bytes.is_some());
+        #[cfg(not(windows))]
+        assert_eq!(result.disk_available_bytes, None);
         assert!(!root.exists());
     }
 

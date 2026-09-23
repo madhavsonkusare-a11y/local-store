@@ -312,6 +312,17 @@ notices/source review and the Windows support matrix still block distribution.
 Next obtain a repeatable clean payload build, then wire consented product setup
 to an authenticated payload rather than a development tarball.
 
+September 23 E03 setup preflight follow-up: the product now reserves a local
+`wsl-data` path beside its per-machine `wsl-state` journal. Managed-engine status
+reads free bytes available to the caller on that planned volume through the
+Windows filesystem API; an existing journal's recorded install path takes
+precedence. Unknown measurement remains unknown, never zero or sufficient.
+No arbitrary minimum is used until a release payload and first-app disk budget
+are measured. Fifteen focused bootstrap tests pass; parallel Windows tests now
+use a monotonic suffix to avoid equal-clock-tick scratch-directory collisions.
+Strict all-target/all-feature Clippy passes. The previous two Windows workflows
+passed. Docker Desktop still had no responding daemon, so no payload rebuild ran.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

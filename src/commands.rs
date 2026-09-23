@@ -203,6 +203,7 @@ pub async fn managed_engine_status(
         runtime::engine::wsl::bootstrap::status(
             &runtime::SystemProcessRunner,
             &storage::managed_engine_state_root(),
+            &storage::managed_engine_data_root(),
         )
     })
     .await
