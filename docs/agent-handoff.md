@@ -409,11 +409,11 @@ above. Documentation changes after that head are not covered by that CI run.
 Reuse `src/importers`, `src/plan.rs`, `src/setup`, `src/runtime`,
 `src/qualification.rs`, `src/offerings.rs` and existing frontend state modules.
 September 23 E04 first slice: managed-engine status now exposes a daemon state
-only after the journal and in-distro token agree. An internal bounded repair
-starts `docker.service` in the fixed Local Store distro only if the daemon is
-unresponsive, then rechecks both Docker and Compose. It is not wired to a
-launcher action yet: add owner intent and an operation lock before exposing it.
-Fixture tests cover healthy, unresponsive and ownership-refusal cases. Real
+only after the journal and in-distro token agree. Explicit `engine repair` CLI
+holds a cross-process operation lock, starts `docker.service` in the fixed
+Local Store distro only if unresponsive, then rechecks Docker and Compose.
+`engine status` returns the same typed status as the launcher. V3 repair UI
+is still absent. Fixture tests cover healthy, unresponsive and ownership-refusal cases. Real
 sleep/wake, crash/restart, coexistence and removal proof remain.
 
 September 23 A02 first slice: `src/agent_policy.rs` provides in-process scoped

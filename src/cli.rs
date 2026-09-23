@@ -37,7 +37,7 @@ pub(crate) fn ensure_console() {
 pub(crate) fn ensure_console() {}
 
 fn usage() -> String {
-    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} version")
+    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} version")
 }
 fn get_flag(args: &[String], flag: &str) -> Option<String> {
     args.iter()
@@ -200,6 +200,57 @@ pub fn run_cli() -> i32 {
             }
         },
         "doctor" => query_result(queries::doctor(&args[1..], &runtime::SystemProcessRunner)),
+        "engine" => match args.get(1).map(String::as_str) {
+            Some("status") => {
+                match runtime::engine::wsl::bootstrap::status(
+                    &runtime::SystemProcessRunner,
+                    &storage::managed_engine_state_root(),
+                    &storage::managed_engine_data_root(),
+                ) {
+                    Ok(status) => match serde_json::to_string_pretty(&status) {
+                        Ok(json) => emit(&format!("{json}\n")).err().unwrap_or(0),
+                        Err(error) => {
+                            eprintln!("Could not encode engine status: {error}");
+                            1
+                        }
+                    },
+                    Err(error) => {
+                        eprintln!("{error}");
+                        1
+                    }
+                }
+            }
+            Some("repair") => {
+                let _lock = match runtime::lock_operation("managed-engine") {
+                    Ok(lock) => lock,
+                    Err(error) => {
+                        eprintln!("{error}");
+                        return 1;
+                    }
+                };
+                match runtime::engine::wsl::bootstrap::repair_daemon(
+                    &runtime::SystemProcessRunner,
+                    &storage::managed_engine_state_root(),
+                ) {
+                    Ok(true) => {
+                        println!("Managed engine is responsive after repair.");
+                        0
+                    }
+                    Ok(false) => {
+                        println!("Managed engine was already responsive.");
+                        0
+                    }
+                    Err(error) => {
+                        eprintln!("{error}");
+                        1
+                    }
+                }
+            }
+            _ => {
+                eprintln!("Usage: {CLI_NAME} engine status|repair");
+                2
+            }
+        },
         "recovery" => query_result(queries::recovery(&args[1..])),
         // The one recovery action. `recovery` stays read-only: an inventory
         // command that could also delete things is too easy to run by accident.
@@ -509,6 +560,7 @@ fn normalize_action_args(args: Vec<String>) -> Result<Vec<String>, String> {
     };
     if ![
         "bind-engine",
+        "engine",
         "add",
         "install",
         "open",
@@ -588,6 +640,8 @@ mod tests {
         );
         for values in [
             vec!["bind-engine"],
+            vec!["engine", "repair", "extra"],
+            vec!["engine", "--repair"],
             vec!["bind-engine", "memos", "--force"],
             vec!["uninstall", "memos", "--delete-dtaa"],
             vec!["remove", "memos", "--delete-data"],
@@ -633,6 +687,7 @@ mod tests {
         let value = usage();
         for command in [
             "doctor",
+            "engine",
             "install",
             "recipes",
             "start",
