@@ -902,10 +902,12 @@
    "pulls": 21813704,
    "stars": 64912,
    "catalogues": 3,
-   "importable": true,
-   "blockers": [],
-   "services": 3,
-   "required_inputs": 0,
+   "importable": false,
+   "blockers": [
+    "plan policy"
+   ],
+   "services": null,
+   "required_inputs": null,
    "images": [
     "nocodb/nocodb:2026.08.2",
     "postgres:16",
@@ -1095,10 +1097,12 @@
    "pulls": 3556133,
    "stars": 46246,
    "catalogues": 5,
-   "importable": true,
-   "blockers": [],
-   "services": 1,
-   "required_inputs": 0,
+   "importable": false,
+   "blockers": [
+    "plan policy"
+   ],
+   "services": null,
+   "required_inputs": null,
    "images": [
     "b3log/siyuan:v3.8.2"
    ]
@@ -1456,28 +1460,6 @@
    "required_inputs": null,
    "images": [
     "lobehub/lobe-chat:1.143.3"
-   ]
-  },
-  {
-   "id": "outline",
-   "source": "caprover",
-   "reach": 54.7,
-   "open_source": false,
-   "licenses": [
-    "NOASSERTION",
-    "BUSL-1.1"
-   ],
-   "pulls": 14642702,
-   "stars": 40512,
-   "catalogues": 2,
-   "importable": true,
-   "blockers": [],
-   "services": 3,
-   "required_inputs": 0,
-   "images": [
-    "outlinewiki/outline:1.9.2",
-    "postgres:17-alpine",
-    "redis:7.4-alpine"
    ]
   },
   {
@@ -2086,6 +2068,30 @@
    ]
   },
   {
+   "id": "ghostfolio",
+   "source": "runtipi",
+   "reach": 51.88,
+   "open_source": true,
+   "licenses": [
+    "AGPL-3.0",
+    "AGPL-3.0"
+   ],
+   "pulls": 3248128,
+   "stars": 9270,
+   "catalogues": 4,
+   "importable": false,
+   "blockers": [
+    "plan policy"
+   ],
+   "services": null,
+   "required_inputs": null,
+   "images": [
+    "ghostfolio/ghostfolio:3.66.0",
+    "postgres:15.4-alpine",
+    "redis:7-alpine"
+   ]
+  },
+  {
    "id": "wallos",
    "source": "runtipi",
    "reach": 51.83,
@@ -2353,28 +2359,6 @@
    "required_inputs": 0,
    "images": [
     "libretranslate/libretranslate:v1.9.6"
-   ]
-  },
-  {
-   "id": "ghostfolio",
-   "source": "runtipi",
-   "reach": 50.38,
-   "open_source": true,
-   "licenses": [
-    "AGPL-3.0",
-    "AGPL-3.0"
-   ],
-   "pulls": 3248128,
-   "stars": 9270,
-   "catalogues": 3,
-   "importable": true,
-   "blockers": [],
-   "services": 3,
-   "required_inputs": 0,
-   "images": [
-    "ghostfolio/ghostfolio:3.66.0",
-    "postgres:15.4-alpine",
-    "redis:7-alpine"
    ]
   },
   {
@@ -3241,10 +3225,12 @@
    "pulls": 4802254,
    "stars": 2401,
    "catalogues": 1,
-   "importable": true,
-   "blockers": [],
-   "services": 1,
-   "required_inputs": 1,
+   "importable": false,
+   "blockers": [
+    "plan policy"
+   ],
+   "services": null,
+   "required_inputs": null,
    "images": [
     "evanbuss/openbooks:4.5.0"
    ]
@@ -5785,10 +5771,12 @@
    "pulls": 23831,
    "stars": 30,
    "catalogues": 1,
-   "importable": true,
-   "blockers": [],
-   "services": 1,
-   "required_inputs": 0,
+   "importable": false,
+   "blockers": [
+    "plan policy"
+   ],
+   "services": null,
+   "required_inputs": null,
    "images": [
     "sethsimmons/moneroblock:v0.1.2"
    ]
@@ -5944,6 +5932,26 @@
    "images": []
   },
   {
+   "id": "outline",
+   "source": "caprover",
+   "reach": 26.04,
+   "open_source": false,
+   "licenses": [
+    "NOASSERTION",
+    "BUSL-1.1"
+   ],
+   "pulls": null,
+   "stars": 40512,
+   "catalogues": 2,
+   "importable": false,
+   "blockers": [
+    "plan rule"
+   ],
+   "services": null,
+   "required_inputs": null,
+   "images": []
+  },
+  {
    "id": "novu",
    "source": "caprover",
    "reach": 26.01,
@@ -6055,6 +6063,26 @@
    ],
    "pulls": null,
    "stars": 9315,
+   "catalogues": 4,
+   "importable": false,
+   "blockers": [
+    "public domain"
+   ],
+   "services": null,
+   "required_inputs": null,
+   "images": []
+  },
+  {
+   "id": "ghostfolio",
+   "source": "caprover",
+   "reach": 25.84,
+   "open_source": true,
+   "licenses": [
+    "AGPL-3.0",
+    "AGPL-3.0"
+   ],
+   "pulls": null,
+   "stars": 9270,
    "catalogues": 4,
    "importable": false,
    "blockers": [
@@ -6738,26 +6766,6 @@
    "pulls": null,
    "stars": 4675,
    "catalogues": 4,
-   "importable": false,
-   "blockers": [
-    "public domain"
-   ],
-   "services": null,
-   "required_inputs": null,
-   "images": []
-  },
-  {
-   "id": "ghostfolio",
-   "source": "caprover",
-   "reach": 24.34,
-   "open_source": true,
-   "licenses": [
-    "AGPL-3.0",
-    "AGPL-3.0"
-   ],
-   "pulls": null,
-   "stars": 9270,
-   "catalogues": 3,
    "importable": false,
    "blockers": [
     "public domain"

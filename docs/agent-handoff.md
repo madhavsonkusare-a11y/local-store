@@ -378,6 +378,18 @@ or volumes. Do not count n8n as managed-engine verified. Next diagnose its
 restart, apply measured limits, then wire product engine selection and consented
 setup.
 
+September 23 C01 refresh: `python scripts/build-candidate-queue.py` replayed
+606 source definitions from the two checksum-pinned archives through the actual
+Rust importers; `python scripts/rank-candidates.py` reused cached reach signals;
+`python scripts/build-v1-roster.py` regenerated the acceptance matrix. Membership
+remains 100 (52 offerings plus 48 planning candidates), with zero V1-qualified
+or agent-content-access apps claimed. Five definitions formerly counted as
+importable are now refused because their command values depend on environment
+substitution the normalized plan does not perform: moneroblock, siyuan,
+ghostfolio, Runtipi nocodb and CapRover outline. This is a real demotion, not
+a reason to silently select replacements. Current top-150 ranking: 89 structurally
+importable, 61 blocked. Queue tests and `build-v1-roster.py --check` pass.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

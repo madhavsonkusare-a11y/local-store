@@ -6,8 +6,8 @@
   "input_sha256": {
     "catalog/v1-roster-selection.json": "45b3c50d2d320f810fb008e0176c7d5d22824c3a6de5907e9aba735b1d537167",
     "catalog/v1-roster-upstream-evidence.json": "60b0859df9b82306871ca89eff99ae04f77ed631c4dc71fe74eee13013cfbe0d",
-    "catalog/candidate-queue.json": "5083002a9330119acc47e3036c76a384c71eff1db44fdd0e947ea83df246a35d",
-    "catalog/candidate-ranking.json": "6dca804bb133fdaf28cf4f9c16d4b3c14074b3960ab948b910b0c6b409d52b31",
+    "catalog/candidate-queue.json": "886cb82d4daafe0f3676cc72a9273cdec3bf0aba95cbb7c95d4d4a5982e0d790",
+    "catalog/candidate-ranking.json": "5e417b02f872c85f1438112f93b42aca721410c41f886fc58a0cb2f110fef3ce",
     "src/generated/catalog.json": "e3fce37a0771d7c1684343638bff5c9d2045d5bae6eb3159786deb35089c4ecc",
     "src/templates/activepieces.json": "2e677bb5901e63a80a0f71fca501fccbaec324cdb706670ece8b83921ee572b1",
     "src/templates/actual.json": "027dff92841929eb67b06230aba6e25f7557568b641158f1ad49b433e93e9a21",
@@ -342,7 +342,7 @@
       "canonical_project": "github.com/henrygd/beszel",
       "source_url": "https://github.com/henrygd/beszel",
       "license_snapshot": [],
-      "ranking_position_snapshot": 75,
+      "ranking_position_snapshot": 74,
       "manifest": "src/templates/beszel.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -555,7 +555,7 @@
       "license_snapshot": [
         "Apache-2.0"
       ],
-      "ranking_position_snapshot": 229,
+      "ranking_position_snapshot": 228,
       "manifest": "src/templates/changedetection.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -1110,7 +1110,7 @@
       "license_snapshot": [
         "AGPL-3.0"
       ],
-      "ranking_position_snapshot": 114,
+      "ranking_position_snapshot": 113,
       "manifest": "src/templates/docmost.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -1343,7 +1343,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 139,
+      "ranking_position_snapshot": 138,
       "manifest": "src/templates/flatnotes.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -1489,7 +1489,7 @@
       "license_snapshot": [
         "Apache-2.0 (enterprise folder under a commercial licence)"
       ],
-      "ranking_position_snapshot": 91,
+      "ranking_position_snapshot": 90,
       "manifest": "src/templates/flowise.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -1672,15 +1672,21 @@
       "license_snapshot": [
         "AGPL-3.0"
       ],
-      "ranking_position_snapshot": 112,
+      "ranking_position_snapshot": 98,
       "manifest": "src/templates/ghostfolio.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
         {
           "source": "runtipi",
           "id": "ghostfolio",
-          "importable_snapshot": true,
-          "blockers": [],
+          "importable_snapshot": false,
+          "blockers": [
+            {
+              "category": "refused",
+              "detail": "a command for \"ghostfolio-redis\" expects \"GHOSTFOLIO_REDIS_PASSWORD\", which is only filled in environment values",
+              "feature": "plan policy"
+            }
+          ],
           "provenance": {
             "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
             "path": "apps/ghostfolio/docker-compose.json",
@@ -1688,12 +1694,8 @@
             "repository": "runtipi/runtipi-appstore",
             "declared_project": "github:ghostfolio/ghostfolio"
           },
-          "images_snapshot": [
-            "ghostfolio/ghostfolio:3.66.0",
-            "postgres:15.4-alpine",
-            "redis:7-alpine"
-          ],
-          "service_count": 3
+          "images_snapshot": null,
+          "service_count": null
         },
         {
           "source": "caprover",
@@ -2740,7 +2742,7 @@
       "license_snapshot": [
         "AGPL-3.0"
       ],
-      "ranking_position_snapshot": 202,
+      "ranking_position_snapshot": 201,
       "manifest": "src/templates/immich.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -2971,7 +2973,7 @@
       "license_snapshot": [
         "GPL-2.0"
       ],
-      "ranking_position_snapshot": 216,
+      "ranking_position_snapshot": 215,
       "manifest": "src/templates/jellyfin.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -3292,7 +3294,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 79,
+      "ranking_position_snapshot": 78,
       "manifest": "src/templates/kanboard.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -4908,7 +4910,7 @@
       "license_snapshot": [
         "GPL-3.0"
       ],
-      "ranking_position_snapshot": 74,
+      "ranking_position_snapshot": 73,
       "manifest": "src/templates/navidrome.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -5296,7 +5298,7 @@
       "license_snapshot": [
         "BSD-3-Clause"
       ],
-      "ranking_position_snapshot": 211,
+      "ranking_position_snapshot": 210,
       "manifest": "src/templates/open-webui.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -6732,7 +6734,7 @@
       "license_snapshot": [
         "AGPL-3.0"
       ],
-      "ranking_position_snapshot": 322,
+      "ranking_position_snapshot": 323,
       "manifest": "src/templates/trilium.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -6852,7 +6854,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 320,
+      "ranking_position_snapshot": 321,
       "manifest": "src/templates/umami-analytics.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -7370,7 +7372,7 @@
         "AGPL-3.0/GPL-3.0",
         "GPL-3.0"
       ],
-      "ranking_position_snapshot": 87,
+      "ranking_position_snapshot": 86,
       "manifest": "src/templates/vikunja.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -7672,7 +7674,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 285,
+      "ranking_position_snapshot": 284,
       "manifest": "src/templates/wekan.json",
       "current_manifest_promotion": "approved",
       "deployment_candidates": [
@@ -8178,8 +8180,14 @@
         {
           "source": "caprover",
           "id": "outline",
-          "importable_snapshot": true,
-          "blockers": [],
+          "importable_snapshot": false,
+          "blockers": [
+            {
+              "category": "refused",
+              "detail": "a command for \"redis\" expects \"CAP_REDIS_PASSWORD\", which is only filled in environment values",
+              "feature": "plan rule"
+            }
+          ],
           "provenance": {
             "revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
             "path": "public/v4/apps/outline.yml",
@@ -8187,12 +8195,8 @@
             "repository": "caprover/one-click-apps",
             "declared_project": null
           },
-          "images_snapshot": [
-            "outlinewiki/outline:1.9.2",
-            "postgres:17-alpine",
-            "redis:7.4-alpine"
-          ],
-          "service_count": 3
+          "images_snapshot": null,
+          "service_count": null
         }
       ],
       "preferred_candidate_for_review": "runtipi:outline",
@@ -9226,25 +9230,6 @@
       "current_manifest_promotion": null,
       "deployment_candidates": [
         {
-          "source": "runtipi",
-          "id": "nocodb",
-          "importable_snapshot": true,
-          "blockers": [],
-          "provenance": {
-            "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
-            "path": "apps/nocodb/docker-compose.json",
-            "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
-            "repository": "runtipi/runtipi-appstore",
-            "declared_project": "github:nocodb/nocodb"
-          },
-          "images_snapshot": [
-            "nocodb/nocodb:2026.08.2",
-            "postgres:16",
-            "redis:alpine"
-          ],
-          "service_count": 3
-        },
-        {
           "source": "caprover",
           "id": "nocodb",
           "importable_snapshot": true,
@@ -9260,12 +9245,70 @@
             "nocodb/nocodb:0.83.8"
           ],
           "service_count": 1
+        },
+        {
+          "source": "runtipi",
+          "id": "nocodb",
+          "importable_snapshot": false,
+          "blockers": [
+            {
+              "category": "refused",
+              "detail": "a command for \"nocodb-redis\" expects \"NOCODB_REDIS_PASSWORD\", which is only filled in environment values",
+              "feature": "plan policy"
+            }
+          ],
+          "provenance": {
+            "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+            "path": "apps/nocodb/docker-compose.json",
+            "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
+            "repository": "runtipi/runtipi-appstore",
+            "declared_project": "github:nocodb/nocodb"
+          },
+          "images_snapshot": null,
+          "service_count": null
         }
       ],
-      "preferred_candidate_for_review": "runtipi:nocodb",
+      "preferred_candidate_for_review": "caprover:nocodb",
       "deployment_status": "candidate_review_required",
       "setup": {
-        "fields_snapshot": [],
+        "fields_snapshot": [
+          {
+            "has_default": true,
+            "key": "CAP_NC_DB",
+            "required": false,
+            "sensitive": true
+          },
+          {
+            "has_default": true,
+            "key": "CAP_DATABASE_URL",
+            "required": false,
+            "sensitive": true
+          },
+          {
+            "has_default": true,
+            "key": "CAP_PUBLIC_URL",
+            "required": false,
+            "sensitive": true
+          },
+          {
+            "has_default": true,
+            "key": "CAP_SENTRY_DSN",
+            "required": false,
+            "sensitive": true
+          },
+          {
+            "has_default": true,
+            "key": "CAP_CONNECT_TO_EXTERNAL_DB_DISABLED",
+            "required": false,
+            "sensitive": true
+          },
+          {
+            "has_default": true,
+            "key": "CAP_DISABLE_TELE",
+            "required": false,
+            "sensitive": true
+          }
+        ],
         "first_run_and_external_requirements": "must_prove_with_app_task",
         "baseline_risk_notes": []
       },
@@ -9516,7 +9559,7 @@
           "blockers": [
             {
               "category": "refused",
-              "detail": "image \"mariadb\" is not pinned to a tag",
+              "detail": "a command for \"firefly-iii-cron\" expects \"APP_DOMAIN\", which is only filled in environment values",
               "feature": "plan policy"
             }
           ],
@@ -9726,8 +9769,14 @@
         {
           "source": "runtipi",
           "id": "siyuan",
-          "importable_snapshot": true,
-          "blockers": [],
+          "importable_snapshot": false,
+          "blockers": [
+            {
+              "category": "refused",
+              "detail": "a command for \"siyuan\" expects \"SIYUAN_ACCESS_AUTH_CODE\", which is only filled in environment values",
+              "feature": "plan policy"
+            }
+          ],
           "provenance": {
             "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
             "path": "apps/siyuan/docker-compose.json",
@@ -9735,23 +9784,14 @@
             "repository": "runtipi/runtipi-appstore",
             "declared_project": "github:siyuan-note/siyuan"
           },
-          "images_snapshot": [
-            "b3log/siyuan:v3.8.2"
-          ],
-          "service_count": 1
+          "images_snapshot": null,
+          "service_count": null
         }
       ],
       "preferred_candidate_for_review": "runtipi:siyuan",
       "deployment_status": "candidate_review_required",
       "setup": {
-        "fields_snapshot": [
-          {
-            "has_default": true,
-            "key": "TZ",
-            "required": false,
-            "sensitive": false
-          }
-        ],
+        "fields_snapshot": null,
         "first_run_and_external_requirements": "must_prove_with_app_task",
         "baseline_risk_notes": []
       },
@@ -10034,7 +10074,7 @@
       "license_snapshot": [
         "Apache-2.0"
       ],
-      "ranking_position_snapshot": 71,
+      "ranking_position_snapshot": 70,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -10144,7 +10184,7 @@
       "license_snapshot": [
         "GPL-3.0"
       ],
-      "ranking_position_snapshot": 73,
+      "ranking_position_snapshot": 72,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -10271,7 +10311,7 @@
       "license_snapshot": [
         "Apache-2.0"
       ],
-      "ranking_position_snapshot": 86,
+      "ranking_position_snapshot": 85,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -10380,7 +10420,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 89,
+      "ranking_position_snapshot": 88,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -10495,7 +10535,7 @@
       "license_snapshot": [
         "⊘ Proprietary"
       ],
-      "ranking_position_snapshot": 94,
+      "ranking_position_snapshot": 93,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -11160,7 +11200,7 @@
       "canonical_project": "github.com/semaphoreui/semaphore",
       "source_url": "https://github.com/semaphoreui/semaphore",
       "license_snapshot": [],
-      "ranking_position_snapshot": 119,
+      "ranking_position_snapshot": 118,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -11288,7 +11328,7 @@
       "license_snapshot": [
         "AGPL-3.0"
       ],
-      "ranking_position_snapshot": 122,
+      "ranking_position_snapshot": 121,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -11435,7 +11475,7 @@
       "license_snapshot": [
         "GPL-3.0"
       ],
-      "ranking_position_snapshot": 251,
+      "ranking_position_snapshot": 250,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -11566,7 +11606,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 128,
+      "ranking_position_snapshot": 127,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -11704,7 +11744,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 130,
+      "ranking_position_snapshot": 129,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -11826,7 +11866,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 135,
+      "ranking_position_snapshot": 134,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -11966,7 +12006,7 @@
       "license_snapshot": [
         "GPL-2.0"
       ],
-      "ranking_position_snapshot": 137,
+      "ranking_position_snapshot": 136,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -12084,7 +12124,7 @@
       "license_snapshot": [
         "GPL-3.0"
       ],
-      "ranking_position_snapshot": 145,
+      "ranking_position_snapshot": 144,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -12206,7 +12246,7 @@
       "license_snapshot": [
         "AGPL-3.0"
       ],
-      "ranking_position_snapshot": 155,
+      "ranking_position_snapshot": 154,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -12315,7 +12355,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 160,
+      "ranking_position_snapshot": 159,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -12425,7 +12465,7 @@
       "license_snapshot": [
         "Apache-2.0"
       ],
-      "ranking_position_snapshot": 162,
+      "ranking_position_snapshot": 161,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -12538,7 +12578,7 @@
       "canonical_project": "github.com/jenkinsci/jenkins",
       "source_url": "https://github.com/jenkinsci/jenkins",
       "license_snapshot": [],
-      "ranking_position_snapshot": 175,
+      "ranking_position_snapshot": 174,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -12640,7 +12680,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 183,
+      "ranking_position_snapshot": 182,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -12756,7 +12796,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 267,
+      "ranking_position_snapshot": 266,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -12905,7 +12945,7 @@
       "license_snapshot": [
         "AGPL-3.0"
       ],
-      "ranking_position_snapshot": 270,
+      "ranking_position_snapshot": 269,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -13100,7 +13140,7 @@
       "license_snapshot": [
         "Apache-2.0"
       ],
-      "ranking_position_snapshot": 321,
+      "ranking_position_snapshot": 322,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -13226,7 +13266,7 @@
       "license_snapshot": [
         "GPL-3.0"
       ],
-      "ranking_position_snapshot": 259,
+      "ranking_position_snapshot": 258,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -13536,7 +13576,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 263,
+      "ranking_position_snapshot": 262,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [
@@ -13902,7 +13942,7 @@
       "license_snapshot": [
         "MIT"
       ],
-      "ranking_position_snapshot": 298,
+      "ranking_position_snapshot": 299,
       "manifest": null,
       "current_manifest_promotion": null,
       "deployment_candidates": [

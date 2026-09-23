@@ -3,11 +3,11 @@
   "summary": {
     "caprover": {
       "definitions": 356,
-      "expressible": 125
+      "expressible": 124
     },
     "runtipi": {
       "definitions": 250,
-      "expressible": 128
+      "expressible": 123
     },
     "resolved_project_groups": 233,
     "unresolved_definitions": 365,
@@ -2170,33 +2170,6 @@
       "identity": "github:dgtlmoon/changedetection.io",
       "identity_status": "source_declared_repository",
       "image_family": "ghcr.io/dgtlmoon/changedetection.io",
-      "maintenance_status": "not_screened",
-      "verification_status": "not_qualified_by_this_queue",
-      "possible_matches": []
-    },
-    {
-      "blockers": [],
-      "fields": [],
-      "generated_credentials": 0,
-      "id": "moneroblock",
-      "images": [
-        "sethsimmons/moneroblock:v0.1.2"
-      ],
-      "importable": true,
-      "primary_image": "sethsimmons/moneroblock:v0.1.2",
-      "required_inputs": 0,
-      "service_count": 1,
-      "source": "runtipi",
-      "provenance": {
-        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
-        "path": "apps/moneroblock/docker-compose.json",
-        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
-        "repository": "runtipi/runtipi-appstore",
-        "declared_project": "github:duggavo/moneroblock"
-      },
-      "identity": "github:duggavo/moneroblock",
-      "identity_status": "source_declared_repository",
-      "image_family": "sethsimmons/moneroblock",
       "maintenance_status": "not_screened",
       "verification_status": "not_qualified_by_this_queue",
       "possible_matches": []
@@ -4757,40 +4730,6 @@
         }
       ],
       "generated_credentials": 0,
-      "id": "siyuan",
-      "images": [
-        "b3log/siyuan:v3.8.2"
-      ],
-      "importable": true,
-      "primary_image": "b3log/siyuan:v3.8.2",
-      "required_inputs": 0,
-      "service_count": 1,
-      "source": "runtipi",
-      "provenance": {
-        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
-        "path": "apps/siyuan/docker-compose.json",
-        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
-        "repository": "runtipi/runtipi-appstore",
-        "declared_project": "github:siyuan-note/siyuan"
-      },
-      "identity": "github:siyuan-note/siyuan",
-      "identity_status": "source_declared_repository",
-      "image_family": "b3log/siyuan",
-      "maintenance_status": "not_screened",
-      "verification_status": "not_qualified_by_this_queue",
-      "possible_matches": []
-    },
-    {
-      "blockers": [],
-      "fields": [
-        {
-          "has_default": true,
-          "key": "TZ",
-          "required": false,
-          "sensitive": false
-        }
-      ],
-      "generated_credentials": 0,
       "id": "suwayomi",
       "images": [
         "ghcr.io/suwayomi/tachidesk:v2.3.2358"
@@ -6365,9 +6304,7 @@
       "image_family": "nocodb/nocodb",
       "maintenance_status": "not_screened",
       "verification_status": "not_qualified_by_this_queue",
-      "possible_matches": [
-        "runtipi:nocodb"
-      ]
+      "possible_matches": []
     },
     {
       "blockers": [],
@@ -8898,66 +8835,6 @@
     {
       "blockers": [],
       "fields": [],
-      "generated_credentials": 3,
-      "id": "ghostfolio",
-      "images": [
-        "ghostfolio/ghostfolio:3.66.0",
-        "postgres:15.4-alpine",
-        "redis:7-alpine"
-      ],
-      "importable": true,
-      "primary_image": "ghostfolio/ghostfolio:3.66.0",
-      "required_inputs": 0,
-      "service_count": 3,
-      "source": "runtipi",
-      "provenance": {
-        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
-        "path": "apps/ghostfolio/docker-compose.json",
-        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
-        "repository": "runtipi/runtipi-appstore",
-        "declared_project": "github:ghostfolio/ghostfolio"
-      },
-      "identity": "github:ghostfolio/ghostfolio",
-      "identity_status": "source_declared_repository",
-      "image_family": "ghostfolio/ghostfolio",
-      "maintenance_status": "not_screened",
-      "verification_status": "not_qualified_by_this_queue",
-      "possible_matches": []
-    },
-    {
-      "blockers": [],
-      "fields": [],
-      "generated_credentials": 3,
-      "id": "nocodb",
-      "images": [
-        "nocodb/nocodb:2026.08.2",
-        "postgres:16",
-        "redis:alpine"
-      ],
-      "importable": true,
-      "primary_image": "nocodb/nocodb:2026.08.2",
-      "required_inputs": 0,
-      "service_count": 3,
-      "source": "runtipi",
-      "provenance": {
-        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
-        "path": "apps/nocodb/docker-compose.json",
-        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
-        "repository": "runtipi/runtipi-appstore",
-        "declared_project": "github:nocodb/nocodb"
-      },
-      "identity": "github:nocodb/nocodb",
-      "identity_status": "source_declared_repository",
-      "image_family": "nocodb/nocodb",
-      "maintenance_status": "not_screened",
-      "verification_status": "not_qualified_by_this_queue",
-      "possible_matches": [
-        "caprover:nocodb"
-      ]
-    },
-    {
-      "blockers": [],
-      "fields": [],
       "generated_credentials": 0,
       "id": "viewtube",
       "images": [
@@ -9428,204 +9305,6 @@
       "blockers": [],
       "fields": [
         {
-          "has_default": true,
-          "key": "CAP_DB_USER",
-          "required": true,
-          "sensitive": true
-        },
-        {
-          "has_default": true,
-          "key": "CAP_DEFAULT_LANGUAGE",
-          "required": true,
-          "sensitive": true
-        },
-        {
-          "has_default": true,
-          "key": "CAP_FILE_STORAGE",
-          "required": true,
-          "sensitive": true
-        },
-        {
-          "has_default": true,
-          "key": "CAP_UPLOAD_MAX_SIZE",
-          "required": true,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_S3_BUCKET_URL",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_S3_BUCKET_NAME",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_S3_REGION",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_S3_ACCESS_KEY_ID",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_S3_SECRET_ACCESS_KEY",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": true,
-          "key": "CAP_S3_FORCE_PATH_STYLE",
-          "required": true,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_GOOGLE_CLIENT_ID",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_GOOGLE_CLIENT_SECRET",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_OIDC_CLIENT_ID",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_OIDC_CLIENT_SECRET",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_OIDC_AUTH_URI",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_OIDC_TOKEN_URI",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_OIDC_USERINFO_URI",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_OIDC_LOGOUT_URI",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": true,
-          "key": "CAP_OIDC_USERNAME_CLAIM",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": true,
-          "key": "CAP_OIDC_DISPLAY_NAME",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": true,
-          "key": "CAP_OIDC_SCOPES",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_SMTP_HOST",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_SMTP_PORT",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": true,
-          "key": "CAP_SMTP_SECURE",
-          "required": true,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_SMTP_USERNAME",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_SMTP_PASSWORD",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_SMTP_FROM_EMAIL",
-          "required": false,
-          "sensitive": true
-        },
-        {
-          "has_default": false,
-          "key": "CAP_SMTP_REPLY_EMAIL",
-          "required": false,
-          "sensitive": true
-        }
-      ],
-      "generated_credentials": 4,
-      "id": "outline",
-      "images": [
-        "outlinewiki/outline:1.9.2",
-        "postgres:17-alpine",
-        "redis:7.4-alpine"
-      ],
-      "importable": true,
-      "primary_image": "outlinewiki/outline:1.9.2",
-      "required_inputs": 0,
-      "service_count": 3,
-      "source": "caprover",
-      "provenance": {
-        "revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
-        "path": "public/v4/apps/outline.yml",
-        "archive_sha256": "7535b8ce39660ad6bf074461612f81b8bf7d3d8fd9e8c8c50c15477041ff3084",
-        "repository": "caprover/one-click-apps",
-        "declared_project": null
-      },
-      "identity": "unresolved:caprover:outline",
-      "identity_status": "unresolved",
-      "image_family": "outlinewiki/outline",
-      "maintenance_status": "not_screened",
-      "verification_status": "not_qualified_by_this_queue",
-      "possible_matches": []
-    },
-    {
-      "blockers": [],
-      "fields": [
-        {
           "has_default": false,
           "key": "TASKS_MD_TITLE",
           "required": true,
@@ -9686,40 +9365,6 @@
       "identity": "github:dani-garcia/vaultwarden",
       "identity_status": "source_declared_repository",
       "image_family": "vaultwarden/server",
-      "maintenance_status": "not_screened",
-      "verification_status": "not_qualified_by_this_queue",
-      "possible_matches": []
-    },
-    {
-      "blockers": [],
-      "fields": [
-        {
-          "has_default": false,
-          "key": "FOLDER_BOOKS",
-          "required": true,
-          "sensitive": false
-        }
-      ],
-      "generated_credentials": 0,
-      "id": "openbooks",
-      "images": [
-        "evanbuss/openbooks:4.5.0"
-      ],
-      "importable": true,
-      "primary_image": "evanbuss/openbooks:4.5.0",
-      "required_inputs": 1,
-      "service_count": 1,
-      "source": "runtipi",
-      "provenance": {
-        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
-        "path": "apps/openbooks/docker-compose.json",
-        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
-        "repository": "runtipi/runtipi-appstore",
-        "declared_project": "github:evan-buss/openbooks"
-      },
-      "identity": "github:evan-buss/openbooks",
-      "identity_status": "source_declared_repository",
-      "image_family": "evanbuss/openbooks",
       "maintenance_status": "not_screened",
       "verification_status": "not_qualified_by_this_queue",
       "possible_matches": []
@@ -12957,6 +12602,31 @@
     {
       "blockers": [
         {
+          "category": "refused",
+          "detail": "a command for \"moneroblock\" expects \"DAEMON_ADDRESS\", which is only filled in environment values",
+          "feature": "plan policy"
+        }
+      ],
+      "id": "moneroblock",
+      "importable": false,
+      "source": "runtipi",
+      "provenance": {
+        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+        "path": "apps/moneroblock/docker-compose.json",
+        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
+        "repository": "runtipi/runtipi-appstore",
+        "declared_project": "github:duggavo/moneroblock"
+      },
+      "identity": "github:duggavo/moneroblock",
+      "identity_status": "source_declared_repository",
+      "image_family": null,
+      "maintenance_status": "not_screened",
+      "verification_status": "not_qualified_by_this_queue",
+      "possible_matches": []
+    },
+    {
+      "blockers": [
+        {
           "category": "not modelled",
           "detail": "emqx declares 4 extra ports; one is supported",
           "feature": "addPorts"
@@ -12998,6 +12668,31 @@
         "declared_project": "github:esphome/esphome"
       },
       "identity": "github:esphome/esphome",
+      "identity_status": "source_declared_repository",
+      "image_family": null,
+      "maintenance_status": "not_screened",
+      "verification_status": "not_qualified_by_this_queue",
+      "possible_matches": []
+    },
+    {
+      "blockers": [
+        {
+          "category": "refused",
+          "detail": "a command for \"openbooks\" expects \"OPENBOOKS_IRC_USERNAME\", which is only filled in environment values",
+          "feature": "plan policy"
+        }
+      ],
+      "id": "openbooks",
+      "importable": false,
+      "source": "runtipi",
+      "provenance": {
+        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+        "path": "apps/openbooks/docker-compose.json",
+        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
+        "repository": "runtipi/runtipi-appstore",
+        "declared_project": "github:evan-buss/openbooks"
+      },
+      "identity": "github:evan-buss/openbooks",
       "identity_status": "source_declared_repository",
       "image_family": null,
       "maintenance_status": "not_screened",
@@ -13058,7 +12753,7 @@
       "blockers": [
         {
           "category": "refused",
-          "detail": "image \"mariadb\" is not pinned to a tag",
+          "detail": "a command for \"firefly-iii-cron\" expects \"APP_DOMAIN\", which is only filled in environment values",
           "feature": "plan policy"
         }
       ],
@@ -13123,6 +12818,31 @@
         "declared_project": "github:gethomepage/homepage"
       },
       "identity": "github:gethomepage/homepage",
+      "identity_status": "source_declared_repository",
+      "image_family": null,
+      "maintenance_status": "not_screened",
+      "verification_status": "not_qualified_by_this_queue",
+      "possible_matches": []
+    },
+    {
+      "blockers": [
+        {
+          "category": "refused",
+          "detail": "a command for \"ghostfolio-redis\" expects \"GHOSTFOLIO_REDIS_PASSWORD\", which is only filled in environment values",
+          "feature": "plan policy"
+        }
+      ],
+      "id": "ghostfolio",
+      "importable": false,
+      "source": "runtipi",
+      "provenance": {
+        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+        "path": "apps/ghostfolio/docker-compose.json",
+        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
+        "repository": "runtipi/runtipi-appstore",
+        "declared_project": "github:ghostfolio/ghostfolio"
+      },
+      "identity": "github:ghostfolio/ghostfolio",
       "identity_status": "source_declared_repository",
       "image_family": null,
       "maintenance_status": "not_screened",
@@ -13443,7 +13163,7 @@
       "blockers": [
         {
           "category": "refused",
-          "detail": "image \"inovector/mixpost-pro-team:latest\" is not pinned to a fixed tag",
+          "detail": "a command for \"mixpost-pro-redis\" expects \"MIXPOST_REDIS_PASSWORD\", which is only filled in environment values",
           "feature": "plan policy"
         }
       ],
@@ -13468,7 +13188,7 @@
       "blockers": [
         {
           "category": "refused",
-          "detail": "image \"redis:latest\" is not pinned to a fixed tag",
+          "detail": "a command for \"mixpost-redis\" expects \"MIXPOST_REDIS_PASSWORD\", which is only filled in environment values",
           "feature": "plan policy"
         }
       ],
@@ -14577,6 +14297,31 @@
     {
       "blockers": [
         {
+          "category": "refused",
+          "detail": "a command for \"nocodb-redis\" expects \"NOCODB_REDIS_PASSWORD\", which is only filled in environment values",
+          "feature": "plan policy"
+        }
+      ],
+      "id": "nocodb",
+      "importable": false,
+      "source": "runtipi",
+      "provenance": {
+        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+        "path": "apps/nocodb/docker-compose.json",
+        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
+        "repository": "runtipi/runtipi-appstore",
+        "declared_project": "github:nocodb/nocodb"
+      },
+      "identity": "github:nocodb/nocodb",
+      "identity_status": "source_declared_repository",
+      "image_family": null,
+      "maintenance_status": "not_screened",
+      "verification_status": "not_qualified_by_this_queue",
+      "possible_matches": []
+    },
+    {
+      "blockers": [
+        {
           "category": "not modelled",
           "detail": "odoo allocates a TTY",
           "feature": "tty"
@@ -15158,6 +14903,31 @@
         "declared_project": "github:shamil/docker-postfix-relay"
       },
       "identity": "github:shamil/docker-postfix-relay",
+      "identity_status": "source_declared_repository",
+      "image_family": null,
+      "maintenance_status": "not_screened",
+      "verification_status": "not_qualified_by_this_queue",
+      "possible_matches": []
+    },
+    {
+      "blockers": [
+        {
+          "category": "refused",
+          "detail": "a command for \"siyuan\" expects \"SIYUAN_ACCESS_AUTH_CODE\", which is only filled in environment values",
+          "feature": "plan policy"
+        }
+      ],
+      "id": "siyuan",
+      "importable": false,
+      "source": "runtipi",
+      "provenance": {
+        "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+        "path": "apps/siyuan/docker-compose.json",
+        "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
+        "repository": "runtipi/runtipi-appstore",
+        "declared_project": "github:siyuan-note/siyuan"
+      },
+      "identity": "github:siyuan-note/siyuan",
       "identity_status": "source_declared_repository",
       "image_family": null,
       "maintenance_status": "not_screened",
@@ -21288,6 +21058,31 @@
         "declared_project": null
       },
       "identity": "unresolved:caprover:organizr",
+      "identity_status": "unresolved",
+      "image_family": null,
+      "maintenance_status": "not_screened",
+      "verification_status": "not_qualified_by_this_queue",
+      "possible_matches": []
+    },
+    {
+      "blockers": [
+        {
+          "category": "refused",
+          "detail": "a command for \"redis\" expects \"CAP_REDIS_PASSWORD\", which is only filled in environment values",
+          "feature": "plan rule"
+        }
+      ],
+      "id": "outline",
+      "importable": false,
+      "source": "caprover",
+      "provenance": {
+        "revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
+        "path": "public/v4/apps/outline.yml",
+        "archive_sha256": "7535b8ce39660ad6bf074461612f81b8bf7d3d8fd9e8c8c50c15477041ff3084",
+        "repository": "caprover/one-click-apps",
+        "declared_project": null
+      },
+      "identity": "unresolved:caprover:outline",
       "identity_status": "unresolved",
       "image_family": null,
       "maintenance_status": "not_screened",

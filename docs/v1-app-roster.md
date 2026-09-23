@@ -95,7 +95,7 @@ ranked row. All 100 must pass applicable V1 gates or require an owner scope deci
 | [PhotoPrism](https://github.com/photoprism/photoprism) | Photo Galleries | runtipi:photoprism | Import a photo, find it by search, and reopen it after restart. |
 | [SearXNG](https://github.com/searxng/searxng) | Search Engines | runtipi:searxng | Run a search and verify result handling with a controlled upstream. |
 | [Actual](https://github.com/actualbudget/actual) | Money, Budgeting & Management | caprover:actual | Create an account/category/transaction and verify the balance after restart. |
-| [NocoDB](https://github.com/nocodb/nocodb) | Database Management | runtipi:nocodb | Create a table and record, query it, and preserve it after restart. |
+| [NocoDB](https://github.com/nocodb/nocodb) | Database Management | caprover:nocodb | Create a table and record, query it, and preserve it after restart. |
 | [Excalidraw](https://github.com/excalidraw/excalidraw) | Utilities | runtipi:excalidraw | Create a drawing and prove export/import or the declared persistence model. |
 | [Firefly III](https://github.com/firefly-iii/firefly-iii) | Money, Budgeting & Management | caprover:firefly-iii | Create an account and transaction and verify its report after restart. |
 | [File Browser Quantum](https://github.com/gtsteffaniak/filebrowser) | Utilities | Find/review deployment | Upload, rename and download a file within an explicitly shared folder. |

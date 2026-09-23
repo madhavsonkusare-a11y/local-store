@@ -6,11 +6,11 @@ Generated offline by `python scripts/build-candidate-queue.py` using actual Rust
 {
   "caprover": {
     "definitions": 356,
-    "expressible": 125
+    "expressible": 124
   },
   "runtipi": {
     "definitions": 250,
-    "expressible": 128
+    "expressible": 123
   },
   "resolved_project_groups": 233,
   "unresolved_definitions": 365,
@@ -40,7 +40,6 @@ No candidate is promoted. Field values/defaults and generated credentials are no
 | runtipi | ntfy | 1 | 0 | source_declared_repository |
 | runtipi | cheshire-cat-ai | 1 | 0 | source_declared_repository |
 | runtipi | changedetection | 1 | 0 | source_declared_repository |
-| runtipi | moneroblock | 1 | 0 | source_declared_repository |
 | runtipi | glance | 1 | 0 | source_declared_repository |
 | runtipi | grafana | 1 | 0 | source_declared_repository |
 | runtipi | inspircd | 1 | 0 | source_declared_repository |
@@ -50,6 +49,7 @@ No candidate is promoted. Field values/defaults and generated credentials are no
 | runtipi | dashy | 1 | 0 | source_declared_repository |
 | runtipi | nginx | 1 | 0 | source_declared_repository |
 | runtipi | nextgba | 1 | 0 | source_declared_repository |
+| runtipi | ollama-cpu | 1 | 0 | source_declared_repository |
 
 ## Reviewed shortlist
 
