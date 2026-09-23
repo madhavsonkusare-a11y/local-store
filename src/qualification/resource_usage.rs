@@ -55,6 +55,139 @@ fn bytes(value: &str) -> Result<u64, String> {
 pub(super) struct Snapshot {
     pub memory_bytes: BTreeMap<String, u64>,
     pub managed_storage_bytes: u64,
+    pub named_volume_bytes: BTreeMap<String, u64>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "PascalCase")]
+struct VolumeInspection {
+    name: String,
+    driver: String,
+    scope: String,
+    mountpoint: String,
+    labels: BTreeMap<String, String>,
+}
+
+fn named_volume_bytes(
+    runner: &dyn ProcessRunner,
+    project: &str,
+    names: &[String],
+) -> Result<BTreeMap<String, u64>, String> {
+    if names.is_empty() {
+        return Ok(BTreeMap::new());
+    }
+    if names.len() > 16 {
+        return Err("too many named volumes to measure safely".into());
+    }
+    let managed = runner
+        .engine_binding()
+        .map_err(|_| "selected engine could not be identified".to_owned())?
+        .is_some_and(|binding| binding.is_wsl());
+    if !managed {
+        return Err("named volume disk usage requires the managed WSL engine".into());
+    }
+    let expected: BTreeMap<_, _> = names
+        .iter()
+        .map(|name| (format!("{project}_{name}"), name.as_str()))
+        .collect();
+    if expected.len() != names.len() {
+        return Err("named volume declarations were duplicated".into());
+    }
+    let mut args = vec![
+        "volume".into(),
+        "inspect".into(),
+        "--format".into(),
+        "{{json .}}".into(),
+    ];
+    args.extend(expected.keys().cloned());
+    let inspected = runner
+        .run(&CommandSpec::new("docker", args, None, DIAGNOSTIC_TIMEOUT))
+        .map_err(|_| "named volume inventory could not be read".to_owned())?;
+    if !inspected.success || inspected.truncated {
+        return Err("named volume inventory failed or was truncated".into());
+    }
+    let mut mountpoints = BTreeMap::new();
+    for line in inspected.stdout.lines() {
+        let volume: VolumeInspection = serde_json::from_str(line)
+            .map_err(|_| "named volume inventory returned invalid JSON".to_owned())?;
+        let declared = expected
+            .get(&volume.name)
+            .ok_or_else(|| "named volume inventory returned a foreign volume".to_owned())?;
+        if volume.driver != "local"
+            || volume.scope != "local"
+            || volume
+                .labels
+                .get("com.docker.compose.project")
+                .map(String::as_str)
+                != Some(project)
+            || volume
+                .labels
+                .get("com.docker.compose.volume")
+                .map(String::as_str)
+                != Some(*declared)
+            || !volume.mountpoint.starts_with('/')
+            || volume.mountpoint == "/"
+            || volume
+                .mountpoint
+                .split('/')
+                .skip(1)
+                .any(|part| part.is_empty() || part == "." || part == "..")
+            || volume.mountpoint.chars().any(char::is_control)
+            || mountpoints
+                .insert((*declared).to_owned(), volume.mountpoint)
+                .is_some()
+        {
+            return Err("named volume inventory failed ownership or path checks".into());
+        }
+    }
+    if mountpoints.len() != expected.len() {
+        return Err("named volume inventory omitted a declared volume".into());
+    }
+    let mut sizes = BTreeMap::new();
+    for (name, mountpoint) in mountpoints {
+        let mut command = CommandSpec::new(
+            "wsl.exe",
+            vec![
+                "--distribution".into(),
+                crate::runtime::engine::wsl::DISTRO.into(),
+                "--user".into(),
+                "root".into(),
+                "--cd".into(),
+                "/".into(),
+                "--exec".into(),
+                "/usr/bin/du".into(),
+                "--bytes".into(),
+                "--summarize".into(),
+                "--one-file-system".into(),
+                "--".into(),
+                mountpoint.clone(),
+            ],
+            None,
+            DIAGNOSTIC_TIMEOUT,
+        );
+        command.remove_env.push("WSLENV".into());
+        let measured = runner
+            .run(&command)
+            .map_err(|_| "named volume disk usage could not be read".to_owned())?;
+        if !measured.success || measured.truncated {
+            return Err("named volume disk usage failed or was truncated".into());
+        }
+        let (value, path) = measured
+            .stdout
+            .trim_end_matches('\n')
+            .split_once('\t')
+            .ok_or_else(|| "named volume disk usage returned an invalid row".to_owned())?;
+        if path != mountpoint || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+            return Err("named volume disk usage returned an unexpected path or size".into());
+        }
+        sizes.insert(
+            name,
+            value
+                .parse::<u64>()
+                .map_err(|_| "named volume disk usage overflowed".to_owned())?,
+        );
+    }
+    Ok(sizes)
 }
 
 fn directory_bytes(root: &Path) -> Result<u64, String> {
@@ -94,6 +227,7 @@ pub(super) fn snapshot(
     runner: &dyn ProcessRunner,
     project: &str,
     project_dir: &Path,
+    named_volumes: &[String],
 ) -> Result<Snapshot, String> {
     let listed = runner
         .run(&CommandSpec::new(
@@ -154,6 +288,7 @@ pub(super) fn snapshot(
     Ok(Snapshot {
         memory_bytes: sample,
         managed_storage_bytes: directory_bytes(project_dir)?,
+        named_volume_bytes: named_volume_bytes(runner, project, named_volumes)?,
     })
 }
 
@@ -255,16 +390,18 @@ mod tests {
             output("abc123\ndef456\n"),
             output("owned-web-1\t12.25MiB / 1GiB\nowned-db-1\t1.5KiB / 1GiB\n"),
         ])));
-        let sample = snapshot(&runner, "owned", &root).unwrap();
+        let sample = snapshot(&runner, "owned", &root, &[]).unwrap();
         assert_eq!(sample.memory_bytes["owned-web-1"], 12_845_056);
         assert_eq!(sample.memory_bytes["owned-db-1"], 1_536);
         assert_eq!(sample.managed_storage_bytes, 5);
+        assert_eq!(sample.named_volume_bytes, BTreeMap::new());
+        assert!(named_volume_bytes(&runner, "owned", &["data".into()]).is_err());
 
         let missing = Sequence(Mutex::new(VecDeque::from([
             output("abc123\ndef456\n"),
             output("owned-web-1\t1MiB / 1GiB\n"),
         ])));
-        assert!(snapshot(&missing, "owned", &root).is_err());
+        assert!(snapshot(&missing, "owned", &root, &[]).is_err());
         std::fs::remove_dir_all(root).unwrap();
     }
 
@@ -289,5 +426,59 @@ mod tests {
         assert_eq!(sizes.len(), 2);
         assert_eq!(sizes[&a], 123);
         assert_eq!(sizes[&b], 456);
+    }
+
+    #[test]
+    fn managed_volume_measurement_requires_compose_ownership_and_exact_du_path() {
+        struct Managed {
+            outputs: Mutex<VecDeque<ProcessOutput>>,
+            calls: Mutex<Vec<CommandSpec>>,
+        }
+        impl ProcessRunner for Managed {
+            fn engine_binding(
+                &self,
+            ) -> crate::error::AppResult<Option<crate::runtime::engine::EngineBinding>>
+            {
+                Ok(Some(crate::runtime::engine::EngineBinding::managed_wsl()))
+            }
+            fn run_cancellable(
+                &self,
+                spec: &CommandSpec,
+                _: &CancelToken,
+            ) -> Result<ProcessOutput, ProcessError> {
+                self.calls.lock().unwrap().push(spec.clone());
+                Ok(self.outputs.lock().unwrap().pop_front().unwrap())
+            }
+        }
+        let mountpoint = "/var/lib/docker/volumes/owned_data/_data";
+        let volume = format!(
+            "{{\"Name\":\"owned_data\",\"Driver\":\"local\",\"Scope\":\"local\",\"Mountpoint\":\"{mountpoint}\",\"Labels\":{{\"com.docker.compose.project\":\"owned\",\"com.docker.compose.volume\":\"data\"}}}}\n"
+        );
+        let runner = Managed {
+            outputs: Mutex::new(VecDeque::from([
+                output(&volume),
+                output(&format!("123\t{mountpoint}\n")),
+            ])),
+            calls: Mutex::new(Vec::new()),
+        };
+        let measured = named_volume_bytes(&runner, "owned", &["data".into()]).unwrap();
+        assert_eq!(measured["data"], 123);
+        let calls = runner.calls.lock().unwrap();
+        assert_eq!(calls.len(), 2);
+        assert_eq!(calls[0].program, "docker");
+        assert_eq!(calls[1].program, "wsl.exe");
+        assert!(calls[1].args.contains(&"/usr/bin/du".into()));
+        assert!(calls[1].remove_env.contains(&"WSLENV".into()));
+        drop(calls);
+
+        let foreign = Managed {
+            outputs: Mutex::new(VecDeque::from([output(&volume.replace(
+                "\"com.docker.compose.project\":\"owned\"",
+                "\"com.docker.compose.project\":\"foreign\"",
+            ))])),
+            calls: Mutex::new(Vec::new()),
+        };
+        assert!(named_volume_bytes(&foreign, "owned", &["data".into()]).is_err());
+        assert_eq!(foreign.calls.lock().unwrap().len(), 1);
     }
 }

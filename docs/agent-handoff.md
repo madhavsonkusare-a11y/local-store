@@ -323,6 +323,18 @@ use a monotonic suffix to avoid equal-clock-tick scratch-directory collisions.
 Strict all-target/all-feature Clippy passes. The previous two Windows workflows
 passed. Docker Desktop still had no responding daemon, so no payload rebuild ran.
 
+September 23 Q02 volume follow-up: qualification now measures every declared
+Compose named volume on the selected managed WSL engine, using Docker's exact
+volume inspection and Compose ownership labels before a bounded in-distro `du`.
+The three lifecycle samples retain idle/peak per-volume bytes. Missing, foreign,
+unsupported-driver, truncated or unmeasurable volumes fail the resource step;
+older evidence without the fields cannot be reused. This has fixture proof only:
+31 qualification tests and strict all-target/all-feature Clippy passed; one
+opt-in real-Docker test was skipped while the daemon was unavailable. The latest
+Windows workflow before this change passed.
+Next prove the sampler on the real owned distro, then add explicit resource
+limits and repeat Q02 across release apps. Do not claim 50 verified apps yet.
+
 ## Baseline and limitations
 
 52 offerings (3 recipes, 49 approved templates), 1,678 discovery entries with

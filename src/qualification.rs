@@ -221,6 +221,11 @@ pub struct ResourceMeasurements {
     pub idle_managed_storage_bytes: u64,
     #[serde(default)]
     pub peak_managed_storage_bytes: u64,
+    /// Per declared Compose volume; absent in older or incomplete evidence.
+    #[serde(default)]
+    pub idle_named_volume_bytes: Option<BTreeMap<String, u64>>,
+    #[serde(default)]
+    pub peak_named_volume_bytes: Option<BTreeMap<String, u64>>,
     /// Virtual size per immutable image id. Shared layers make summing these
     /// unsuitable as physical host usage, but each value is stable evidence.
     #[serde(default)]
@@ -237,6 +242,8 @@ impl ResourceMeasurements {
             peak_total_memory_bytes: 0,
             idle_managed_storage_bytes: 0,
             peak_managed_storage_bytes: 0,
+            idle_named_volume_bytes: None,
+            peak_named_volume_bytes: None,
             image_virtual_bytes: BTreeMap::new(),
         }
     }
@@ -245,6 +252,7 @@ impl ResourceMeasurements {
         if self.samples == 0 {
             self.idle_memory_bytes = sample.memory_bytes.clone();
             self.idle_managed_storage_bytes = sample.managed_storage_bytes;
+            self.idle_named_volume_bytes = Some(sample.named_volume_bytes.clone());
         }
         let total = sample
             .memory_bytes
@@ -255,6 +263,15 @@ impl ResourceMeasurements {
         self.peak_managed_storage_bytes = self
             .peak_managed_storage_bytes
             .max(sample.managed_storage_bytes);
+        let volume_peaks = self
+            .peak_named_volume_bytes
+            .get_or_insert_with(BTreeMap::new);
+        for (name, bytes) in sample.named_volume_bytes {
+            volume_peaks
+                .entry(name)
+                .and_modify(|peak| *peak = (*peak).max(bytes))
+                .or_insert(bytes);
+        }
         for (container, bytes) in sample.memory_bytes {
             self.peak_memory_bytes
                 .entry(container)
@@ -269,6 +286,13 @@ impl ResourceMeasurements {
             && self.samples >= 3
             && !self.idle_memory_bytes.is_empty()
             && !self.image_virtual_bytes.is_empty()
+            && self.idle_named_volume_bytes.is_some()
+            && self.peak_named_volume_bytes.is_some()
+            && self.idle_named_volume_bytes.as_ref().is_some_and(|idle| {
+                self.peak_named_volume_bytes
+                    .as_ref()
+                    .is_some_and(|peak| idle.keys().all(|name| peak.contains_key(name)))
+            })
             && self
                 .idle_memory_bytes
                 .keys()
@@ -906,7 +930,12 @@ pub fn qualify_template(
         service_health::wait(&runner, &template.plan, &isolation.project, health)
     });
     if let Some(sample) = steps.run("measures resources after install", || {
-        resource_usage::snapshot(&runner, &isolation.project, &isolation.project_dir())
+        resource_usage::snapshot(
+            &runner,
+            &isolation.project,
+            &isolation.project_dir(),
+            &template.plan.named_volumes,
+        )
     }) {
         if let Some(measurements) = &mut measurements {
             measurements.observe(sample);
@@ -934,7 +963,12 @@ pub fn qualify_template(
         service_health::wait(&runner, &template.plan, &isolation.project, health)
     });
     if let Some(sample) = steps.run("measures resources after restart", || {
-        resource_usage::snapshot(&runner, &isolation.project, &isolation.project_dir())
+        resource_usage::snapshot(
+            &runner,
+            &isolation.project,
+            &isolation.project_dir(),
+            &template.plan.named_volumes,
+        )
     }) {
         if let Some(measurements) = &mut measurements {
             measurements.observe(sample);
@@ -979,7 +1013,12 @@ pub fn qualify_template(
             service_health::wait(&runner, &template.plan, &isolation.project, health)
         });
         if let Some(sample) = steps.run("measures resources after reinstall", || {
-            resource_usage::snapshot(&runner, &isolation.project, &isolation.project_dir())
+            resource_usage::snapshot(
+                &runner,
+                &isolation.project,
+                &isolation.project_dir(),
+                &template.plan.named_volumes,
+            )
         }) {
             if let Some(measurements) = &mut measurements {
                 measurements.observe(sample);
@@ -1573,6 +1612,8 @@ ccc",
                 peak_total_memory_bytes: 2_048,
                 idle_managed_storage_bytes: 4_096,
                 peak_managed_storage_bytes: 8_192,
+                idle_named_volume_bytes: Some(BTreeMap::new()),
+                peak_named_volume_bytes: Some(BTreeMap::new()),
                 image_virtual_bytes: [("sha256:abc".into(), 16_384)].into_iter().collect(),
             }),
             steps: vec![StepResult {
@@ -1643,6 +1684,17 @@ ccc",
         );
         assert!(batch.recorded("example").is_none());
         std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn evidence_without_named_volume_measurements_cannot_be_reused() {
+        let mut evidence = evidence_for("example", true);
+        let identity = evidence.identity.clone().unwrap();
+        assert!(evidence.is_current(&identity));
+        let measurements = evidence.measurements.as_mut().unwrap();
+        measurements.idle_named_volume_bytes = None;
+        measurements.peak_named_volume_bytes = None;
+        assert!(!evidence.is_current(&identity));
     }
 
     /// Qualifying a shortlist is hours of real Docker time and the run will be
