@@ -8,6 +8,7 @@ only release ledger. [Documentation index](README.md) explains the rest.
 Actual checkout is `D:/06 Projects/dockwrap`; older path references in this
 handoff are historical. The user's uncommitted `CHANGELOG.md` is untouched.
 The literal V1 task count is 6 DONE of 36 (16.7%); 50% requires 18 DONE.
+This integrated backend/documentation batch is local commit `8bf5962`; it has not been pushed.
 See [parallel execution](plans/parallel-v1-execution.md) for bounded agent
 lanes and the one-worker managed-engine constraint.
 
