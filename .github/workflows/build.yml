@@ -1,8 +1,8 @@
 name: build
 
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
     tags: ["v*"]
   pull_request:
     # Stacked PRs need checks before their base branch reaches main too.

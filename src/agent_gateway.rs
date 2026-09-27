@@ -54,6 +54,35 @@ impl AgentGateway {
         })
     }
 
+    /// Trusted local owner CLI only. The secret is returned once and never stored
+    /// as plaintext. The caller must treat stdout as sensitive.
+    pub fn enroll_client_for_owner(&self, id: &str) -> AppResult<String> {
+        let mut credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        if credentials.contains(id) {
+            return Err(AppError::new(
+                ErrorCode::AlreadyExists,
+                "Agent client is already enrolled.",
+            ));
+        }
+        // A previously revoked ID must not inherit any surviving grants.
+        AgentPolicyStore::open(&self.policy_root)?.revoke_client(id)?;
+        credentials
+            .enroll(id)
+            .map(auth::EnrolledSecret::into_string)
+    }
+
+    /// Remove grants first, so a credential-store write failure cannot leave
+    /// the old credential authorized and a later enrollment cannot revive access.
+    pub fn revoke_client_for_owner(&self, id: &str) -> AppResult<()> {
+        let mut credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        AgentPolicyStore::open(&self.policy_root)?.revoke_client(id)?;
+        credentials.revoke(id)
+    }
+
+    pub fn list_clients_for_owner(&self) -> AppResult<Vec<String>> {
+        Ok(ClientCredentialStore::open(&self.credentials_root)?.client_ids())
+    }
+
     pub fn get_status(
         &self,
         presented_secret: &str,
@@ -133,6 +162,53 @@ mod tests {
     fn roots(root: &Path) -> (PathBuf, PathBuf) {
         (root.join("policy"), root.join("credentials"))
     }
+    #[test]
+    fn owner_reenrollment_does_not_restore_old_grants() {
+        let root = scratch();
+        let policy_root = root.join("policy");
+        let credentials_root = root.join("credentials");
+        let gateway = AgentGateway::open(&policy_root, &credentials_root).unwrap();
+        let first = gateway.enroll_client_for_owner("client").unwrap();
+        assert_eq!(gateway.list_clients_for_owner().unwrap(), vec!["client"]);
+        {
+            let mut policy = AgentPolicyStore::open(&policy_root).unwrap();
+            policy
+                .grant(Grant {
+                    client_id: "client".into(),
+                    app_id: "memos".into(),
+                    actions: BTreeSet::from([AgentAction::Status]),
+                    expires_at_unix: u64::MAX,
+                })
+                .unwrap();
+        }
+        gateway.revoke_client_for_owner("client").unwrap();
+        assert!(gateway.list_clients_for_owner().unwrap().is_empty());
+        let second = gateway.enroll_client_for_owner("client").unwrap();
+        assert_ne!(first, second);
+        let credentials = ClientCredentialStore::open(&credentials_root).unwrap();
+        assert_eq!(
+            credentials
+                .verify(&first, Some("client"))
+                .err()
+                .unwrap()
+                .code,
+            ErrorCode::Forbidden
+        );
+        assert!(credentials.verify(&second, Some("client")).is_ok());
+        drop(credentials);
+        let mut policy = AgentPolicyStore::open(&policy_root).unwrap();
+        assert_eq!(
+            policy
+                .authorize("client", "memos", AgentAction::Status, None, 1)
+                .err()
+                .unwrap()
+                .code,
+            ErrorCode::Forbidden
+        );
+        drop(policy);
+        fs::remove_dir_all(root).unwrap();
+    }
+
     fn enroll(root: &Path, id: &str) -> String {
         let (_, credentials_root) = roots(root);
         ClientCredentialStore::open(&credentials_root)

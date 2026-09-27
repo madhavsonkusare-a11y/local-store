@@ -124,6 +124,17 @@ impl AgentPolicyStore {
         saved
     }
 
+    pub fn revoke_client(&mut self, client_id: &str) -> AppResult<()> {
+        if !valid_id(client_id) {
+            return Err(AppError::invalid("Invalid agent client ID."));
+        }
+        let mut next = self.policy.clone();
+        next.revoke_client(client_id);
+        let saved = self.save(&next);
+        self.policy = next;
+        saved
+    }
+
     /// One-use tickets are never serialized. A restart requires fresh approval.
     pub fn approve(
         &mut self,

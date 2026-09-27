@@ -32,11 +32,9 @@ struct ClientFile {
     clients: Vec<ClientRecord>,
 }
 
-// Owner enrollment is intentionally not wired to an agent-reachable command yet.
+// Enrollment is available only through the local owner CLI, never an agent tool.
 /// Returned once to a trusted owner flow; deliberately neither Debug nor Clone.
-#[allow(dead_code)]
 pub(crate) struct EnrolledSecret(String);
-#[allow(dead_code)]
 impl EnrolledSecret {
     pub(crate) fn into_string(self) -> String {
         self.0
@@ -46,7 +44,6 @@ impl EnrolledSecret {
 /// Stores hashes only. Local-profile ACLs protect against other OS users, but
 /// cannot isolate an agent with arbitrary file access under the same account.
 pub(crate) struct ClientCredentialStore {
-    #[allow(dead_code)]
     path: PathBuf,
     clients: Vec<ClientRecord>,
     _lock: fs::File,
@@ -97,7 +94,6 @@ impl ClientCredentialStore {
         })
     }
 
-    #[allow(dead_code)]
     fn save(&self, clients: &[ClientRecord]) -> AppResult<()> {
         if clients.len() > MAX_CLIENTS {
             return Err(AppError::invalid("Too many agent clients."));
@@ -114,7 +110,6 @@ impl ClientCredentialStore {
     }
 
     /// Trusted owner flow only. Never offer enrollment as an MCP tool.
-    #[allow(dead_code)]
     pub(crate) fn enroll(&mut self, id: &str) -> AppResult<EnrolledSecret> {
         if !valid_id(id) {
             return Err(AppError::invalid("Invalid agent client ID."));
@@ -140,7 +135,6 @@ impl ClientCredentialStore {
     }
 
     /// Trusted owner flow only. Future requests must verify again.
-    #[allow(dead_code)]
     pub(crate) fn revoke(&mut self, id: &str) -> AppResult<()> {
         if !valid_id(id) {
             return Err(AppError::invalid("Invalid agent client ID."));
@@ -151,9 +145,17 @@ impl ClientCredentialStore {
             .filter(|row| row.id != id)
             .cloned()
             .collect::<Vec<_>>();
-        let saved = self.save(&next);
+        self.save(&next)?;
         self.clients = next;
-        saved
+        Ok(())
+    }
+
+    pub(crate) fn contains(&self, id: &str) -> bool {
+        self.clients.iter().any(|row| row.id == id)
+    }
+
+    pub(crate) fn client_ids(&self) -> Vec<String> {
+        self.clients.iter().map(|row| row.id.clone()).collect()
     }
 
     /// Metadata can narrow a verified identity, never choose it.

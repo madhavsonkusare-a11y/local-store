@@ -78,6 +78,12 @@ impl AgentPolicy {
             .retain(|_, value| value.client_id != client_id || value.app_id != app_id);
     }
 
+    pub fn revoke_client(&mut self, client_id: &str) {
+        self.grants.retain(|(id, _), _| id != client_id);
+        self.approvals
+            .retain(|_, value| value.client_id != client_id);
+    }
+
     /// Registers a one-use owner approval. This method must only be reached
     /// from a trusted owner flow; agent transports must not expose it.
     pub fn approve(

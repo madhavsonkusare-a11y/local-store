@@ -15,6 +15,15 @@ The release ledger is [V1_TASKS.md](../V1_TASKS.md). This is a work allocation p
 
 Assign file ownership per batch and give each agent a narrow acceptance test. Agents can develop probes, policy, source inspection and UI contracts concurrently; one integrator reviews conflicts and updates the sole ledger after evidence lands. Treat Cargo.toml/Cargo.lock, central commands, docs/V1_TASKS.md and docs/agent-handoff.md as integration-owned files to avoid simultaneous edits. Run one Rust compile/test batch after code lanes settle instead of contending for the target directory.
 
+## Development check cadence
+
+During implementation, run the smallest focused test for the touched boundary and
+one compile check when a CLI or IPC surface changes. Do not wait for a full
+Windows release build after every main commit. The full build workflow remains
+available for PRs, version tags and manual dispatch; run it at integration
+milestones and before release. Keep runtime and app proof gates unchanged: a
+mocked test is never a managed-engine qualification.
+
 ## Throughput strategy
 
 1. Group release apps by task shape and reuse a small number of version-pinned adapters. Generate candidate probes from catalog metadata, but require an independent exact-state assertion after restart and keep-data reinstall. A browser or Jev may discover steps; it cannot certify its own success.

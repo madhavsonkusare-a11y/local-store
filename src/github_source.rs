@@ -35,6 +35,22 @@ pub struct CandidateReference {
     pub revision: String,
     pub path: String,
     pub structurally_importable: bool,
+    pub review_stage: CandidateReviewStage,
+    pub definition_url: String,
+    pub service_count: u32,
+    pub required_inputs: u32,
+    pub image_references: Vec<String>,
+    pub remaining_checks: Vec<String>,
+}
+
+/// These stages describe review work only; none grants install permission.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum CandidateReviewStage {
+    StructuralBlocker,
+    MaintenanceBlocker,
+    NeedsSourceReview,
+    NeedsQualification,
 }
 
 #[derive(Deserialize)]
@@ -49,13 +65,75 @@ struct QueuedCandidate {
     identity: String,
     identity_status: String,
     importable: bool,
+    #[serde(default)]
+    service_count: u32,
+    #[serde(default)]
+    required_inputs: u32,
+    #[serde(default)]
+    images: Vec<String>,
+    maintenance_status: Option<String>,
+    screening_review: Option<ScreeningReview>,
     provenance: CandidateProvenance,
+}
+
+#[derive(Deserialize)]
+struct ScreeningReview {
+    #[serde(default)]
+    remaining_checks: Vec<String>,
 }
 
 #[derive(Deserialize)]
 struct CandidateProvenance {
     revision: String,
     path: String,
+    repository: String,
+}
+
+fn definition_url(provenance: &CandidateProvenance) -> Option<String> {
+    let repo = repository(&format!("https://github.com/{}", provenance.repository)).ok()?;
+    if repo.strip_prefix("https://github.com/") != Some(provenance.repository.as_str()) {
+        return None;
+    }
+    if provenance.revision.len() != 40
+        || !provenance
+            .revision
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit())
+        || provenance.path.is_empty()
+        || provenance.path.split('/').any(|part| {
+            part.is_empty()
+                || part == "."
+                || part == ".."
+                || !part
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.'))
+        })
+    {
+        return None;
+    }
+    Some(format!(
+        "{repo}/blob/{}/{}",
+        provenance.revision.to_ascii_lowercase(),
+        provenance.path
+    ))
+}
+
+fn review_stage(row: &QueuedCandidate) -> CandidateReviewStage {
+    if !row.importable {
+        CandidateReviewStage::StructuralBlocker
+    } else if row
+        .maintenance_status
+        .as_deref()
+        .is_some_and(|status| status.starts_with("withhold_"))
+    {
+        CandidateReviewStage::MaintenanceBlocker
+    } else if row.screening_review.is_none()
+        || row.maintenance_status.as_deref() == Some("alternate_definition_not_screened")
+    {
+        CandidateReviewStage::NeedsSourceReview
+    } else {
+        CandidateReviewStage::NeedsQualification
+    }
 }
 
 fn reviewed_candidates(repository: &str) -> Result<Vec<CandidateReference>, String> {
@@ -69,14 +147,28 @@ fn reviewed_candidates(repository: &str) -> Result<Vec<CandidateReference>, Stri
         .filter(|row| {
             row.identity_status == "reviewed_repository_match" && row.identity == identity
         })
-        .map(|row| CandidateReference {
-            source: row.source,
-            id: row.id,
-            revision: row.provenance.revision,
-            path: row.provenance.path,
-            structurally_importable: row.importable,
+        .map(|row| {
+            let definition_url = definition_url(&row.provenance)
+                .ok_or("The pinned candidate has invalid source provenance.")?;
+            let review_stage = review_stage(&row);
+            Ok(CandidateReference {
+                source: row.source,
+                id: row.id,
+                revision: row.provenance.revision,
+                path: row.provenance.path,
+                structurally_importable: row.importable,
+                review_stage,
+                definition_url,
+                service_count: row.service_count,
+                required_inputs: row.required_inputs,
+                image_references: row.images,
+                remaining_checks: row
+                    .screening_review
+                    .map(|review| review.remaining_checks)
+                    .unwrap_or_default(),
+            })
         })
-        .collect::<Vec<_>>();
+        .collect::<Result<Vec<_>, String>>()?;
     matches.sort_by(|a, b| (&a.source, &a.id).cmp(&(&b.source, &b.id)));
     Ok(matches)
 }
@@ -752,6 +844,63 @@ mod tests {
         assert_eq!(candidates[0].id, "linkding");
         assert_eq!(candidates[0].revision.len(), 40);
         assert!(candidates[0].structurally_importable);
+    }
+
+    #[test]
+    fn candidate_review_exposes_pinned_provenance_and_remaining_work() {
+        let GithubResolution::ReviewCandidates { candidates, .. } =
+            resolve_from("https://github.com/privatebin/privatebin", &[]).unwrap()
+        else {
+            panic!("expected reviewed candidate");
+        };
+        let selected = candidates.iter().find(|c| c.source == "runtipi").unwrap();
+        assert_eq!(
+            selected.review_stage,
+            CandidateReviewStage::NeedsQualification
+        );
+        assert!(selected
+            .definition_url
+            .starts_with("https://github.com/runtipi/runtipi-appstore/blob/"));
+        assert!(selected.definition_url.contains(&selected.revision));
+        assert!(!selected.remaining_checks.is_empty());
+        assert!(!selected.image_references.is_empty());
+        let alternate = candidates.iter().find(|c| c.source == "caprover").unwrap();
+        assert_eq!(
+            alternate.review_stage,
+            CandidateReviewStage::NeedsSourceReview
+        );
+    }
+
+    #[test]
+    fn stale_candidate_is_blocked_even_when_structurally_importable() {
+        let GithubResolution::ReviewCandidates { candidates, .. } =
+            resolve("https://github.com/sissbruecker/linkding").unwrap()
+        else {
+            panic!("expected reviewed candidate");
+        };
+        assert_eq!(
+            candidates[0].review_stage,
+            CandidateReviewStage::MaintenanceBlocker
+        );
+        assert!(candidates[0].structurally_importable);
+    }
+
+    #[test]
+    fn definition_url_rejects_unpinned_or_unsafe_provenance() {
+        let mut p = CandidateProvenance {
+            repository: "caprover/one-click-apps".into(),
+            revision: "a".repeat(40),
+            path: "public/v4/apps/app.yml".into(),
+        };
+        assert!(definition_url(&p).is_some());
+        p.path = "../compose.yml".into();
+        assert!(definition_url(&p).is_none());
+        p.path = "public/v4/apps/app.yml".into();
+        p.repository = "caprover/one-click-apps/extra".into();
+        assert!(definition_url(&p).is_none());
+        p.repository = "caprover/one-click-apps".into();
+        p.revision = "main".into();
+        assert!(definition_url(&p).is_none());
     }
 
     #[test]

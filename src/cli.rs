@@ -1,5 +1,6 @@
 //! Standalone command-line interface for Local Store.
 use local_store::{
+    agent_gateway::AgentGateway,
     brand::{CLI_NAME, PRODUCT_NAME},
     error::{AppError, AppResult, ErrorCode},
     model::{next_available_installed_app_id, InstalledApp, RuntimeSpec},
@@ -37,7 +38,7 @@ pub(crate) fn ensure_console() {
 pub(crate) fn ensure_console() {}
 
 fn usage() -> String {
-    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} version")
+    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} agent-client list|enroll <id>|revoke <id>\n  {CLI_NAME} version")
 }
 fn get_flag(args: &[String], flag: &str) -> Option<String> {
     args.iter()
@@ -199,6 +200,49 @@ pub fn run_cli() -> i32 {
                 1
             }
         },
+        "agent-client" => {
+            let gateway = match AgentGateway::open_local() {
+                Ok(gateway) => gateway,
+                Err(error) => {
+                    eprintln!("{error}");
+                    return 1;
+                }
+            };
+            match args.as_slice() {
+                [_, action] if action == "list" => match gateway.list_clients_for_owner() {
+                    Ok(ids) => emit(&format!("{}\n", ids.join("\n"))).err().unwrap_or(0),
+                    Err(error) => {
+                        eprintln!("{error}");
+                        1
+                    }
+                },
+                [_, action, id] if action == "enroll" => {
+                    match gateway.enroll_client_for_owner(id) {
+                        Ok(secret) => match emit(&format!("{secret}\n")) {
+                            Ok(()) => 0,
+                            Err(_) => {
+                                match gateway.revoke_client_for_owner(id) {
+                                    Ok(()) => eprintln!("Could not deliver the agent credential; enrollment was revoked."),
+                                    Err(error) => eprintln!("Could not deliver the agent credential or revoke enrollment: {error}"),
+                                }
+                                1
+                            }
+                        },
+                        Err(error) => {
+                            eprintln!("{error}");
+                            1
+                        }
+                    }
+                }
+                [_, action, id] if action == "revoke" => {
+                    report(gateway.revoke_client_for_owner(id), "Agent client revoked.")
+                }
+                _ => {
+                    eprintln!("Usage: {CLI_NAME} agent-client list|enroll <id>|revoke <id>");
+                    2
+                }
+            }
+        }
         "doctor" => query_result(queries::doctor(&args[1..], &runtime::SystemProcessRunner)),
         "engine" => match args.get(1).map(String::as_str) {
             Some("status") => {

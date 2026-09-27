@@ -15,16 +15,26 @@ This is build evidence, not signed V1 release approval.
 See [parallel execution](plans/parallel-v1-execution.md) for bounded agent
 lanes and the one-worker managed-engine constraint.
 
+September 27 follow-up: A02 now has local agent-client list|enroll|revoke owner
+commands. Credentials are returned once, stored only as hashes, and revocation
+clears client grants so re-enrollment cannot revive access. A03 still has no MCP
+transport. C04 candidates now carry a pinned definition URL, review stage,
+manifest shape and remaining checks; this is a review preview, not install
+approval. Focused gateway tests (8), GitHub-source tests (15), and a CLI
+compile check passed. The workflow now runs its full Windows checks for PRs,
+version tags and manual dispatch; normal main pushes use focused local checks
+until the next milestone. The latest full green checkpoint remains run 36328665761.
+
 A02 has a durable, locked internal policy store with versioned grants, redacted
-bounded audit and fail-closed corruption handling. Seven focused tests pass;
-external identity and transport remain. C04 now offers opt-in bounded live
+bounded audit and fail-closed corruption handling. Eight focused tests pass;
+external transport and V3 onboarding remain. C04 now offers opt-in bounded live
 GitHub metadata and commit pinning behind the launcher command, with mocked
 HTTP refusal tests; no install approval or V3 preview is implied. Q04 has a
 shared Memos/Flatnotes exact-content probe with three passing fake-API tests;
 Flatnotes still needs a real owned-WSL run. None of these PARTIAL tasks moved
 to DONE. A03 now also has a transport-neutral status gateway that re-verifies
 an owner-enrolled random bearer token on every request, checks a durable grant
-and saves audit before dispatch; no MCP endpoint or owner enrollment UI is
+and saves audit before dispatch; no MCP endpoint or V3 credential onboarding is
 exposed. F02 now has typed launcher-state IPC, persisted onboarding viewed
 steps and launcher recovery commands delegated to existing locked CLI paths.
 Viewed steps are not consent. Real launcher action parity and V3-approved flow
