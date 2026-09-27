@@ -192,12 +192,15 @@ pub async fn doctor(window: tauri::WebviewWindow) -> AppResult<DoctorReport> {
 }
 
 #[tauri::command]
-pub fn resolve_github_source(
+pub async fn resolve_github_source(
     window: tauri::WebviewWindow,
     url: String,
-) -> AppResult<crate::github_source::GithubResolution> {
+) -> AppResult<crate::github_source::GithubInspection> {
     require_launcher(&window)?;
-    crate::github_source::resolve(&url).map_err(AppError::invalid)
+    tauri::async_runtime::spawn_blocking(move || crate::github_source::inspect(&url))
+        .await
+        .map_err(AppError::internal)?
+        .map_err(AppError::invalid)
 }
 
 /// Read-only managed-engine setup and Windows prerequisite state for the
@@ -511,4 +514,109 @@ mod tests {
             assert!(validate_connection(name, url).is_err());
         }
     }
+}
+
+/// Read the user's presentation progress without creating or modifying it.
+/// This is separate from live engine readiness and does not grant consent.
+#[tauri::command]
+pub async fn onboarding_progress(
+    window: tauri::WebviewWindow,
+) -> AppResult<crate::launcher_projection::OnboardingProgress> {
+    require_launcher(&window)?;
+    tauri::async_runtime::spawn_blocking(|| {
+        crate::launcher_projection::OnboardingStore::read(
+            &storage::managed_apps_root().with_file_name("onboarding"),
+        )
+    })
+    .await
+    .map_err(AppError::internal)?
+}
+
+#[tauri::command]
+pub async fn mark_onboarding_viewed(
+    window: tauri::WebviewWindow,
+    step: crate::launcher_projection::OnboardingStep,
+) -> AppResult<crate::launcher_projection::OnboardingProgress> {
+    require_launcher(&window)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let mut store = crate::launcher_projection::OnboardingStore::open(
+            &storage::managed_apps_root().with_file_name("onboarding"),
+        )?;
+        store.mark_viewed(step).cloned()
+    })
+    .await
+    .map_err(AppError::internal)?
+}
+
+/// Mirrors `local-store engine repair`: the lock and ownership recheck are
+/// required even if an earlier status response said repair looked possible.
+#[tauri::command]
+pub async fn repair_managed_engine(window: tauri::WebviewWindow) -> AppResult<bool> {
+    require_launcher(&window)?;
+    tauri::async_runtime::spawn_blocking(|| {
+        let _lock = runtime::lock_operation("managed-engine")?;
+        runtime::engine::wsl::bootstrap::repair_daemon(
+            &runtime::SystemProcessRunner,
+            &storage::managed_engine_state_root(),
+        )
+    })
+    .await
+    .map_err(AppError::internal)?
+}
+
+/// The recovery library re-inventories and rechecks labels under its own
+/// per-app lock. No browser-provided path, project name or snapshot is trusted.
+#[tauri::command]
+pub async fn discard_retained_setup(
+    window: tauri::WebviewWindow,
+    recipe_id: String,
+    delete_data: bool,
+) -> AppResult<crate::recovery::Discarded> {
+    require_launcher(&window)?;
+    tauri::async_runtime::spawn_blocking(move || crate::recovery::discard(&recipe_id, delete_data))
+        .await
+        .map_err(AppError::internal)?
+}
+
+#[tauri::command]
+pub async fn adopt_retained_setup(
+    window: tauri::WebviewWindow,
+    recipe_id: String,
+) -> AppResult<crate::recovery::Adopted> {
+    require_launcher(&window)?;
+    tauri::async_runtime::spawn_blocking(move || crate::recovery::adopt(&recipe_id))
+        .await
+        .map_err(AppError::internal)?
+}
+
+/// V3-facing snapshot built from the same backend reads as the existing
+/// launcher commands. Recovery labels remain display-only snapshots; action
+/// commands recheck ownership under their operation locks.
+#[tauri::command]
+pub async fn launcher_state(
+    window: tauri::WebviewWindow,
+) -> AppResult<crate::launcher_projection::LauncherState> {
+    require_launcher(&window)?;
+    tauri::async_runtime::spawn_blocking(|| {
+        let status = runtime::engine::wsl::bootstrap::status(
+            &runtime::SystemProcessRunner,
+            &storage::managed_engine_state_root(),
+            &storage::managed_engine_data_root(),
+        )?;
+        let installed = storage::load_or_migrate_registry()
+            .map_err(AppError::from)?
+            .apps;
+        let mut retained = crate::recovery::inspect()?;
+        for candidate in &mut retained {
+            crate::recovery::verify_with(candidate, &runtime::SystemProcessRunner)?;
+        }
+        let progress = crate::launcher_projection::OnboardingStore::read(
+            &storage::managed_apps_root().with_file_name("onboarding"),
+        )?;
+        Ok(crate::launcher_projection::launcher_state(
+            &status, &installed, &retained, &progress,
+        ))
+    })
+    .await
+    .map_err(AppError::internal)?
 }

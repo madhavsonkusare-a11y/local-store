@@ -1,5 +1,6 @@
 pub mod activation;
 pub mod agent_access;
+pub mod agent_gateway;
 pub mod agent_policy;
 pub mod brand;
 pub mod catalog;
@@ -9,6 +10,7 @@ pub mod error;
 pub mod folders;
 pub mod github_source;
 pub mod importers;
+pub mod launcher_projection;
 pub mod model;
 pub mod native;
 pub mod offerings;

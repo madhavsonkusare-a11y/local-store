@@ -57,12 +57,12 @@ as proof. The September 23 run used seven requests and 23,563 API tokens:
 and 5 other suggestions. Low-confidence or evidently mismatched cases need
 manual correction before building a driver. The key stays outside the repo.
 
-Jev could later rank candidate UI controls from a sanitized accessibility tree
-or flag whether a failure looks like app behavior versus a broken test. It
-must not decide pass/fail, choose arbitrary actions, see credentials, or grant
-an app agent access. A deterministic assertion must verify the resulting app
-state. Measure its accuracy and cost on labeled pilot cases before using it in
-the harness.
+The [thousand-app research](../research/qualification-at-1000-scale.md) found
+an MIT [Jev Ultrafast](https://github.com/browser-use/jev-ultrafast) browser
+executor. Jev can choose from observed, allowlisted UI actions when code owns
+the browser and enforces boundaries; it still cannot determine pass/fail.
+Its MVP has important UI gaps and needs an independent exact-state assertion.
+Pilot it against deterministic probes before adopting it in the harness.
 
 ## Next bounded batch
 

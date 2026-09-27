@@ -3,10 +3,10 @@
 //! credentials and raw arguments never enter its audit records.
 
 use crate::error::{AppError, AppResult, ErrorCode};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AgentAction {
     Status,
@@ -21,7 +21,8 @@ impl AgentAction {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Grant {
     pub client_id: String,
     pub app_id: String,
@@ -38,7 +39,8 @@ struct Approval {
 }
 
 /// Audit metadata only. No prompt, tool arguments, response or credential.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct AuditEvent {
     pub client_id: String,
     pub app_id: String,
@@ -47,7 +49,7 @@ pub struct AuditEvent {
     pub at_unix: u64,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct AgentPolicy {
     grants: BTreeMap<(String, String), Grant>,
     approvals: BTreeMap<String, Approval>,
@@ -146,6 +148,9 @@ impl AgentPolicy {
             allowed,
             at_unix: now_unix,
         });
+        if self.audit.len() > 2048 {
+            self.audit.remove(0);
+        }
         if allowed {
             Ok(())
         } else {
@@ -286,3 +291,6 @@ mod tests {
         assert!(json.contains("\"client_id\":\"invalid\""));
     }
 }
+
+mod store;
+pub use store::AgentPolicyStore;

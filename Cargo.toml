@@ -34,9 +34,13 @@ getrandom = "=0.4.3"
 # Already present through Tauri; bounded regex validation for imported fields.
 regex = "=1.13.1"
 url = "=2.5.8"
+# GitHub repository metadata inspection only; redirects are validated in code.
+reqwest = { version = "=0.13.4", default-features = false, features = ["blocking", "rustls"] }
 # Stream payload verification before WSL import. Already present transitively;
 # direct use makes the authenticated bootstrap boundary explicit.
 sha2 = "=0.10.9"
+# Constant-time comparison for enrolled agent credential hashes.
+subtle = "=2.6.1"
 
 # Process-group signalling for the bounded runtime process runner. `libc` is
 # already in the dependency graph through Tauri; its MSRV is far below the

@@ -1,7 +1,42 @@
 # Agent handoff
 
-Updated September 23, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
+Updated September 27, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
+
+## September 27 integration checkpoint
+
+Actual checkout is `D:/06 Projects/dockwrap`; older path references in this
+handoff are historical. The user's uncommitted `CHANGELOG.md` is untouched.
+The literal V1 task count is 6 DONE of 36 (16.7%); 50% requires 18 DONE.
+See [parallel execution](plans/parallel-v1-execution.md) for bounded agent
+lanes and the one-worker managed-engine constraint.
+
+A02 has a durable, locked internal policy store with versioned grants, redacted
+bounded audit and fail-closed corruption handling. Seven focused tests pass;
+external identity and transport remain. C04 now offers opt-in bounded live
+GitHub metadata and commit pinning behind the launcher command, with mocked
+HTTP refusal tests; no install approval or V3 preview is implied. Q04 has a
+shared Memos/Flatnotes exact-content probe with three passing fake-API tests;
+Flatnotes still needs a real owned-WSL run. None of these PARTIAL tasks moved
+to DONE. A03 now also has a transport-neutral status gateway that re-verifies
+an owner-enrolled random bearer token on every request, checks a durable grant
+and saves audit before dispatch; no MCP endpoint or owner enrollment UI is
+exposed. F02 now has typed launcher-state IPC, persisted onboarding viewed
+steps and launcher recovery commands delegated to existing locked CLI paths.
+Viewed steps are not consent. Real launcher action parity and V3-approved flow
+remain. The integrated library suite passed 339 tests (two ignored), all-target
+strict Clippy and Rust formatting passed, and the shared probe's three local
+API tests passed. See the corresponding master ledger rows before claiming
+progress.
+
+Docker daemon was unavailable after the owner's disk migration, so no new real
+app qualification ran. Start Docker Desktop from the Start menu before the
+Flatnotes pilot; do not launch it inside a Claude/Codex session. The pnpm store
+was moved to `D:/06 Projects/_build/pnpm-store`, Axonix UI and extension were
+reinstalled/relinked, the extension build and UI TypeScript check passed, and
+the old `D:/.pnpm-store` was removed after package/index verification. No
+Compose or script bind mounts to the old `D:/Data/Madhav/...` layout were found
+in Local Store or Axonix.
 
 ## Current work and checkout
 
@@ -52,7 +87,7 @@ that does not settle broad distribution rights. Shrimply remains excluded.
   pins, isolated builder/exporter and offline refusal tests. Export evidence and
   128-package inventory are in `docs/evidence/engine-*-development-2026-09-13.*`.
   Local artifacts: `.cache/engine/build-4c6cb9c7590146799bcec6e000d231bf/`.
-  The rootfs is unsigned and has never booted in WSL. No app uses this engine yet.
+  The rootfs remains a development payload without release provenance. Later owned-WSL Memos and n8n runs below prove it can boot and host apps; they do not approve E01 for release.
 - E02: `src/runtime/engine.rs` persists local Docker endpoint bindings beside
   Compose files. New installs, lifecycle, rollback, qualification and recovery
   use the saved endpoint and clear child context overrides. Missing marked or
@@ -472,6 +507,16 @@ Uptime Kuma experiment passed first-use setup but failed on a restart login
 selector; its failed evidence and bespoke probe were removed. Counts remain
 one task-qualified app of 50, two managed lifecycle passes. The owner's
 uncommitted `CHANGELOG.md` remains untouched.
+
+September 24 research follow-up: read
+[qualification-at-1000-scale.md](research/qualification-at-1000-scale.md) before
+more per-app probes. The strongest untried accelerator is constrained AI
+browser action discovery followed by independent synthetic-marker assertions
+and replay. Jev Ultrafast shows how Jev can select live UI controls with a
+bounded executor; its early benchmark does not prove broad reliability. Pilot
+across diverse apps first. Scale runtime checks with separate owned-WSL
+workers, never concurrent runs on the present shared engine. No verification
+count changed from this research.
 
 ```text
 cargo fmt --all -- --check
