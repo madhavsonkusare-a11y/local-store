@@ -8,7 +8,10 @@ only release ledger. [Documentation index](README.md) explains the rest.
 The checkout now lives under `D:/06 Projects`; older path references in this
 handoff are historical. The user's uncommitted `CHANGELOG.md` is untouched.
 The literal V1 task count is 6 DONE of 36 (16.7%); 50% requires 18 DONE.
-This integrated backend/documentation batch is local commit `8bf5962`; it has not been pushed.
+Implementation through `ef3e178` passed
+[Windows CI run 36328665761](https://github.com/madhavsonkusare-a11y/local-store/actions/runs/36328665761):
+minimum Rust, quality/UI tests, packaged CLI and release artifact staging.
+This is build evidence, not signed V1 release approval.
 See [parallel execution](plans/parallel-v1-execution.md) for bounded agent
 lanes and the one-worker managed-engine constraint.
 
