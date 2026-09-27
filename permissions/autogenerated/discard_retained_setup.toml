@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-discard-retained-setup"
+description = "Enables the discard_retained_setup command without any pre-configured scope."
+commands.allow = ["discard_retained_setup"]
+
+[[permission]]
+identifier = "deny-discard-retained-setup"
+description = "Denies the discard_retained_setup command without any pre-configured scope."
+commands.deny = ["discard_retained_setup"]

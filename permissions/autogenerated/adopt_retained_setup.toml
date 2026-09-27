@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-adopt-retained-setup"
+description = "Enables the adopt_retained_setup command without any pre-configured scope."
+commands.allow = ["adopt_retained_setup"]
+
+[[permission]]
+identifier = "deny-adopt-retained-setup"
+description = "Denies the adopt_retained_setup command without any pre-configured scope."
+commands.deny = ["adopt_retained_setup"]
