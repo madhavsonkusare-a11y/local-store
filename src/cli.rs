@@ -38,7 +38,7 @@ pub(crate) fn ensure_console() {
 pub(crate) fn ensure_console() {}
 
 fn usage() -> String {
-    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} agent-client list|enroll <id>|revoke <id>\n  {CLI_NAME} version")
+    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} agent-client list|enroll <id>|revoke <id>\n  {CLI_NAME} agent-grant status <client-id> <installed-app-id> --hours <1..720>\n  {CLI_NAME} agent-grant revoke <client-id> <app-id>\n  {CLI_NAME} version")
 }
 fn get_flag(args: &[String], flag: &str) -> Option<String> {
     args.iter()
@@ -239,6 +239,53 @@ pub fn run_cli() -> i32 {
                 }
                 _ => {
                     eprintln!("Usage: {CLI_NAME} agent-client list|enroll <id>|revoke <id>");
+                    2
+                }
+            }
+        }
+        "agent-grant" => {
+            let gateway = match AgentGateway::open_local() {
+                Ok(gateway) => gateway,
+                Err(error) => {
+                    eprintln!("{error}");
+                    return 1;
+                }
+            };
+            match args.as_slice() {
+                [_, action, client_id, app_id, flag, hours]
+                    if action == "status" && flag == "--hours" =>
+                {
+                    let hours = match hours.parse::<u64>() {
+                        Ok(value) => value,
+                        Err(_) => {
+                            eprintln!("Hours must be a whole number from 1 to 720.");
+                            return 2;
+                        }
+                    };
+                    let timestamp = match now() {
+                        Ok(value) => value,
+                        Err(error) => {
+                            eprintln!("{error}");
+                            return 1;
+                        }
+                    };
+                    match gateway.grant_status_for_owner(client_id, app_id, hours, timestamp) {
+                        Ok(expires) => {
+                            println!("Status access granted until Unix time {expires}.");
+                            0
+                        }
+                        Err(error) => {
+                            eprintln!("{error}");
+                            1
+                        }
+                    }
+                }
+                [_, action, client_id, app_id] if action == "revoke" => report(
+                    gateway.revoke_status_for_owner(client_id, app_id),
+                    "Agent status grant revoked.",
+                ),
+                _ => {
+                    eprintln!("Usage: {CLI_NAME} agent-grant status <client-id> <installed-app-id> --hours <1..720> | revoke <client-id> <app-id>");
                     2
                 }
             }

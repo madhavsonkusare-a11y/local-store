@@ -6,7 +6,7 @@ mod auth;
 
 use crate::{
     agent_access::ToolResult,
-    agent_policy::{AgentAction, AgentPolicyStore},
+    agent_policy::{AgentAction, AgentPolicyStore, Grant},
     brand::CONFIG_SLUG,
     error::{AppError, AppResult, ErrorCode},
     model::InstalledApp,
@@ -14,7 +14,12 @@ use crate::{
     storage::{self, RegistryV2},
 };
 use auth::ClientCredentialStore;
-use std::path::{Path, PathBuf};
+use std::{
+    collections::BTreeSet,
+    path::{Path, PathBuf},
+};
+
+const MAX_STATUS_GRANT_HOURS: u64 = 24 * 30;
 
 /// Only the credential verifier in this module can mint this identity.
 struct VerifiedClient {
@@ -81,6 +86,72 @@ impl AgentGateway {
 
     pub fn list_clients_for_owner(&self) -> AppResult<Vec<String>> {
         Ok(ClientCredentialStore::open(&self.credentials_root)?.client_ids())
+    }
+
+    /// Trusted local owner CLI only. Grants exactly status for an enrolled
+    /// client and an exact installed app ID, for at most thirty days.
+    pub fn grant_status_for_owner(
+        &self,
+        client_id: &str,
+        app_id: &str,
+        hours: u64,
+        now_unix: u64,
+    ) -> AppResult<u64> {
+        self.grant_status_for_owner_with(client_id, app_id, hours, now_unix, || {
+            storage::load_or_migrate_registry().map_err(AppError::from)
+        })
+    }
+
+    fn grant_status_for_owner_with(
+        &self,
+        client_id: &str,
+        app_id: &str,
+        hours: u64,
+        now_unix: u64,
+        load: impl FnOnce() -> AppResult<RegistryV2>,
+    ) -> AppResult<u64> {
+        if !(1..=MAX_STATUS_GRANT_HOURS).contains(&hours) {
+            return Err(AppError::invalid("Status grant must last 1 to 720 hours."));
+        }
+        let expires_at_unix = now_unix
+            .checked_add(hours * 3600)
+            .ok_or_else(|| AppError::invalid("Status grant expiry is out of range."))?;
+        // Keep the credential lock through the policy write: concurrent client
+        // revocation cannot be followed by a stale status grant.
+        let credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        if !credentials.contains(client_id) {
+            return Err(AppError::new(
+                ErrorCode::NotFound,
+                "Agent client is not enrolled.",
+            ));
+        }
+        if !load()?.apps.iter().any(|app| app.id == app_id) {
+            return Err(AppError::new(
+                ErrorCode::NotFound,
+                "That app is not installed.",
+            ));
+        }
+        AgentPolicyStore::open(&self.policy_root)?.grant(Grant {
+            client_id: client_id.to_owned(),
+            app_id: app_id.to_owned(),
+            actions: BTreeSet::from([AgentAction::Status]),
+            expires_at_unix,
+        })?;
+        Ok(expires_at_unix)
+    }
+
+    /// Revocation accepts a previously installed app ID so its stale grant can
+    /// still be removed after uninstall. A client must remain enrolled.
+    pub fn revoke_status_for_owner(&self, client_id: &str, app_id: &str) -> AppResult<()> {
+        // Keep enrollment and the policy change coherent across processes.
+        let credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        if !credentials.contains(client_id) {
+            return Err(AppError::new(
+                ErrorCode::NotFound,
+                "Agent client is not enrolled.",
+            ));
+        }
+        AgentPolicyStore::open(&self.policy_root)?.revoke(client_id, app_id)
     }
 
     pub fn get_status(
@@ -240,6 +311,75 @@ mod tests {
             created_at_unix: 0,
             updated_at_unix: 0,
         }
+    }
+
+    #[test]
+    fn owner_status_grant_requires_enrolled_client_and_installed_app() {
+        let root = scratch();
+        let (policy_root, credentials_root) = roots(&root);
+        let gateway = AgentGateway::open(&policy_root, &credentials_root).unwrap();
+        let registry = || Ok(RegistryV2::new(vec![installed("memos")]));
+        assert_eq!(
+            gateway
+                .grant_status_for_owner_with("missing", "memos", 1, 100, registry)
+                .unwrap_err()
+                .code,
+            ErrorCode::NotFound
+        );
+        let secret = gateway.enroll_client_for_owner("client").unwrap();
+        assert_eq!(
+            gateway
+                .grant_status_for_owner_with("client", "missing", 1, 100, registry)
+                .unwrap_err()
+                .code,
+            ErrorCode::NotFound
+        );
+        for hours in [0, 721] {
+            assert!(gateway
+                .grant_status_for_owner_with("client", "memos", hours, 100, registry)
+                .is_err());
+        }
+        assert_eq!(
+            gateway
+                .grant_status_for_owner_with("client", "memos", 1, 100, registry)
+                .unwrap(),
+            3700
+        );
+        assert!(gateway
+            .get_status_with(&secret, Some("client"), "memos", 3699, registry, |_| Ok(
+                AppStatus::Running
+            ))
+            .is_ok());
+        assert_eq!(
+            gateway
+                .get_status_with(
+                    &secret,
+                    Some("client"),
+                    "memos",
+                    3700,
+                    || panic!("expired grant read registry"),
+                    |_| panic!("expired grant dispatched")
+                )
+                .unwrap_err()
+                .code,
+            ErrorCode::Forbidden
+        );
+        gateway.revoke_status_for_owner("client", "memos").unwrap();
+        assert_eq!(
+            gateway
+                .get_status_with(
+                    &secret,
+                    Some("client"),
+                    "memos",
+                    101,
+                    || panic!("revoked grant read registry"),
+                    |_| panic!("revoked grant dispatched")
+                )
+                .unwrap_err()
+                .code,
+            ErrorCode::Forbidden
+        );
+        fs::remove_dir_all(root).unwrap();
     }
 
     #[test]

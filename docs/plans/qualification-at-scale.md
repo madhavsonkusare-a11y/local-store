@@ -64,6 +64,16 @@ the browser and enforces boundaries; it still cannot determine pass/fail.
 Its MVP has important UI gaps and needs an independent exact-state assertion.
 Pilot it against deterministic probes before adopting it in the harness.
 
+## ntfy retention blocker found September 27
+
+The current imported ntfy definition mounts `/var/cache/ntfy` but does not set
+`NTFY_CACHE_FILE`. [ntfy's configuration](https://docs.ntfy.sh/config/) says
+the default message cache is in memory and does not survive restart. A
+publish-and-receive probe may demonstrate first use but cannot prove retained
+messages until a reviewed definition configures disk caching. Keep the pinned
+upstream definition unedited; promote a first-party override with fresh source
+review and managed-engine task proof. This is not another verified app.
+
 ## Next bounded batch
 
 1. Review the 52 triage rows, correcting the five `other` cases and obvious

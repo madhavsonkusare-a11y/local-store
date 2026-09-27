@@ -23,7 +23,18 @@ manifest shape and remaining checks; this is a review preview, not install
 approval. Focused gateway tests (8), GitHub-source tests (15), and a CLI
 compile check passed. The workflow now runs its full Windows checks for PRs,
 version tags and manual dispatch; normal main pushes use focused local checks
-until the next milestone. The latest full green checkpoint remains run 36328665761.
+until the next milestone. The latest full green checkpoint is run 36330091524 (pre-MCP).
+
+Next status-access slice: `agent-grant status <client-id> <installed-app-id>
+--hours <1..720>` and `agent-grant revoke <client-id> <app-id>` now persist
+bounded owner grants. A separate `local-store-mcp` development binary exposes
+only `local_store_get_status` over stdio, taking the enrolled bearer from its
+owner-configured environment. Credential, grant and audit checks run on every
+call; client metadata is ignored. The binary is not packaged for V1 yet and
+no install/content/write tools are exposed. Focused gateway tests (9), MCP
+handler tests (2), both-bin compile and formatting checks passed. A grant
+race with concurrent client revocation was closed by holding the credential
+lock through the policy write. Keep A02/A03 PARTIAL.
 
 A02 has a durable, locked internal policy store with versioned grants, redacted
 bounded audit and fail-closed corruption handling. Eight focused tests pass;

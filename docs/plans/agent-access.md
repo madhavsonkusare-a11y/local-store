@@ -2,7 +2,23 @@
 
 V1 requirement confirmed by the owner September 12, 2026. Task status lives in
 [V1_TASKS.md](../V1_TASKS.md), A01–A08. This is an implementation proposal,
-not a claim that MCP, app adapters or browser automation already ship.
+the read-only development MCP bridge is implemented; app adapters, browser automation and packaged V1 delivery remain pending.
+
+## Current read-only development bridge
+
+The local CLI can enroll a client (`agent-client enroll <id>`), grant status
+for an exact installed app (`agent-grant status <id> <app-id> --hours <1..720>`),
+and revoke either grant or client. Enrollment prints the bearer once; the
+credential store retains its hash. A separate `local-store-mcp` development
+binary reads `LOCAL_STORE_AGENT_BEARER` from its owner-configured process
+environment and exposes only `local_store_get_status` over stdio. Each call
+rechecks the credential and persisted grant, then records a redacted audit
+before dispatch. Client metadata cannot choose an identity.
+
+The binary is not yet staged into the release installer. Keep the bearer in a
+trusted local MCP launch configuration; do not paste it into prompts or commit
+it. Agents with unrestricted same-user shell/process access remain outside
+this gateway's isolation model. Install, content and write tools are pending.
 
 ## One gateway, multiple access methods
 
