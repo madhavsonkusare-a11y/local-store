@@ -1,0 +1,133 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790575386,
+  "app": "kanboard",
+  "passed": true,
+  "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "approved",
+  "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+  "images": [
+    "kanboard/kanboard:v1.2.54"
+  ],
+  "image_ids": {
+    "kanboard/kanboard:v1.2.54": "sha256:8df6c4339134b6c196da9a262daa42ab8ce395f528a48d4a3dd7038c296f34c1"
+  },
+  "first_use": "a project and exact task are created, the task moves to a second column, and both survive restart and keep-data reinstall",
+  "measurements": {
+    "first_start_millis": 6552,
+    "samples": 3,
+    "idle_memory_bytes": {
+      "local-store-kanboard-qualify-32160-1790575323276195100-kanboard": 26078085
+    },
+    "peak_memory_bytes": {
+      "local-store-kanboard-qualify-32160-1790575323276195100-kanboard": 26466058
+    },
+    "peak_total_memory_bytes": 26466058,
+    "idle_managed_storage_bytes": 407076,
+    "peak_managed_storage_bytes": 407076,
+    "idle_named_volume_bytes": {},
+    "peak_named_volume_bytes": {},
+    "image_virtual_bytes": {
+      "sha256:8df6c4339134b6c196da9a262daa42ab8ce395f528a48d4a3dd7038c296f34c1": 136550685
+    }
+  },
+  "steps": [
+    {
+      "step": "pull kanboard/kanboard:v1.2.54",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "generates no credentials, so there are none to lose",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed mapping",
+    "source_adapter": "runtipi",
+    "source_locator": "runtipi/runtipi-appstore#apps/kanboard/docker-compose.json",
+    "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+    "source_observed_on": "2026-09-10",
+    "images_observed_on": "2026-09-10",
+    "plan_sha256": "15995fd4192a3071e764d671a39355e0ecf77dc2f0ea5f4180af4e8515425d29",
+    "requested_images": [
+      "kanboard/kanboard:v1.2.54"
+    ],
+    "resolved_image_ids": {
+      "kanboard/kanboard:v1.2.54": "sha256:8df6c4339134b6c196da9a262daa42ab8ce395f528a48d4a3dd7038c296f34c1"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "11d93bb4cf6e08c08121025749f13a6a56e858a3edc490395c684e8aca2c6f06",
+    "level": "lifecycle_and_first_use"
+  }
+}

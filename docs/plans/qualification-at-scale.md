@@ -2,8 +2,8 @@
 
 Decision checkpoint, September 23, 2026. V1 still requires 50 selected apps
 proven on the owned Windows/WSL engine with a meaningful task; this document
-changes the work method, not the release bar. Today two apps (Memos and
-Flatnotes) meet the task bar. n8n has a managed-engine lifecycle pass without a task proof.
+changes the work method, not the release bar. Today three apps (Memos, Flatnotes and
+Kanboard) meet the task bar. n8n has a managed-engine lifecycle pass without a task proof.
 
 ## Why the one-script-per-app loop is too slow
 
@@ -79,7 +79,8 @@ review and managed-engine task proof. This is not another verified app.
 1. Review the 52 triage rows, correcting the five `other` cases and obvious
    mismatches (for example, a repository push is not merely a file upload).
 2. The shared content driver now has managed-engine proof for Flatnotes;
-   Memos still has its earlier dedicated real probe. Build one controlled
+   Memos still has its earlier dedicated real probe. Kanboard now proves a
+   separate JSON-RPC project/task/move path. Build one controlled
    HTTP fixture and add a distinct app task that asserts exact state after
    restart and keep-data reinstall. Migrate Memos only with a fresh proof.
 3. Generate a matrix of preflight, engine lifecycle, task, agent access, and UX

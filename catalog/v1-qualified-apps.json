@@ -12,6 +12,15 @@
       "task": "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall"
     },
     {
+      "id": "kanboard",
+      "manifest": "src/templates/kanboard.json",
+      "manifest_sha256": "8743f6bb094224fb630b68c2d70ad599d07dd48ccc157e049a94b91380d17520",
+      "evidence": "docs/evidence/kanboard-managed-task-2026-09-28.json",
+      "evidence_sha256": "7531d5197823ea47db04f1e1fd4af94720be37f9ba69bf195108d4dd974ec8eb",
+      "probe": "scripts/kanboard-task-probe.mjs",
+      "task": "a project and exact task are created, the task moves to a second column, and both survive restart and keep-data reinstall"
+    },
+    {
       "id": "memos",
       "manifest": "src/recipes/memos.json",
       "manifest_sha256": "6ecab572f38fabe0337121cca07b60418c29b36af511d249a9958ba974246916",

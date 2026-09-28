@@ -3,6 +3,18 @@
 Updated September 28, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
 
+## September 28 Kanboard follow-up
+
+A pinned Kanboard JSON-RPC probe creates a unique project and exact task,
+moves the task to a second column, and independently reads the state after
+restart and keep-data reinstall. The isolated managed-engine run passed in
+76.8 seconds and wrote [evidence](evidence/kanboard-managed-task-2026-09-28.json).
+The curated gate now accepts **3/50** app tasks; n8n remains lifecycle-only.
+The pilot used Kanboard's documented default admin credentials in its isolated
+loopback install, so credential rotation and agent access remain unproven.
+The overall V1 ledger stays **6/36 DONE (16.7%)**. Next build a controlled
+HTTP fixture family and review a candidate that can reuse it.
+
 ## September 28 checkpoint
 
 Docker Desktop is running. The Local Store WSL registration still pointed at
