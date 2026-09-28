@@ -19,9 +19,11 @@ Tests and Tauri builds use the explicit Windows target. Tauri CLI is pinned to
 2.11.4. Confirm the Windows job on GitHub before claiming coverage.
 
 `scripts/prepare-release.py` stages the platform installers and a standalone CLI
-named `local-store-<target>` (plus `.exe` on Windows). It refuses a missing CLI,
-missing installer, duplicate filenames, input paths outside the build root or
-nonempty staging directory. Debug symbols and `.d` files are not release assets.
+named `local-store-<target>` (plus `.exe` on Windows). The Windows job also
+builds the read-only `local-store-mcp` sidecar into the installer and stages a
+standalone target-named copy. Staging refuses a missing CLI, MCP executable or
+installer, duplicate filenames, input paths outside the build root or a
+nonempty output directory. Debug symbols and `.d` files are not release assets.
 
 Each target also publishes `SHA256SUMS-<target>.txt` and `build-<target>.json`.
 The JSON records version, source commit, target, workflow URL and file hashes;
@@ -38,8 +40,8 @@ gh attestation verify "Local Store_<version>_x64-setup.exe" --repo <owner>/<repo
 
 That proves which workflow, at which commit, produced the file. It is **not**
 code signing and **not** an updater signature: Windows will still warn that the
-publisher is unknown, and there is no update channel. Task 30 remains
-outstanding and needs owner-generated keys — see below.
+publisher is unknown, and there is no update channel. S02/S03 remain
+outstanding and need owner-controlled signing and updater keys — see below.
 
 On Linux/macOS, download the matching checksum list and all its listed files
 into one directory, then run `sha256sum --check SHA256SUMS-<target>.txt` (or
@@ -71,8 +73,9 @@ repository secrets. Until `pubkey` is set, the updater plugin must stay out of
 the build: a placeholder key would produce update artifacts nobody can verify,
 which is worse than having none.
 
-**Windows code signing** is separate and needs a certificate from a CA. Without
-it, SmartScreen warns on every install; build provenance does not remove that
+**Windows code signing** is separate and needs a certificate from a CA.
+The launcher, bundled MCP sidecar and installer must all be verified as
+signed. Without signing, SmartScreen warns on every install; build provenance does not remove that
 warning, because it answers a different question.
 
 **Before any of this ships**, the update endpoint has to exist and be served

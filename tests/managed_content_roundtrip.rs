@@ -33,12 +33,14 @@ fn shared_content_driver_on_flatnotes() {
         ("FLATNOTES_USERNAME".to_owned(), user.to_owned()),
         ("FLATNOTES_PASSWORD".to_owned(), password.to_owned()),
     ]);
-    let probe = ScriptProbe::new(
-        root.join("scripts/content-roundtrip-probe.mjs"),
-        "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall",
-    ).with_args(vec![
-        state.to_string_lossy().into_owned(), "flatnotes".into(), user.into(), password.into(),
-    ]);
+    const TASK: &str = "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall";
+    let probe =
+        ScriptProbe::new(root.join("scripts/content-roundtrip-probe.mjs"), TASK).with_args(vec![
+            state.to_string_lossy().into_owned(),
+            "flatnotes".into(),
+            user.into(),
+            password.into(),
+        ]);
     let result = qualify_on_engine_at(
         "flatnotes",
         &answers,
@@ -49,6 +51,8 @@ fn shared_content_driver_on_flatnotes() {
     );
     let _ = std::fs::remove_file(&state);
     let evidence = result.expect("managed qualification could run");
+    let output = root.join("docs/evidence/flatnotes-managed-content-2026-09-28.json");
+    std::fs::write(&output, format!("{}\n", evidence.to_json())).expect("evidence written");
     assert!(
         evidence.passed,
         "flatnotes content failed: {:?}",

@@ -15,7 +15,8 @@ environment and exposes only `local_store_get_status` over stdio. Each call
 rechecks the credential and persisted grant, then records a redacted audit
 before dispatch. Client metadata cannot choose an identity.
 
-The binary is not yet staged into the release installer. Keep the bearer in a
+Windows release staging is wired to bundle the sidecar, but a real installer
+build has not verified its delivery. Keep the bearer in a
 trusted local MCP launch configuration; do not paste it into prompts or commit
 it. Agents with unrestricted same-user shell/process access remain outside
 this gateway's isolation model. Install, content and write tools are pending.

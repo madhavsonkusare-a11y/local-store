@@ -151,13 +151,21 @@ jobs:
       - name: Install Tauri CLI
         run: cargo install tauri-cli --version "=2.11.4" --locked
 
+      - name: Build and prepare Windows MCP sidecar
+        shell: pwsh
+        run: |
+          cargo build --locked --release --target ${{ matrix.target }} --bin local-store-mcp
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          New-Item -ItemType Directory -Force binaries | Out-Null
+          Copy-Item -LiteralPath "target/${{ matrix.target }}/release/local-store-mcp.exe" -Destination "binaries/local-store-mcp-${{ matrix.target }}.exe"
+
       - name: Build (release)
-        run: cargo tauri build --target ${{ matrix.target }} --ci
+        run: cargo tauri build --target ${{ matrix.target }} --ci --config tauri.mcp-release.conf.json
 
       - name: Stage release payloads and checksums
         run: python scripts/prepare-release.py --target ${{ matrix.target }} --build-dir target/${{ matrix.target }}/release --output-dir dist/${{ matrix.target }}
 
-      # Upload staged installers, the target-named CLI and integrity metadata.
+      # Upload staged installers, target-named CLI/MCP binaries and integrity metadata.
       # Bundle internals, debug symbols and Cargo dependency files stay out.
       - name: Upload artifacts
         uses: actions/upload-artifact@v5
@@ -190,7 +198,7 @@ jobs:
       # `gh attestation verify <file> --repo <owner>/<repo>`. This is build
       # provenance, not a code-signing signature and not an updater signature:
       # it tells you this workflow built the file, not that an identified
-      # publisher vouches for it. Task 30 remains outstanding.
+      # publisher vouches for it. S02/S03 remain outstanding.
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v3
         with:

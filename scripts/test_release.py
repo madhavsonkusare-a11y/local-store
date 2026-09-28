@@ -19,6 +19,7 @@ class ReleaseTests(unittest.TestCase):
         self.build, self.output = self.root / "release", self.root / "staged"
         (self.build / "bundle/nsis").mkdir(parents=True)
         (self.build / "local-store.exe").write_bytes(b"test binary")
+        (self.build / "local-store-mcp.exe").write_bytes(b"test MCP binary")
         (self.build / "bundle/nsis/Local Store_x64-setup.exe").write_bytes(b"test installer")
         (self.build / "local-store.pdb").write_bytes(b"debug symbols")
 
@@ -29,7 +30,13 @@ class ReleaseTests(unittest.TestCase):
         manifest = self.prepare()
         self.assertEqual(manifest["source_commit"], "a" * 40)
         self.assertFalse(manifest["attested"])
-        self.assertEqual(len(manifest["files"]), 2)
+        self.assertEqual(len(manifest["files"]), 3)
+        self.assertEqual(
+            {item["name"] for item in manifest["files"]},
+            {"local-store-x86_64-pc-windows-msvc.exe",
+             "local-store-mcp-x86_64-pc-windows-msvc.exe",
+             "Local Store_x64-setup.exe"},
+        )
         for item in manifest["files"]:
             self.assertEqual(item["sha256"], hashlib.sha256((self.output / item["name"]).read_bytes()).hexdigest())
         self.assertFalse((self.output / "local-store.pdb").exists())
@@ -43,6 +50,12 @@ class ReleaseTests(unittest.TestCase):
     def test_missing_installer_cannot_publish_only_a_binary(self):
         (self.build / "bundle/nsis/Local Store_x64-setup.exe").unlink()
         with self.assertRaisesRegex(ValueError, "at least one"):
+            self.prepare()
+        self.assertFalse(self.output.exists())
+
+    def test_missing_mcp_binary_cannot_publish_windows_release(self):
+        (self.build / "local-store-mcp.exe").unlink()
+        with self.assertRaisesRegex(ValueError, "local-store-mcp.exe"):
             self.prepare()
         self.assertFalse(self.output.exists())
 

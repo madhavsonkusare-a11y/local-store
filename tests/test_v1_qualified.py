@@ -21,10 +21,10 @@ class V1QualifiedTests(unittest.TestCase):
         roster = gate.read_json(ROOT, "catalog/v1-roster.json")
         self.roster = {app["id"]: app for app in roster["apps"] if app.get("cohort") == "existing_offering"}
 
-    def test_current_memos_proof_counts_once(self):
+    def test_current_managed_task_proofs_count_once_each(self):
         result = gate.validate(ROOT, self.now)
-        self.assertEqual(result["qualified"], 1)
-        self.assertEqual(result["remaining"], 49)
+        self.assertEqual(result["qualified"], 2)
+        self.assertEqual(result["remaining"], 48)
 
     def test_changed_manifest_or_evidence_is_refused(self):
         for field in ("manifest_sha256", "evidence_sha256"):

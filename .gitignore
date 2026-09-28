@@ -5,6 +5,7 @@
 /src-tauri/target/
 /gen/
 /dist/
+/binaries/local-store-mcp-*.exe
 
 # Node
 node_modules/

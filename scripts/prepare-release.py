@@ -35,6 +35,11 @@ def prepare(build, output, target, version, source_sha, run_url=None):
     if not binary.is_file() or not installers:
         raise ValueError("release requires the compiled CLI and at least one platform installer")
     payloads = [(binary, f"local-store-{target}{'.exe' if windows else ''}")]
+    if windows:
+        mcp_binary = build / "local-store-mcp.exe"
+        if not mcp_binary.is_file():
+            raise ValueError("Windows release requires the compiled local-store-mcp.exe")
+        payloads.append((mcp_binary, f"local-store-mcp-{target}.exe"))
     payloads += [(path, path.name) for path in installers]
     names = set()
     for path, name in payloads:

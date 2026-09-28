@@ -1,7 +1,33 @@
 # Agent handoff
 
-Updated September 27, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
+Updated September 28, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
+
+## September 28 checkpoint
+
+Docker Desktop is running. The Local Store WSL registration still pointed at
+the old vault path after the repo move, so the first Flatnotes attempt stopped
+at ownership preflight. The stopped 6,032,457,728-byte VHD was copied and
+SHA-256 verified under `.cache/engine/repair-backup-2026-09-27/`; its bootstrap
+journal and WSL registration were also backed up there. The stale distro
+registration was repaired with WSL unregister/import-in-place using the moved
+VHD, then the in-distro ownership token was compared directly with the
+external token before the journal install path was updated. Keep this backup
+until the recovered engine has been used for more than this pilot.
+
+Flatnotes then passed two isolated managed-engine runs; the second persisted
+[evidence](evidence/flatnotes-managed-content-2026-09-28.json) and entered
+[catalog/v1-qualified-apps.json](../catalog/v1-qualified-apps.json). The
+curated gate accepts **2/50** meaningful managed-engine app tasks (Memos and
+Flatnotes); n8n remains lifecycle-only. The V1 task ledger is still **6/36
+DONE (16.7%)**. The next app family needs a reviewed exact-state probe and a
+single managed-engine run; do not treat Docker Desktop proof as equivalent.
+
+This batch wires the Windows MCP sidecar into release staging. Seven focused
+release-staging tests and sidecar JSON parsing pass; a real Tauri installer
+build has not yet confirmed bundling. The user's uncommitted `CHANGELOG.md`
+remains untouched. No full CI build was started for this batch, per the
+owner's fast-check cadence.
 
 ## September 27 integration checkpoint
 

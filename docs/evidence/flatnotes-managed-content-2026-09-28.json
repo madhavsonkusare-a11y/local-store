@@ -1,0 +1,133 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790574629,
+  "app": "flatnotes",
+  "passed": true,
+  "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "approved",
+  "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+  "images": [
+    "dullage/flatnotes:v5.5.5"
+  ],
+  "image_ids": {
+    "dullage/flatnotes:v5.5.5": "sha256:ca4b40ee7491aabf6b52bbb20ab140145cb96981d4b3fe96ab1e797ac6cd93e5"
+  },
+  "first_use": "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall",
+  "measurements": {
+    "first_start_millis": 5258,
+    "samples": 3,
+    "idle_memory_bytes": {
+      "local-store-flatnotes-qualify-6552-1790574433163352700-flatnotes": 59024343
+    },
+    "peak_memory_bytes": {
+      "local-store-flatnotes-qualify-6552-1790574433163352700-flatnotes": 59024343
+    },
+    "peak_total_memory_bytes": 59024343,
+    "idle_managed_storage_bytes": 7852,
+    "peak_managed_storage_bytes": 14840,
+    "idle_named_volume_bytes": {},
+    "peak_named_volume_bytes": {},
+    "image_virtual_bytes": {
+      "sha256:ca4b40ee7491aabf6b52bbb20ab140145cb96981d4b3fe96ab1e797ac6cd93e5": 384457433
+    }
+  },
+  "steps": [
+    {
+      "step": "pull dullage/flatnotes:v5.5.5",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "keeps the credentials it generated",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed mapping",
+    "source_adapter": "runtipi",
+    "source_locator": "runtipi/runtipi-appstore#apps/flatnotes/docker-compose.json",
+    "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+    "source_observed_on": "2026-09-10",
+    "images_observed_on": "2026-09-10",
+    "plan_sha256": "9bf7887da3f95515ced5323a07a771020b8cabcd84c4a1e302138e5671acd13b",
+    "requested_images": [
+      "dullage/flatnotes:v5.5.5"
+    ],
+    "resolved_image_ids": {
+      "dullage/flatnotes:v5.5.5": "sha256:ca4b40ee7491aabf6b52bbb20ab140145cb96981d4b3fe96ab1e797ac6cd93e5"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "91b46e0826de6192370313753659c06501d8d5620d5ce46e489e2e72c71a35f2",
+    "level": "lifecycle_and_first_use"
+  }
+}
