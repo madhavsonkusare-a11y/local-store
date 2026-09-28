@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790577059,
+  "app": "nodered",
+  "passed": false,
+  "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "approved",
+  "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+  "images": [
+    "nodered/node-red:5.0.7"
+  ],
+  "image_ids": {},
+  "first_use": "a deployed function flow returns its computed value, the editor stays connected, and both survive restart and keep-data reinstall",
+  "steps": [
+    {
+      "step": "pull nodered/node-red:5.0.7",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": false,
+      "detail": "Health check timed out for http://localhost:54256 Containers: local-store-nodered-qualify-4352-1790576871920709300-nodered   nodered/node-red:5.0.7@sha256:a649dd711d55490151a2c39a8e48ad0c44325488fbc0e66315f2d2e19e5e1ace   \"./entrypoint.sh\"   nodered   3 minutes ago   Restarting (1) 17 seconds ago. nodered last said: binding.copyFile( | ^ | Error: EPERM: operation not permitted, copyfile '/usr/src/node-red/node_modules/node-red/settings.js' -> '/data/settings.js' | at Object.copyFileSync (node:fs:3177:11) | at copyFile (/usr/src/node-red/node_modules/fs-extra/lib/copy/copy-sync.js:64:6) | at onFile (/usr/src/node-red/node_modules/fs-extra/lib/copy/copy-sync.js:50:25) | at getStats (/usr/src/node-red/node_modules/fs-extra/lib/copy/copy-sync.js:42:44) | at Object.copySync (/usr/src/node-red/node_modules/fs-extra/lib/copy/copy-sync.js:32:10) | at Object.<anonymous> (/usr/src/node-red/node_modules/node-red/red.js:151:20) | at Module._compile (node:internal/modules/cjs/loader:1929:14) | at Object..js (node:internal/modules/cjs/loader:2060:10) | at Module.load (node:internal/modules/cjs/loader:1651:32) | at Module._load (node:internal/modules/cjs/loader:1443:12) { | errno: -1, | code: 'EPERM', | syscall: 'copyfile', | path: '/usr/src/node-red/node_modules/node-red/settings.js', | dest: '/data/settings.js' | } | Node.js v24.20.0"
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed mapping",
+    "source_adapter": "runtipi",
+    "source_locator": "runtipi/runtipi-appstore#apps/nodered/docker-compose.json",
+    "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+    "source_observed_on": "2026-09-10",
+    "images_observed_on": "2026-09-10",
+    "plan_sha256": "c0ca48c43fb2dbad38357469cc7564b5148f639732b405c4bf026055e3b73752",
+    "requested_images": [
+      "nodered/node-red:5.0.7"
+    ],
+    "resolved_image_ids": {},
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "38315e813502608b1e617a23edcf94cc5131507a977549dc7cdcadad51c54800",
+    "level": "lifecycle_and_first_use"
+  }
+}

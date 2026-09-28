@@ -54,6 +54,15 @@ class PayloadTests(unittest.TestCase):
             with patch.object(payload.urllib.request, "urlopen", side_effect=AssertionError("network")):
                 payload.fetch_package(package, target)
 
+    def test_inventory_drift_reports_exact_changed_added_and_removed_packages(self):
+        locked = b"alpha\t1\tamd64\ncharlie\t3\tall\n"
+        observed = b"alpha\t2\tamd64\nbravo\t1\tamd64\n"
+        self.assertEqual(payload.inventory_drift(locked, observed), [
+            {"name": "alpha", "locked": ("1", "amd64"), "observed": ("2", "amd64")},
+            {"name": "bravo", "locked": None, "observed": ("1", "amd64")},
+            {"name": "charlie", "locked": ("3", "all"), "observed": None},
+        ])
+
     def test_full_inventory_lock_refuses_drift_and_malformed_rows(self):
         locked = payload.PACKAGE_LOCK.read_bytes()
         self.assertGreaterEqual(len(payload.parse_inventory(locked)), 100)

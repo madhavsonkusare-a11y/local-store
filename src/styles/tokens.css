@@ -1,0 +1,237 @@
+/* Local Store V2 visual system
+ * Laptop-first, dark-only, offline, and shared by every V2 prototype surface.
+ * Primitive values live here; component CSS consumes semantic tokens only.
+ */
+
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/InstrumentSans-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/InstrumentSans-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/InstrumentSans-SemiBold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/IBMPlexMono-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/IBMPlexMono-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+
+  /* Primitive color */
+  --v2-neutral-1000: #080706;
+  --v2-neutral-950: #0c0a09;
+  --v2-neutral-900: #100d0c;
+  --v2-neutral-850: #161211;
+  --v2-neutral-800: #1d1816;
+  --v2-neutral-750: #251e1b;
+  --v2-neutral-700: #302824;
+  --v2-neutral-600: #4f443e;
+  --v2-neutral-500: #756961;
+  --v2-neutral-450: #7d7068;
+  --v2-neutral-400: #998b80;
+  --v2-neutral-300: #c3b8ae;
+  --v2-neutral-100: #f7f1e9;
+  --v2-neutral-050: #fff7ef;   /* base of every translucent border and wash */
+
+  --v2-ember-700: #6e2708;
+  --v2-ember-600: #db5710;
+  --v2-ember-500: #f26419;
+  --v2-ember-400: #ff7a2b;
+  --v2-ember-300: #ff9b5c;
+
+  /* Ember material: the approved grain surface, darkest to brightest */
+  --v2-material-ember-1: #2d0d08;
+  --v2-material-ember-2: #68190d;
+  --v2-material-ember-3: #a92a10;
+  --v2-material-ember-4: #e65b18;
+  --v2-material-ember-5: #ee571a;
+  --v2-material-ember-6: #ff812d;
+  /* Cream on the material. Eight near-identical creams collapsed to two. */
+  --v2-on-material-strong: #fff5ea;
+  --v2-on-material: #ffe2c8;
+  --v2-surface-accent-selected: #32120b;
+  /* Log viewer: #d8d0c9 on #181512 measures 12.1:1 */
+  --v2-surface-log: #181512;
+  --v2-text-log: #d8d0c9;
+
+  --v2-green-500: #62c79a;
+  --v2-yellow-500: #f5c451;
+  --v2-red-500: #e8614c;
+
+  /* Semantic surfaces */
+  --v2-surface-canvas: var(--v2-neutral-950);
+  --v2-surface-sunk: var(--v2-neutral-900);
+  --v2-surface-raised: var(--v2-neutral-850);
+  --v2-surface-elevated: var(--v2-neutral-800);
+  --v2-surface-hover: var(--v2-neutral-750);
+  --v2-surface-active: var(--v2-neutral-700);
+  --v2-surface-scrim: rgb(8 7 6 / 76%);
+  --v2-surface-accent-soft: rgb(242 100 25 / 10%);
+  --v2-surface-success-soft: rgb(98 199 154 / 10%);
+  --v2-surface-warning-soft: rgb(245 196 81 / 10%);
+  --v2-surface-danger-soft: rgb(232 97 76 / 10%);
+
+  /* Semantic text. Contrast against canvas #0c0a09:
+   * primary 17.60:1; secondary 10.15:1; tertiary 5.98:1;
+   * quiet 3.72:1 and is restricted to large/nonessential content.
+   */
+  --v2-text-primary: var(--v2-neutral-100);
+  --v2-text-secondary: var(--v2-neutral-300);
+  --v2-text-tertiary: var(--v2-neutral-400);
+  --v2-text-quiet: var(--v2-neutral-500);
+  --v2-text-on-accent: #2a0f03;
+
+  /* Action and state. Contrast against canvas: accent 6.22:1;
+   * accent-high 8.42:1; focus 9.50:1; success 9.55:1;
+   * warning 12.13:1; danger 5.88:1. Dark text on the pressed
+   * accent remains 4.61:1.
+   */
+  --v2-action-primary: var(--v2-ember-500);
+  --v2-action-primary-hover: var(--v2-ember-400);
+  --v2-action-primary-pressed: var(--v2-ember-600);
+  --v2-action-focus: var(--v2-ember-300);
+  --v2-action-link: var(--v2-ember-300);
+  --v2-state-success: var(--v2-green-500);
+  --v2-state-warning: var(--v2-yellow-500);
+  --v2-state-danger: var(--v2-red-500);
+
+  /* Borders */
+  --v2-border-soft: rgb(255 247 239 / 5%);
+  --v2-border-default: rgb(255 247 239 / 9%);
+  --v2-border-strong: rgb(255 247 239 / 15%);
+  --v2-border-accent: rgb(242 100 25 / 34%);
+  --v2-border-success: rgb(98 199 154 / 32%);
+  --v2-border-warning: rgb(245 196 81 / 34%);
+  --v2-border-danger: rgb(232 97 76 / 38%);
+  /* Form-control boundary. WCAG 1.4.11 needs >= 3:1 against the adjacent
+   * surface: canvas 4.13, sunk 4.05, raised 3.89, elevated 3.67, hover 3.43.
+   * The translucent borders above measure 1.3-1.5:1 and cannot mark a field. */
+  --v2-border-control: var(--v2-neutral-450);
+
+  /* Typography */
+  --v2-font-sans: "Instrument Sans", "Segoe UI", sans-serif;
+  --v2-font-mono: "IBM Plex Mono", "Cascadia Mono", Consolas, monospace;
+  --v2-type-display: 52px;
+  --v2-type-title: 38px;
+  --v2-type-heading-lg: 30px;   /* focused-task result headings */
+  --v2-type-heading: 27px;
+  --v2-type-subheading: 20px;
+  --v2-type-body-lg: 17px;
+  --v2-type-body: 15px;
+  --v2-type-body-sm: 14px;
+  --v2-type-label: 13px;
+  /* Floors for a dark-only UI: negative polarity loses acuity fastest at small
+   * sizes, so no reading text sits below 13px. The one exception is mono-label:
+   * short, isolated, letter-spaced tags (status, counts, key legends, eyebrows),
+   * which must always pair with --v2-tracking-label. */
+  --v2-type-caption: 13px;
+  --v2-type-mono: 13px;
+  --v2-type-mono-label: 11px;
+  --v2-leading-display: 0.98;
+  --v2-leading-title: 1.05;
+  --v2-leading-heading: 1.15;
+  --v2-leading-body: 1.55;
+  --v2-leading-compact: 1.3;
+  --v2-tracking-display: -0.045em;
+  --v2-tracking-heading: -0.025em;
+  --v2-tracking-label: 0.08em;
+
+  /* Four-pixel spacing system */
+  --v2-space-1: 4px;
+  --v2-space-2: 8px;
+  --v2-space-3: 12px;
+  --v2-space-4: 16px;
+  --v2-space-5: 20px;
+  --v2-space-6: 24px;
+  --v2-space-7: 28px;
+  --v2-space-8: 32px;
+  --v2-space-10: 40px;
+  --v2-space-12: 48px;
+  --v2-space-16: 64px;
+
+  /* Geometry */
+  --v2-radius-xs: 4px;
+  --v2-radius-sm: 8px;
+  --v2-radius-md: 12px;
+  --v2-radius-lg: 20px;
+  --v2-radius-pill: 999px;
+  /* Icon containers keep a proportional corner of roughly 0.3 x box size,
+   * quantised to three steps. Circles use 50% and are not a scale value. */
+  --v2-radius-icon-sm: 10px;  /* 30-38px boxes */
+  --v2-radius-icon-md: 13px;  /* 42-48px boxes */
+  --v2-radius-icon-lg: 18px;  /* 54-58px boxes */
+  --v2-field-icon-inset: 42px; /* text clears an inline field icon */
+  --v2-control-height-sm: 34px;
+  --v2-control-height: 42px;
+  --v2-control-height-lg: 46px;
+  --v2-app-icon-sm: 32px;
+  --v2-app-icon: 44px;
+  --v2-app-icon-lg: 64px;
+
+  /* Laptop layout */
+  --v2-rail-width: 216px;
+  --v2-page-pad-inline: clamp(32px, 3.34vw, 48px);
+  --v2-page-pad-block: 36px;
+  --v2-content-max: 1220px;
+  --v2-list-width: 340px;
+  --v2-drawer-width: 480px;
+  --v2-dialog-width: 500px;
+  --v2-install-max: 1080px;
+
+  /* Elevation */
+  --v2-shadow-raised: 0 1px 0 rgb(255 255 255 / 3%);
+  --v2-shadow-elevated: 0 18px 50px rgb(0 0 0 / 34%), 0 1px 0 rgb(255 255 255 / 4%);
+  --v2-shadow-dialog: 0 34px 100px rgb(0 0 0 / 58%), 0 1px 0 rgb(255 255 255 / 5%);
+  --v2-shadow-accent: 0 14px 36px -18px rgb(242 100 25 / 72%);
+
+  /* Motion */
+  --v2-duration-press: 120ms;
+  --v2-duration-fast: 160ms;
+  --v2-duration-panel: 220ms;
+  --v2-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --v2-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (max-width: 1320px) {
+  :root {
+    --v2-rail-width: 200px;
+    --v2-list-width: 340px;   /* app names stay whole at the 13px floor */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --v2-duration-press: 0ms;
+    --v2-duration-fast: 100ms;
+    --v2-duration-panel: 120ms;
+  }
+}

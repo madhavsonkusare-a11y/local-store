@@ -75,12 +75,55 @@ which is worse than having none.
 
 **Windows code signing** is separate and needs a certificate from a CA.
 The launcher, bundled MCP sidecar and installer must all be verified as
-signed. Without signing, SmartScreen warns on every install; build provenance does not remove that
-warning, because it answers a different question.
+signed. Without trusted signing, browser downloads can trigger SmartScreen warnings;
+even a newly signed app may need time to build reputation. Build provenance
+answers a different question.
 
 **Before any of this ships**, the update endpoint has to exist and be served
 over HTTPS, and the update UI has to let somebody decline. An updater that
 cannot be refused is a worse defect than no updater.
+
+## Owner setup for Windows signing and updates
+
+These are two different signatures. **Windows code signing** puts a verified
+publisher on the EXE/installer. **Tauri updater signing** lets an installed
+copy reject a tampered update. The HTTPS update address tells the installed
+app where to check; it is not a signing service.
+
+For the current Tauri NSIS/MSI build distributed through GitHub Releases:
+
+1. Choose the legal publisher name that should appear in Windows. Apply for
+   a publicly trusted Windows code-signing certificate from a certificate
+   authority, preferably with a managed HSM/signing service that GitHub Actions
+   can call. Microsoft currently limits Azure Artifact Signing public trust to
+   organizations in the US/Canada/EU/UK and individuals in the US/Canada; if
+   those rules exclude you, compare OV certificate providers such as DigiCert,
+   Sectigo or GlobalSign. Verify eligibility and current price with the
+   provider before paying. A self-signed development certificate will not
+   satisfy the public-release gate. Do not send the certificate private key,
+   HSM credentials or account recovery codes in chat.
+2. For the update address, the simplest existing-hosting choice is this
+   repository's public GitHub Releases. Each release can carry a Tauri
+   `latest.json` plus the Windows installer and its `.sig` file. Tauri can
+   check the HTTPS `releases/latest/download/latest.json` URL. We will
+   implement and test the manifest generation, consent UI, invalid-signature
+   rejection, failed-download behavior and staged updates before enabling it
+   in a public build. No separate domain or update server is required for
+   this choice.
+3. When release plumbing is ready, generate the Tauri updater key pair once
+   on a machine you control, back up its private half offline, and provide
+   **only the public half** for `tauri.conf.json`. Put the private half and
+   passphrase into restricted CI secrets. Losing the private half prevents
+   future updates to existing installs.
+
+The owner need only decide the publisher identity/certificate route and
+whether GitHub Releases is acceptable as the update host. The project can
+prepare the rest without receiving private keys. Tauri's
+[updater documentation](https://v2.tauri.app/plugin/updater/),
+[Windows signing guide](https://v2.tauri.app/distribute/sign/windows/),
+[Microsoft signing comparison](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/code-signing-options)
+and [GitHub Releases guide](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)
+are the source for these choices.
 
 ## Before tagging
 

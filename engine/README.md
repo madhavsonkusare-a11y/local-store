@@ -6,10 +6,14 @@ rootfs for the future managed WSL2 engine, not a shipping installer.
 ```text
 python scripts/build-engine-payload.py
 python scripts/test_engine_payload.py
+python scripts/build-engine-payload.py --inspect-inventory
 python scripts/build-engine-payload.py --build
 ```
 
-The first two commands are offline. The last uses an existing Docker daemon to
+The validation and test commands are offline. `--inspect-inventory` uses Docker
+to build only the unverified package stage and writes `packages.tsv` plus a
+package-level `inventory-drift.json` under `.cache/engine/build-<unique-id>/`.
+It never exports a rootfs. The final `--build` uses an existing Docker daemon to
 build an isolated Linux/amd64 image, verify installed component versions, retain
 the package inventory and notices, then export `rootfs.tar` with SHA-256 evidence
 under `.cache/engine/build-<unique-id>/`. It does not register a WSL distro,
@@ -29,7 +33,11 @@ dependencies are installed through apt's signed repository metadata.
 The full observed 128-package result is frozen in [packages.lock.tsv](packages.lock.tsv).
 The Dockerfile and exporter refuse a build if the installed inventory differs
 byte-for-byte from this lock. This prevents silent dependency drift, but old
-package versions may disappear from Ubuntu's moving repositories.
+package versions may disappear from Ubuntu's moving repositories. The diagnostic
+stage exists so a failed rebuild can identify every changed package without
+loosening the export gate. A [September 28 diagnostic](../docs/evidence/engine-inventory-drift-2026-09-28.json)
+found one changed Ubuntu dependency (`libapparmor1` `.7` to `.8`); the normal
+post-lock build refused export. This is a measured blocker, not a release build.
 
 We inspected Rancher Desktop at `515877cd5f92af42089c9128fc3c7402c0fbbb6c`:
 its WSL downloader verifies an expected rootfs checksum. Its separate distro

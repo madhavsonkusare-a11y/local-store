@@ -1,5 +1,5 @@
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
+FROM ${BASE_IMAGE} AS package-install
 
 # Development payload only. Ubuntu's signed apt repositories resolve the OS
 # dependencies; the exported inventory records their versions. Engine packages
@@ -14,8 +14,12 @@ RUN printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d \
        /tmp/local-store-packages/*.deb \
     && mkdir -p /usr/share/local-store /etc/docker \
     && dpkg-query -W -f='${Package}\t${Version}\t${Architecture}\n' \
-       > /usr/share/local-store/packages.tsv \
-    && cmp /usr/share/local-store/packages.lock.tsv /usr/share/local-store/packages.tsv \
+       > /usr/share/local-store/packages.tsv
+
+# The install stage is addressable for bounded inventory-drift diagnosis.
+# Payload export always uses this final stage and requires the exact lock.
+FROM package-install AS verified
+RUN cmp /usr/share/local-store/packages.lock.tsv /usr/share/local-store/packages.tsv \
     && rm -rf /tmp/local-store-packages /var/lib/apt/lists/* \
     && rm /usr/sbin/policy-rc.d
 COPY wsl.conf /etc/wsl.conf

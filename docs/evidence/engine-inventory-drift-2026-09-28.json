@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "diagnostic_only",
+  "platform": "linux/amd64",
+  "image_id": "sha256:6729d477b2c9e66ea3e86b0f2c947ba828b95a094d3662aeeb2e2ac9b65190f8",
+  "package_lock_sha256": "1f0011d3aadb90d950c3125fdaba92327f38195c19fab44acf57e5844fb430db",
+  "packages_sha256": "e5b5e2ee4d784fe1d4c671d6a3e9f43b96feade82e75f52e50564f1cc8cf4b4f",
+  "drift": [
+    {
+      "name": "libapparmor1",
+      "locked": [
+        "4.0.1really4.0.1-0ubuntu0.24.04.7",
+        "amd64"
+      ],
+      "observed": [
+        "4.0.1really4.0.1-0ubuntu0.24.04.8",
+        "amd64"
+      ]
+    }
+  ]
+}

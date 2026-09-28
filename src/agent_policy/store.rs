@@ -163,6 +163,14 @@ impl AgentPolicyStore {
         outcome
     }
 
+    pub fn status_app_ids(
+        &self,
+        client_id: &str,
+        now_unix: u64,
+    ) -> std::collections::BTreeSet<String> {
+        self.policy.status_app_ids(client_id, now_unix)
+    }
+
     pub fn audit(&self) -> &[AuditEvent] {
         self.policy.audit()
     }

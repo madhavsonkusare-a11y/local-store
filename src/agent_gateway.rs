@@ -154,6 +154,39 @@ impl AgentGateway {
         AgentPolicyStore::open(&self.policy_root)?.revoke(client_id, app_id)
     }
 
+    /// Discover only installed apps with a live status grant for this credential.
+    pub fn list_granted_apps(
+        &self,
+        presented_secret: &str,
+        now_unix: u64,
+    ) -> AppResult<Vec<String>> {
+        self.list_granted_apps_with(presented_secret, now_unix, || {
+            storage::load_or_migrate_registry().map_err(AppError::from)
+        })
+    }
+
+    fn list_granted_apps_with(
+        &self,
+        presented_secret: &str,
+        now_unix: u64,
+        load: impl FnOnce() -> AppResult<RegistryV2>,
+    ) -> AppResult<Vec<String>> {
+        let caller =
+            ClientCredentialStore::open(&self.credentials_root)?.verify(presented_secret, None)?;
+        let granted =
+            AgentPolicyStore::open(&self.policy_root)?.status_app_ids(&caller.client_id, now_unix);
+        if granted.is_empty() {
+            return Ok(Vec::new());
+        }
+        let registry = load()?;
+        Ok(registry
+            .apps
+            .iter()
+            .filter(|app| granted.contains(&app.id))
+            .map(|app| app.id.clone())
+            .collect())
+    }
+
     pub fn get_status(
         &self,
         presented_secret: &str,
@@ -495,6 +528,49 @@ mod tests {
             .unwrap()
             .contains(&secret));
         drop(store);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn discovery_returns_only_live_granted_installed_apps() {
+        let root = scratch();
+        let secret = enroll(&root, "client");
+        grant(&root, "client", "memos");
+        grant(&root, "client", "uninstalled");
+        let (policy_root, credentials_root) = roots(&root);
+        let gateway = AgentGateway::open(&policy_root, &credentials_root).unwrap();
+        let registry = || {
+            Ok(RegistryV2::new(vec![
+                installed("memos"),
+                installed("private"),
+            ]))
+        };
+        assert_eq!(
+            gateway
+                .list_granted_apps_with(&secret, 100, registry)
+                .unwrap(),
+            vec!["memos"]
+        );
+        assert!(gateway
+            .list_granted_apps_with(&"f".repeat(64), 100, || panic!(
+                "unverified discovery read registry"
+            ))
+            .is_err());
+        AgentPolicyStore::open(&policy_root)
+            .unwrap()
+            .revoke("client", "memos")
+            .unwrap();
+        assert!(gateway
+            .list_granted_apps_with(&secret, 100, registry)
+            .unwrap()
+            .is_empty());
+        ClientCredentialStore::open(&credentials_root)
+            .unwrap()
+            .revoke("client")
+            .unwrap();
+        assert!(gateway
+            .list_granted_apps_with(&secret, 100, || panic!("revoked discovery read registry"))
+            .is_err());
         fs::remove_dir_all(root).unwrap();
     }
 

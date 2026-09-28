@@ -101,7 +101,18 @@ def docker(*args, timeout=120):
     return subprocess.check_output(["docker", *args], text=True, encoding="utf-8", timeout=timeout).strip()
 
 
-def build(lock):
+def inventory_drift(locked, observed):
+    """Return package-level changes without treating a diagnosis as a release build."""
+    expected = parse_inventory(locked)
+    actual = parse_inventory(observed)
+    return [
+        {"name": name, "locked": expected.get(name), "observed": actual.get(name)}
+        for name in sorted(expected.keys() | actual.keys())
+        if expected.get(name) != actual.get(name)
+    ]
+
+
+def build(lock, inspect_inventory=False):
     # Unique output/name: concurrent runs never share a partial artifact/container.
     output = ROOT / ".cache" / "engine" / ("build-" + uuid.uuid4().hex)
     context = output / "context"
@@ -116,7 +127,9 @@ def build(lock):
         # bytes must not depend on the builder's host line-ending preference.
         (context / name).write_bytes((ENGINE / name).read_bytes().replace(b"\r\n", b"\n"))
     image_file = output / "image-id"
+    target_stage = "package-install" if inspect_inventory else "verified"
     subprocess.run(["docker", "build", "--platform", lock["platform"],
+                    "--target", target_stage,
                     "--build-arg", "BASE_IMAGE=" + lock["base_image"],
                     "--iidfile", str(image_file), str(context)], check=True, timeout=1200)
     image = image_file.read_text().strip()
@@ -127,6 +140,20 @@ def build(lock):
                        "io.local-store.purpose=engine-payload-export", image)
     try:
         docker("cp", container + ":/usr/share/local-store/packages.tsv", str(output / "packages.tsv"))
+        if inspect_inventory:
+            differences = inventory_drift(
+                (context / "packages.lock.tsv").read_bytes(),
+                (output / "packages.tsv").read_bytes(),
+            )
+            report = {"schema_version": 1, "status": "diagnostic_only",
+                      "platform": lock["platform"], "image_id": image,
+                      "package_lock_sha256": digest(context / "packages.lock.tsv"),
+                      "packages_sha256": digest(output / "packages.tsv"),
+                      "drift": differences}
+            (output / "inventory-drift.json").write_text(
+                json.dumps(report, indent=2) + "\n", encoding="utf-8")
+            print("Inventory diagnosis:", output / "inventory-drift.json", flush=True)
+            return
         # Keep Linux symlinks inside a tar; extracting them on Windows requires
         # privileges that a payload build should never need.
         with (output / "notices.tar").open("wb") as notices:
@@ -169,11 +196,15 @@ def build(lock):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build", action="store_true", help="download, build and export; default only validates")
+    parser.add_argument("--inspect-inventory", action="store_true",
+                        help="build the unverified package stage and report drift; never export")
     args = parser.parse_args()
     lock = json.loads((ENGINE / "components.lock.json").read_text(encoding="utf-8"))
     validate(lock)
-    if args.build:
-        build(lock)
+    if args.build and args.inspect_inventory:
+        parser.error("--build and --inspect-inventory are mutually exclusive")
+    if args.build or args.inspect_inventory:
+        build(lock, inspect_inventory=args.inspect_inventory)
     else:
         print("Engine pins valid; no build or release qualification implied.")
 

@@ -42,9 +42,12 @@ upstream app, independently of these data licenses.
   broad redistribution.
 - Monogram icons for apps no source covers are drawn by Local Store from glyph
   outlines of Instrument Sans, The Instrument Sans Project Authors,
-  [SIL Open Font License 1.1](docs/design/v2/assets/fonts/InstrumentSans-OFL.txt).
-  The font itself is not shipped.
+  [SIL Open Font License 1.1](src/fonts/InstrumentSans-OFL.txt).
+  The font is also shipped in the V2 interface at weights 400, 500 and 600.
 - Interface icons: Lucide Icons and Contributors, [ISC license](src/assets/LUCIDE-LICENSE).
+- IBM Plex Mono font: IBM Plex Project Authors,
+  [SIL Open Font License 1.1](src/fonts/IBMPlex-OFL.txt),
+  shipped in the V2 interface at weights 400 and 500.
 - Inter font: The Inter Project Authors, [SIL Open Font License 1.1](src/fonts/OFL.txt),
   [upstream source](https://github.com/rsms/inter).
 

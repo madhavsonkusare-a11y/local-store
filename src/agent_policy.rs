@@ -57,6 +57,18 @@ pub struct AgentPolicy {
 }
 
 impl AgentPolicy {
+    /// Only scopes with a live status grant are discoverable by the client.
+    pub fn status_app_ids(&self, client_id: &str, now_unix: u64) -> BTreeSet<String> {
+        self.grants
+            .values()
+            .filter(|grant| {
+                grant.client_id == client_id
+                    && now_unix < grant.expires_at_unix
+                    && grant.actions.contains(&AgentAction::Status)
+            })
+            .map(|grant| grant.app_id.clone())
+            .collect()
+    }
     /// Owner-side mutation only. A03 must never expose this to an agent client.
     pub fn grant(&mut self, grant: Grant) -> AppResult<()> {
         if !valid_id(&grant.client_id)

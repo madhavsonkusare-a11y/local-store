@@ -3,6 +3,36 @@
 Updated September 28, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
 
+## September 28 scope and implementation checkpoint
+
+The owner selected the previously approved V2 design as the V1 interface; there
+is no V3. F01 is DONE under the revised scope; **7/36 ledger rows are DONE
+(19.4%)**. The V2 handoff and freeze are the active visual contract, with
+engine/agent consent extensions still to implement. See [PUBLISH.md](../PUBLISH.md)
+for the owner's plain-language signing and GitHub Releases updater choices.
+Provider identity and updater private keys remain owner-controlled.
+
+Two managed Node-RED flow qualifications failed during container startup.
+Node.js `copyFileSync` returns EPERM copying `settings.js` into the
+Windows-backed managed mount; an isolated UID1000 shell copy at the same path
+depth succeeds. The timeout diagnostic now retains the actual error code. The failed evidence is
+[evidence/nodered-managed-flow-2026-09-28.json](evidence/nodered-managed-flow-2026-09-28.json);
+it is **not** a qualified app. The accepted task gate remains 3/50. Inspect
+the exact mount and container error before retrying or changing permissions.
+
+E01 clean rebuild correctly refused one upstream Ubuntu package drift
+(`libapparmor1` .7 to .8). The bounded inventory diagnostic writes
+[evidence](evidence/engine-inventory-drift-2026-09-28.json) without exporting
+unlocked bytes. E01 remains PARTIAL. Agent MCP discovery now lists only
+installed apps with live grants, and GitHub candidate previews check pinned
+source archive provenance; A03/C04 remain PARTIAL. Focused tests passed.
+The approved V2 fonts/brand/tokens and shell foundation are in production
+`src/`; the remaining screens and engine/agent consent states keep F03 PARTIAL.
+The V2 freeze, focused Discover/keyboard and dark-only tests pass; the focused
+connect-dialog screenshot was refreshed and visually checked. Shipped font
+licences now appear in `THIRD_PARTY_NOTICES.md`. The user's
+`CHANGELOG.md` edit remains untouched.
+
 ## September 28 Kanboard follow-up
 
 A pinned Kanboard JSON-RPC probe creates a unique project and exact task,
@@ -127,7 +157,7 @@ consolidated V1 documentation plus the frozen 100-app planning roster.
 ## Owner decisions to carry forward
 
 V1 requires 50 managed-engine-verified apps selected from the 52 current
-offerings, a bundled engine, owner-led V3 frontend, signed Windows delivery, an
+offerings, a bundled engine, approved V2 frontend, signed Windows delivery, an
 automatic updater, and agents managing the store and accessing every offered
 app. The frozen 100-app roster is a future sourcing and replacement pool, not a
 V1 release gate. The new signing requirement supersedes its earlier deferral.
@@ -137,8 +167,8 @@ do not spend current V1 work or CI capacity extending or certifying them.
 The first Windows-only quality run exposed Python's inherited cp1252 decoding
 of Cargo's captured output. The MSRV, licence and advisory gates now parse JSON
 as UTF-8 bytes and use replacement decoding only for failure diagnostics.
-V2 is reference material; do not start its production integration while V3 is
-being designed.
+The approved V2 handoff is now the release UI target; extend it for engine
+and agent consent states without changing the frozen visual system casually.
 
 Source-available apps remain allowed with accurate notices. The eight Umbrel
 icons remain under the owner's existing retain-with-NOASSERTION decision;

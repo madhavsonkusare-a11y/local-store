@@ -34,6 +34,7 @@ pub struct CandidateReference {
     pub id: String,
     pub revision: String,
     pub path: String,
+    pub archive_sha256: String,
     pub structurally_importable: bool,
     pub review_stage: CandidateReviewStage,
     pub definition_url: String,
@@ -87,6 +88,32 @@ struct CandidateProvenance {
     revision: String,
     path: String,
     repository: String,
+    archive_sha256: String,
+}
+
+#[derive(Deserialize)]
+struct ImportSourcePin {
+    revision: String,
+    sha256: String,
+    repository: String,
+}
+
+#[derive(Deserialize)]
+struct ImportSourcePins {
+    runtipi: ImportSourcePin,
+    caprover: ImportSourcePin,
+}
+
+fn valid_sha256(value: &str) -> bool {
+    value.len() == 64 && value.bytes().all(|byte| byte.is_ascii_hexdigit())
+}
+
+fn pinned_source<'a>(pins: &'a ImportSourcePins, source: &str) -> Option<&'a ImportSourcePin> {
+    match source {
+        "runtipi" => Some(&pins.runtipi),
+        "caprover" => Some(&pins.caprover),
+        _ => None,
+    }
 }
 
 fn definition_url(provenance: &CandidateProvenance) -> Option<String> {
@@ -136,11 +163,21 @@ fn review_stage(row: &QueuedCandidate) -> CandidateReviewStage {
     }
 }
 
+fn source_matches_pin(provenance: &CandidateProvenance, pin: &ImportSourcePin) -> bool {
+    provenance.revision == pin.revision
+        && provenance.archive_sha256 == pin.sha256
+        && provenance.repository == pin.repository
+        && valid_sha256(&pin.sha256)
+}
+
 fn reviewed_candidates(repository: &str) -> Result<Vec<CandidateReference>, String> {
     let queue: CandidateQueue =
         serde_json::from_str(include_str!("../catalog/candidate-queue.json"))
             .map_err(|_| "The pinned candidate index is unavailable.")?;
     let identity = repository.replacen("https://github.com/", "github:", 1);
+    let pins: ImportSourcePins =
+        serde_json::from_str(include_str!("../catalog/import-audit-sources.json"))
+            .map_err(|_| "The pinned import source index is unavailable.")?;
     let mut matches = queue
         .candidates
         .into_iter()
@@ -148,6 +185,13 @@ fn reviewed_candidates(repository: &str) -> Result<Vec<CandidateReference>, Stri
             row.identity_status == "reviewed_repository_match" && row.identity == identity
         })
         .map(|row| {
+            let pin = pinned_source(&pins, &row.source)
+                .ok_or_else(|| "The candidate has an unsupported import source.".to_owned())?;
+            if !source_matches_pin(&row.provenance, pin) {
+                return Err(
+                    "The candidate source does not match the pinned import archive.".to_owned(),
+                );
+            }
             let definition_url = definition_url(&row.provenance)
                 .ok_or("The pinned candidate has invalid source provenance.")?;
             let review_stage = review_stage(&row);
@@ -156,6 +200,7 @@ fn reviewed_candidates(repository: &str) -> Result<Vec<CandidateReference>, Stri
                 id: row.id,
                 revision: row.provenance.revision,
                 path: row.provenance.path,
+                archive_sha256: row.provenance.archive_sha256,
                 structurally_importable: row.importable,
                 review_stage,
                 definition_url,
@@ -587,6 +632,28 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "opt-in live GitHub API check"]
+    fn live_public_repository_inspection_preserves_review_boundary() {
+        let result = inspect("https://github.com/usememos/memos").unwrap();
+        assert_eq!(
+            result.canonical_repository,
+            "https://github.com/usememos/memos"
+        );
+        assert!(result.repository_id > 0);
+        assert_eq!(result.commit_sha.len(), 40);
+        assert_eq!(
+            result.commit_url,
+            format!(
+                "{}/commit/{}",
+                result.canonical_repository, result.commit_sha
+            )
+        );
+        assert!(
+            matches!(result.resolution, GithubResolution::ApprovedMatch { offering_id, .. } if offering_id == "memos")
+        );
+    }
+
+    #[test]
     fn inspection_pins_canonical_approved_repo_and_commit() {
         let sha = "0123456789abcdef0123456789abcdef01234567";
         let http = fake_http(vec![
@@ -843,6 +910,7 @@ mod tests {
         assert_eq!(candidates[0].source, "caprover");
         assert_eq!(candidates[0].id, "linkding");
         assert_eq!(candidates[0].revision.len(), 40);
+        assert_eq!(candidates[0].archive_sha256.len(), 64);
         assert!(candidates[0].structurally_importable);
     }
 
@@ -891,6 +959,7 @@ mod tests {
             repository: "caprover/one-click-apps".into(),
             revision: "a".repeat(40),
             path: "public/v4/apps/app.yml".into(),
+            archive_sha256: "b".repeat(64),
         };
         assert!(definition_url(&p).is_some());
         p.path = "../compose.yml".into();
@@ -901,6 +970,30 @@ mod tests {
         p.repository = "caprover/one-click-apps".into();
         p.revision = "main".into();
         assert!(definition_url(&p).is_none());
+    }
+
+    #[test]
+    fn candidate_preview_refuses_stale_or_mismatched_source_archive() {
+        let pin = ImportSourcePin {
+            revision: "a".repeat(40),
+            sha256: "b".repeat(64),
+            repository: "caprover/one-click-apps".into(),
+        };
+        let mut provenance = CandidateProvenance {
+            revision: pin.revision.clone(),
+            path: "public/v4/apps/app.yml".into(),
+            repository: pin.repository.clone(),
+            archive_sha256: pin.sha256.clone(),
+        };
+        assert!(source_matches_pin(&provenance, &pin));
+        provenance.archive_sha256 = "c".repeat(64);
+        assert!(!source_matches_pin(&provenance, &pin));
+        provenance.archive_sha256 = pin.sha256.clone();
+        provenance.revision = "d".repeat(40);
+        assert!(!source_matches_pin(&provenance, &pin));
+        provenance.revision = pin.revision.clone();
+        provenance.repository = "unreviewed/catalog".into();
+        assert!(!source_matches_pin(&provenance, &pin));
     }
 
     #[test]

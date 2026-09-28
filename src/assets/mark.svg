@@ -1,4 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <path d="M13 13 V33 A18 18 0 0 0 31 51 H51" stroke="#F8F7F3" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="23" y="9" width="32" height="32" rx="8" fill="#FF623E"/>
+  <defs>
+    <linearGradient id="tile" x1="25" y1="10" x2="53" y2="41" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF9148"/>
+      <stop offset="0.42" stop-color="#F56B20"/>
+      <stop offset="1" stop-color="#DC470C"/>
+    </linearGradient>
+    <radialGradient id="bloom" cx="0" cy="0" r="1" gradientTransform="translate(29 13) rotate(43) scale(26 24)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE0C1" stop-opacity="0.24"/>
+      <stop offset="0.55" stop-color="#FFB06D" stop-opacity="0.07"/>
+      <stop offset="1" stop-color="#B83205" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rim" x1="39" y1="9" x2="39" y2="41" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE0C1" stop-opacity="0.42"/>
+      <stop offset="0.36" stop-color="#FFF7EF" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#842403" stop-opacity="0.34"/>
+    </linearGradient>
+    <filter id="grain" x="22.5" y="8.5" width="33" height="33" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="1.05" numOctaves="2" seed="23" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
+      <feComponentTransfer in="mono" result="compressed">
+        <feFuncR type="linear" slope="0.52" intercept="0.24"/>
+        <feFuncG type="linear" slope="0.52" intercept="0.24"/>
+        <feFuncB type="linear" slope="0.52" intercept="0.24"/>
+        <feFuncA type="linear" slope="0.38"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="compressed" mode="soft-light" result="textured"/>
+      <feComposite in="textured" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+  <path d="M13 13V33A18 18 0 0 0 31 51H51" stroke="#F8F7F3" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <g>
+    <rect x="23" y="9" width="32" height="32" rx="8" fill="url(#tile)" filter="url(#grain)"/>
+    <rect x="23" y="9" width="32" height="32" rx="8" fill="url(#bloom)"/>
+    <rect x="23.5" y="9.5" width="31" height="31" rx="7.5" stroke="url(#rim)"/>
+  </g>
 </svg>

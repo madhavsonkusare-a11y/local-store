@@ -1213,7 +1213,9 @@ fn last_words(runner: &dyn ProcessRunner, app: &InstalledApp) -> Option<String> 
         // cuts the lines that matter most.
         by_service.sort_by_key(|(service, _)| service.len());
         for (service, lines) in &by_service {
-            let tail: Vec<String> = lines[lines.len().saturating_sub(5)..]
+            // Keep enough of the final stack trace to include its error code; the
+            // last five lines of a Node exception contain only path/syscall.
+            let tail: Vec<String> = lines[lines.len().saturating_sub(20)..]
                 .iter()
                 .map(|line| match line.char_indices().nth(200) {
                     Some((cut, _)) => format!("{}…", &line[..cut]),
@@ -1843,6 +1845,38 @@ mod tests {
         let said = last_words(&runner, &managed(&root)).expect("both halves answered");
         assert!(said.contains("Exited (1)"), "no container state: {said}");
         assert!(said.contains("no such file"), "no log line: {said}");
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn timeout_diagnosis_keeps_the_error_code_before_a_stack_trace() {
+        let root =
+            std::env::temp_dir().join(format!("local-store-error-code-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(&root).unwrap();
+        let mut log = String::from("app-1 | Error: EACCES: permission denied, copyfile\n");
+        for index in 0..8 {
+            log.push_str(&format!("app-1 | stack frame {index}\n"));
+        }
+        let runner = FakeRunner {
+            outputs: Mutex::new(VecDeque::from([
+                Ok(ProcessOutput {
+                    success: true,
+                    stdout: "NAME       STATUS\napp-1   Exited (1)\n".into(),
+                    stderr: String::new(),
+                    truncated: false,
+                }),
+                Ok(ProcessOutput {
+                    success: true,
+                    stdout: String::new(),
+                    stderr: log,
+                    truncated: false,
+                }),
+            ])),
+            calls: Mutex::new(Vec::new()),
+        };
+        let said = last_words(&runner, &managed(&root)).unwrap();
+        assert!(said.contains("EACCES"), "{said}");
         let _ = fs::remove_dir_all(&root);
     }
 

@@ -9,6 +9,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 const MAX_LINE: usize = 64 * 1024;
 const PROTOCOL_VERSION: &str = "2025-06-18";
 const TOOL_NAME: &str = "local_store_get_status";
+const LIST_TOOL_NAME: &str = "local_store_list_granted_apps";
 
 pub fn serve_stdio() -> Result<(), String> {
     let secret = std::env::var("LOCAL_STORE_AGENT_BEARER")
@@ -17,15 +18,28 @@ pub fn serve_stdio() -> Result<(), String> {
         return Err("LOCAL_STORE_AGENT_BEARER is invalid".to_owned());
     }
     let gateway = AgentGateway::open_local().map_err(|error| error.message)?;
-    serve(io::stdin().lock(), io::stdout().lock(), |app_id| {
-        let now = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map_err(|_| "System clock is unavailable".to_owned())?
-            .as_secs();
-        gateway
-            .get_status(&secret, None, app_id, now)
-            .map_err(|error| error.message)
-    })
+    serve(
+        io::stdin().lock(),
+        io::stdout().lock(),
+        |app_id| {
+            let now = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map_err(|_| "System clock is unavailable".to_owned())?
+                .as_secs();
+            gateway
+                .get_status(&secret, None, app_id, now)
+                .map_err(|error| error.message)
+        },
+        || {
+            let now = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map_err(|_| "System clock is unavailable".to_owned())?
+                .as_secs();
+            gateway
+                .list_granted_apps(&secret, now)
+                .map_err(|error| error.message)
+        },
+    )
     .map_err(|error| error.to_string())
 }
 
@@ -33,6 +47,7 @@ fn serve<R: BufRead, W: Write>(
     mut input: R,
     mut output: W,
     mut status: impl FnMut(&str) -> Result<ToolResult, String>,
+    mut list: impl FnMut() -> Result<Vec<String>, String>,
 ) -> io::Result<()> {
     let mut initialized = false;
     loop {
@@ -55,7 +70,7 @@ fn serve<R: BufRead, W: Write>(
                 continue;
             }
         };
-        if let Some(response) = handle(&request, &mut initialized, &mut status) {
+        if let Some(response) = handle(&request, &mut initialized, &mut status, &mut list) {
             write_json(&mut output, &response)?;
         }
     }
@@ -71,6 +86,7 @@ fn handle(
     request: &Value,
     initialized: &mut bool,
     status: &mut impl FnMut(&str) -> Result<ToolResult, String>,
+    list: &mut impl FnMut() -> Result<Vec<String>, String>,
 ) -> Option<Value> {
     let id = request.get("id").cloned();
     if request.get("jsonrpc").and_then(Value::as_str) != Some("2.0")
@@ -109,10 +125,31 @@ fn handle(
             "inputSchema": {"type": "object", "properties": {"app_id": {"type": "string"}},
                 "required": ["app_id"], "additionalProperties": false},
             "annotations": {"readOnlyHint": true, "destructiveHint": false}
+        }, {
+            "name": LIST_TOOL_NAME,
+            "description": "List installed Local Store app IDs with a live status grant for this client.",
+            "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false},
+            "annotations": {"readOnlyHint": true, "destructiveHint": false}
         }]}),
         "tools/call" if *initialized => {
             let params = request.get("params");
-            if params.and_then(|p| p.get("name")).and_then(Value::as_str) != Some(TOOL_NAME) {
+            let name = params.and_then(|p| p.get("name")).and_then(Value::as_str);
+            if name == Some(LIST_TOOL_NAME) {
+                let args = params.and_then(|p| p.get("arguments"));
+                if !args.is_none_or(|a| a.as_object().is_some_and(|obj| obj.is_empty())) {
+                    return Some(rpc_error(id, -32602, "Invalid arguments"));
+                }
+                let result = match list() {
+                    Ok(app_ids) => json!({"content": [{"type": "text",
+                        "text": serde_json::to_string(&app_ids).unwrap_or_default()}],
+                        "structuredContent": {"app_ids": app_ids}, "isError": false}),
+                    Err(error) => {
+                        json!({"content": [{"type": "text", "text": error}], "isError": true})
+                    }
+                };
+                return Some(json!({"jsonrpc": "2.0", "id": id, "result": result}));
+            }
+            if name != Some(TOOL_NAME) {
                 return Some(rpc_error(id, -32602, "Unknown tool"));
             }
             let arguments = params.and_then(|p| p.get("arguments"));
@@ -153,34 +190,83 @@ mod tests {
         let request = json!({"jsonrpc":"2.0","id":1,"method":"tools/call",
             "params":{"name":TOOL_NAME,"arguments":{"app_id":"memos"}},
             "clientInfo":{"name":"owner"}});
-        let denied = handle(&request, &mut initialized, &mut |_| {
-            calls += 1;
-            Err("denied".into())
-        })
+        let denied = handle(
+            &request,
+            &mut initialized,
+            &mut |_| {
+                calls += 1;
+                Err("denied".into())
+            },
+            &mut || Err("denied".into()),
+        )
         .unwrap();
         assert_eq!(denied["error"]["code"], -32000);
         assert_eq!(calls, 0);
         let init = json!({"jsonrpc":"2.0","id":2,"method":"initialize","params":{}});
-        assert!(
-            handle(&init, &mut initialized, &mut |_| Err("denied".into()))
-                .unwrap()
-                .get("result")
-                .is_some()
-        );
-        let denied = handle(&request, &mut initialized, &mut |_| {
-            calls += 1;
-            Err("denied".into())
-        })
+        assert!(handle(
+            &init,
+            &mut initialized,
+            &mut |_| Err("denied".into()),
+            &mut || Err("denied".into())
+        )
+        .unwrap()
+        .get("result")
+        .is_some());
+        let denied = handle(
+            &request,
+            &mut initialized,
+            &mut |_| {
+                calls += 1;
+                Err("denied".into())
+            },
+            &mut || Err("denied".into()),
+        )
         .unwrap();
         assert_eq!(denied["result"]["isError"], true);
         assert_eq!(calls, 1);
     }
 
     #[test]
+    fn list_tool_dispatches_without_client_supplied_scope() {
+        let mut initialized = true;
+        let request = json!({"jsonrpc":"2.0","id":3,"method":"tools/call",
+            "params":{"name":LIST_TOOL_NAME,"arguments":{}}});
+        let response = handle(
+            &request,
+            &mut initialized,
+            &mut |_| panic!("status called"),
+            &mut || Ok(vec!["memos".into()]),
+        )
+        .unwrap();
+        assert_eq!(
+            response["result"]["structuredContent"]["app_ids"],
+            json!(["memos"])
+        );
+        let invalid = json!({"jsonrpc":"2.0","id":4,"method":"tools/call",
+            "params":{"name":LIST_TOOL_NAME,"arguments":{"client_id":"other"}}});
+        assert_eq!(
+            handle(
+                &invalid,
+                &mut initialized,
+                &mut |_| panic!("status called"),
+                &mut || panic!("list called")
+            )
+            .unwrap()["error"]["code"],
+            -32602
+        );
+    }
+
+    #[test]
     fn stdio_roundtrip_is_newline_delimited() {
         let input = b"{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}\n{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}\n";
         let mut output = Vec::new();
-        serve(&input[..], &mut output, |_| Err("denied".into())).unwrap();
+        serve(
+            &input[..],
+            &mut output,
+            |_| Err("denied".into()),
+            || Err("denied".into()),
+        )
+        .unwrap();
         let lines: Vec<_> = output
             .split(|byte| *byte == b'\n')
             .filter(|line| !line.is_empty())

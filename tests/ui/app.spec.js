@@ -92,7 +92,7 @@ test('dark-only surfaces keep contrast in light and dark system settings', async
  for (const colorScheme of ['light', 'dark']) {
    await page.emulateMedia({colorScheme});
    expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('dark');
-   expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe('rgb(17, 18, 20)');
+   expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe('rgb(12, 10, 9)');
  }
  await page.getByRole('button',{name:'Connect an app',exact:true}).first().click();
  await expect(page.getByLabel('App name')).toBeFocused();
