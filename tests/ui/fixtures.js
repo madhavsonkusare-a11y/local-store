@@ -53,6 +53,7 @@ export function installAdapter(page, options = {}) {
          licenses: [...new Set(catalog.flatMap(a=>a.licenses || [a.license]).filter(Boolean))].sort(), architectures: [...new Set(catalog.flatMap(a=>a.architectures || []))].sort(), snapshot_date:'2026-09-05', source_count:4 };
      }
      if (command === 'take_activation_errors') return [];
+     if (command === 'managed_engine_status') return {bootstrap:{status:'not_configured'}, prerequisites:{state:'ready'}, daemon:'not_checked', disk_available_bytes:null};
      if (command === 'list_apps') return structuredClone(current);
      if (command === 'add_app') { current.push({ id:args.name.toLowerCase().replaceAll(' ','-'), display_name:args.name, launch_url:args.url, icon_path:null, runtime:{kind:'external'}, status:'connected', catalog_id:null, created_at_unix:1, updated_at_unix:1 }); return; }
      if (command === 'remove_app_cmd' || command === 'uninstall_app') { current = current.filter(a => a.id !== args.id); return; }

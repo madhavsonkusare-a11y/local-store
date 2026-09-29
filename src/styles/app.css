@@ -226,6 +226,13 @@ dialog h2 { font-size: 26px; font-weight: 550; line-height: 1.25; letter-spacing
 .about-facts p { color: var(--muted); font-size: 12px; line-height: 1.9; padding: 15px 0; border-top: 1px solid var(--border); }
 .about-facts strong { color: var(--ink); font-weight: 550; }
 .wide-dialog { width: min(650px, calc(100vw - 32px)); }
+.engine-output:not(:empty) { margin: -1px 0 13px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: linear-gradient(110deg, #ffffff08, #ffffff03); }
+.engine-output strong { display: block; font-size: 13px; font-weight: 550; }
+.engine-output p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+.engine-state-ready { color: var(--success); }
+.engine-state-unresponsive, .engine-state-manual_review { color: #ffb0a3; }
+.engine-state-setup_required, .engine-state-retry_import, .engine-state-resume_verification { color: var(--accent); }
+#repair-engine { margin-bottom: 12px; }
 .recipe-summary { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #ffffff16; background: #11121440; border-radius: 12px; overflow: hidden; }
 .recipe-summary div { padding: 15px; border-bottom: 1px solid #ffffff10; }
 .recipe-summary div:nth-child(odd) { border-right: 1px solid #ffffff10; }

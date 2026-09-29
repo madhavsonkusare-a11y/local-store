@@ -3,6 +3,24 @@
 Updated September 28, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
 
+## September 29 unsigned personal build
+
+The owner confirmed code-signing and updater private keys are needed before
+shipping, not for a local personal build. The approved V2 Settings dialog now
+shows typed managed-engine status and offers repair only after verified
+ownership with an unresponsive daemon. Focused browser checks passed.
+The first Tauri NSIS bundle incorrectly selected the MCP Cargo binary as the
+main app (677 KB installer). The sidecar entry point is now an explicit
+`mcp-sidecar` Cargo feature outside `src/bin`, the launcher is pinned by
+`mainBinaryName`, and `scripts/check-local-windows-build.py` gates the
+actual binary identity in CI. A corrected unsigned NSIS installer built at
+`target/x86_64-pc-windows-msvc/release/bundle/nsis/Local Store_0.5.0-1_x64-setup.exe`
+(16,017,533 bytes), copied with matching SHA-256 to `dist/local-preview/`; its launcher reports version 0.5.0-1 and differs from the
+bundled MCP sidecar. This is a local preview dependent on Docker Desktop or
+an already configured managed WSL engine, not a clean-machine bundled-engine
+V1 release. S01–S04 remain release gates. The user's CHANGELOG edit remains
+untouched.
+
 ## September 28 scope and implementation checkpoint
 
 The owner selected the previously approved V2 design as the V1 interface; there

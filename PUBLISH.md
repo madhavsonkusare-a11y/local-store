@@ -48,6 +48,31 @@ into one directory, then run `sha256sum --check SHA256SUMS-<target>.txt` (or
 `shasum -a 256 --check ...` on macOS). On Windows, use `Get-FileHash -Algorithm
 SHA256` to compare a downloaded artifact with its listed digest.
 
+## Unsigned local Windows preview
+
+The owner can build and use a local preview before public-release signing and
+updater keys exist. This does **not** satisfy S01–S04 or publish a V1 release.
+Build the sidecar explicitly, then build the NSIS installer:
+
+```powershell
+cargo build --locked --release --target x86_64-pc-windows-msvc --features mcp-sidecar --bin local-store-mcp
+New-Item -ItemType Directory -Force binaries | Out-Null
+Copy-Item -LiteralPath "target/x86_64-pc-windows-msvc/release/local-store-mcp.exe" -Destination "binaries/local-store-mcp-x86_64-pc-windows-msvc.exe"
+cargo tauri build --target x86_64-pc-windows-msvc --ci --config tauri.mcp-release.conf.json --bundles nsis
+python scripts/check-local-windows-build.py --build-dir target/x86_64-pc-windows-msvc/release
+```
+
+The installer is under `target/x86_64-pc-windows-msvc/release/bundle/nsis/`.
+The September 29 personal copy and its checksum are in the ignored
+`dist/local-preview/` folder; rebuilding or cleaning `target/` does not remove
+that copy.
+The local preview currently needs Docker Desktop or an already configured
+Local Store WSL engine; the reproducible bundled-engine payload, setup consent
+and clean-machine bootstrap are still open work. Do not present this preview as
+one-click setup on a fresh PC. Windows may warn because it is unsigned. The
+post-build check runs the actual launcher with `--version` and refuses the
+wrong Cargo binary, a regression found on September 29.
+
 ## Code signing and updates (required for V1)
 
 **Required by the owner on September 12, 2026.** This supersedes the earlier

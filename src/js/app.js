@@ -5,6 +5,7 @@ import { discoveryCard, installedRow, emptyState, detail, recipeView, doctorView
 import { renderSetupFields, firstMissingAnswer, collectAnswers, markInvalidAnswer } from './setup-form.js';
 import { showDialog, closeDialog, setDialogBusy, revealToast } from './motion.js';
 import { createReadinessMonitor } from './readiness.js';
+import { refreshEngineStatus } from './engine-settings.js';
 import './recovery.js';
 
 const $ = id => document.getElementById(id);
@@ -255,7 +256,7 @@ $('nav-apps').onclick = async () => { await refreshApps(); navigate('apps'); };
 document.querySelector('.brand').onclick = event => { event.preventDefault(); navigate('discover'); };
 $('connect-top').onclick = $('connect-note').onclick = () => openConnect();
 $('about').onclick = () => showDialog($('about-dialog'));
-$('settings').onclick = () => showDialog($('settings-dialog'));
+$('settings').onclick = () => { showDialog($('settings-dialog')); void refreshEngineStatus(); };
 $('run-doctor').onclick = async () => {
   const button = $('run-doctor'); button.disabled = true; button.textContent = 'Checking…';
   $('doctor-error').textContent = ''; $('doctor-output').innerHTML = '';

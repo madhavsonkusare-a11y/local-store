@@ -81,6 +81,27 @@ test('settings exposes diagnostics and handles failure', async ({page}) => {
   await expect(page.getByRole('button',{name:'Run again'})).toBeEnabled();
 });
 
+test('managed-engine repair appears only for an owned unresponsive engine', async ({page}) => {
+  await page.evaluate(() => {
+    const original = window.__TAURI__.core.invoke;
+    let responsive = false;
+    window.__TAURI__.core.invoke = async (command, args) => {
+      if (command === 'managed_engine_status') return {
+        bootstrap:{status:'recovery', phase:'verified', disposition:'ready'},
+        prerequisites:{state:'ready'}, daemon:responsive ? 'responsive' : 'unresponsive',
+        disk_available_bytes:1000000,
+      };
+      if (command === 'repair_managed_engine') { responsive = true; return true; }
+      return original(command, args);
+    };
+  });
+  await page.getByRole('button',{name:'Settings',exact:true}).click();
+  await expect(page.locator('#engine-output')).toContainText('Needs attention');
+  await page.getByRole('button',{name:'Repair managed engine'}).click();
+  await expect(page.locator('#engine-output')).toContainText('Ready');
+  await expect(page.getByRole('button',{name:'Repair managed engine'})).toBeHidden();
+});
+
 test('new SVG and PNG identities render in cards and details offline', async ({page}) => {
   await page.route('https://**', route => route.abort());
   for (const name of ['Ampache', 'Appsmith', 'Dashy']) {

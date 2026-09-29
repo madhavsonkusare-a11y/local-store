@@ -154,13 +154,16 @@ jobs:
       - name: Build and prepare Windows MCP sidecar
         shell: pwsh
         run: |
-          cargo build --locked --release --target ${{ matrix.target }} --bin local-store-mcp
+          cargo build --locked --release --target ${{ matrix.target }} --features mcp-sidecar --bin local-store-mcp
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           New-Item -ItemType Directory -Force binaries | Out-Null
           Copy-Item -LiteralPath "target/${{ matrix.target }}/release/local-store-mcp.exe" -Destination "binaries/local-store-mcp-${{ matrix.target }}.exe"
 
       - name: Build (release)
         run: cargo tauri build --target ${{ matrix.target }} --ci --config tauri.mcp-release.conf.json
+
+      - name: Verify bundled launcher identity
+        run: python scripts/check-local-windows-build.py --build-dir target/${{ matrix.target }}/release
 
       - name: Stage release payloads and checksums
         run: python scripts/prepare-release.py --target ${{ matrix.target }} --build-dir target/${{ matrix.target }}/release --output-dir dist/${{ matrix.target }}

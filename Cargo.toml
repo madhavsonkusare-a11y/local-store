@@ -1,5 +1,6 @@
 [package]
 name = "local-store"
+default-run = "local-store"
 version = "0.5.0-1"
 edition = "2021"
 rust-version = "1.88.0"
@@ -7,6 +8,14 @@ license = "MIT"
 repository = "https://github.com/madhavsonkusare-a11y/local-store"
 readme = "README.md"
 description = "Native desktop windows and reviewed setup recipes for self-hosted web apps."
+
+[features]
+mcp-sidecar = []
+
+[[bin]]
+name = "local-store-mcp"
+path = "tools/local-store-mcp.rs"
+required-features = ["mcp-sidecar"]
 
 [dependencies]
 tauri = { version = "2", features = ["image-png"] }
