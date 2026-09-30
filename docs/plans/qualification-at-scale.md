@@ -2,14 +2,17 @@
 
 Decision checkpoint, September 30, 2026. V1 requires 10 selected apps
 proven on the owned Windows/WSL engine with a meaningful task; this document
-changes the work method, not the release bar. Today seven apps (Memos, Flatnotes,
-Gitea, Kanboard, PrivateBin, Uptime Kuma and n8n) meet the task bar. n8n's
+changes the work method, not the release bar. Today eight apps (Memos, Flatnotes,
+Gitea, Kanboard, PrivateBin, Uptime Kuma, n8n and WordPress) meet the task bar. n8n's
 [managed-engine workflow proof](../evidence/n8n-managed-workflow-2026-09-30.json)
 checks an exact execution result after restart and keep-data reinstall.
 Gitea's [managed proof](../evidence/gitea-managed-repository-2026-09-30.json)
 checks a private repository, exact file and commit after both transitions.
 Its Git/SSH and PostgreSQL mounts need reviewed named-volume pins on Windows;
 the generic importer still preserves the upstream definition.
+WordPress's [managed proof](../evidence/wordpress-managed-post-2026-09-30.json)
+checks an exact published post after both transitions. Its PHP and MariaDB
+data also need reviewed named-volume pins on Windows.
 
 ## Why the one-script-per-app loop is too slow
 

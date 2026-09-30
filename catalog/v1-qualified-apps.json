@@ -64,6 +64,15 @@
       "evidence_sha256": "5a4f8c3f782c4c088ea8c8eb25beb7dc0ebb77bc0ce336b90f1c2066400ec4e7",
       "probe": "scripts/uptime-kuma-monitor-probe.mjs",
       "task": "a local admin creates a unique HTTP monitor of the app's own page, it records Up, and that exact monitor remains Up after restart and keep-data reinstall"
+    },
+    {
+      "id": "wordpress",
+      "manifest": "src/templates/wordpress.json",
+      "manifest_sha256": "904921ba26420c6272872484e971596d58cd4da39432cbef62bbce5cf8e18bb5",
+      "evidence": "docs/evidence/wordpress-managed-post-2026-09-30.json",
+      "evidence_sha256": "cfd2f9c0f9a5d665444ebdc1abab22519f3b6f01d4c4332fc9364e1d8e464536",
+      "probe": "scripts/wordpress-post-probe.mjs",
+      "task": "an administrator installs WordPress, publishes an exact unique post, and reads the same published content after restart and keep-data reinstall"
     }
   ]
 }

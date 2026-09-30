@@ -12,7 +12,9 @@ through restart and keep-data reinstall. n8n then passed a [saved workflow and
 exact execution-result task](evidence/n8n-managed-workflow-2026-09-30.json)
 through both transitions. Gitea then passed a [private-repository, exact-file
 and commit task](evidence/gitea-managed-repository-2026-09-30.json) with 19/19
-steps through restart and keep-data reinstall. The curated validator is **7/10**, with three more
+steps through restart and keep-data reinstall. WordPress now also passed an
+[exact published-post task](evidence/wordpress-managed-post-2026-09-30.json)
+with 19/19 steps through both transitions. The curated validator is **8/10**, with two more
 needed. Keep 52 current offerings and the 100-app planning
 roster as discovery/replacement pools rather than treating them as verified.
 Work is split into non-overlapping lanes: E01 reproducible bundled-engine
@@ -30,7 +32,10 @@ master/detail routes; Install/Recovery and first run still need integration.
 Do not run simultaneous Docker qualifications on this shared host. The owner
 excluded changedetection.io from the 10-app launch shortlist and asked for
 more widely used offerings. The next managed-engine worker should prioritize
-Jellyfin, Immich and WordPress with exact tasks. Gitea required two narrow
+Jellyfin and Immich with exact tasks. WordPress required two reviewed named-volume
+pins for its PHP files and MariaDB; generated credentials remain in the managed
+app folder. Its first-use proof uses the installer, XML-RPC publication and the
+query-form REST route, which works before permalink rewrite setup. Gitea required two narrow
 reviewed storage pins: its `/data` Git/SSH files and PostgreSQL data need
 Docker named volumes because Windows-backed bind mounts reject POSIX chmod.
 The upstream Runtipi definition remains verbatim; a focused stale/duplicate-pin

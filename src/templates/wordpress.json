@@ -10,7 +10,7 @@
   "documentation_url": "https://wordpress.org/",
   "verified_at": "2026-09-11",
   "version": "7.1.0",
-  "lifecycle_proof": "docs/evidence/wordpress-qualification.json",
+  "lifecycle_proof": "docs/evidence/wordpress-managed-post-2026-09-30.json",
   "origin": {
     "importer": "runtipi",
     "repository": "runtipi/runtipi-appstore",
@@ -73,17 +73,33 @@
   },
   "promotion": {
     "state": "approved",
-    "reason": "Approved by the owner on 2026-09-10 after qualifying as offered: a real install of WordPress 7.1.0 — upstream's current release — with its MariaDB pinned from an end-of-life 11.1 to the 11.4 long-term line proved it starts, opens to its installer, survives a restart and a keep-data reinstall with its data and generated database credentials intact, and removes everything it created. Two containers; the database is not published and is reachable only by WordPress. The first as-offered run failed at first use and its error was lost — the probe kept only the tail of Node's output — which is why probe failures are now recorded by what they threw. The second run passed every step. Worth watching for a slow first page on the 11.4 database."
+    "reason": "Approved by the owner. The Runtipi definition runs WordPress 7.1.0 with MariaDB pinned to 11.4.13. A September 30 managed-Windows proof installed the site, published an exact unique post and read it after restart and keep-data reinstall; all owned resources were removed. Reviewed storage pins keep both POSIX-sensitive data paths on Docker named volumes."
   },
-  "data_storage": "Local Store managed folder / wordpress",
+  "data_storage": "Docker named volumes for WordPress files and MariaDB; generated database credentials remain in the managed app folder",
   "risk_notes": [
     "Creates 2 Docker containers and publishes one port on this computer's loopback interface only.",
     "Generates 2 credentials of its own, keeps them beside the app's data, and reuses them if you reinstall.",
-    "Keeps its data in this app's managed folder. A keep-data uninstall leaves it; deleting data removes it permanently.",
+    "Keeps WordPress files and MariaDB in Docker named volumes and generated database credentials in the managed app folder. A keep-data uninstall retains them; deleting data removes them.",
     "Proven on Windows with Docker's Linux engine. macOS and Linux hosts are unverified.",
     "Opens to WordPress's own installer, which asks you to name the site and create the administrator account. Themes and plugins you add later are code that runs on your computer, so install them from sources you trust."
   ],
   "fields": {},
+  "storage_pins": [
+    {
+      "service": "wordpress",
+      "source": "data/wordpress",
+      "target": "/var/www/html",
+      "volume": "wordpress-data",
+      "reason": "WordPress writes application files and updates their ownership, which a Windows-backed WSL bind mount cannot reliably support."
+    },
+    {
+      "service": "wordpress-db",
+      "source": "data/mariadb",
+      "target": "/var/lib/mysql",
+      "volume": "wordpress-mariadb",
+      "reason": "MariaDB initialization needs POSIX ownership and permissions, which a Windows-backed WSL bind mount cannot provide."
+    }
+  ],
   "definition": "{\n  \"services\": [\n    {\n      \"name\": \"wordpress\",\n      \"image\": \"wordpress:7.1.0\",\n      \"isMain\": true,\n      \"internalPort\": 80,\n      \"environment\": [\n        {\n          \"key\": \"WORDPRESS_DB_HOST\",\n          \"value\": \"wordpress-db\"\n        },\n        {\n          \"key\": \"WORDPRESS_DB_NAME\",\n          \"value\": \"wordpress\"\n        },\n        {\n          \"key\": \"WORDPRESS_DB_USER\",\n          \"value\": \"tipi\"\n        },\n        {\n          \"key\": \"WORDPRESS_DB_PASSWORD\",\n          \"value\": \"${DB_PASSWORD}\"\n        }\n      ],\n      \"dependsOn\": [\"wordpress-db\"],\n      \"volumes\": [\n        {\n          \"hostPath\": \"${APP_DATA_DIR}/data/wordpress\",\n          \"containerPath\": \"/var/www/html\"\n        }\n      ]\n    },\n    {\n      \"name\": \"wordpress-db\",\n      \"image\": \"mariadb:11.1.3\",\n      \"environment\": [\n        {\n          \"key\": \"MYSQL_ROOT_PASSWORD\",\n          \"value\": \"${DB_ROOT_PASSWORD}\"\n        },\n        {\n          \"key\": \"MYSQL_DATABASE\",\n          \"value\": \"wordpress\"\n        },\n        {\n          \"key\": \"MYSQL_USER\",\n          \"value\": \"tipi\"\n        },\n        {\n          \"key\": \"MYSQL_PASSWORD\",\n          \"value\": \"${DB_PASSWORD}\"\n        }\n      ],\n      \"volumes\": [\n        {\n          \"hostPath\": \"${APP_DATA_DIR}/data/mariadb\",\n          \"containerPath\": \"/var/lib/mysql\"\n        }\n      ]\n    }\n  ],\n  \"schemaVersion\": 2,\n  \"$schema\": \"https://schemas.runtipi.io/v2/dynamic-compose.json\"\n}\n",
   "config": {
     "path": "apps/wordpress/config.json",
