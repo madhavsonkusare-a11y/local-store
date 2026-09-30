@@ -1,0 +1,137 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790740057,
+  "app": "n8n",
+  "passed": true,
+  "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "recipe",
+  "source_revision": "",
+  "images": [
+    "docker.n8n.io/n8nio/n8n:2.37.10"
+  ],
+  "image_ids": {
+    "docker.n8n.io/n8nio/n8n:2.37.10": "sha256:307d6065be25619aa24cfc63a7c2f04ca56d084a08c05c8e9f189a89f353b1ec"
+  },
+  "first_use": "an owner creates a two-node workflow, executes it, and reads the exact persisted output after restart and keep-data reinstall",
+  "measurements": {
+    "first_start_millis": 7419,
+    "samples": 3,
+    "idle_memory_bytes": {
+      "local-store-n8n-qualify-33776-1790739990223807300-n8n": 395418009
+    },
+    "peak_memory_bytes": {
+      "local-store-n8n-qualify-33776-1790739990223807300-n8n": 1068498944
+    },
+    "peak_total_memory_bytes": 1068498944,
+    "idle_managed_storage_bytes": 1090,
+    "peak_managed_storage_bytes": 1090,
+    "idle_named_volume_bytes": {
+      "n8n-data": 5688952
+    },
+    "peak_named_volume_bytes": {
+      "n8n-data": 5699125
+    },
+    "image_virtual_bytes": {
+      "sha256:307d6065be25619aa24cfc63a7c2f04ca56d084a08c05c8e9f189a89f353b1ec": 2465586723
+    }
+  },
+  "steps": [
+    {
+      "step": "pull docker.n8n.io/n8nio/n8n:2.37.10",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "generates no credentials, so there are none to lose",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed recipe",
+    "source_adapter": "recipe",
+    "source_locator": "https://github.com/n8n-io/n8n",
+    "source_revision": "",
+    "source_observed_on": "2026-09-05",
+    "images_observed_on": "2026-09-07",
+    "plan_sha256": "d905ec3880967fa346e51048e96027cee8e9baa9556db3f3c7dcb7fc20020537",
+    "requested_images": [
+      "docker.n8n.io/n8nio/n8n:2.37.10"
+    ],
+    "resolved_image_ids": {
+      "docker.n8n.io/n8nio/n8n:2.37.10": "sha256:307d6065be25619aa24cfc63a7c2f04ca56d084a08c05c8e9f189a89f353b1ec"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "afcd8e444f10ea3cad794140aea05a1130fa6529ae3a8acada5c32fd9c017955",
+    "level": "lifecycle_and_first_use"
+  }
+}

@@ -30,6 +30,15 @@
       "task": "an admin signs in, creates a private memo, and reads the same content after restart and reinstall"
     },
     {
+      "id": "n8n",
+      "manifest": "src/recipes/n8n.json",
+      "manifest_sha256": "4e6aed52b582c003cdf35aa845342efdebe197c37f789b58b5a7e6f45d740955",
+      "evidence": "docs/evidence/n8n-managed-workflow-2026-09-30.json",
+      "evidence_sha256": "f27fcce708523d76a7955843ae29db92d0afc9bed3ae9970348152281a171561",
+      "probe": "scripts/n8n-workflow-probe.mjs",
+      "task": "an owner creates a two-node workflow, executes it, and reads the exact persisted output after restart and keep-data reinstall"
+    },
+    {
       "id": "privatebin",
       "manifest": "src/templates/privatebin.json",
       "manifest_sha256": "09af373f5840c0cb33057e5844ef5712c28db92c8c1c34238d9331142e6beedc",

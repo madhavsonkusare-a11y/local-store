@@ -24,7 +24,7 @@
     "n8n uses the Sustainable Use License and is not an OSI-approved open-source product.",
     "External webhook delivery requires a separately configured HTTPS endpoint; this recipe stays local."
   ],
-  "compose": "services:\n  n8n:\n    image: docker.n8n.io/n8nio/n8n:2.37.10@sha256:307d6065be25619aa24cfc63a7c2f04ca56d084a08c05c8e9f189a89f353b1ec\n    container_name: local-store-n8n\n    restart: unless-stopped\n    ports:\n      - \"127.0.0.1:5678:5678\"\n    environment:\n      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: \"true\"\n    volumes:\n      - n8n-data:/home/node/.n8n\nvolumes:\n  n8n-data:\n",
+  "compose": "services:\n  n8n:\n    image: docker.n8n.io/n8nio/n8n:2.37.10@sha256:307d6065be25619aa24cfc63a7c2f04ca56d084a08c05c8e9f189a89f353b1ec\n    container_name: local-store-n8n\n    restart: unless-stopped\n    ports:\n      - \"127.0.0.1:5678:5678\"\n    environment:\n      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: \"true\"\n      N8N_SECURE_COOKIE: \"false\"\n    volumes:\n      - n8n-data:/home/node/.n8n\nvolumes:\n  n8n-data:\n",
   "requirements": {
     "docker_engine_os": "linux",
     "compose_major": 2,

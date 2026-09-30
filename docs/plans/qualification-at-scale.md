@@ -2,9 +2,10 @@
 
 Decision checkpoint, September 30, 2026. V1 requires 10 selected apps
 proven on the owned Windows/WSL engine with a meaningful task; this document
-changes the work method, not the release bar. Today five apps (Memos, Flatnotes,
-Kanboard, PrivateBin and Uptime Kuma) meet the task bar. n8n has a managed-engine
-lifecycle pass without a task proof.
+changes the work method, not the release bar. Today six apps (Memos, Flatnotes,
+Kanboard, PrivateBin, Uptime Kuma and n8n) meet the task bar. n8n's
+[managed-engine workflow proof](../evidence/n8n-managed-workflow-2026-09-30.json)
+checks an exact execution result after restart and keep-data reinstall.
 
 ## Why the one-script-per-app loop is too slow
 

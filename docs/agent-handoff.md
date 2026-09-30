@@ -8,8 +8,10 @@ only release ledger. [Documentation index](README.md) explains the rest.
 The owner reduced the V1 launch gate from 50 to **10 managed-engine-verified
 apps**. PrivateBin passed an [encrypted paste task](evidence/privatebin-managed-paste-2026-09-30.json),
 and Uptime Kuma passed an [HTTP monitor task](evidence/uptime-kuma-managed-monitor-2026-09-30.json)
-through restart and keep-data reinstall. The curated validator is **5/10**, with
-five more needed. Keep 52 current offerings and the 100-app planning
+through restart and keep-data reinstall. n8n then passed a [saved workflow and
+exact execution-result task](evidence/n8n-managed-workflow-2026-09-30.json)
+through both transitions. The curated validator is **6/10**, with four more
+needed. Keep 52 current offerings and the 100-app planning
 roster as discovery/replacement pools rather than treating them as verified.
 Work is split into non-overlapping lanes: E01 reproducible bundled-engine
 payload, A03 bounded agent management tools, F03 approved V2 screen integration,
@@ -25,9 +27,13 @@ install/uninstall approval remain. The V2 lane added live-data Overview and My A
 master/detail routes; Install/Recovery and first run still need integration.
 Do not run simultaneous Docker qualifications on this shared host. The owner
 excluded changedetection.io from the 10-app launch shortlist and asked for
-more widely used offerings. The next managed-engine worker should qualify a
-real n8n workflow, reusing its existing lifecycle pass; then prioritize Gitea,
-Jellyfin, Immich and WordPress with exact tasks. Uptime Kuma's pinned browser
+more widely used offerings. The next managed-engine worker should prioritize
+Gitea, Jellyfin, Immich and WordPress with exact tasks. n8n's pinned browser
+probe signs up an owner, saves a connected two-node workflow, runs it, and
+checks the exact persisted output after restart and keep-data reinstall. The
+recipe now sets `N8N_SECURE_COOKIE=false` because its editor is served through
+loopback HTTP; a separate diagnostic exposed a transient healthy-before-editor
+startup window, so the probe reloads until the editor is ready. Uptime Kuma's pinned browser
 probe passed all 18 lifecycle/task steps and three resource samples. The focused
 validator, Rust formatting and probe syntax checks pass; the V2 Overview/My
 Apps browser checks passed 4/4. `CHANGELOG.md` is the owner's edit.
