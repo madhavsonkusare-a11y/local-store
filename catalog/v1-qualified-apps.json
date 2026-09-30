@@ -21,6 +21,15 @@
       "task": "an administrator creates a private repository and commits an exact file; the repository, commit and file survive restart and keep-data reinstall"
     },
     {
+      "id": "immich",
+      "manifest": "src/templates/immich.json",
+      "manifest_sha256": "672d776c7653107094239c2397712dbc0f7ce0a6e4ecda0da8aefefa9ff87118",
+      "evidence": "docs/evidence/immich-managed-photo-2026-09-30.json",
+      "evidence_sha256": "68639bb3136340521d9b88ba2ac998b78756c02272464bf86cb13ebbc66c308c",
+      "probe": "scripts/immich-photo-probe.mjs",
+      "task": "an administrator uploads an owned photo, finds it by filename, and downloads identical original bytes after restart and keep-data reinstall"
+    },
+    {
       "id": "jellyfin",
       "manifest": "src/templates/jellyfin.json",
       "manifest_sha256": "9cc47ac4596a8bf59dce54838c3ca7a53411e4ebe0e6a75ace9b2a95dcd4a92f",

@@ -16,8 +16,10 @@ steps through restart and keep-data reinstall. WordPress now also passed an
 [exact published-post task](evidence/wordpress-managed-post-2026-09-30.json)
 with 19/19 steps through both transitions. Jellyfin passed an
 [exact sample-media import and playback task](evidence/jellyfin-managed-media-2026-09-30.json)
-through both transitions. The curated validator is **9/10**, with one more
-needed. Keep 52 current offerings and the 100-app planning
+through both transitions. Immich passed an [exact photo upload, filename search
+and download task](evidence/immich-managed-photo-2026-09-30.json) with 21/21
+steps through both transitions. The curated validator is **10/10**. This clears
+the selected-app proof count, not the full V1 release gate. Keep 52 current offerings and the 100-app planning
 roster as discovery/replacement pools rather than treating them as verified.
 Work is split into non-overlapping lanes: E01 reproducible bundled-engine
 payload, A03 bounded agent management tools, F03 approved V2 screen integration,
@@ -34,7 +36,11 @@ master/detail routes; Install/Recovery and first run still need integration.
 Do not run simultaneous Docker qualifications on this shared host. The owner
 excluded changedetection.io from the 10-app launch shortlist and asked for
 more widely used offerings. The next managed-engine worker should prioritize
-Immich with an exact task. Jellyfin uses the pinned Runtipi definition to expose
+follow-up release checks. Immich uses its pinned Runtipi definition and two
+reviewed named-volume pins for PostgreSQL and the model cache; its media remains
+in the selected host folder. The first administrator uploaded a tiny owned PNG,
+found it by filename and downloaded identical bytes after both lifecycle
+transitions. Jellyfin uses the pinned Runtipi definition to expose
 a selected host media folder; a reviewed named-volume pin keeps `/config` on the
 engine Linux filesystem. Its proof completed the first-run wizard through the
 API, imported an owned WAV and streamed identical bytes after both lifecycle

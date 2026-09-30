@@ -1,0 +1,172 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790765267,
+  "app": "immich",
+  "passed": true,
+  "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "approved",
+  "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+  "images": [
+    "ghcr.io/immich-app/immich-server:v3.2.0",
+    "ghcr.io/immich-app/immich-machine-learning:v3.2.0",
+    "redis:6.2",
+    "ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0"
+  ],
+  "image_ids": {
+    "ghcr.io/immich-app/immich-machine-learning:v3.2.0": "sha256:f8b2869891c861a58dde969d86e7ea8a186e6059a55886632ee3249e51fb574a",
+    "ghcr.io/immich-app/immich-server:v3.2.0": "sha256:ae13784ffcfcce8f4178113eb6661602a1fd1912f3d539880b8ac0dd95fc8ac2",
+    "ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0": "sha256:c570d9e1c2494f65d2a0a379a7f6df66e8441964254a30aa62cc58e8ebf1dee0",
+    "redis:6.2": "sha256:143f7bfc2358911d6b36138eabfbfffea46273c5d4b5696d90e5cbf23d633cf8"
+  },
+  "first_use": "an administrator uploads an owned photo, finds it by filename, and downloads identical original bytes after restart and keep-data reinstall",
+  "measurements": {
+    "first_start_millis": 26652,
+    "samples": 3,
+    "idle_memory_bytes": {
+      "local-store-immich-qualify-17800-1790764991143497900-immich": 1658931118,
+      "local-store-immich-qualify-17800-1790764991143497900-immich-db": 460220006,
+      "local-store-immich-qualify-17800-1790764991143497900-immich-machine-learning": 253965107,
+      "local-store-immich-qualify-17800-1790764991143497900-immich-redis": 14575206
+    },
+    "peak_memory_bytes": {
+      "local-store-immich-qualify-17800-1790764991143497900-immich": 1658931118,
+      "local-store-immich-qualify-17800-1790764991143497900-immich-db": 460220006,
+      "local-store-immich-qualify-17800-1790764991143497900-immich-machine-learning": 266967449,
+      "local-store-immich-qualify-17800-1790764991143497900-immich-redis": 14575206
+    },
+    "peak_total_memory_bytes": 2387691437,
+    "idle_managed_storage_bytes": 5183,
+    "peak_managed_storage_bytes": 5183,
+    "idle_named_volume_bytes": {
+      "immich-db": 326140236,
+      "immich-ml-cache": 0
+    },
+    "peak_named_volume_bytes": {
+      "immich-db": 326597935,
+      "immich-ml-cache": 5778
+    },
+    "image_virtual_bytes": {
+      "sha256:143f7bfc2358911d6b36138eabfbfffea46273c5d4b5696d90e5cbf23d633cf8": 151213707,
+      "sha256:ae13784ffcfcce8f4178113eb6661602a1fd1912f3d539880b8ac0dd95fc8ac2": 2541686205,
+      "sha256:c570d9e1c2494f65d2a0a379a7f6df66e8441964254a30aa62cc58e8ebf1dee0": 968994749,
+      "sha256:f8b2869891c861a58dde969d86e7ea8a186e6059a55886632ee3249e51fb574a": 1380154575
+    }
+  },
+  "steps": [
+    {
+      "step": "pull ghcr.io/immich-app/immich-server:v3.2.0",
+      "passed": true
+    },
+    {
+      "step": "pull ghcr.io/immich-app/immich-machine-learning:v3.2.0",
+      "passed": true
+    },
+    {
+      "step": "pull redis:6.2",
+      "passed": true
+    },
+    {
+      "step": "pull ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "keeps the credentials it generated",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed mapping",
+    "source_adapter": "runtipi",
+    "source_locator": "runtipi/runtipi-appstore#apps/immich/docker-compose.json",
+    "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+    "source_observed_on": "2026-09-12",
+    "images_observed_on": "2026-09-12",
+    "plan_sha256": "fb12025534e378e0ab02d2cdfaeb4be8e28ccf90834d958d19acacc61e04f80e",
+    "requested_images": [
+      "ghcr.io/immich-app/immich-server:v3.2.0",
+      "ghcr.io/immich-app/immich-machine-learning:v3.2.0",
+      "redis:6.2",
+      "ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0"
+    ],
+    "resolved_image_ids": {
+      "ghcr.io/immich-app/immich-machine-learning:v3.2.0": "sha256:f8b2869891c861a58dde969d86e7ea8a186e6059a55886632ee3249e51fb574a",
+      "ghcr.io/immich-app/immich-server:v3.2.0": "sha256:ae13784ffcfcce8f4178113eb6661602a1fd1912f3d539880b8ac0dd95fc8ac2",
+      "ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0": "sha256:c570d9e1c2494f65d2a0a379a7f6df66e8441964254a30aa62cc58e8ebf1dee0",
+      "redis:6.2": "sha256:143f7bfc2358911d6b36138eabfbfffea46273c5d4b5696d90e5cbf23d633cf8"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "c1338af4bc89cd57a07e9da75571edc40a77ab1197690a5c41a1393fb885e079",
+    "level": "lifecycle_and_first_use"
+  }
+}

@@ -9,7 +9,7 @@
   "source_url": "https://github.com/immich-app/immich",
   "documentation_url": "https://immich.app/",
   "verified_at": "2026-09-12",
-  "lifecycle_proof": "docs/evidence/immich-qualification.json",
+  "lifecycle_proof": "docs/evidence/immich-managed-photo-2026-09-30.json",
   "origin": {
     "importer": "runtipi",
     "repository": "runtipi/runtipi-appstore",
@@ -92,17 +92,17 @@
   },
   "promotion": {
     "state": "approved",
-    "reason": "Approved by the owner. Qualified as offered on 2026-09-12: a real install of Immich 3.2.0, upstream's current release proved it starts, opens to a first screen with a clear next step, survives a restart and a keep-data reinstall with its data and generated credentials intact, and removes everything it created. The definition comes from Runtipi's app store."
+    "reason": "Owner-approved offering from a pinned Runtipi definition. Managed-engine proof of Immich 3.2.0 created the first administrator, uploaded an owned photo, found it by filename and downloaded identical bytes after install, restart and keep-data reinstall."
   },
-  "data_storage": "Local Store managed folder / immich, plus a folder you choose",
+  "data_storage": "Docker named volumes for database and model cache; a chosen host folder for photos and videos",
   "risk_notes": [
     "Creates 4 Docker containers and publishes one port on this computer's loopback interface only.",
     "Reads and writes a folder on this computer that you choose during setup. Nothing outside that folder is shared with it.",
     "Generates 2 credentials of its own, keeps them beside the app's data, and reuses them if you reinstall.",
-    "Keeps its data in this app's managed folder. A keep-data uninstall leaves it; deleting data removes it permanently.",
+    "Keeps database and model cache in managed Docker named volumes. A keep-data uninstall retains them; deleting data removes them.",
     "Proven on Windows with Docker's Linux engine. macOS and Linux hosts are unverified.",
     "Asks you to create the first account, which becomes the administrator.",
-    "Photos and videos go in the folder you choose; its database, thumbnails and search index live in the app's own folder.",
+    "Photos, videos and thumbnails go in the folder you choose; the database stays in a managed named volume.",
     "Its machine-learning service downloads a model the first time it runs, so searching by face or content works only after that finishes.",
     "Immich changes quickly: read its release notes before moving to a newer version, because some releases migrate the database."
   ],
@@ -121,12 +121,28 @@
     {
       "definition": "ghcr.io/immich-app/immich-server:v3.1.0",
       "replacement": "ghcr.io/immich-app/immich-server:v3.2.0",
-      "reason": "Runtipi's definition pins v3.1.0. This is upstream's current release, and its machine learning image moves with it."
+      "reason": "Runtipi's definition pins v3.1.0. Use the audited v3.2.0 server image with the matching machine-learning image."
     },
     {
       "definition": "ghcr.io/immich-app/immich-machine-learning:v3.1.0",
       "replacement": "ghcr.io/immich-app/immich-machine-learning:v3.2.0",
       "reason": "Immich's server and machine learning images are released together and must match."
+    }
+  ],
+  "storage_pins": [
+    {
+      "service": "immich-db",
+      "source": "data/db",
+      "target": "/var/lib/postgresql/data",
+      "volume": "immich-db",
+      "reason": "PostgreSQL requires Linux filesystem permissions for its data directory."
+    },
+    {
+      "service": "immich-machine-learning",
+      "source": "data/immich-ml-cache",
+      "target": "/cache",
+      "volume": "immich-ml-cache",
+      "reason": "Keep downloaded model cache files on the engine Linux filesystem."
     }
   ],
   "first_start_seconds": 600
