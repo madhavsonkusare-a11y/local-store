@@ -1,9 +1,45 @@
 # Release checklist
 
-The GitHub repository and release automation are already connected. A pushed
-version tag triggers the Windows CI build and publishes its installer to the
-matching GitHub Release. Builds depend on both quality and
-the minimum-Rust job; a failed MSRV check blocks publication.
+The [GitHub repository](https://github.com/madhavsonkusare-a11y/local-store)
+is already public. The next V1 milestone is a **source-only GitHub Release**;
+it does not publish an installer and needs no Windows code-signing certificate,
+updater key or HTTPS update channel. The Windows-product and signed-update
+checklists below remain for later distribution work.
+
+## Current V1: source-only GitHub Release
+
+The existing workflow matches `v*` tags and publishes a Windows installer.
+Use a reviewed source-only tag such as `source-v1.0.0`, which does not match
+that trigger. Do not push a `v1.0.0` tag for this milestone without changing
+the workflow first.
+
+Before tagging, review the exact commit for accidental secrets, the launcher
+license and third-party notices, current build instructions and honest feature
+limitations. Prepare release notes in a saved Markdown file. The master
+[source-release gate](docs/V1_TASKS.md#source-only-v1-github-release-gate)
+records the remaining checks. Obtain the owner's publication approval only
+after the source commit, notes and tag name are reviewable.
+
+When the gate is complete and publication is authorized, the source-only
+procedure is:
+
+```bash
+git tag -a source-v1.0.0 -m "Local Store V1 source release" <reviewed-commit>
+git push origin source-v1.0.0
+gh release create source-v1.0.0 --verify-tag --title "Local Store V1 source release" --notes-file <release-notes.md>
+gh release view source-v1.0.0
+```
+
+Verify the release tag points to the reviewed commit, inspect the generated
+source archives and notes, and confirm that no installer asset is attached.
+This publishes source, not a claim that a fresh Windows computer can already
+install and run every planned V1 feature.
+
+## Later Windows binary distribution
+
+A pushed `v*` version tag currently triggers the Windows CI build and
+publishes its installer to the matching GitHub Release. Builds depend on both
+quality and the minimum-Rust job; a failed MSRV check blocks publication.
 
 ## Build targets and integrity metadata
 
@@ -13,7 +49,7 @@ the minimum-Rust job; a failed MSRV check blocks publication.
 
 Runner architectures follow [GitHub's runner image list](https://github.com/actions/runner-images#available-images).
 macOS and Linux staging support remains in the repository for later scope, but
-V1 does not build, certify or publish those artifacts. The Linux release job is
+the later Windows distribution does not certify those platforms. The Linux release job is
 only a platform-neutral coordinator for Windows provenance and publication.
 Tests and Tauri builds use the explicit Windows target. Tauri CLI is pinned to
 2.11.4. Confirm the Windows job on GitHub before claiming coverage.
@@ -39,9 +75,9 @@ gh attestation verify "Local Store_<version>_x64-setup.exe" --repo <owner>/<repo
 ```
 
 That proves which workflow, at which commit, produced the file. It is **not**
-code signing and **not** an updater signature: Windows will still warn that the
-publisher is unknown, and there is no update channel. S02/S03 remain
-outstanding and need owner-controlled signing and updater keys — see below.
+code signing and **not** an updater signature: Windows can warn that the
+publisher is unknown, and there is no update channel. S02/S03 are deferred
+to later Windows distribution and need owner-controlled keys then.
 
 On Linux/macOS, download the matching checksum list and all its listed files
 into one directory, then run `sha256sum --check SHA256SUMS-<target>.txt` (or
@@ -50,8 +86,8 @@ SHA256` to compare a downloaded artifact with its listed digest.
 
 ## Unsigned local Windows preview
 
-The owner can build and use a local preview before public-release signing and
-updater keys exist. This does **not** satisfy S01–S04 or publish a V1 release.
+The owner can build and use a local Windows preview without signing or updater
+keys. It is separate from the source-only V1 GitHub Release.
 Build the sidecar explicitly, then build the NSIS installer:
 
 ```powershell
@@ -73,11 +109,11 @@ one-click setup on a fresh PC. Windows may warn because it is unsigned. The
 post-build check runs the actual launcher with `--version` and refuses the
 wrong Cargo binary, a regression found on September 29.
 
-## Code signing and updates (required for V1)
+## Code signing and updates (later distribution)
 
-**Required by the owner on September 12, 2026.** This supersedes the earlier
-signing/updater deferral. No signing or updater implementation is claimed yet.
-S01–S04 in [V1_TASKS.md](docs/V1_TASKS.md) define the release acceptance gates.
+The owner changed V1 to a source-only GitHub release on September 30, 2026.
+S01–S04 in [V1_TASKS.md](docs/V1_TASKS.md) are deferred to a later signed,
+automatic-update distribution. No signing or updater implementation is claimed.
 Code signing, updater payload signatures and build provenance are distinct.
 A signed artifact is not a guarantee that reputation-based warnings disappear.
 
@@ -104,11 +140,11 @@ signed. Without trusted signing, browser downloads can trigger SmartScreen warni
 even a newly signed app may need time to build reputation. Build provenance
 answers a different question.
 
-**Before any of this ships**, the update endpoint has to exist and be served
+**Before automatic updates ship**, the update endpoint has to exist and be served
 over HTTPS, and the update UI has to let somebody decline. An updater that
 cannot be refused is a worse defect than no updater.
 
-## Owner setup for Windows signing and updates
+## Later owner setup for Windows signing and updates
 
 These are two different signatures. **Windows code signing** puts a verified
 publisher on the EXE/installer. **Tauri updater signing** lets an installed
@@ -150,7 +186,7 @@ prepare the rest without receiving private keys. Tauri's
 and [GitHub Releases guide](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)
 are the source for these choices.
 
-## Before tagging
+## Before a later Windows binary tag
 
 1. Update the version in both `Cargo.toml` and `tauri.conf.json`.
 2. Confirm the working tree contains only the intended release changes:
@@ -164,7 +200,7 @@ are the source for these choices.
    must be exactly `v` followed by the configured product version; staging fails
    if a version tag disagrees with `tauri.conf.json`.
 
-## Publish and verify
+## Publish and verify a later Windows binary release
 
 ```bash
 TAG=vX.Y.Z

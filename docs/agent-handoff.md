@@ -3,6 +3,22 @@
 Updated September 30, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
 
+## September 30 release-scope correction
+
+The owner chose a **source-only V1 GitHub Release**. The repository is already
+public; no Windows installer, signing certificate, updater key or HTTPS update
+channel is required for the next tag. The existing `v*` tag workflow publishes
+an installer, so use the [source-only gate](V1_TASKS.md#source-only-v1-github-release-gate)
+and [publishing procedure](../PUBLISH.md) before tagging; no release tag has
+been created in this scope update. G02's source audit, G03 release notes/owner
+publication authorization and G04 source-archive verification remain.
+
+The Windows product roadmap continues separately: 9/31 active rows are DONE
+(29.0% by strict task count), Q03/Q04 now close on the current 10/10 managed
+task ledger, and S01–S05 are DEFERRED rather than blocked. E01–E04, Q02,
+agent access and V2 implementation are still incomplete; none blocks source
+publication. Keep the owner's uncommitted `CHANGELOG.md` change untouched.
+
 ## September 30 parallel implementation and launch scope
 
 The owner reduced the V1 launch gate from 50 to **10 managed-engine-verified

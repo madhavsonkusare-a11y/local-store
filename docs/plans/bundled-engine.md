@@ -240,8 +240,9 @@ or unregister another product's distro. Removing the engine and deleting app dat
 must remain separate, explicit actions.
 
 Local Store maintainers own engine security updates: review upstream advisories,
-refresh locks, rebuild and requalify, then sign and deliver the payload through
-the updater. Keep replaceable engine binaries separate from durable app data.
+refresh locks, rebuild and requalify. A future signed Windows distribution may
+deliver that payload through an updater; the source-only V1 tag has no engine
+binary or automatic update channel. Keep replaceable engine binaries separate from durable app data.
 Live restore is configured in the development daemon but is not evidence of a
 working update/rollback system. Disk compaction needs an explicit offline
 maintenance design and must target only the owned disk.
@@ -252,4 +253,6 @@ Requalify current offerings on the managed engine after E04 and Q01/Q02. Existin
 Docker Desktop evidence cannot establish compatibility with the new daemon,
 filesystem or network. All-service health checks now exist in qualification;
 full engine identity, resource measurements and useful app tasks remain required.
-V3 integration, signing credentials and release publication are separate gates.
+Approved V2 integration and Windows engine proof are separate product gates;
+neither blocks the source-only GitHub publication gate. Signing credentials
+belong to a later distribution milestone.

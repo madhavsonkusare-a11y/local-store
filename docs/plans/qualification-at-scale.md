@@ -57,8 +57,8 @@ browser probe passed the [full managed-engine monitor task](../evidence/uptime-k
 5. Run a release gate on immutable manifest, engine, image and probe fingerprints.
    Failed or missing tasks cannot be promoted. Review evidence and a small
    sample of the actual UI for each app family; automate repeat runs and stale
-   input detection. Keep agent access, approved V2 UX and signed delivery as separate
-   V1 gates.
+   input detection. Keep agent access and approved V2 UX as separate Windows
+   product gates; signed automatic delivery is deferred beyond the source-only V1 tag.
 
 ## Where Jev helps
 

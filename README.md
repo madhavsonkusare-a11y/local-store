@@ -19,6 +19,13 @@ and native dialogs with keyboard and reduced-motion support.
 See the [refined brand deck](branding/brand-deck.html) and
 [identity guidelines](branding/README.md).
 
+The repository is public, but the planned **V1 GitHub Release is source-only**.
+It has no Windows installer or automatic updater. The Windows product is still
+in development: ten selected apps have managed-engine lifecycle and
+meaningful-task proof, while the bundled-engine setup, complete V2 interface
+and agent access remain unfinished. See the [V1 task ledger](docs/V1_TASKS.md)
+for current evidence and release status.
+
 ## How it works
 
 - **Discover** searches the embedded project catalog in bounded pages. A project

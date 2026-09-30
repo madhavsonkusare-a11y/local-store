@@ -36,9 +36,10 @@ Worth saying plainly, because the store does not yet say it:
 ## Current planning context
 
 The integration baseline has 52 offerings. The old twelve-app batch is finished
-in its manifests; it is not the next task. V1 now requires the bundled engine,
-10 verified release apps, approved V2, signed updates and agent access across the
-release roster. The frozen 100-app planning roster remains available for future
+in its manifests; it is not the next task. The source-only V1 GitHub release
+does not wait for an installer, signing or updater keys. The later Windows
+product requires the bundled engine, 10 verified selected apps, approved V2
+and useful agent access across its release roster. The frozen 100-app planning roster remains available for future
 expansion and reviewed replacements.
 Task ownership and dependencies are Q01–Q05/C03/A06 in
 [V1_TASKS.md](../V1_TASKS.md). The detail below explains the proof requirements.

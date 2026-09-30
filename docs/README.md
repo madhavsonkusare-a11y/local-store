@@ -1,7 +1,7 @@
 # Documentation
 
 Start with [V1 release tasks](V1_TASKS.md), then the [agent handoff](agent-handoff.md).
-Only the master ledger owns task status and release scope. Updated September 27, 2026.
+Only the master ledger owns task status and release scope. Updated September 30, 2026.
 
 | Area | Read | Purpose |
 | --- | --- | --- |
@@ -9,7 +9,7 @@ Only the master ledger owns task status and release scope. Updated September 27,
 | Next session | [Agent handoff](agent-handoff.md) | Exact checkout state, next bounded work, validation and known blockers |
 | Architecture | [Backend coverage](backend-app-coverage-plan.md), [command contract](command-contract.md) | Reused installation pipeline and frontend/backend semantics |
 | Detailed plans | [Managed engine](plans/bundled-engine.md), [qualification](plans/qualification.md), [agent access](plans/agent-access.md), [parallel execution](plans/parallel-v1-execution.md) | Implementation detail and work allocation subordinate to the master ledger |
-| Product design | [Design index](design/README.md), [V2 reference handoff](design/v2/HANDOFF.md) | V3 is owner-led and pending; V2 is an approved reference, not the current implementation target |
+| Product design | [Design index](design/README.md), [V2 approved handoff](design/v2/HANDOFF.md) | V2 is the active approved interface; there is no V3 release requirement |
 | Operations | [CLI](cli.md), [recovery](interrupted-install-recovery.md), [security/privacy](security-and-privacy.md) | Current behavior and supported actions |
 | V1 roster | [100-app planning roster](v1-app-roster.md), [acceptance matrix](../catalog/v1-roster.json) | Future sourcing and replacement pool; planning is not qualification |
 | Catalog | [Contribution guide](catalog.md), [recipe requirements](recipe-requirements.md) | Reproduction, sources, image and manifest requirements |

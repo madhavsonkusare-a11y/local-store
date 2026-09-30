@@ -6,24 +6,31 @@ research documents are proposals, not additional commitments.
 
 ## Release contract and owner decisions
 
-V1 is a Windows desktop app store that installs supported self-hosted apps,
+The product goal is a Windows desktop app store that installs supported self-hosted apps,
 opens them in native windows, manages its own container engine, and gives
-agents controlled access to the store and installed apps.
+agents controlled access to the store and installed apps. The source is
+already public on [GitHub](https://github.com/madhavsonkusare-a11y/local-store).
+The next **V1 GitHub milestone is source-only**: a tagged source release with
+accurate docs, license/notices, and a reviewed source archive. It has no Windows
+installer or automatic update channel. The Windows product remains active
+development after that source milestone; its functional gates below are not
+prerequisites to publishing source.
 
 | Decision | Source / consequence |
 | --- | --- |
-| 10 managed-engine-verified apps for V1 | Owner reduced the launch target from 50 to 10 on September 30. Select from today's 52 offerings; the frozen 100-app roster remains a future research and replacement pool, not a V1 release gate. |
-| Bundled engine required | Owner confirmed September 12. WSL prerequisites may still require consent, administrator access or restart; do not promise zero prerequisites. |
-| Approved V2 frontend | Owner selected the already approved V2 handoff as the release interface on September 28; there is no V3. Extend V2 for bundled-engine and agent flows. |
-| Signed Windows delivery and automatic updater required | Owner confirmed September 12, superseding the September 8 deferral. Code signing and updater signatures are separate requirements. |
-| Agents can manage the store and access every offered app | Owner confirmed September 12. Use a shared access layer with multiple backends; prove a useful access path per app rather than promise universal API coverage. |
-| Windows x64 is the only active shipping target | Owner reconfirmed September 19. CI validation and packaging run on Windows. Existing macOS/Linux code and staging support remain intact for later scope, without active certification work. |
+| 10 managed-engine-verified apps for the Windows product | Owner reduced the product launch target from 50 to 10 on September 30. The 10-app proof gate now passes; the frozen 100-app roster remains future research and replacement capacity. |
+| Bundled engine required for the Windows product | Owner confirmed September 12. WSL prerequisites may still require consent, administrator access or restart; do not promise zero prerequisites. It does not block the source-only tag. |
+| Approved V2 frontend for the Windows product | Owner selected the already approved V2 handoff on September 28; there is no V3. Extend V2 for bundled-engine and agent flows. It does not block the source-only tag. |
+| Source-only V1 GitHub release; no signing keys | Owner confirmed September 30. The repository is already public. The next V1 release tag contains source only, with no installer artifact, automatic updater, or signing requirement. Windows distribution and signed automatic updates are later milestones. |
+| Agents can manage the store and access every offered app in the Windows product | Owner confirmed September 12. Use a shared access layer with multiple backends; prove a useful access path per app rather than promise universal API coverage. |
+| Windows x64 is the only active binary target | Owner reconfirmed September 19. Existing macOS/Linux code and staging support remain intact for later scope. The source-only release contains no platform binary. |
 | Source-available apps allowed, with accurate license information | Existing owner decision retained. This does not establish redistribution rights for every image or asset. |
 | Dark mode only, native per-app windows, reuse existing code | Existing product direction retained. No replacement installer or custom language build system. |
 
 ## Current baseline
 
-Measured from integration commit `720ce23d46a8bcfd7b401b5ef94f840296f74749`:
+The integration baseline began at commit `720ce23d46a8bcfd7b401b5ef94f840296f74749`;
+later evidence and task completions are recorded below:
 
 - **52 offerings:** 3 recipes and 49 approved templates; 57 template manifests total.
 - **1,678 discovery entries**, each with a local icon or generated monogram.
@@ -34,25 +41,54 @@ Measured from integration commit `720ce23d46a8bcfd7b401b5ef94f840296f74749`:
   and adoption, readiness, native windows and packaged Windows evidence exist.
 - The default Rust suite, Clippy, UI/axe checks, metadata checks and all three
   platform builds passed [CI run 34695407242](https://github.com/madhavsonkusare-a11y/local-store/actions/runs/34695407242).
-- **Not implemented:** bundled engine, V2 production UI, agent gateway, broad
-  meaningful first-use proof, signed delivery or automatic launcher updates.
+- **Remaining Windows product work:** bundled-engine packaging/setup, complete approved V2
+  flows, useful agent access across the release roster, backup/recovery and a
+  clean Windows release-candidate run. The selected 10-app managed task gate
+  now passes; signing and automatic updates are later work.
 
 The generic app proof demonstrates startup, an actionable page, persistence and
 cleanup. It does not establish that every app can finish a real task. Some
 individual recipes/probes have stronger evidence; inspect them separately.
-There is no defensible overall percentage complete: the new engine, agent and
-frontend requirements materially expand V1 beyond the old 33 tasks.
+The public-repository goal is already complete; the tagged source-only V1
+release is not yet published. In the separate Windows-product roadmap below,
+**9 of 31 active rows are DONE (29.0%)**. Two qualification rows now close
+because all 10 selected apps have current managed-engine lifecycle and
+meaningful-task evidence. Five signing/update rows are deferred, not completed,
+and are excluded from that product-work denominator. Partial work earns no
+fraction of a DONE row. Task count is not a calendar-time or risk estimate.
 
 ## Status and completion rules
 
 `TODO` means no accepted completion evidence. `PARTIAL` names what exists.
-`BLOCKED` names an external input. `DONE` requires the acceptance result and a
+`BLOCKED` names an external input for an in-scope task. `DEFERRED` means the
+owner moved a task beyond this GitHub V1 milestone; it is excluded from the
+percentage, never counted as done. `DONE` requires the acceptance result and a
 commit/evidence link. Planning, a mocked screen, parsing a definition, and an
 image pull are not task completion.
 
 Every implementation batch updates this file and the short handoff with:
 task ID, files/commit, checks and result, unresolved limitation, next task.
 Use one bounded batch at a time. Do not run concurrent Docker qualifications.
+
+## Source-only V1 GitHub release gate
+
+This is the **only publication gate for the next V1 tag**. The repository is
+already public, but a tagged V1 source release has not been made. The `v*`
+tag workflow currently builds and publishes a Windows installer, so the
+source-only procedure uses a `source-v1.0.0` tag (or another reviewed prefix
+outside `v*`) until that workflow is changed. Do not publish a binary by
+accident. See [PUBLISH.md](../PUBLISH.md) for the procedure.
+
+| ID | Status | Acceptance |
+| --- | --- | --- |
+| G01 | DONE | [GitHub repository](https://github.com/madhavsonkusare-a11y/local-store) is public, with `main` as the default branch; verified September 30. This is source visibility, not a V1 tag. |
+| G02 | PARTIAL | Review the exact tagged source for secrets, licenses/notices, build instructions and truthful current limitations. `LICENSE`, `CONTRIBUTING.md`, `THIRD_PARTY_NOTICES.md` and security/privacy guidance already exist; their presence alone does not complete the release review. |
+| G03 | TODO | Prepare versioned release notes and a source-only tag that does not trigger the `v*` installer workflow. Record the commit and obtain owner authorization for publication. No installer, checksum file for a binary, signing key or updater endpoint is needed. |
+| G04 | TODO | Publish the GitHub Release, verify its tag resolves to the reviewed commit, inspect the generated source archives and release text, and confirm no installer asset was attached. |
+
+**Source-release progress: 1/4 DONE (25%).** The percentage is deliberately
+separate from the Windows-product roadmap below. The source milestone may
+finish while the engine, V2 UI and agent access remain in development.
 
 ## 0 — Integration and scope
 
@@ -75,8 +111,8 @@ Detailed design: [bundled engine](plans/bundled-engine.md) and
 | E04 | PARTIAL | The launcher engine-status contract and `engine status` CLI distinguish unchecked, responsive and unresponsive daemon state, probing only after verified WSL ownership. Explicit `engine repair` holds a cross-process operation lock, starts Docker only inside that owned distro, skips an already responsive daemon and rechecks readiness. Fixture tests cover ownership refusal and exact command targeting. A first V2 Settings status/repair surface now uses this IPC and shows repair only for verified, unresponsive ownership; focused browser proof passes. Coexistence, removal and sleep/wake/crash/restart proof remain; launcher close must not stop background apps. Engine and app-data removal are separate decisions. | E03 |
 | Q01 | DONE | Evidence schema 2 fingerprints the exact source locator, adapter and revision; normalized plan; requested and resolved images; OS/architecture; selected engine; Compose version; first-use probe (including actual script source for script probes); and evidence level. Batch scheduling reruns changed inputs, retains current passes and optionally retries current failures. Qualification proof expires after 30 days, source review after 90 days and image observation after 30 days; missing, malformed or implausibly future dates refuse. Older JSON remains readable history without retaining stronger claims. Focused fingerprint and freshness tests and strict Clippy pass. | E02 |
 | Q02 | PARTIAL | All-service count, running/health and successful-job checks run after install/restart/reinstall; uncertain cleanup inventory fails qualification. Evidence records time-to-first-answer, idle/peak memory, managed bind and named-volume storage, and immutable image virtual size. Named volumes require verified project/volume labels and local driver; missing, foreign, partial and unmeasurable volumes fail. Historical evidence without volume measurements is not reusable. [Real managed-engine Memos](evidence/memos-managed-resource-2026-09-23.json) and [n8n](evidence/n8n-managed-workflow-2026-09-30.json) each passed 18 steps; [Gitea](evidence/gitea-managed-repository-2026-09-30.json), [WordPress](evidence/wordpress-managed-post-2026-09-30.json) and [Jellyfin](evidence/jellyfin-managed-media-2026-09-30.json) each passed 19 with named volumes; [Immich](evidence/immich-managed-photo-2026-09-30.json) passed 21 with four services. Each has three resource samples, restart/reinstall and exact cleanup. Per-service memory, CPU and PID ceilings render from the plan; [Flatnotes](evidence/flatnotes-managed-content-2026-09-30.json) now has reviewed 512 MiB, 2 CPU and 512 PID limits, checked against Docker's actual container configuration after install, restart and keep-data reinstall. Select and prove safe limits for the other nine apps before Q02 closes. | Q01 |
-| Q03 | PARTIAL | Ten of 52 current offerings (Memos, n8n, Flatnotes, Gitea, Immich, Jellyfin, Kanboard, PrivateBin, Uptime Kuma and WordPress) passed isolated managed-WSL lifecycle/resource runs with recorded engine identity, meaningful exact-state tasks and ownership-safe cleanup. n8n's local HTTP editor needs `N8N_SECURE_COOKIE=false`; the recipe remains loopback-bound. Gitea, WordPress, Immich and Jellyfin need reviewed named-volume overrides for POSIX-sensitive data because Windows-backed bind mounts refuse POSIX chmod. Two Node-RED managed attempts failed at startup for the same mount-permission class. The other offerings remain unqualified discovery candidates; record future failures/demotions and never inherit Docker Desktop proof across the engine swap. | E04, Q02 |
-| Q04 | PARTIAL | Ten apps have meaningful managed-engine task proof. Memos creates and rereads a private memo; the shared [content driver](../scripts/content-roundtrip-probe.mjs) also covers Flatnotes exact note readback. [Uptime Kuma](evidence/uptime-kuma-managed-monitor-2026-09-30.json) creates an HTTP self-monitor and observes Up; [PrivateBin](evidence/privatebin-managed-paste-2026-09-30.json) reopens an encrypted browser paste; [Kanboard](evidence/kanboard-managed-task-2026-09-28.json) moves an exact task; [n8n](evidence/n8n-managed-workflow-2026-09-30.json) executes a saved two-node workflow and checks its exact result; [Gitea](evidence/gitea-managed-repository-2026-09-30.json) creates a private repository, commits an exact file and rereads the commit. [WordPress](evidence/wordpress-managed-post-2026-09-30.json) installs a site, publishes a unique post and rereads its exact content. [Jellyfin](evidence/jellyfin-managed-media-2026-09-30.json) imports an owned audio file and streams its exact bytes. [Immich](evidence/immich-managed-photo-2026-09-30.json) uploads, finds and downloads an exact photo. Each task survives restart and keep-data reinstall. Kanboard's pilot uses default admin credentials and does not prove rotation or agent access. Probe bytes enter evidence fingerprints. The [at-scale plan](plans/qualification-at-scale.md) groups reusable paths; Jev triage suggestions add zero proofs. Next expand adapters from real results and a controlled HTTP fixture. | Q02 |
+| Q03 | DONE | The selected 10 of 52 offerings (Memos, n8n, Flatnotes, Gitea, Immich, Jellyfin, Kanboard, PrivateBin, Uptime Kuma and WordPress) passed isolated managed-WSL lifecycle/resource runs with recorded engine identity, restart, keep-data reinstall and ownership-safe cleanup. The [curated ledger](../catalog/v1-qualified-apps.json) and `python scripts/check-v1-qualified.py --release-gate` validate all 10; the last two proofs landed in `44c64b6` and `05e2e62`, and bounded Flatnotes was re-proven in `1e9125e`. The other 42 offerings are unqualified discovery/replacement candidates. Q02 owns limits for the remaining nine; E04 owns engine resilience. | E02, Q01 |
+| Q04 | DONE | All 10 selected apps passed a meaningful exact-state task after install, restart and keep-data reinstall: Memos private memo, Flatnotes note/login, Uptime Kuma HTTP monitor, PrivateBin encrypted paste, Kanboard moved task, n8n workflow result, Gitea private repository/commit, WordPress published post, Jellyfin exact audio playback and Immich exact photo search/download. The [curated ledger](../catalog/v1-qualified-apps.json) fingerprints each task probe and evidence file; the 10/10 release-count validator passes. Kanboard's default admin credential and agent-content access remain separate security/agent gates, not extra app-task proof. | Q03 |
 | Q05 | TODO | Establish consistent backup/restore primitives for the app types V1 exposes to agent writes or updates. Include bind data, named volumes and credentials; quiesce the app or use its native backup. Restore into a fresh isolated install and read the content. Live folder copies are not database backup proof. | E04, Q04 |
 
 ## 2 — Agentic app store
@@ -138,37 +174,35 @@ states within the frozen visual system, with truthful status and proof labels.
 | F03 | PARTIAL | The production launcher now loads the frozen V2 token sheet and approved fonts/brand mark; the current shell uses V2 canvas, type, spacing and navigation values. Focused dark-mode/keyboard/Discover checks pass. Settings now has a managed-engine status/repair row; an unsigned local NSIS bundle built and passed launcher-versus-sidecar identity verification on September 29. The V2 Overview reads live saved/managed/linked/attention counts, and My Apps now has a selectable master/detail view with actual app state, on-demand logs, keyboard selection and truthful linked-app status; focused browser/axe checks pass. Implement approved V2 in usable increments over existing API, operations, readiness, setup and recovery modules; extend the frozen visual system for bundled-engine and agent consent states. Preserve native app windows and accurate busy/error/cancel semantics. No prototype fixtures, annotations or fabricated metrics ship. | F01, F02 |
 | F04 | TODO | Validate complete flows: fresh engine setup → install → app task → agent access → restart → recovery/removal. Preserve behavioral tests, replace only design-obsolete snapshots, run axe/focus/motion/asset checks at V2-approved sizes and in the Windows WebView. | F03, A07, C05 |
 
-## 5 — Signing, updates and release
+## 5 — Later Windows distribution and product release
 
-Publication procedure: [PUBLISH.md](../PUBLISH.md). This plan does not generate
-keys, submit applications, incur costs or publish a release.
+The source-only GitHub release uses G01–G04 above. The rows here track later
+Windows distribution and product maintenance. No signing provider, private key
+or HTTPS update channel is needed to publish the source milestone.
 
 | ID | Status | Task and acceptance | Depends on |
 | --- | --- | --- | --- |
-| S01 | BLOCKED | Choose an eligible Windows signing provider and establish owner-controlled identity/secrets. Reverify provider conditions, including bundled data and source-available offerings. Record certificate/identity ownership and secure CI access. | Owner/provider enrollment |
-| S02 | TODO | Sign Windows binaries/installers in CI; verify signature, publisher, timestamp and artifact provenance on downloaded artifacts. Code signing alone is not a guarantee of SmartScreen reputation. | S01 |
-| S03 | BLOCKED | Establish owner-controlled updater keys and HTTPS channel, then implement opt-in/deferrable signed updates with error/retry behavior. Reject invalid signature, altered payload and wrong-channel/version data. Never commit private keys. | Owner keys/channel |
-| S04 | TODO | Prove launcher and managed-engine upgrades separately. Preserve registry, app data, secrets and running-app policy through failure/restart. Define engine rollback/repair compatibility; do not assume database migrations are reversible. | S03, E04, Q05 |
-| S05 | TODO | Prove supported app-version upgrades for the launch maintenance promise. At minimum document withheld updates and a supported restore route; do not claim universal rollback from reinstall tests. | Q05 |
-| R04 | TODO | Run clean Windows release-candidate install, first launch, engine bootstrap, native app windows, protocol/shortcut, agent access, signed update and uninstall with data preservation. Include restricted/failed prerequisites and supported older-version migration. | F04, S02, S04, C03, A06, A08 |
-| R05 | TODO | Release review: app/asset notices, security/privacy and support limits match code; every required row above has evidence. Download actual tagged artifacts and verify signatures, hashes and attestation. Publish only with explicit owner authorization. | R04, S05 |
+| S01 | DEFERRED | Before signed Windows distribution, choose an eligible code-signing provider and owner-controlled identity/secrets; verify provider terms and secure CI access. This is not a source-release gate. | Later owner/provider enrollment |
+| S02 | DEFERRED | Sign Windows binaries/installers in CI and verify publisher, timestamp and downloaded-artifact provenance. Code signing alone does not guarantee SmartScreen reputation. | S01 |
+| S03 | DEFERRED | Before automatic updates, establish owner-controlled updater keys and an HTTPS channel; implement opt-in/deferrable signed updates and reject tampering, wrong channel/version and failed downloads. Never commit private keys. | Later owner keys/channel |
+| S04 | DEFERRED | Prove launcher and managed-engine upgrades separately, preserving registry, app data, secrets and running-app policy through failure/restart. Define repair/rollback compatibility without assuming database migrations reverse. | S03, E04, Q05 |
+| S05 | DEFERRED | Before promising supported app-version upgrades, prove the update and restore route; do not infer rollback from keep-data reinstall tests. The source-only release makes no automatic app-update promise. | Q05 |
+| R04 | TODO | For a later Windows product preview, run a clean-machine install, first launch, engine bootstrap, native app windows, protocol/shortcut, agent access and uninstall with data preservation. Include restricted/failed prerequisites. This is not required to publish source. | F04, C03, A06, A08 |
+| R05 | TODO | Before a later Windows product release, review app/asset notices, security/privacy and support limits against actual code, and verify the downloaded Windows artifacts. The source-only release review is G02–G04. | R04, Q05 |
 
 ## Recommended execution order
 
-1. Finish R01 and commit this documentation cleanup (R02).
-2. E01/E02 + Q01/Q02: choose engine packaging, add the seam and evidence contract.
-   In the same planning batch, establish A01 so proof records cover agent access.
-3. E03/E04 and Q03: prove the managed engine before the 10-app qualification
-   campaign. Start S01/S03 enrollment in parallel with
-   owner work because credentials and providers have external lead time.
-4. A02–A05 and Q04/Q05: demonstrate store control and three distinct app-access
-   methods with meaningful tasks, permissions and recovery.
-5. C01–C05 and A06: qualify the selected 10 in bounded, reviewed batches, with
-   agent access measured alongside installation. Use the planning roster only
-   to replace a demotion. Do not schedule a second proof run over the same host
-   while one is active.
-6. Integrate F02 contracts as needed; F03/F04 implement the already approved V2 handoff.
-7. Finish security, signing/update proof and the actual Windows release gate.
+1. Complete G02 source audit and release notes; use the source-only tag and
+   GitHub verification in G03–G04 after owner authorization. Do not wait for
+   signing keys, the bundled-engine installer or agent integration to publish
+   this source milestone.
+2. Continue E01–E04 and Q02 for the usable Windows product. Q03/Q04's 10-app
+   managed task proof is complete; keep it fresh when definitions or images move.
+3. Complete A02–A08, C03–C05 and F02–F04 for the approved V2 experience and
+   useful, permissioned agent access. Run Docker qualifications serially on
+   the shared host.
+4. Run R04/R05 before distributing a Windows product preview. Start S01–S05
+   only when a signed, automatic-update distribution is actually planned.
 
 ## Explicitly outside the current V1 commitment
 
@@ -176,14 +210,15 @@ Native macOS/Linux support certification; a public community publishing
 service; arbitrary GitHub source builds; paid tiers/Store sales; cross-machine
 management; Tailscale/remote hosting; automatic sleeping apps; global SQL/exec
 access; unrestricted agent browser control; automatic image upgrades without
-application migration evidence. None is implemented by merely being described
+application migration evidence; Windows installer publication and automatic
+updates for the source-only milestone. None is implemented by merely being described
 in a research paper or prototype.
 
 ## Relationship to the original 33 tasks
 
 [The reconciled Hermes ledger](upgrade-status.md) records the original work.
-It is a historical traceability table, not a second queue. The former signed
-update deferral is revoked by the current owner decision; tasks 29–31/33 must
-be re-proven for the actual signed V1 candidate. The managed engine, agent
+It is a historical traceability table, not a second queue. The September 30
+source-only decision defers signed Windows delivery and automatic updates;
+the old tasks 29–31/33 apply to a later Windows distribution. The managed engine, agent
 gateway and V2 work are additional requirements; the 100-app roster is retained
 for future expansion rather than required for V1 release.
