@@ -1,0 +1,137 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790764036,
+  "app": "jellyfin",
+  "passed": true,
+  "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "approved",
+  "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+  "images": [
+    "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48"
+  ],
+  "image_ids": {
+    "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48": "sha256:0f42497a69fa0441bfd5f9d6bba8694f2a656ec984e571d0ac04c6dd91250039"
+  },
+  "first_use": "an administrator imports an owned sample audio file, streams its exact bytes, and repeats playback after restart and keep-data reinstall",
+  "measurements": {
+    "first_start_millis": 10004,
+    "samples": 3,
+    "idle_memory_bytes": {
+      "local-store-jellyfin-qualify-28640-1790763973950153700-jellyfin": 175951052
+    },
+    "peak_memory_bytes": {
+      "local-store-jellyfin-qualify-28640-1790763973950153700-jellyfin": 186227097
+    },
+    "peak_total_memory_bytes": 186227097,
+    "idle_managed_storage_bytes": 1574,
+    "peak_managed_storage_bytes": 1574,
+    "idle_named_volume_bytes": {
+      "jellyfin-config": 891956
+    },
+    "peak_named_volume_bytes": {
+      "jellyfin-config": 891956
+    },
+    "image_virtual_bytes": {
+      "sha256:0f42497a69fa0441bfd5f9d6bba8694f2a656ec984e571d0ac04c6dd91250039": 1296509288
+    }
+  },
+  "steps": [
+    {
+      "step": "pull lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "generates no credentials, so there are none to lose",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed mapping",
+    "source_adapter": "runtipi",
+    "source_locator": "runtipi/runtipi-appstore#apps/jellyfin/docker-compose.json",
+    "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+    "source_observed_on": "2026-09-12",
+    "images_observed_on": "2026-09-30",
+    "plan_sha256": "74badb6c60c71521f5b91adee8d21740073e58273e46214b289a45f7c2fc0e56",
+    "requested_images": [
+      "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48"
+    ],
+    "resolved_image_ids": {
+      "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48": "sha256:0f42497a69fa0441bfd5f9d6bba8694f2a656ec984e571d0ac04c6dd91250039"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "07337c6570484291f31ef755d584d0d25e15db57ee032a6a9cd3d50d0f425800",
+    "level": "lifecycle_and_first_use"
+  }
+}

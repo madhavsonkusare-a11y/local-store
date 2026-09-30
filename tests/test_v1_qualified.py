@@ -23,8 +23,8 @@ class V1QualifiedTests(unittest.TestCase):
 
     def test_current_managed_task_proofs_count_once_each(self):
         result = gate.validate(ROOT, self.now)
-        self.assertEqual(result["qualified"], 8)
-        self.assertEqual(result["remaining"], 2)
+        self.assertEqual(result["qualified"], 9)
+        self.assertEqual(result["remaining"], 1)
 
     def test_changed_manifest_or_evidence_is_refused(self):
         for field in ("manifest_sha256", "evidence_sha256"):

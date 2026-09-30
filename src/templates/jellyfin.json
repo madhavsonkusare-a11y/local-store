@@ -10,13 +10,13 @@
   "documentation_url": "https://jellyfin.org",
   "verified_at": "2026-09-12",
   "version": "12.0",
-  "lifecycle_proof": "docs/evidence/jellyfin-qualification.json",
+  "lifecycle_proof": "docs/evidence/jellyfin-managed-media-2026-09-30.json",
   "origin": {
-    "importer": "caprover",
-    "repository": "caprover/one-click-apps",
-    "revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
-    "path": "public/v4/apps/jellyfin.yml",
-    "license": "Apache-2.0"
+    "importer": "runtipi",
+    "repository": "runtipi/runtipi-appstore",
+    "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+    "path": "apps/jellyfin/docker-compose.json",
+    "license": "GPL-3.0"
   },
   "requirements": {
     "docker_engine_os": "linux",
@@ -24,9 +24,9 @@
     "local_storage_required": true,
     "images": [
       {
-        "image": "ghcr.io/linuxserver/jellyfin:12.0ubu2604-ls48",
-        "source_url": "https://ghcr.io/v2/linuxserver/jellyfin/manifests/12.0ubu2604-ls48",
-        "checked_at": "2026-09-12",
+        "image": "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48",
+        "source_url": "https://lscr.io/v2/linuxserver/jellyfin/manifests/12.0ubu2604-ls48",
+        "checked_at": "2026-09-30",
         "last_updated": "2026-09-08",
         "container_platforms": [
           "linux/amd64",
@@ -42,38 +42,46 @@
   },
   "promotion": {
     "state": "approved",
-    "reason": "Approved by the owner. Qualified as offered on 2026-09-12: a real install of Jellyfin 12.0, upstream's current release, in LinuxServer's image proved it starts, opens to a first screen with a clear next step, survives a restart and a keep-data reinstall with its data intact, and removes everything it created. The definition comes from CapRover's one-click apps."
+    "reason": "Owner-approved Jellyfin offering. The pinned Runtipi definition lets setup choose a host media folder; a reviewed storage pin keeps settings on the engine's Linux filesystem. Managed-engine proof imported and streamed exact sample audio after install, restart and keep-data reinstall."
   },
-  "data_storage": "A Docker volume Local Store manages for jellyfin",
+  "data_storage": "Docker named volume for settings; a chosen host folder for media",
   "risk_notes": [
-    "Creates 1 Docker container and publishes one port on this computer's loopback interface only.",
-    "Keeps its data in a Docker volume that Local Store manages for it. A keep-data uninstall leaves the volume; deleting data removes it permanently.",
+    "Creates one Docker container and publishes one loopback port on this computer.",
+    "Keeps settings in a Docker named volume; keep-data uninstall retains it and deleting data removes it.",
+    "Mounts the media folder you choose at setup. Jellyfin can read and write that folder.",
+    "Opens a setup wizard to create the first administrator and add a media library.",
     "Proven on Windows with Docker's Linux engine. macOS and Linux hosts are unverified.",
-    "Opens a setup wizard: pick a language and create the first account, which is the administrator.",
-    "Plays what it finds in the folder you choose. Nothing is copied, and it writes only its own database and artwork.",
-    "The user and group numbers you set at setup decide what it may read in that folder; 1000 is right on most machines.",
-    "LinuxServer packages this image; Jellyfin itself is GPL-2.0."
+    "LinuxServer packages the image; Jellyfin itself is GPL-2.0."
   ],
   "fields": {
-    "CAP_PUID": {
-      "label": "User ID Jellyfin runs as (1000 unless you know otherwise)",
+    "FOLDER_MEDIA": {
+      "label": "Folder containing your media",
       "sensitive": false
     },
-    "CAP_PGID": {
-      "label": "Group ID Jellyfin runs as (1000 unless you know otherwise)",
-      "sensitive": false
-    },
-    "CAP_TZ": {
-      "label": "Time zone, for scheduled tasks (for example, Asia/Kolkata)",
+    "TZ": {
+      "label": "Time zone for scheduled tasks",
       "sensitive": false
     }
   },
-  "definition": "{\"captainVersion\": 4, \"services\": {\"$$cap_appname\": {\"image\": \"ghcr.io/linuxserver/jellyfin:$$cap_jf_version\", \"environment\": {\"PUID\": \"$$cap_puid\", \"PGID\": \"$$cap_pgid\", \"TZ\": \"$$cap_tz\", \"JELLYFIN_PublishedServerUrl\": \"$$cap_appname.$$cap_root_domain\"}, \"volumes\": [\"$$cap_appname-config:/config\"], \"caproverExtra\": {\"containerHttpPort\": \"8096\"}}}, \"caproverOneClickApp\": {\"variables\": [{\"id\": \"$$cap_jf_version\", \"label\": \"Jellyfin Version\", \"defaultValue\": \"10.10.1\", \"description\": \"Check out their Docker page for the valid tags https://hub.docker.com/r/linuxserver/jellyfin/tags\", \"validRegex\": \"/^([^\\\\s^\\\\/])+$/\"}, {\"id\": \"$$cap_puid\", \"label\": \"Jellyfin UserID\", \"defaultValue\": 1000, \"description\": \"UserID used by JellyFin to avoid permission problems, please refer to docs- https://github.com/linuxserver/docker-jellyfin#Parameters\", \"validRegex\": \"/[0-9]/\"}, {\"id\": \"$$cap_pgid\", \"label\": \"Jellyfin GroupID\", \"defaultValue\": 1000, \"description\": \"GroupID used by JellyFin to avoid permission problems, please refer to docs- https://github.com/linuxserver/docker-jellyfin#Parameters\", \"validRegex\": \"/[0-9]/\"}, {\"id\": \"$$cap_tz\", \"label\": \"Time Zone\", \"defaultValue\": \"Asia/Kolkata\", \"description\": \"Get yours from https://en.wikipedia.org/wiki/List_of_tz_database_time_zones\", \"validRegex\": \"/.{1,}/\"}], \"instructions\": {\"start\": \"Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media.\\nIt is an alternative to the proprietary Emby and Plex, to provide media from a dedicated server to end-user devices via multiple apps.\\n\\nFor more details visit- https://github.com/jellyfin/jellyfin\\n\\nPS. It might not work with RPi, or atleast, you wont be able to use OpenMax or V4L2 because Caprover ignores 'devices' parameters of docker-compose\", \"end\": \"Jellyfin has been successfully deployed! Please wait atleast 2-4 mins before trying to connect. \\nTo enable HTTPS, enable it inside app config from caprover dashboard. 'Enable HTTPS' setting inside of Jellyfin might not work.\\n\\n\\nMake sure to add volume mapping for your movies and videos after installation finishes.\\n\\nYou can also optionally map 7359 and 1900 for auto discovery.\"}, \"displayName\": \"Jellyfin\", \"isOfficial\": false, \"description\": \"A free media streaming alternative to Plex. Also supports group sync.\", \"documentation\": \"See https://github.com/linuxserver/docker-jellyfin\"}}",
+  "definition": "{\n  \"services\": [\n    {\n      \"name\": \"jellyfin\",\n      \"image\": \"lscr.io/linuxserver/jellyfin:10.11.11\",\n      \"isMain\": true,\n      \"internalPort\": 8096,\n      \"environment\": [\n        {\n          \"key\": \"PUID\",\n          \"value\": \"1000\"\n        },\n        {\n          \"key\": \"PGID\",\n          \"value\": \"1000\"\n        },\n        {\n          \"key\": \"TZ\",\n          \"value\": \"${TZ}\"\n        },\n        {\n          \"key\": \"JELLYFIN_PublishedServerUrl\",\n          \"value\": \"${APP_PROTOCOL:-http}://${APP_DOMAIN}/\"\n        }\n      ],\n      \"volumes\": [\n        {\n          \"hostPath\": \"${APP_DATA_DIR}/data/config\",\n          \"containerPath\": \"/config\"\n        },\n        {\n          \"hostPath\": \"${ROOT_FOLDER_HOST}/media/data\",\n          \"containerPath\": \"/media/data\"\n        }\n      ]\n    }\n  ],\n  \"schemaVersion\": 2,\n  \"$schema\": \"https://schemas.runtipi.io/v2/dynamic-compose.json\"\n}\n",
   "image_pins": [
     {
-      "definition": "ghcr.io/linuxserver/jellyfin:10.10.1",
-      "replacement": "ghcr.io/linuxserver/jellyfin:12.0ubu2604-ls48",
-      "reason": "CapRover's definition pins Jellyfin 10.10.1, from 2024 and two major versions behind. This is upstream's current release, 12.0, in the same LinuxServer image."
+      "definition": "lscr.io/linuxserver/jellyfin:10.11.11",
+      "replacement": "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48",
+      "reason": "The reviewed Runtipi definition offers LinuxServer Jellyfin 10.11.11; pin an audited 12.0 image from the same registry."
+    }
+  ],
+  "config": {
+    "path": "apps/jellyfin/config.json",
+    "content": "{\n  \"$schema\": \"../app-info-schema.json\",\n  \"name\": \"Jellyfin\",\n  \"available\": true,\n  \"exposable\": true,\n  \"dynamic_config\": true,\n  \"port\": 8091,\n  \"id\": \"jellyfin\",\n  \"tipi_version\": 47,\n  \"version\": \"10.11.11\",\n  \"categories\": [\"media\"],\n  \"description\": \"Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media. It is an alternative to the proprietary Emby and Plex, to provide media from a dedicated server to end-user devices via multiple apps. Jellyfin is descended from Emby's 3.5.2 release and ported to the .NET Core framework to enable full cross-platform support. There are no strings attached, no premium licenses or features, and no hidden agendas: just a team who want to build something better and work together to achieve it. We welcome anyone who is interested in joining us in our quest!\",\n  \"short_desc\": \"A media server for your home collection\",\n  \"author\": \"jellyfin.org\",\n  \"source\": \"https://github.com/jellyfin/jellyfin\",\n  \"form_fields\": [],\n  \"supported_architectures\": [\"arm64\", \"amd64\"],\n  \"created_at\": 1691943801422,\n  \"updated_at\": 1780909723699,\n  \"min_tipi_version\": \"4.5.0\"\n}\n"
+  },
+  "storage_pins": [
+    {
+      "service": "jellyfin",
+      "source": "data/config",
+      "target": "/config",
+      "volume": "jellyfin-config",
+      "reason": "The LinuxServer app maintains permission-sensitive settings and database files; keep them on the engine Linux filesystem."
     }
   ]
 }

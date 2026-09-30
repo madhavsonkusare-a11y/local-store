@@ -14,7 +14,9 @@ through both transitions. Gitea then passed a [private-repository, exact-file
 and commit task](evidence/gitea-managed-repository-2026-09-30.json) with 19/19
 steps through restart and keep-data reinstall. WordPress now also passed an
 [exact published-post task](evidence/wordpress-managed-post-2026-09-30.json)
-with 19/19 steps through both transitions. The curated validator is **8/10**, with two more
+with 19/19 steps through both transitions. Jellyfin passed an
+[exact sample-media import and playback task](evidence/jellyfin-managed-media-2026-09-30.json)
+through both transitions. The curated validator is **9/10**, with one more
 needed. Keep 52 current offerings and the 100-app planning
 roster as discovery/replacement pools rather than treating them as verified.
 Work is split into non-overlapping lanes: E01 reproducible bundled-engine
@@ -32,7 +34,12 @@ master/detail routes; Install/Recovery and first run still need integration.
 Do not run simultaneous Docker qualifications on this shared host. The owner
 excluded changedetection.io from the 10-app launch shortlist and asked for
 more widely used offerings. The next managed-engine worker should prioritize
-Jellyfin and Immich with exact tasks. WordPress required two reviewed named-volume
+Immich with an exact task. Jellyfin uses the pinned Runtipi definition to expose
+a selected host media folder; a reviewed named-volume pin keeps `/config` on the
+engine Linux filesystem. Its proof completed the first-run wizard through the
+API, imported an owned WAV and streamed identical bytes after both lifecycle
+transitions. The UI opened to a server-selection screen on this host; check
+launcher connection friction before release. WordPress required two reviewed named-volume
 pins for its PHP files and MariaDB; generated credentials remain in the managed
 app folder. Its first-use proof uses the installer, XML-RPC publication and the
 query-form REST route, which works before permalink rewrite setup. Gitea required two narrow

@@ -21,6 +21,15 @@
       "task": "an administrator creates a private repository and commits an exact file; the repository, commit and file survive restart and keep-data reinstall"
     },
     {
+      "id": "jellyfin",
+      "manifest": "src/templates/jellyfin.json",
+      "manifest_sha256": "9cc47ac4596a8bf59dce54838c3ca7a53411e4ebe0e6a75ace9b2a95dcd4a92f",
+      "evidence": "docs/evidence/jellyfin-managed-media-2026-09-30.json",
+      "evidence_sha256": "5e704837d1a3320ad400fa0652ec1ac3f11f8ca2db754c4b100f11acbf4dba0a",
+      "probe": "scripts/jellyfin-media-probe.mjs",
+      "task": "an administrator imports an owned sample audio file, streams its exact bytes, and repeats playback after restart and keep-data reinstall"
+    },
+    {
       "id": "kanboard",
       "manifest": "src/templates/kanboard.json",
       "manifest_sha256": "8743f6bb094224fb630b68c2d70ad599d07dd48ccc157e049a94b91380d17520",
