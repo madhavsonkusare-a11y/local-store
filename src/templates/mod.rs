@@ -10,7 +10,7 @@
 //! Nothing here is offered to anyone. A reviewed template is a template a
 //! person could be shown; whether it appears in the catalog is a separate
 //! decision, made by the project owner, and this module does not make it.
-use crate::setup::PlanTemplate;
+use crate::{plan::PlanMount, setup::PlanTemplate};
 use serde::Deserialize;
 use std::collections::BTreeMap;
 
@@ -134,6 +134,19 @@ impl ImagePin {
     }
 }
 
+/// A reviewed replacement for one upstream app-data bind mount. Databases
+/// which require POSIX ownership cannot initialize on a Windows-backed WSL
+/// mount; a Docker named volume keeps their data on the engine's Linux disk.
+#[derive(Debug, Clone, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct StoragePin {
+    pub service: String,
+    pub source: String,
+    pub target: String,
+    pub volume: String,
+    pub reason: String,
+}
+
 /// Companion config from the same repository and commit as the definition.
 #[derive(Debug, Clone, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
@@ -183,6 +196,10 @@ pub struct ReviewedTemplate {
     /// Tags this review runs in place of the ones the definition names.
     #[serde(default)]
     pub image_pins: Vec<ImagePin>,
+    /// Exact mount substitutions reviewed for this app; the upstream
+    /// definition remains verbatim and any source drift refuses the install.
+    #[serde(default)]
+    pub storage_pins: Vec<StoragePin>,
     /// The files the definition's source copies into the app's data folder,
     /// carried verbatim like the definition itself so a review covers them.
     #[serde(default)]
@@ -275,6 +292,43 @@ impl ReviewedTemplate {
                     self.id, pin.definition
                 ));
             }
+        }
+
+        for pin in &self.storage_pins {
+            if pin.reason.trim().len() <= 20 {
+                return Err(format!("{}: storage pin gives no reason", self.id));
+            }
+            let service = template
+                .plan
+                .services
+                .iter_mut()
+                .find(|service| service.name == pin.service)
+                .ok_or_else(|| {
+                    format!(
+                        "{}: storage pin names no service {:?}",
+                        self.id, pin.service
+                    )
+                })?;
+            let mut replaced = 0;
+            for mount in &mut service.mounts {
+                if matches!(mount, PlanMount::Directory { source, target, read_only: false }
+                    if source == &pin.source && target == &pin.target)
+                {
+                    *mount = PlanMount::Volume {
+                        name: pin.volume.clone(),
+                        target: pin.target.clone(),
+                        read_only: false,
+                    };
+                    replaced += 1;
+                }
+            }
+            if replaced != 1 {
+                return Err(format!(
+                    "{}: storage pin for {:?} no longer matches one writable app-data mount",
+                    self.id, pin.service
+                ));
+            }
+            template.plan.named_volumes.push(pin.volume.clone());
         }
 
         for field in &mut template.fields {
@@ -1013,6 +1067,51 @@ mod tests {
             },
             "names no tag",
         );
+    }
+
+    #[test]
+    fn storage_pins_replace_only_the_reviewed_gitea_mounts() {
+        let reviewed = reviewed_template("gitea").expect("gitea is reviewed");
+        let template = reviewed.plan_template().expect("gitea should map");
+        assert_eq!(
+            template.plan.named_volumes,
+            vec!["gitea-data", "gitea-postgres"]
+        );
+        let app = template
+            .plan
+            .services
+            .iter()
+            .find(|service| service.name == "gitea")
+            .expect("app service exists");
+        assert!(
+            matches!(&app.mounts[0], PlanMount::Volume { name, target, read_only: false }
+            if name == "gitea-data" && target == "/data")
+        );
+        let db = template
+            .plan
+            .services
+            .iter()
+            .find(|service| service.name == "gitea-db")
+            .expect("database service exists");
+        assert!(
+            matches!(&db.mounts[0], PlanMount::Volume { name, target, read_only: false }
+            if name == "gitea-postgres" && target == "/var/lib/postgresql/data")
+        );
+
+        let mut stale = reviewed.clone();
+        stale.storage_pins[0].source = "data/elsewhere".into();
+        assert!(stale
+            .plan_template()
+            .unwrap_err()
+            .contains("no longer matches"));
+        let mut duplicate = reviewed;
+        duplicate
+            .storage_pins
+            .push(duplicate.storage_pins[0].clone());
+        assert!(duplicate
+            .plan_template()
+            .unwrap_err()
+            .contains("no longer matches"));
     }
 
     /// The audit has to be about what runs, not about what the definition said

@@ -1,0 +1,150 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790759885,
+  "app": "gitea",
+  "passed": true,
+  "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "approved",
+  "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+  "images": [
+    "gitea/gitea:1.27.3",
+    "postgres:14"
+  ],
+  "image_ids": {
+    "gitea/gitea:1.27.3": "sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+    "postgres:14": "sha256:156f0b253fd61366d5fc2107ad45955027d5612f695a8436ce20167f3fa79bff"
+  },
+  "first_use": "an administrator creates a private repository and commits an exact file; the repository, commit and file survive restart and keep-data reinstall",
+  "measurements": {
+    "first_start_millis": 5482,
+    "samples": 3,
+    "idle_memory_bytes": {
+      "local-store-gitea-qualify-13404-1790759834855875600-gitea": 86077603,
+      "local-store-gitea-qualify-13404-1790759834855875600-gitea-db": 30702305
+    },
+    "peak_memory_bytes": {
+      "local-store-gitea-qualify-13404-1790759834855875600-gitea": 106011033,
+      "local-store-gitea-qualify-13404-1790759834855875600-gitea-db": 31971082
+    },
+    "peak_total_memory_bytes": 133420810,
+    "idle_managed_storage_bytes": 2470,
+    "peak_managed_storage_bytes": 2470,
+    "idle_named_volume_bytes": {
+      "gitea-data": 5489,
+      "gitea-postgres": 51970827
+    },
+    "peak_named_volume_bytes": {
+      "gitea-data": 107463,
+      "gitea-postgres": 60009789
+    },
+    "image_virtual_bytes": {
+      "sha256:156f0b253fd61366d5fc2107ad45955027d5612f695a8436ce20167f3fa79bff": 622619889,
+      "sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef": 266003497
+    }
+  },
+  "steps": [
+    {
+      "step": "pull gitea/gitea:1.27.3",
+      "passed": true
+    },
+    {
+      "step": "pull postgres:14",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "generates no credentials, so there are none to lose",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed mapping",
+    "source_adapter": "runtipi",
+    "source_locator": "runtipi/runtipi-appstore#apps/gitea/docker-compose.json",
+    "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+    "source_observed_on": "2026-09-12",
+    "images_observed_on": "2026-09-12",
+    "plan_sha256": "75593fbe43f20c165d9c88bf9b0d32431c8416385e93bd7da3bf6835fae16f70",
+    "requested_images": [
+      "gitea/gitea:1.27.3",
+      "postgres:14"
+    ],
+    "resolved_image_ids": {
+      "gitea/gitea:1.27.3": "sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+      "postgres:14": "sha256:156f0b253fd61366d5fc2107ad45955027d5612f695a8436ce20167f3fa79bff"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "e1ffd1181805a31ca2d96cdd5bfc53b8d963c533b04aff39241de1d6253ea188",
+    "level": "lifecycle_and_first_use"
+  }
+}

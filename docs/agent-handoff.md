@@ -10,7 +10,9 @@ apps**. PrivateBin passed an [encrypted paste task](evidence/privatebin-managed-
 and Uptime Kuma passed an [HTTP monitor task](evidence/uptime-kuma-managed-monitor-2026-09-30.json)
 through restart and keep-data reinstall. n8n then passed a [saved workflow and
 exact execution-result task](evidence/n8n-managed-workflow-2026-09-30.json)
-through both transitions. The curated validator is **6/10**, with four more
+through both transitions. Gitea then passed a [private-repository, exact-file
+and commit task](evidence/gitea-managed-repository-2026-09-30.json) with 19/19
+steps through restart and keep-data reinstall. The curated validator is **7/10**, with three more
 needed. Keep 52 current offerings and the 100-app planning
 roster as discovery/replacement pools rather than treating them as verified.
 Work is split into non-overlapping lanes: E01 reproducible bundled-engine
@@ -28,7 +30,11 @@ master/detail routes; Install/Recovery and first run still need integration.
 Do not run simultaneous Docker qualifications on this shared host. The owner
 excluded changedetection.io from the 10-app launch shortlist and asked for
 more widely used offerings. The next managed-engine worker should prioritize
-Gitea, Jellyfin, Immich and WordPress with exact tasks. n8n's pinned browser
+Jellyfin, Immich and WordPress with exact tasks. Gitea required two narrow
+reviewed storage pins: its `/data` Git/SSH files and PostgreSQL data need
+Docker named volumes because Windows-backed bind mounts reject POSIX chmod.
+The upstream Runtipi definition remains verbatim; a focused stale/duplicate-pin
+test and the real managed proof passed. n8n's pinned browser
 probe signs up an owner, saves a connected two-node workflow, runs it, and
 checks the exact persisted output after restart and keep-data reinstall. The
 recipe now sets `N8N_SECURE_COOKIE=false` because its editor is served through

@@ -12,6 +12,15 @@
       "task": "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall"
     },
     {
+      "id": "gitea",
+      "manifest": "src/templates/gitea.json",
+      "manifest_sha256": "c37ed0792622dcec21cc603eb4e3031b314a8a7c8364438805068261e205c0a7",
+      "evidence": "docs/evidence/gitea-managed-repository-2026-09-30.json",
+      "evidence_sha256": "6a0085ec5311ac0593ba4c99262b815b15acc55f1ee470ee61f995508f14de32",
+      "probe": "scripts/gitea-repository-probe.mjs",
+      "task": "an administrator creates a private repository and commits an exact file; the repository, commit and file survive restart and keep-data reinstall"
+    },
+    {
       "id": "kanboard",
       "manifest": "src/templates/kanboard.json",
       "manifest_sha256": "8743f6bb094224fb630b68c2d70ad599d07dd48ccc157e049a94b91380d17520",

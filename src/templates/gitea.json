@@ -9,7 +9,7 @@
   "source_url": "https://github.com/go-gitea/gitea",
   "documentation_url": "https://gitea.com",
   "verified_at": "2026-09-12",
-  "lifecycle_proof": "docs/evidence/gitea-qualification.json",
+  "lifecycle_proof": "docs/evidence/gitea-managed-repository-2026-09-30.json",
   "origin": {
     "importer": "runtipi",
     "repository": "runtipi/runtipi-appstore",
@@ -70,19 +70,35 @@
   },
   "promotion": {
     "state": "approved",
-    "reason": "Approved by the owner. Qualified as offered on 2026-09-12: a real install of Gitea 1.27.3, upstream's current release proved it starts, opens to a first screen with a clear next step, survives a restart and a keep-data reinstall with its data intact, and removes everything it created. The definition comes from Runtipi's app store."
+    "reason": "Approved by the owner. The Runtipi definition runs Gitea 1.27.3 and PostgreSQL 14. A September 30 managed-Windows proof created a private repository and exact committed file, verified the commit after restart and keep-data reinstall, and removed its owned resources. Reviewed storage pins move both POSIX-sensitive mounts into Docker named volumes."
   },
-  "data_storage": "Local Store managed folder / gitea",
+  "data_storage": "Docker named volumes for Gitea data and PostgreSQL",
   "risk_notes": [
     "Creates 2 Docker containers and publishes 2 ports on this computer's loopback interface only.",
     "Its gitea service answers on a second loopback address, which the app's own pages call directly. Local Store opens only the main one.",
-    "Keeps its data in this app's managed folder. A keep-data uninstall leaves it; deleting data removes it permanently.",
+    "Keeps Git files and PostgreSQL in Docker named volumes. A keep-data uninstall retains both; deleting data removes both.",
     "Proven on Windows with Docker's Linux engine. macOS and Linux hosts are unverified.",
     "Opens an installer page: check the settings it shows, then create the administrator account.",
     "Serves git over HTTP on its own address, and over SSH on a second loopback address — both reachable from this computer only.",
     "Registration is open until you turn it off in its settings."
   ],
   "fields": {},
+  "storage_pins": [
+    {
+      "service": "gitea",
+      "source": "data/gitea",
+      "target": "/data",
+      "volume": "gitea-data",
+      "reason": "Git configuration and SSH host keys require POSIX file permissions, which a Windows-backed WSL bind mount cannot provide."
+    },
+    {
+      "service": "gitea-db",
+      "source": "data/postgres",
+      "target": "/var/lib/postgresql/data",
+      "volume": "gitea-postgres",
+      "reason": "PostgreSQL initialization needs POSIX chmod and ownership, which a Windows-backed WSL bind mount cannot provide."
+    }
+  ],
   "definition": "{\n  \"services\": [\n    {\n      \"name\": \"gitea\",\n      \"image\": \"gitea/gitea:1.27.3\",\n      \"environment\": [\n        {\n          \"key\": \"USER_UID\",\n          \"value\": \"1000\"\n        },\n        {\n          \"key\": \"USER_GID\",\n          \"value\": \"1000\"\n        },\n        {\n          \"key\": \"GITEA__database__DB_TYPE\",\n          \"value\": \"postgres\"\n        },\n        {\n          \"key\": \"GITEA__database__DB_HOST\",\n          \"value\": \"gitea-db:5432\"\n        },\n        {\n          \"key\": \"GITEA__database__DB_NAME\",\n          \"value\": \"gitea\"\n        },\n        {\n          \"key\": \"GITEA__database__DB_USER\",\n          \"value\": \"gitea\"\n        },\n        {\n          \"key\": \"GITEA__database__DB_PASSWD\",\n          \"value\": \"gitea\"\n        }\n      ],\n      \"volumes\": [\n        {\n          \"hostPath\": \"${APP_DATA_DIR}/data/gitea\",\n          \"containerPath\": \"/data\"\n        }\n      ],\n      \"internalPort\": 3000,\n      \"addPorts\": [\n        {\n          \"hostPort\": 222,\n          \"containerPort\": 22\n        }\n      ],\n      \"dependsOn\": [\"gitea-db\"],\n      \"isMain\": true\n    },\n    {\n      \"name\": \"gitea-db\",\n      \"image\": \"postgres:14\",\n      \"environment\": [\n        {\n          \"key\": \"POSTGRES_USER\",\n          \"value\": \"gitea\"\n        },\n        {\n          \"key\": \"POSTGRES_PASSWORD\",\n          \"value\": \"gitea\"\n        },\n        {\n          \"key\": \"POSTGRES_DB\",\n          \"value\": \"gitea\"\n        }\n      ],\n      \"volumes\": [\n        {\n          \"hostPath\": \"${APP_DATA_DIR}/data/postgres\",\n          \"containerPath\": \"/var/lib/postgresql/data\"\n        }\n      ]\n    }\n  ],\n  \"schemaVersion\": 2,\n  \"$schema\": \"https://schemas.runtipi.io/v2/dynamic-compose.json\"\n}\n",
   "config": {
     "path": "apps/gitea/config.json",
