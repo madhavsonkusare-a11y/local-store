@@ -2,17 +2,17 @@
 
 Decision checkpoint, September 30, 2026. V1 requires 10 selected apps
 proven on the owned Windows/WSL engine with a meaningful task; this document
-changes the work method, not the release bar. Today four apps (Memos, Flatnotes,
-Kanboard and PrivateBin) meet the task bar. n8n has a managed-engine lifecycle pass without a task proof.
+changes the work method, not the release bar. Today five apps (Memos, Flatnotes,
+Kanboard, PrivateBin and Uptime Kuma) meet the task bar. n8n has a managed-engine
+lifecycle pass without a task proof.
 
 ## Why the one-script-per-app loop is too slow
 
 The current harness already installs, checks all services, measures resources,
 restarts, reinstalls over kept data, and cleans up safely. Rewriting its browser
 setup and persistence check for each app wastes effort and creates fragile UI
-selectors. An Uptime Kuma pilot passed initial setup and then failed on a login
-button selector after restart. That failure is useful feedback on the method;
-it is **not** a Uptime Kuma qualification or release evidence.
+selectors. An early Uptime Kuma pilot failed on a login selector; a later pinned
+browser probe passed the [full managed-engine monitor task](../evidence/uptime-kuma-managed-monitor-2026-09-30.json).
 
 ## Shared qualification pipeline
 

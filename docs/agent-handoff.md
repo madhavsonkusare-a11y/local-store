@@ -6,9 +6,10 @@ only release ledger. [Documentation index](README.md) explains the rest.
 ## September 30 parallel implementation and launch scope
 
 The owner reduced the V1 launch gate from 50 to **10 managed-engine-verified
-apps**. PrivateBin then passed a real managed-WSL encrypted paste round trip
-through restart and keep-data reinstall; [its evidence](evidence/privatebin-managed-paste-2026-09-30.json)
-brings the curated validator to **4/10**, with six more needed. Keep 52 current offerings and the 100-app planning
+apps**. PrivateBin passed an [encrypted paste task](evidence/privatebin-managed-paste-2026-09-30.json),
+and Uptime Kuma passed an [HTTP monitor task](evidence/uptime-kuma-managed-monitor-2026-09-30.json)
+through restart and keep-data reinstall. The curated validator is **5/10**, with
+five more needed. Keep 52 current offerings and the 100-app planning
 roster as discovery/replacement pools rather than treating them as verified.
 Work is split into non-overlapping lanes: E01 reproducible bundled-engine
 payload, A03 bounded agent management tools, F03 approved V2 screen integration,
@@ -24,7 +25,12 @@ install/uninstall approval remain. The V2 lane added live-data Overview and My A
 master/detail routes; Install/Recovery and first run still need integration.
 Do not run simultaneous Docker qualifications on this shared host. The owner
 excluded changedetection.io from the 10-app launch shortlist and asked for
-more widely used offerings. `CHANGELOG.md` is the owner's edit.
+more widely used offerings. The next managed-engine worker should qualify a
+real n8n workflow, reusing its existing lifecycle pass; then prioritize Gitea,
+Jellyfin, Immich and WordPress with exact tasks. Uptime Kuma's pinned browser
+probe passed all 18 lifecycle/task steps and three resource samples. The focused
+validator, Rust formatting and probe syntax checks pass; the V2 Overview/My
+Apps browser checks passed 4/4. `CHANGELOG.md` is the owner's edit.
 
 ## September 29 unsigned personal build
 

@@ -37,6 +37,15 @@
       "evidence_sha256": "789dd259adc4f592cf3f387828bca31f38e57b2d6153efb246a46443356be0de",
       "probe": "scripts/privatebin-browser-probe.mjs",
       "task": "an encrypted paste is created in the browser, and its exact plaintext is read after restart and keep-data reinstall"
+    },
+    {
+      "id": "uptime-kuma",
+      "manifest": "src/recipes/uptime-kuma.json",
+      "manifest_sha256": "cc0548bc2db4103b279254a38d8577843b63153ce25a355a454327bb2edb4e5a",
+      "evidence": "docs/evidence/uptime-kuma-managed-monitor-2026-09-30.json",
+      "evidence_sha256": "5a4f8c3f782c4c088ea8c8eb25beb7dc0ebb77bc0ce336b90f1c2066400ec4e7",
+      "probe": "scripts/uptime-kuma-monitor-probe.mjs",
+      "task": "a local admin creates a unique HTTP monitor of the app's own page, it records Up, and that exact monitor remains Up after restart and keep-data reinstall"
     }
   ]
 }

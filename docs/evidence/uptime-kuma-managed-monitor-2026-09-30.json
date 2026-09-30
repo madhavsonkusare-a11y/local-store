@@ -1,0 +1,133 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790737259,
+  "app": "uptime-kuma",
+  "passed": true,
+  "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "recipe",
+  "source_revision": "",
+  "images": [
+    "louislam/uptime-kuma:2.5.3"
+  ],
+  "image_ids": {
+    "louislam/uptime-kuma:2.5.3": "sha256:3e24e96c89efff0e3a4b0698cbdd36c15ad3022371db57166e5588853002ee5c"
+  },
+  "first_use": "a local admin creates a unique HTTP monitor of the app's own page, it records Up, and that exact monitor remains Up after restart and keep-data reinstall",
+  "measurements": {
+    "first_start_millis": 10320,
+    "samples": 3,
+    "idle_memory_bytes": {
+      "local-store-uptime-kuma-qualify-32264-1790737184461408400-uptime-kuma": 165884723
+    },
+    "peak_memory_bytes": {
+      "local-store-uptime-kuma-qualify-32264-1790737184461408400-uptime-kuma": 165884723
+    },
+    "peak_total_memory_bytes": 165884723,
+    "idle_managed_storage_bytes": 1076,
+    "peak_managed_storage_bytes": 374312,
+    "idle_named_volume_bytes": {},
+    "peak_named_volume_bytes": {},
+    "image_virtual_bytes": {
+      "sha256:3e24e96c89efff0e3a4b0698cbdd36c15ad3022371db57166e5588853002ee5c": 2476168370
+    }
+  },
+  "steps": [
+    {
+      "step": "pull louislam/uptime-kuma:2.5.3",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "generates no credentials, so there are none to lose",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
+    }
+  ],
+  "identity": {
+    "source_kind": "reviewed recipe",
+    "source_adapter": "recipe",
+    "source_locator": "https://github.com/louislam/uptime-kuma",
+    "source_revision": "",
+    "source_observed_on": "2026-09-05",
+    "images_observed_on": "2026-09-07",
+    "plan_sha256": "8906f2e6ad49cd2ad5a22477dbe917c773b55a5a88d6a8e7144c41e097ea232a",
+    "requested_images": [
+      "louislam/uptime-kuma:2.5.3"
+    ],
+    "resolved_image_ids": {
+      "louislam/uptime-kuma:2.5.3": "sha256:3e24e96c89efff0e3a4b0698cbdd36c15ad3022371db57166e5588853002ee5c"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "36c2e344921f1a554b1c33859ac615981a14f48315d6add6186198545c1ecdfa",
+    "level": "lifecycle_and_first_use"
+  }
+}
