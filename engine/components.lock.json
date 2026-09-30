@@ -4,6 +4,7 @@
   "status": "development_payload_not_release_approved",
   "platform": "linux/amd64",
   "base_image": "ubuntu:24.04@sha256:a61567bd31828687156d735ea8eb01ba4e37636e225dd6a48ba94136a70d9d61",
+  "ubuntu_snapshot": "20260913T120000Z",
   "package_index_url": "https://download.docker.com/linux/ubuntu/dists/noble/stable/binary-amd64/Packages.gz",
   "packages": [
     {
@@ -48,7 +49,7 @@
     }
   ],
   "limitations": [
-    "Ubuntu transitive dependencies resolve from signed apt metadata at build time; the full installed inventory is locked and drift refuses, but transitive package bytes and index provenance are not yet frozen for a reproducible release build.",
+    "Ubuntu transitive dependencies resolve from a date-pinned signed Ubuntu archive snapshot; the full installed inventory is locked and drift refuses. Archive and index bytes are captured with hashes, but their signatures and relationship to a reviewed transitive package lock still require independent verification before release approval.",
     "Rootfs notices are retained; redistribution/source obligations need release review.",
     "No WSL bootstrap or clean-machine qualification is implied."
   ]

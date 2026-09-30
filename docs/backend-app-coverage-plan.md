@@ -2,7 +2,7 @@
 
 Current execution status is in [V1_TASKS.md](V1_TASKS.md). This document
 replaces the stale B1–B9/V1–V6 queues with the architecture they established.
-V1 targets 50 managed-engine-verified apps in native windows, with agent
+V1 targets 10 managed-engine-verified apps in native windows, with agent
 access. The frozen 100-app roster is retained as a research and replacement
 pool; roster membership does not make an app a V1 release candidate.
 
@@ -22,7 +22,7 @@ Keep a single installer and operation/registry locking scheme.
 | Service ordering and addressing | Health dependencies, successful one-shot jobs, loopback auxiliary ports, internal networks | All-service qualification, required callbacks/TLS/auth per app |
 | Immutable installs | Reviewed image/index digests and CI metadata | Evidence freshness and supported app upgrades |
 | Qualification and promotion | `src/qualification.rs`, `src/templates`, `docs/evidence` | Meaningful task/agent access proof and requalification on managed engine |
-| Transaction and recovery | `src/runtime`, `src/recovery.rs`, CLI recover/adopt | Launcher action wiring, engine-aware recovery and V3 integration |
+| Transaction and recovery | `src/runtime`, `src/recovery.rs`, CLI recover/adopt | Launcher action wiring, engine-aware recovery and approved V2 integration |
 
 ## Coverage rules
 

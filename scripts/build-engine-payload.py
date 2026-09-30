@@ -4,11 +4,14 @@ No WSL registration, privileged container, host socket mount or daemon change.
 Outputs stay in .cache/engine; this is not a signed release artifact.
 """
 import argparse
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+from pathlib import PurePosixPath
 import re
 import subprocess
+import tarfile
 import urllib.request
 from urllib.parse import urlsplit
 import uuid
@@ -30,6 +33,15 @@ def validate(lock):
         raise ValueError("Unsupported engine lock schema/platform")
     if not re.fullmatch(r"ubuntu:24\.04@sha256:[0-9a-f]{64}", lock["base_image"]):
         raise ValueError("Base image must be an exact Ubuntu 24.04 digest")
+    snapshot = lock.get("ubuntu_snapshot", "")
+    if not re.fullmatch(r"20[0-9]{6}T[0-9]{6}Z", snapshot):
+        raise ValueError("Ubuntu archive snapshot must be an exact UTC timestamp")
+    try:
+        parsed_snapshot = datetime.strptime(snapshot, "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
+    except ValueError as error:
+        raise ValueError("Ubuntu archive snapshot is not a real UTC timestamp") from error
+    if parsed_snapshot >= datetime.now(timezone.utc):
+        raise ValueError("Ubuntu archive snapshot cannot be in the future")
     packages = lock["packages"]
     if len(packages) != len(EXPECTED) or {p["name"] for p in packages} != EXPECTED:
         raise ValueError("Missing or duplicate engine packages")
@@ -112,6 +124,90 @@ def inventory_drift(locked, observed):
     ]
 
 
+def manifest_tar(path, *, suffix=None):
+    """Hash regular Docker-copied files without extracting untrusted tar paths."""
+    files = {}
+    total = 0
+    with tarfile.open(path, "r:") as archive:
+        for entry in archive:
+            raw = entry.name
+            name = raw.removeprefix("./")
+            parts = PurePosixPath(name).parts
+            if (not name or name.startswith("/") or "\\" in name
+                    or any(part in {"", ".."} for part in parts)):
+                raise ValueError("Unsafe apt provenance tar path")
+            if entry.isdir():
+                continue
+            if not entry.isfile() or entry.size < 0 or entry.size > 250_000_000:
+                raise ValueError("Unexpected apt provenance tar entry")
+            if suffix and not name.endswith(suffix):
+                continue
+            if name in files or len(files) >= 1000:
+                raise ValueError("Duplicate or excessive apt provenance files")
+            total += entry.size
+            if total > 1_000_000_000:
+                raise ValueError("Apt provenance exceeds size limit")
+            stream = archive.extractfile(entry)
+            if stream is None:
+                raise ValueError("Missing apt provenance file")
+            with stream:
+                sha256 = hashlib.file_digest(stream, "sha256").hexdigest()
+            files[name] = {"size_bytes": entry.size, "sha256": sha256}
+    return dict(sorted(files.items()))
+
+
+def capture_apt_provenance(image, output, lock):
+    """Save APT-verified indexes and downloaded Ubuntu archives for review."""
+    container = docker("create", "--network", "none", "--label",
+                       "io.local-store.purpose=engine-apt-provenance", image)
+    try:
+        for source, filename in (("/var/cache/apt/archives", "ubuntu-archives.tar"),
+                                 ("/var/lib/apt/lists", "ubuntu-indexes.tar")):
+            with (output / filename).open("wb") as destination:
+                subprocess.run(["docker", "cp", container + ":" + source, "-"],
+                               stdout=destination, check=True, timeout=120)
+    finally:
+        docker("rm", container)
+    archives = manifest_tar(output / "ubuntu-archives.tar", suffix=".deb")
+    indexes = manifest_tar(output / "ubuntu-indexes.tar")
+    if len(archives) < 20:
+        raise ValueError("Too few cached Ubuntu package archives")
+    snapshot = lock["ubuntu_snapshot"]
+    for suite in ("noble", "noble-updates", "noble-security"):
+        needle = snapshot + "_dists_" + suite + "_InRelease"
+        if not any(name.endswith(needle) for name in indexes):
+            raise ValueError("Missing signed Ubuntu snapshot index: " + suite)
+    manifest = {"schema_version": 1, "status": "development_capture_only",
+                "ubuntu_snapshot": snapshot, "image_id": image,
+                "archives_tar_sha256": digest(output / "ubuntu-archives.tar"),
+                "indexes_tar_sha256": digest(output / "ubuntu-indexes.tar"),
+                "archives": archives, "indexes": indexes,
+                "limitations": [
+                    "APT verified signed Ubuntu indexes during the build; this manifest records their bytes but does not independently re-verify signatures.",
+                    "Archive bytes are observed and hashed, not yet matched to a reviewed transitive-package lock.",
+                ]}
+    (output / "ubuntu-provenance.json").write_text(
+        json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    return manifest
+
+
+def build_stage(lock, context, image_file, stage):
+    subprocess.run(["docker", "build", "--platform", lock["platform"],
+                    "--target", stage,
+                    "--build-arg", "BASE_IMAGE=" + lock["base_image"],
+                    "--build-arg", "UBUNTU_SNAPSHOT=" + lock["ubuntu_snapshot"],
+                    "--build-arg", "UBUNTU_CA_CERTIFICATES_VERSION="
+                    + parse_inventory(PACKAGE_LOCK.read_bytes())["ca-certificates"][0],
+                    "--build-arg", "UBUNTU_OPENSSL_VERSION="
+                    + parse_inventory(PACKAGE_LOCK.read_bytes())["openssl"][0],
+                    "--iidfile", str(image_file), str(context)], check=True, timeout=1200)
+    image = image_file.read_text().strip()
+    details = json.loads(docker("image", "inspect", image))[0]
+    if details["Os"] + "/" + details["Architecture"] != lock["platform"]:
+        raise ValueError("Built platform differs from lock")
+    return image
+
+
 def build(lock, inspect_inventory=False):
     # Unique output/name: concurrent runs never share a partial artifact/container.
     output = ROOT / ".cache" / "engine" / ("build-" + uuid.uuid4().hex)
@@ -126,42 +222,39 @@ def build(lock, inspect_inventory=False):
         # Windows Git checkouts may use CRLF; Dockerfile continuation/config
         # bytes must not depend on the builder's host line-ending preference.
         (context / name).write_bytes((ENGINE / name).read_bytes().replace(b"\r\n", b"\n"))
-    image_file = output / "image-id"
-    target_stage = "package-install" if inspect_inventory else "verified"
-    subprocess.run(["docker", "build", "--platform", lock["platform"],
-                    "--target", target_stage,
-                    "--build-arg", "BASE_IMAGE=" + lock["base_image"],
-                    "--iidfile", str(image_file), str(context)], check=True, timeout=1200)
-    image = image_file.read_text().strip()
-    details = json.loads(docker("image", "inspect", image))[0]
-    if details["Os"] + "/" + details["Architecture"] != lock["platform"]:
-        raise ValueError("Built platform differs from lock")
+    package_image = build_stage(lock, context, output / "package-image-id", "package-install")
+    package_container = docker("create", "--network", "none", "--label",
+                               "io.local-store.purpose=engine-package-inspection", package_image)
+    try:
+        docker("cp", package_container + ":/usr/share/local-store/packages.tsv",
+               str(output / "packages.tsv"))
+    finally:
+        docker("rm", package_container)
+    observed = (output / "packages.tsv").read_bytes()
+    if inspect_inventory:
+        differences = inventory_drift((context / "packages.lock.tsv").read_bytes(), observed)
+        report = {"schema_version": 1, "status": "diagnostic_only",
+                  "platform": lock["platform"], "image_id": package_image,
+                  "ubuntu_snapshot": lock["ubuntu_snapshot"],
+                  "package_lock_sha256": digest(context / "packages.lock.tsv"),
+                  "packages_sha256": digest(output / "packages.tsv"),
+                  "drift": differences}
+        (output / "inventory-drift.json").write_text(
+            json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        print("Inventory diagnosis:", output / "inventory-drift.json", flush=True)
+        return
+    if observed != (context / "packages.lock.tsv").read_bytes():
+        raise ValueError("Installed package inventory differs from the reviewed full lock")
+    provenance = capture_apt_provenance(package_image, output, lock)
+    image = build_stage(lock, context, output / "image-id", "verified")
     container = docker("create", "--network", "none", "--label",
                        "io.local-store.purpose=engine-payload-export", image)
     try:
-        docker("cp", container + ":/usr/share/local-store/packages.tsv", str(output / "packages.tsv"))
-        if inspect_inventory:
-            differences = inventory_drift(
-                (context / "packages.lock.tsv").read_bytes(),
-                (output / "packages.tsv").read_bytes(),
-            )
-            report = {"schema_version": 1, "status": "diagnostic_only",
-                      "platform": lock["platform"], "image_id": image,
-                      "package_lock_sha256": digest(context / "packages.lock.tsv"),
-                      "packages_sha256": digest(output / "packages.tsv"),
-                      "drift": differences}
-            (output / "inventory-drift.json").write_text(
-                json.dumps(report, indent=2) + "\n", encoding="utf-8")
-            print("Inventory diagnosis:", output / "inventory-drift.json", flush=True)
-            return
         # Keep Linux symlinks inside a tar; extracting them on Windows requires
         # privileges that a payload build should never need.
         with (output / "notices.tar").open("wb") as notices:
             subprocess.run(["docker", "cp", container + ":/usr/share/doc", "-"],
                            stdout=notices, check=True, timeout=120)
-        observed = (output / "packages.tsv").read_bytes()
-        if observed != (context / "packages.lock.tsv").read_bytes():
-            raise ValueError("Installed package inventory differs from the reviewed full lock")
         inventory = parse_inventory(observed)
         for p in lock["packages"]:
             if inventory.get(p["name"]) != (p["version"], p["architecture"]):
@@ -174,6 +267,7 @@ def build(lock, inspect_inventory=False):
         archive = output / "rootfs.tar"
         docker("export", "--output", str(archive), container, timeout=300)
         evidence = {"schema_version": 1, "status": "development_build_only",
+                    "ubuntu_snapshot": lock["ubuntu_snapshot"],
                     "component_lock_sha256": digest(context / "components.lock.json"),
                     "build_inputs_sha256": {name: digest(context / name) for name in
                                             ("Dockerfile", "wsl.conf", "daemon.json",
@@ -182,6 +276,9 @@ def build(lock, inspect_inventory=False):
                     "rootfs_sha256": digest(archive), "rootfs_bytes": archive.stat().st_size,
                     "packages_sha256": digest(output / "packages.tsv"),
                     "package_lock_sha256": digest(context / "packages.lock.tsv"),
+                    "ubuntu_provenance_sha256": digest(output / "ubuntu-provenance.json"),
+                    "ubuntu_archive_count": len(provenance["archives"]),
+                    "ubuntu_index_count": len(provenance["indexes"]),
                     "notices_sha256": digest(output / "notices.tar"),
                     "package_count": len(inventory), "wsl_boot_tested": False,
                     "daemon_started": False, "signed": False,

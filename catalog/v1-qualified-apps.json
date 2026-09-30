@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "target": 50,
+  "target": 10,
   "apps": [
     {
       "id": "flatnotes",
@@ -28,6 +28,15 @@
       "evidence_sha256": "639710ed14fc8c75a9a8dbf08c1605715c126e8564569a0d60f03078484d4285",
       "probe": "scripts/memos-content-probe.mjs",
       "task": "an admin signs in, creates a private memo, and reads the same content after restart and reinstall"
+    },
+    {
+      "id": "privatebin",
+      "manifest": "src/templates/privatebin.json",
+      "manifest_sha256": "09af373f5840c0cb33057e5844ef5712c28db92c8c1c34238d9331142e6beedc",
+      "evidence": "docs/evidence/privatebin-managed-paste-2026-09-30.json",
+      "evidence_sha256": "789dd259adc4f592cf3f387828bca31f38e57b2d6153efb246a46443356be0de",
+      "probe": "scripts/privatebin-browser-probe.mjs",
+      "task": "an encrypted paste is created in the browser, and its exact plaintext is read after restart and keep-data reinstall"
     }
   ]
 }

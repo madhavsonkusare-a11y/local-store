@@ -6,11 +6,14 @@ import { renderSetupFields, firstMissingAnswer, collectAnswers, markInvalidAnswe
 import { showDialog, closeDialog, setDialogBusy, revealToast } from './motion.js';
 import { createReadinessMonitor } from './readiness.js';
 import { refreshEngineStatus } from './engine-settings.js';
+import { renderOverview } from './overview.js';
+import { myAppsDetail } from './my-apps.js';
 import './recovery.js';
 
 const $ = id => document.getElementById(id);
 const state = { view: 'discover', filters: defaultFilters(), query: '', category: '', offset: 0, limit: 12, entries: [], apps: [], visibleApps: [], total: 0 };
 let request = 0, recipeRequest = 0, searchTimer, toastTimer, pendingApp, activeRecipe, refreshError, activeCatalogId;
+let selectedAppId = null, detailTab = 'overview', detailLog = {state:'idle'};
 // Set when a failed install could not clean up after itself; blocks a retry
 // that would run over containers or files still on disk.
 let installNeedsReview = false;
@@ -55,6 +58,7 @@ function paintOperations() {
     if (status.textContent !== label) status.textContent = label;
     status.classList.toggle('status-busy', busy);
     status.classList.toggle('status-unreachable', !busy && settled === 'unreachable');
+    status.classList.toggle('status-ready', !busy && settled === 'ready');
     row.querySelector('.installed-actions').setAttribute('aria-busy', String(busy));
     row.querySelectorAll('.installed-actions button:not([data-logs])').forEach(button => {
       if (busy) button.setAttribute('aria-disabled', 'true');
@@ -65,6 +69,9 @@ function paintOperations() {
     const text = diagnosticText(entry?.error || (!busy && app?.status_error));
     if (diagnostic.textContent !== text) diagnostic.textContent = text;
   });
+  const selectedStatus = document.querySelector('.installed-app.selected .status');
+  const detailStatus = $('my-apps-detail-status');
+  if (selectedStatus && detailStatus) detailStatus.textContent = selectedStatus.textContent;
 }
 async function invokeOperation(kind, appId, command, args, settled = async () => {}) {
   const token = operations.begin(appId, kind);
@@ -91,19 +98,24 @@ async function refreshApps() {
 }
 async function render() {
   const token = ++request;
+  if (state.view === 'overview') return;
   $('pagination').hidden = true;
   if (state.view === 'apps') {
     loadState(false);
-    if (refreshError) { readiness.update([], false); showError(refreshError); return; }
+    if (refreshError && !state.apps.length) { readiness.update([], false); showError(refreshError); return; }
     const query = state.query.toLowerCase();
     state.visibleApps = state.apps.filter(app => `${app.display_name} ${app.launch_url}`.toLowerCase().includes(query));
+    if (!state.visibleApps.some(app => app.id === selectedAppId)) {
+      selectedAppId = state.visibleApps[0]?.id || null;
+      detailTab = 'overview'; detailLog = {state:'idle'};
+    }
     $('results-count').textContent = `${state.visibleApps.length} ${state.visibleApps.length === 1 ? 'app' : 'apps'}`;
     const focused = document.activeElement;
     const focusedId = focused?.closest('.installed-app')?.dataset.appId;
     const focusedAction = focusedId && Object.keys(focused.dataset)[0];
     const focusedIndex = [...document.querySelectorAll('.installed-app')].findIndex(row => row.dataset.appId === focusedId);
     $('content').innerHTML = state.visibleApps.length
-      ? `<div class="installed-list">${state.visibleApps.map(installedRow).join('')}</div>`
+      ? `${refreshError ? `<p class="my-apps-refresh-error" role="alert">App refresh failed. Showing the last loaded records. <button class="text-button" data-action="retry">Try again</button></p>` : ''}<div class="my-apps-layout"><div class="installed-list" role="group" aria-label="Saved apps">${state.visibleApps.map((app, index) => installedRow(app, index, app.id === selectedAppId)).join('')}</div><aside id="my-apps-detail" class="my-apps-detail" aria-label="Selected app details">${myAppsDetail(state.visibleApps.find(app => app.id === selectedAppId), detailTab, detailLog)}</aside></div>`
       : emptyState(state.query ? 'No matching apps' : 'Your apps belong here.', state.query ? 'Try another name or address.' : 'Install a reviewed recipe or connect an app you already run.', state.query ? 'clear' : 'discover', state.query ? 'Clear search' : 'Discover apps');
     paintOperations();
     if (focusedId) {
@@ -141,12 +153,22 @@ function navigate(view) {
   state.view = view; state.query = ''; state.category = ''; state.offset = 0;
   readiness.update([], false);
   $('search').value = ''; controls.reset();
+  const overview = view === 'overview';
+  $('overview-screen').hidden = !overview;
+  document.querySelector('.workspace').classList.toggle('overview-active', overview);
   const discover = view === 'discover';
-  for (const [id, active] of [['nav-discover', discover], ['nav-apps', !discover]]) {
+  for (const [id, active] of [['nav-overview', overview], ['nav-discover', discover], ['nav-apps', view === 'apps']]) {
     $(id).classList.toggle('selected', active);
     if (active) $(id).setAttribute('aria-current', 'page'); else $(id).removeAttribute('aria-current');
   }
-  $('breadcrumb').textContent = discover ? 'Discover' : 'My Apps';
+  $('breadcrumb').textContent = overview ? 'Overview' : discover ? 'Discover' : 'My Apps';
+  if (overview) {
+    renderOverview(state.apps, null, refreshError, null);
+    $('overview-title').focus({preventScroll: true});
+    void refreshOverview();
+    window.scrollTo({top: 0, behavior: 'instant'});
+    return;
+  }
   $('eyebrow').textContent = discover ? 'THE SELF-HOSTED COLLECTION' : 'YOUR PERSONAL WORKSPACE';
   $('page-title').textContent = discover ? 'Good software. Your space.' : 'Right where you left them.';
   $('intro').textContent = discover ? 'Discover independent apps. Bring your favorites closer to home.' : 'Your apps, their own windows. All within reach.';
@@ -157,6 +179,27 @@ function navigate(view) {
   $('content').replaceChildren();
   window.scrollTo({ top: 0, behavior: 'instant' });
   render();
+}
+let overviewRequest = 0;
+async function refreshOverview() {
+  const token = ++overviewRequest;
+  const button = $('overview-refresh');
+  button.disabled = true;
+  button.textContent = 'Checking…';
+  const [appsResult, engineResult] = await Promise.allSettled([invoke('list_apps'), invoke('managed_engine_status')]);
+  if (token !== overviewRequest || state.view !== 'overview') return;
+  if (appsResult.status === 'fulfilled') {
+    state.apps = appsResult.value;
+    refreshError = null;
+    $('app-count').textContent = state.apps.length;
+  } else {
+    refreshError = appsResult.reason;
+    $('app-count').textContent = '–';
+  }
+  renderOverview(state.apps, engineResult.status === 'fulfilled' ? engineResult.value : null,
+    refreshError, engineResult.status === 'rejected' ? engineResult.reason : null);
+  button.disabled = false;
+  button.textContent = 'Refresh status';
 }
 function openConnect(name = '', catalogId = null) {
   activeCatalogId = catalogId;
@@ -251,8 +294,26 @@ async function runAppAction(command, app, success) {
     toast(success);
   } catch { /* The per-app diagnostic survives navigation and re-rendering. */ }
 }
+async function refreshSelectedLogs() {
+  const app = state.visibleApps.find(item => item.id === selectedAppId);
+  if (!app || app.runtime?.kind !== 'compose') return;
+  const appId = app.id;
+  detailLog = {state:'loading'};
+  $('my-apps-detail').innerHTML = myAppsDetail(app, 'logs', detailLog);
+  try {
+    const text = await invoke('app_logs', {id: appId});
+    if (state.view !== 'apps' || selectedAppId !== appId || detailTab !== 'logs') return;
+    detailLog = {state:'ready', text: text || ''};
+  } catch (error) {
+    if (state.view !== 'apps' || selectedAppId !== appId || detailTab !== 'logs') return;
+    detailLog = {state:'error', error: message(error)};
+  }
+  $('my-apps-detail').innerHTML = myAppsDetail(app, 'logs', detailLog);
+}
 $('nav-discover').onclick = () => navigate('discover');
+$('nav-overview').onclick = () => navigate('overview');
 $('nav-apps').onclick = async () => { await refreshApps(); navigate('apps'); };
+$('overview-refresh').onclick = refreshOverview;
 document.querySelector('.brand').onclick = event => { event.preventDefault(); navigate('discover'); };
 $('connect-top').onclick = $('connect-note').onclick = () => openConnect();
 $('about').onclick = () => showDialog($('about-dialog'));
@@ -272,11 +333,58 @@ $('previous').onclick = () => { state.offset = Math.max(0, state.offset - state.
 $('next').onclick = () => { state.offset += state.limit; render(); };
 document.addEventListener('keydown', event => {
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && !document.querySelector('dialog[open]')) { event.preventDefault(); $('search').focus(); }
+  if (state.view !== 'apps' || document.querySelector('dialog[open]')) return;
+  const selector = event.target.closest?.('.installed-select');
+  if (selector && ['ArrowUp','ArrowDown','Home','End'].includes(event.key)) {
+    const buttons = [...document.querySelectorAll('.installed-select')];
+    const index = buttons.indexOf(selector);
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
+      : Math.max(0, Math.min(buttons.length - 1, index + (event.key === 'ArrowDown' ? 1 : -1)));
+    event.preventDefault(); buttons[next]?.click(); buttons[next]?.focus();
+  }
+  const tab = event.target.closest?.('[data-my-apps-tab]');
+  if (tab && ['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) {
+    const tabs = [...document.querySelectorAll('[data-my-apps-tab]')];
+    const index = tabs.indexOf(tab);
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1
+      : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+    event.preventDefault(); tabs[next]?.click();
+  }
 });
 document.addEventListener('error', event => { if (event.target.matches?.('.app-avatar img')) event.target.remove(); }, true);
 document.addEventListener('click', async event => {
   const button = event.target.closest('button');
   if (!button || button.getAttribute('aria-disabled') === 'true') return;
+  if (button.dataset.selectApp !== undefined) {
+    const app = state.visibleApps[Number(button.dataset.selectApp)];
+    if (!app) return;
+    selectedAppId = app.id; detailTab = 'overview'; detailLog = {state:'idle'};
+    document.querySelectorAll('.installed-app').forEach(row => {
+      const selected = row.dataset.appId === selectedAppId;
+      row.classList.toggle('selected', selected);
+      row.querySelector('.installed-select').setAttribute('aria-pressed', String(selected));
+    });
+    $('my-apps-detail').innerHTML = myAppsDetail(app, detailTab, detailLog);
+    paintOperations();
+    return;
+  }
+  if (button.dataset.myAppsTab) {
+    detailTab = button.dataset.myAppsTab;
+    const app = state.visibleApps.find(item => item.id === selectedAppId);
+    if (!app) return;
+    $('my-apps-detail').innerHTML = myAppsDetail(app, detailTab, detailLog);
+    $('my-apps-detail').querySelector(`[data-my-apps-tab="${detailTab}"]`)?.focus();
+    if (detailTab === 'logs' && detailLog.state === 'idle') void refreshSelectedLogs();
+    return;
+  }
+  if (button.dataset.myAppsLog === 'refresh') { void refreshSelectedLogs(); return; }
+  if (button.dataset.overview) {
+    if (button.dataset.overview === 'refresh') void refreshOverview();
+    else if (button.dataset.overview === 'settings') $('settings').click();
+    else if (button.dataset.overview === 'apps') { await refreshApps(); navigate('apps'); }
+    else navigate('discover');
+    return;
+  }
   if (button.dataset.projectUrl) { try { await invoke('open_project', { url: button.dataset.projectUrl }); } catch (error) { $('detail-error').textContent = message(error); } return; }
   if (button.dataset.close) { await closeDialog($(button.dataset.close)); return; }
   if (button.dataset.featured) { reviewInstall(button.dataset.featured); return; }

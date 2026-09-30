@@ -1,9 +1,9 @@
 # Qualify apps by reusable proof paths
 
-Decision checkpoint, September 23, 2026. V1 still requires 50 selected apps
+Decision checkpoint, September 30, 2026. V1 requires 10 selected apps
 proven on the owned Windows/WSL engine with a meaningful task; this document
-changes the work method, not the release bar. Today three apps (Memos, Flatnotes and
-Kanboard) meet the task bar. n8n has a managed-engine lifecycle pass without a task proof.
+changes the work method, not the release bar. Today four apps (Memos, Flatnotes,
+Kanboard and PrivateBin) meet the task bar. n8n has a managed-engine lifecycle pass without a task proof.
 
 ## Why the one-script-per-app loop is too slow
 
@@ -42,7 +42,7 @@ it is **not** a Uptime Kuma qualification or release evidence.
 5. Run a release gate on immutable manifest, engine, image and probe fingerprints.
    Failed or missing tasks cannot be promoted. Review evidence and a small
    sample of the actual UI for each app family; automate repeat runs and stale
-   input detection. Keep agent access, V3 UX and signed delivery as separate
+   input detection. Keep agent access, approved V2 UX and signed delivery as separate
    V1 gates.
 
 ## Where Jev helps

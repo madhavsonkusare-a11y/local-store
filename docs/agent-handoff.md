@@ -1,7 +1,30 @@
 # Agent handoff
 
-Updated September 28, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
+Updated September 30, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
+
+## September 30 parallel implementation and launch scope
+
+The owner reduced the V1 launch gate from 50 to **10 managed-engine-verified
+apps**. PrivateBin then passed a real managed-WSL encrypted paste round trip
+through restart and keep-data reinstall; [its evidence](evidence/privatebin-managed-paste-2026-09-30.json)
+brings the curated validator to **4/10**, with six more needed. Keep 52 current offerings and the 100-app planning
+roster as discovery/replacement pools rather than treating them as verified.
+Work is split into non-overlapping lanes: E01 reproducible bundled-engine
+payload, A03 bounded agent management tools, F03 approved V2 screen integration,
+and one managed-engine qualification worker. E01's dated Ubuntu snapshot produced
+a [clean 128-package match](evidence/engine-snapshot-development-2026-09-30.json)
+and [34 archive / 39 index hashes](evidence/engine-ubuntu-provenance-2026-09-30.json).
+Independent signature and transitive-lock verification, plus release review,
+remain. A03 added
+owner-granted start/stop MCP tools with bounded scope and audit;
+[Memos real-engine proof](evidence/memos-agent-lifecycle-2026-09-30.json)
+passed stop/start, revocation denial and secret-free audit. Cancellation and
+install/uninstall approval remain. The V2 lane added live-data Overview and My Apps
+master/detail routes; Install/Recovery and first run still need integration.
+Do not run simultaneous Docker qualifications on this shared host. The owner
+excluded changedetection.io from the 10-app launch shortlist and asked for
+more widely used offerings. `CHANGELOG.md` is the owner's edit.
 
 ## September 29 unsigned personal build
 
@@ -174,7 +197,7 @@ consolidated V1 documentation plus the frozen 100-app planning roster.
 
 ## Owner decisions to carry forward
 
-V1 requires 50 managed-engine-verified apps selected from the 52 current
+V1 requires 10 managed-engine-verified apps selected from the 52 current
 offerings, a bundled engine, approved V2 frontend, signed Windows delivery, an
 automatic updater, and agents managing the store and accessing every offered
 app. The frozen 100-app roster is a future sourcing and replacement pool, not a

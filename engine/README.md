@@ -30,6 +30,21 @@ All five Docker package URLs, versions, lengths and SHA-256 values are locked in
 Hashes were selected from Docker's HTTPS package index. They pin observed bytes;
 this first version does not independently verify Docker's signed index. Ubuntu
 dependencies are installed through apt's signed repository metadata.
+The candidate Ubuntu archive snapshot is pinned to `20260913T120000Z` in the
+component lock and passed to APT during the build. This uses Ubuntu 24.04's
+official snapshot mechanism instead of whichever `noble-updates` happens to
+be current. A September 30 clean build reproduced all 128 locked package
+versions. A follow-up clean build retained 34 Ubuntu `.deb` archive hashes and
+39 APT index hashes in a [provenance manifest](../docs/evidence/engine-ubuntu-provenance-2026-09-30.json);
+the larger archive/index tars remain in the ignored local build cache. Signed
+indexes and archive bytes still need independent verification against the
+reviewed transitive package lock for release provenance.
+The minimal Ubuntu base has no CA bundle, so the build first installs the
+exact locked `ca-certificates` version from Ubuntu's signed current index,
+then switches APT to the snapshot. Both index updates fail on fetch errors;
+the final full inventory lock rejects any bootstrap package drift. The final
+install explicitly downgrades the bootstrap OpenSSL pair to the snapshot-locked
+versions, since the initial current index may supply newer versions.
 The full observed 128-package result is frozen in [packages.lock.tsv](packages.lock.tsv).
 The Dockerfile and exporter refuse a build if the installed inventory differs
 byte-for-byte from this lock. This prevents silent dependency drift, but old
@@ -38,6 +53,10 @@ stage exists so a failed rebuild can identify every changed package without
 loosening the export gate. A [September 28 diagnostic](../docs/evidence/engine-inventory-drift-2026-09-28.json)
 found one changed Ubuntu dependency (`libapparmor1` `.7` to `.8`); the normal
 post-lock build refused export. This is a measured blocker, not a release build.
+The [September 30 snapshot build](../docs/evidence/engine-snapshot-development-2026-09-30.json)
+resolved this drift and passed the exact inventory lock. It remains a
+development build, not release approval. See [Ubuntu's snapshot
+service](https://ubuntu.com/server/docs/how-to/software/snapshot-service/).
 
 We inspected Rancher Desktop at `515877cd5f92af42089c9128fc3c7402c0fbbb6c`:
 its WSL downloader verifies an expected rootfs checksum. Its separate distro
@@ -57,10 +76,10 @@ uncompressed). The [128-package inventory](../docs/evidence/engine-packages-deve
 records the exact installed versions. These are observed development artifacts.
 
 The complete installed-package inventory is now locked using the exact bytes
-measured in the original development build. A post-lock export has not run
-because Docker was unavailable at this checkpoint. Cache or mirror every
-transitive package with signed index provenance, then prove a clean rebuild
-before claiming a reproducible release build. The export preserves license files
+measured in the original development build. A clean post-lock export succeeded
+on September 30 with the pinned Ubuntu snapshot. Cache or mirror every
+transitive package with signed index provenance before claiming a reproducible
+release build. The export preserves license files
 inside the rootfs and a separate notices tar, but distributing a rootfs also
 requires reviewing source obligations for the complete package set.
 

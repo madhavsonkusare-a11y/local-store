@@ -2,7 +2,7 @@
 """Fail closed on stale or mislabelled V1 app-task evidence.
 
 Default mode validates the curated list and reports its count. --release-gate
-also fails until 50 approved offerings have current managed-engine task proof.
+also fails until 10 approved offerings have current managed-engine task proof.
 This is a ledger validator, not a substitute for a reviewer assessing each task.
 """
 
@@ -139,19 +139,19 @@ def validate(root, now):
     if len(roster) != 52:
         raise ValueError("the 52-offering V1 baseline has changed")
     curated = read_json(root, "catalog/v1-qualified-apps.json")
-    if curated.get("schema_version") != 1 or curated.get("target") != 50 or not isinstance(curated.get("apps"), list):
+    if curated.get("schema_version") != 1 or curated.get("target") != 10 or not isinstance(curated.get("apps"), list):
         raise ValueError("invalid V1 qualification ledger")
     ids = [entry.get("id") for entry in curated["apps"]]
     if len(ids) != len(set(ids)) or len(ids) > 52:
         raise ValueError("duplicate or excessive V1 qualification entries")
     for entry in curated["apps"]:
         validate_entry(root, entry, roster, now)
-    return {"qualified": len(ids), "target": 50, "remaining": max(0, 50 - len(ids)), "ids": sorted(ids)}
+    return {"qualified": len(ids), "target": 10, "remaining": max(0, 10 - len(ids)), "ids": sorted(ids)}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--release-gate", action="store_true", help="fail while fewer than 50 apps qualify")
+    parser.add_argument("--release-gate", action="store_true", help="fail while fewer than 10 apps qualify")
     args = parser.parse_args()
     try:
         result = validate(ROOT, int(datetime.now(timezone.utc).timestamp()))

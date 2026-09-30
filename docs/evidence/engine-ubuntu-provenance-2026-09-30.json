@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "status": "development_capture_only",
+  "ubuntu_snapshot": "20260913T120000Z",
+  "image_id": "sha256:321c5b06fd4dc1570c04a61b5ee3eb8798c9dff079f1c5a80e63b6e18ed56cf1",
+  "archives_tar_sha256": "40b04037ba2b6d3224ad0e819c5e70ed007482c4dc1606392ca3c4f48646730f",
+  "indexes_tar_sha256": "baedf3e078a888bcc7810e9edd403b9df09c2e26b36ad3b6150a4368c9ea4d4c",
+  "archives": {
+    "archives/ca-certificates_20260601~24.04.1_all.deb": {
+      "size_bytes": 139430,
+      "sha256": "6bac2a01979e210d9eac1d4d56747ec709ea60654744d66705dc3c36e7629e50"
+    },
+    "archives/iproute2_6.1.0-1ubuntu6.4_amd64.deb": {
+      "size_bytes": 1119922,
+      "sha256": "f6c91ec6dba02f8965c88f901205c7db72bc8bf38ef1fdfaaee51030dfa145ea"
+    },
+    "archives/iptables_1.8.10-3ubuntu2_amd64.deb": {
+      "size_bytes": 381328,
+      "sha256": "d341e8ffc42ca035f5aa0fd9a798c8d2b2edb019225dc11f4dac16edf9c57840"
+    },
+    "archives/libapparmor1_4.0.1really4.0.1-0ubuntu0.24.04.7_amd64.deb": {
+      "size_bytes": 51272,
+      "sha256": "4205351c37f4e813f1ca81b6d59a00071f0f70869e652f4ab9e5ba7e5e895d34"
+    },
+    "archives/libargon2-1_0~20190702+dfsg-4build1_amd64.deb": {
+      "size_bytes": 20824,
+      "sha256": "e2c50cb5c50ca598585397f4d4ce43e6f0b5e3ddc212c23b30bdb34ca4a61f66"
+    },
+    "archives/libbpf1_1%3a1.3.0-2build2_amd64.deb": {
+      "size_bytes": 165734,
+      "sha256": "5654cbb145c2b299472cd208dd06c7dc09bf06cad4c4663fc42a865a51a0d96f"
+    },
+    "archives/libbsd0_0.12.1-1build1.1_amd64.deb": {
+      "size_bytes": 41238,
+      "sha256": "f3857b0863ac5cfd4263e9bf6cfb1d4be88d5321e4070d5bc2b62b0949e6c86f"
+    },
+    "archives/libcap2-bin_1%3a2.66-5ubuntu2.4_amd64.deb": {
+      "size_bytes": 34134,
+      "sha256": "a8c875e1711a7a101e995814e6500c826cb658551660ef967ec15fbda79a3997"
+    },
+    "archives/libcryptsetup12_2%3a2.7.0-1ubuntu4.2_amd64.deb": {
+      "size_bytes": 266122,
+      "sha256": "f6f6a7f35104da711997b52c92ab91ce1f47dd039d276d5beb797d713447c9f2"
+    },
+    "archives/libdevmapper1.02.1_2%3a1.02.185-3ubuntu3.2_amd64.deb": {
+      "size_bytes": 139194,
+      "sha256": "0d43a02b9030a50edbc49c9580f88f01eef2b043baad1c6200672c39643c0efe"
+    },
+    "archives/libedit2_3.1-20230828-1build1_amd64.deb": {
+      "size_bytes": 97586,
+      "sha256": "3afbc8ddf835049dd4d88275b9d13680e4c4cdd59e191cbd63424152cc08e00e"
+    },
+    "archives/libelf1t64_0.190-1.1ubuntu0.1_amd64.deb": {
+      "size_bytes": 57810,
+      "sha256": "b4aee123a37472d213647594b4f7d4a0d13615b0ca2a6fd33926b768d6b232c2"
+    },
+    "archives/libfdisk1_2.39.3-9ubuntu6.6_amd64.deb": {
+      "size_bytes": 146344,
+      "sha256": "7f67b127d239f51218c1eb63c3b0c219bbf26f450349bed9ad5d9f10a6b80c1b"
+    },
+    "archives/libip4tc2_1.8.10-3ubuntu2_amd64.deb": {
+      "size_bytes": 23342,
+      "sha256": "eb381f8ff0469534df3f1b146c3eb8baa6e36f8cfcdf2e3e039398322930d0a4"
+    },
+    "archives/libip6tc2_1.8.10-3ubuntu2_amd64.deb": {
+      "size_bytes": 23732,
+      "sha256": "b98b88eb6aa14a902ea1aebc3b12ddd140572545ae1fc6428cb0868c31671d05"
+    },
+    "archives/libjansson4_2.14-2build2_amd64.deb": {
+      "size_bytes": 32830,
+      "sha256": "0cf79113f5d193ce9af2be2ff4b2c3b30dd4e55a0b6c47f7d28f6c849ff3aa60"
+    },
+    "archives/libjson-c5_0.17-1build1_amd64.deb": {
+      "size_bytes": 35340,
+      "sha256": "3ac608d78e9e981e14ba7ceb141a46e3dd3ae8d6dbb3a7ecafd2698fe9930584"
+    },
+    "archives/libkmod2_31+20240202-2ubuntu7.2_amd64.deb": {
+      "size_bytes": 51830,
+      "sha256": "a9cbdc424bc0a5c8af3d6445488a48de76df5ff4d76b7dab8aaf88f712358bbc"
+    },
+    "archives/libmnl0_1.0.5-2build1_amd64.deb": {
+      "size_bytes": 12272,
+      "sha256": "5170658bf0eaf54a8c7d53061ca6b47a6cf33a83543a75fa521de7046cb7197a"
+    },
+    "archives/libnetfilter-conntrack3_1.0.9-6build1_amd64.deb": {
+      "size_bytes": 45218,
+      "sha256": "6d32a4c4618eb7d6c0d989591d28637a9acdfa86dfe22e42e9ac9cc25d882a97"
+    },
+    "archives/libnfnetlink0_1.0.2-2build1_amd64.deb": {
+      "size_bytes": 14810,
+      "sha256": "f557a287af2ca00df5dbf632c6b77d77479139ffb51c83e3de9766eb609b5d63"
+    },
+    "archives/libnftables1_1.0.9-1ubuntu0.1_amd64.deb": {
+      "size_bytes": 358574,
+      "sha256": "fcaee001747a6adaa0cd9337fef437b3aa7a7a6d5246b62fbd4784d3d6a5009e"
+    },
+    "archives/libnftnl11_1.2.6-2build1_amd64.deb": {
+      "size_bytes": 65986,
+      "sha256": "e5bde5c9cbb95082700011f0b7ef2c0a41900b0a9fd7434f6e90448e2a7b4e50"
+    },
+    "archives/libssl3t64_3.0.13-0ubuntu3.15_amd64.deb": {
+      "size_bytes": 1944134,
+      "sha256": "3d0955bc049bbcca0f4c3e78a3a8b994593d96db7d84f4320217224433844534"
+    },
+    "archives/libssl3t64_3.0.13-0ubuntu3.16_amd64.deb": {
+      "size_bytes": 1945300,
+      "sha256": "219f43b1cd836a4da550938db5fda93160d269d39a4edcf1f1ce698a470db797"
+    },
+    "archives/libsystemd-shared_255.4-1ubuntu8.17_amd64.deb": {
+      "size_bytes": 2077458,
+      "sha256": "8722a69d99c1a7e6f72c5389e9c6d8053d95d2f5f4fede5dc83118f735812518"
+    },
+    "archives/libxtables12_1.8.10-3ubuntu2_amd64.deb": {
+      "size_bytes": 35704,
+      "sha256": "c94063499d1b0b336f39607107efb7de95d52a5d4e7e6a9368a5f7308f05b714"
+    },
+    "archives/netbase_6.4_all.deb": {
+      "size_bytes": 13112,
+      "sha256": "8cdbc9c3dca01e660759bf9d840f72e45ac72faf5d19ca1faecacaf6a60c1a87"
+    },
+    "archives/nftables_1.0.9-1ubuntu0.1_amd64.deb": {
+      "size_bytes": 69842,
+      "sha256": "d648859fccde3c17b8b9b89993427564f91f394a39306db1f67bd5ea3ac42c6e"
+    },
+    "archives/openssl_3.0.13-0ubuntu3.15_amd64.deb": {
+      "size_bytes": 1002938,
+      "sha256": "1f2401db59a0beffde6cc47bea3664965ab8fa206b7a5ac8f1cc649cfeeb056b"
+    },
+    "archives/openssl_3.0.13-0ubuntu3.16_amd64.deb": {
+      "size_bytes": 1003702,
+      "sha256": "675b84971ffd4467707008c25ef7520f90ea7c23ef27b7a76b0dccf1d7c4dc3f"
+    },
+    "archives/systemd-dev_255.4-1ubuntu8.17_all.deb": {
+      "size_bytes": 106892,
+      "sha256": "70b863bd1188f49a3ba0ccde5355abd6611a8a5dcd8b92addf25c8036f22556d"
+    },
+    "archives/systemd-sysv_255.4-1ubuntu8.17_amd64.deb": {
+      "size_bytes": 11890,
+      "sha256": "000c90facb7f0f33a3c771ac8cf58221f80239184fb9e24fe78086ffea6e2cf9"
+    },
+    "archives/systemd_255.4-1ubuntu8.17_amd64.deb": {
+      "size_bytes": 3475000,
+      "sha256": "250345b73e42a97ee71cae7c1e470897dfad3c639eb0a7aafe4f9a3a29871cb2"
+    }
+  },
+  "indexes": {
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-backports_InRelease": {
+      "size_bytes": 126173,
+      "sha256": "d01600bd734c4c7c67f860cc13abd867179e31f1ff13ff413920b43993ca6c3f"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-backports_main_binary-amd64_Packages.lz4": {
+      "size_bytes": 79250,
+      "sha256": "bdb7c408eb3b79ad32583ff785b554a2f8f7a6444f09f6b4ec258febdf947228"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-backports_multiverse_binary-amd64_Packages.lz4": {
+      "size_bytes": 921,
+      "sha256": "e02f51ccdcaeaa201abdbead1993242c677db8b38430e9439302cd5f0587bebb"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-backports_universe_binary-amd64_Packages.lz4": {
+      "size_bytes": 57904,
+      "sha256": "c5b0a9aca5aa0735132db22fe97f9e18b52a5f443a93bef46cc0ef293c06cd28"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-updates_InRelease": {
+      "size_bytes": 126125,
+      "sha256": "f9370a8e9c40fff1eb50d0bd395fe5d65f649c0229a2298fbcd12b894b086e44"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-updates_main_binary-amd64_Packages.lz4": {
+      "size_bytes": 2739641,
+      "sha256": "7d9d995283207a9882c414482c6cb9eb2526e0b5c1da8c5c876f6bc15cf3c35a"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-amd64_Packages.lz4": {
+      "size_bytes": 92436,
+      "sha256": "b23de300bf9991568dc6e5f0223c1b4dc24e2b0edf46506cfa69fb0da69c3035"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-updates_restricted_binary-amd64_Packages.lz4": {
+      "size_bytes": 3486347,
+      "sha256": "cc48f62674e3d1d86642c38d3d834f7a371409b7ae6a3f163e6dec364d49688f"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-amd64_Packages.lz4": {
+      "size_bytes": 3608525,
+      "sha256": "ffe50389b398b6128a15e00778bb608856f883debeead20c562a1293fb20c5f9"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble_InRelease": {
+      "size_bytes": 255850,
+      "sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble_main_binary-amd64_Packages.lz4": {
+      "size_bytes": 2950155,
+      "sha256": "5440959b1be383eee0871228f9a97a15f50e5ecf8ac726f3aa53b2c6903bcdf2"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble_multiverse_binary-amd64_Packages.lz4": {
+      "size_bytes": 530633,
+      "sha256": "9541f08c9d7b3b6c13064f51b47507222a9b92eea3e84155b92c5246a857a558"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble_restricted_binary-amd64_Packages.lz4": {
+      "size_bytes": 195876,
+      "sha256": "94382ed0c9be97b6bdca794b26180b577b9b4aec27a3c648a95ca1629b551c54"
+    },
+    "lists/archive.ubuntu.com_ubuntu_dists_noble_universe_binary-amd64_Packages.lz4": {
+      "size_bytes": 31234980,
+      "sha256": "0aa71c66135f20a4aa760fa788a42846a41c8628b6720d82f768b51b5c2d3895"
+    },
+    "lists/lock": {
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lists/security.ubuntu.com_ubuntu_dists_noble-security_InRelease": {
+      "size_bytes": 126127,
+      "sha256": "405d1e825f84ed94d6b71ee62b37d4c0ab1f4ca8bf90192587c7cf2b9fbe2949"
+    },
+    "lists/security.ubuntu.com_ubuntu_dists_noble-security_main_binary-amd64_Packages.lz4": {
+      "size_bytes": 2193064,
+      "sha256": "68bcb31e6c702fcce0635aca12d7a286139bd6e27e0a553c79d58b368ab445e3"
+    },
+    "lists/security.ubuntu.com_ubuntu_dists_noble-security_multiverse_binary-amd64_Packages.lz4": {
+      "size_bytes": 82233,
+      "sha256": "4ee51219c08fd9b67070a2d67e27c05b21d4bb29289011c3788a2d45b0046af0"
+    },
+    "lists/security.ubuntu.com_ubuntu_dists_noble-security_restricted_binary-amd64_Packages.lz4": {
+      "size_bytes": 3277100,
+      "sha256": "0225e8e985332ab1dbb62ba710570bd93c2ebdf1823b1f7d9b817eb3bcf5634d"
+    },
+    "lists/security.ubuntu.com_ubuntu_dists_noble-security_universe_binary-amd64_Packages.lz4": {
+      "size_bytes": 2572445,
+      "sha256": "d99706daaf6b080fc5ea19cc34d4886a42929fd0651aeb4e7df4fbe9ce9ce899"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-backports_InRelease": {
+      "size_bytes": 126173,
+      "sha256": "a590d95ed54e4754f400ef40606eac0080d4d5a4b9244845c42aae2c3c533699"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-backports_main_binary-amd64_Packages.lz4": {
+      "size_bytes": 79259,
+      "sha256": "46dbfe5411030e7ac22826b87a507934e0d9f79816c6d55b6f80034de94ba7e1"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-backports_multiverse_binary-amd64_Packages.lz4": {
+      "size_bytes": 921,
+      "sha256": "e02f51ccdcaeaa201abdbead1993242c677db8b38430e9439302cd5f0587bebb"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-backports_universe_binary-amd64_Packages.lz4": {
+      "size_bytes": 57895,
+      "sha256": "9553382a85f5cef66bd0b594278590b43d03f2cc4f0722e2f90ef3e98322911e"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-security_InRelease": {
+      "size_bytes": 126127,
+      "sha256": "6d9a25abc0c184c52f82045895303ea80c2860e5d868106784b42961135aae1a"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-security_main_binary-amd64_Packages.lz4": {
+      "size_bytes": 2076022,
+      "sha256": "00e3d75b459eb7af915f806e84314767faf84bdc558ba58597e709bd1c47850b"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-security_multiverse_binary-amd64_Packages.lz4": {
+      "size_bytes": 82233,
+      "sha256": "4ee51219c08fd9b67070a2d67e27c05b21d4bb29289011c3788a2d45b0046af0"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-security_restricted_binary-amd64_Packages.lz4": {
+      "size_bytes": 3038457,
+      "sha256": "dc43317664a8a7ea1ab9d7b8273633bb0311d210aca3a5ce5469fd5a503acea9"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-security_universe_binary-amd64_Packages.lz4": {
+      "size_bytes": 2550789,
+      "sha256": "1611801e0bf34e4f133979da8f73f9a68c455894ca7e8fbfdebccfb40bc30cf5"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-updates_InRelease": {
+      "size_bytes": 126125,
+      "sha256": "be43f3a6ff175bc85598ee9508e36e372a7b66066b0f2c39d142b8561a35c893"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-updates_main_binary-amd64_Packages.lz4": {
+      "size_bytes": 2618616,
+      "sha256": "c574b090302acfc9d592defcb2d23e0016062deea849dff9fd66209812ed5200"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-updates_multiverse_binary-amd64_Packages.lz4": {
+      "size_bytes": 91773,
+      "sha256": "a2992918b3f1f2cd06214386fdfb22a08d27f1a2a007833a9e0fd4c383190cfb"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-updates_restricted_binary-amd64_Packages.lz4": {
+      "size_bytes": 3239825,
+      "sha256": "1e76a55a0bba827c4530732643eb4d9c855d5bb6a0d983a1ed2ae18e70eb6ba3"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble-updates_universe_binary-amd64_Packages.lz4": {
+      "size_bytes": 3592890,
+      "sha256": "767e0f911b71ad417460d9558e5866ae0fdad4ade56d9f183d1db59d231a119e"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble_InRelease": {
+      "size_bytes": 255850,
+      "sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble_main_binary-amd64_Packages.lz4": {
+      "size_bytes": 2950155,
+      "sha256": "5440959b1be383eee0871228f9a97a15f50e5ecf8ac726f3aa53b2c6903bcdf2"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble_multiverse_binary-amd64_Packages.lz4": {
+      "size_bytes": 530633,
+      "sha256": "9541f08c9d7b3b6c13064f51b47507222a9b92eea3e84155b92c5246a857a558"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble_restricted_binary-amd64_Packages.lz4": {
+      "size_bytes": 195876,
+      "sha256": "94382ed0c9be97b6bdca794b26180b577b9b4aec27a3c648a95ca1629b551c54"
+    },
+    "lists/snapshot.ubuntu.com_ubuntu_20260913T120000Z_dists_noble_universe_binary-amd64_Packages.lz4": {
+      "size_bytes": 31234980,
+      "sha256": "0aa71c66135f20a4aa760fa788a42846a41c8628b6720d82f768b51b5c2d3895"
+    }
+  },
+  "limitations": [
+    "APT verified signed Ubuntu indexes during the build; this manifest records their bytes but does not independently re-verify signatures.",
+    "Archive bytes are observed and hashed, not yet matched to a reviewed transitive-package lock."
+  ]
+}

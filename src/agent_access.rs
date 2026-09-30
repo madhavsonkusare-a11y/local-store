@@ -94,6 +94,8 @@ pub enum StoreTool {
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum ToolResult {
     Status { status: AppStatus },
+    Started { app_id: String },
+    Stopped { app_id: String },
 }
 
 impl AccessDirectory {

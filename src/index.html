@@ -17,6 +17,7 @@
     <a class="brand" href="#discover" aria-label="Local Store home"><img src="assets/mark.svg" alt=""><span class="wordmark"><b>Local</b> Store<span class="brand-caption">A home for your apps</span></span></a>
     <p class="nav-label">WORKSPACE</p>
     <nav aria-label="Main navigation">
+      <button class="nav-item" id="nav-overview" aria-label="Overview" title="Overview"><img src="assets/icons/layout-grid.svg" alt=""><span class="nav-text">Overview</span></button>
       <button class="nav-item selected" id="nav-discover" aria-current="page" aria-label="Discover" title="Discover"><img src="assets/icons/compass.svg" alt=""><span class="nav-text">Discover</span></button>
       <button class="nav-item" id="nav-apps" aria-label="My Apps" title="My Apps"><img src="assets/icons/layout-grid.svg" alt=""><span class="nav-text">My Apps</span><span id="app-count" class="nav-count">0</span></button>
     </nav>
@@ -30,6 +31,10 @@
   <main id="main" tabindex="-1">
     <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb">Discover</strong></div><button class="primary compact" id="connect-top"><img src="assets/icons/plus.svg" alt="">Connect an app</button></header>
     <div class="workspace">
+      <section id="overview-screen" class="overview-screen" aria-labelledby="overview-title" hidden>
+        <div class="overview-heading"><div><p class="eyebrow">YOUR WORKSPACE</p><h1 id="overview-title" tabindex="-1">A place for what runs here.</h1><p class="intro">Your apps and local engine, at a glance.</p></div><button class="secondary" id="overview-refresh">Refresh status</button></div>
+        <div id="overview-content" aria-live="polite"></div>
+      </section>
       <section class="page-heading"><p class="eyebrow" id="eyebrow">THE SELF-HOSTED COLLECTION</p><h1 id="page-title">Good software. Your space.</h1><p class="intro" id="intro">Discover independent apps. Bring your favorites closer to home.</p></section>
       <section id="featured-shelf" class="featured-shelf" aria-labelledby="featured-title">
         <div class="feature-copy"><p class="eyebrow">A GOOD PLACE TO START</p><h2 id="featured-title">Small tools.<br> Room for big ideas.</h2><p>A quiet place to write, a little less busywork, and a view of what’s running.</p><span class="feature-foot"><img src="assets/icons/hard-drive.svg" alt="">Install previews · Docker required</span></div>

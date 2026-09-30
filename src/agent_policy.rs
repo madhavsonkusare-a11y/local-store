@@ -10,6 +10,8 @@ use std::collections::{BTreeMap, BTreeSet};
 #[serde(rename_all = "snake_case")]
 pub enum AgentAction {
     Status,
+    Start,
+    Stop,
     ReadContent,
     WriteContent,
     Destructive,

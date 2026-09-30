@@ -20,10 +20,17 @@ use std::{
 };
 
 const MAX_STATUS_GRANT_HOURS: u64 = 24 * 30;
+const MAX_LIFECYCLE_GRANT_HOURS: u64 = 24;
 
 /// Only the credential verifier in this module can mint this identity.
 struct VerifiedClient {
     client_id: String,
+}
+
+struct LifecycleCall<'a> {
+    app_id: &'a str,
+    start: bool,
+    now_unix: u64,
 }
 
 /// No grant, approval, install, content, or destructive methods are exposed.
@@ -100,6 +107,58 @@ impl AgentGateway {
         self.grant_status_for_owner_with(client_id, app_id, hours, now_unix, || {
             storage::load_or_migrate_registry().map_err(AppError::from)
         })
+    }
+
+    /// Explicit, short-lived owner grant for reversible start/stop actions.
+    /// It includes status so the app stays discoverable to this client.
+    pub fn grant_lifecycle_for_owner(
+        &self,
+        client_id: &str,
+        app_id: &str,
+        hours: u64,
+        now_unix: u64,
+    ) -> AppResult<u64> {
+        self.grant_lifecycle_for_owner_with(client_id, app_id, hours, now_unix, || {
+            storage::load_or_migrate_registry().map_err(AppError::from)
+        })
+    }
+
+    fn grant_lifecycle_for_owner_with(
+        &self,
+        client_id: &str,
+        app_id: &str,
+        hours: u64,
+        now_unix: u64,
+        load: impl FnOnce() -> AppResult<RegistryV2>,
+    ) -> AppResult<u64> {
+        if !(1..=MAX_LIFECYCLE_GRANT_HOURS).contains(&hours) {
+            return Err(AppError::invalid(
+                "Lifecycle grant must last 1 to 24 hours.",
+            ));
+        }
+        let expires_at_unix = now_unix
+            .checked_add(hours * 3600)
+            .ok_or_else(|| AppError::invalid("Lifecycle grant expiry is out of range."))?;
+        let credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        if !credentials.contains(client_id) {
+            return Err(AppError::new(
+                ErrorCode::NotFound,
+                "Agent client is not enrolled.",
+            ));
+        }
+        if !load()?.apps.iter().any(|app| app.id == app_id) {
+            return Err(AppError::new(
+                ErrorCode::NotFound,
+                "That app is not installed.",
+            ));
+        }
+        AgentPolicyStore::open(&self.policy_root)?.grant(Grant {
+            client_id: client_id.to_owned(),
+            app_id: app_id.to_owned(),
+            actions: BTreeSet::from([AgentAction::Status, AgentAction::Start, AgentAction::Stop]),
+            expires_at_unix,
+        })?;
+        Ok(expires_at_unix)
     }
 
     fn grant_status_for_owner_with(
@@ -202,6 +261,74 @@ impl AgentGateway {
             || storage::load_or_migrate_registry().map_err(AppError::from),
             runtime::status,
         )
+    }
+
+    pub fn lifecycle(
+        &self,
+        presented_secret: &str,
+        app_id: &str,
+        start: bool,
+        now_unix: u64,
+    ) -> AppResult<ToolResult> {
+        self.lifecycle_with(
+            presented_secret,
+            LifecycleCall {
+                app_id,
+                start,
+                now_unix,
+            },
+            runtime::lock_operation,
+            || storage::load_or_migrate_registry().map_err(AppError::from),
+            |app, start| {
+                if start {
+                    runtime::start_with(&runtime::SystemProcessRunner, app)
+                } else {
+                    runtime::stop_with(&runtime::SystemProcessRunner, app)
+                }
+            },
+        )
+    }
+
+    fn lifecycle_with<G>(
+        &self,
+        presented_secret: &str,
+        call: LifecycleCall<'_>,
+        lock: impl FnOnce(&str) -> AppResult<G>,
+        load: impl FnOnce() -> AppResult<RegistryV2>,
+        run: impl FnOnce(&InstalledApp, bool) -> AppResult<()>,
+    ) -> AppResult<ToolResult> {
+        let caller =
+            ClientCredentialStore::open(&self.credentials_root)?.verify(presented_secret, None)?;
+        AgentPolicyStore::open(&self.policy_root)?.authorize(
+            &caller.client_id,
+            call.app_id,
+            if call.start {
+                AgentAction::Start
+            } else {
+                AgentAction::Stop
+            },
+            None,
+            call.now_unix,
+        )?;
+        // Share the owner's per-app operation slot through registry read and
+        // runtime dispatch. A denied request never locks or reads the registry.
+        let _lock = lock(call.app_id)?;
+        let registry = load()?;
+        let app = registry
+            .apps
+            .iter()
+            .find(|app| app.id == call.app_id)
+            .ok_or_else(|| AppError::new(ErrorCode::NotFound, "That app is not installed."))?;
+        run(app, call.start)?;
+        Ok(if call.start {
+            ToolResult::Started {
+                app_id: call.app_id.to_owned(),
+            }
+        } else {
+            ToolResult::Stopped {
+                app_id: call.app_id.to_owned(),
+            }
+        })
     }
 
     fn get_status_with(
@@ -594,6 +721,197 @@ mod tests {
             |_| panic!("revoked grant dispatched"),
         );
         assert_eq!(denied.unwrap_err().code, ErrorCode::Forbidden);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn lifecycle_requires_exact_live_scope_and_audits_before_dispatch() {
+        let root = scratch();
+        let secret = enroll(&root, "client");
+        let (policy_root, credentials_root) = roots(&root);
+        let gateway = AgentGateway::open(&policy_root, &credentials_root).unwrap();
+        let registry = || Ok(RegistryV2::new(vec![installed("memos")]));
+        grant(&root, "client", "memos");
+        assert_eq!(
+            gateway
+                .lifecycle_with(
+                    &secret,
+                    LifecycleCall {
+                        app_id: "memos",
+                        start: true,
+                        now_unix: 100
+                    },
+                    |_| -> AppResult<()> { panic!("denied scope acquired lock") },
+                    || panic!("status scope read registry"),
+                    |_, _| panic!("status scope started app")
+                )
+                .unwrap_err()
+                .code,
+            ErrorCode::Forbidden
+        );
+        AgentPolicyStore::open(&policy_root)
+            .unwrap()
+            .grant(Grant {
+                client_id: "client".into(),
+                app_id: "memos".into(),
+                actions: BTreeSet::from([
+                    AgentAction::Status,
+                    AgentAction::Start,
+                    AgentAction::Stop,
+                ]),
+                expires_at_unix: 200,
+            })
+            .unwrap();
+        assert_eq!(
+            gateway
+                .lifecycle_with(
+                    &secret,
+                    LifecycleCall {
+                        app_id: "memos",
+                        start: true,
+                        now_unix: 100
+                    },
+                    |_| Ok(()),
+                    registry,
+                    |app, start| {
+                        assert_eq!(app.id, "memos");
+                        assert!(start);
+                        Ok(())
+                    }
+                )
+                .unwrap(),
+            ToolResult::Started {
+                app_id: "memos".into()
+            }
+        );
+        assert_eq!(
+            gateway
+                .lifecycle_with(
+                    &secret,
+                    LifecycleCall {
+                        app_id: "memos",
+                        start: false,
+                        now_unix: 100
+                    },
+                    |_| Ok(()),
+                    registry,
+                    |_, start| {
+                        assert!(!start);
+                        Ok(())
+                    }
+                )
+                .unwrap(),
+            ToolResult::Stopped {
+                app_id: "memos".into()
+            }
+        );
+        assert_eq!(
+            gateway
+                .lifecycle_with(
+                    &secret,
+                    LifecycleCall {
+                        app_id: "memos",
+                        start: true,
+                        now_unix: 200
+                    },
+                    |_| -> AppResult<()> { panic!("expired scope acquired lock") },
+                    || panic!("expired scope read registry"),
+                    |_, _| panic!("expired scope started app")
+                )
+                .unwrap_err()
+                .code,
+            ErrorCode::Forbidden
+        );
+        gateway.revoke_status_for_owner("client", "memos").unwrap();
+        assert_eq!(
+            gateway
+                .lifecycle_with(
+                    &secret,
+                    LifecycleCall {
+                        app_id: "memos",
+                        start: false,
+                        now_unix: 100
+                    },
+                    |_| -> AppResult<()> { panic!("revoked scope acquired lock") },
+                    || panic!("revoked scope read registry"),
+                    |_, _| panic!("revoked scope stopped app")
+                )
+                .unwrap_err()
+                .code,
+            ErrorCode::Forbidden
+        );
+        let audit = AgentPolicyStore::open(&policy_root).unwrap();
+        assert_eq!(audit.audit().len(), 5);
+        assert_eq!(
+            audit.audit().iter().filter(|event| event.allowed).count(),
+            2
+        );
+        drop(audit);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn owner_lifecycle_grant_is_bounded_and_requires_an_installed_app() {
+        let root = scratch();
+        let (policy_root, credentials_root) = roots(&root);
+        let gateway = AgentGateway::open(&policy_root, &credentials_root).unwrap();
+        let registry = || Ok(RegistryV2::new(vec![installed("memos")]));
+        assert_eq!(
+            gateway
+                .grant_lifecycle_for_owner_with("missing", "memos", 1, 100, registry)
+                .unwrap_err()
+                .code,
+            ErrorCode::NotFound
+        );
+        let secret = gateway.enroll_client_for_owner("client").unwrap();
+        for hours in [0, 25] {
+            assert!(gateway
+                .grant_lifecycle_for_owner_with("client", "memos", hours, 100, registry)
+                .is_err());
+        }
+        assert_eq!(
+            gateway
+                .grant_lifecycle_for_owner_with("client", "absent", 1, 100, registry)
+                .unwrap_err()
+                .code,
+            ErrorCode::NotFound
+        );
+        assert_eq!(
+            gateway
+                .grant_lifecycle_for_owner_with("client", "memos", 1, 100, registry)
+                .unwrap(),
+            3700
+        );
+        assert!(gateway
+            .lifecycle_with(
+                &secret,
+                LifecycleCall {
+                    app_id: "memos",
+                    start: true,
+                    now_unix: 3699
+                },
+                |_| Ok(()),
+                registry,
+                |_, _| Ok(())
+            )
+            .is_ok());
+        assert_eq!(
+            gateway
+                .lifecycle_with(
+                    &secret,
+                    LifecycleCall {
+                        app_id: "memos",
+                        start: true,
+                        now_unix: 3700
+                    },
+                    |_| -> AppResult<()> { panic!("expired grant acquired lock") },
+                    || panic!("expired grant read registry"),
+                    |_, _| panic!("expired grant dispatched")
+                )
+                .unwrap_err()
+                .code,
+            ErrorCode::Forbidden
+        );
         fs::remove_dir_all(root).unwrap();
     }
 }

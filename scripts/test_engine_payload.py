@@ -5,6 +5,7 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import tarfile
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -20,6 +21,13 @@ class PayloadTests(unittest.TestCase):
 
     def test_pins_and_origin_are_required(self):
         payload.validate(self.lock)
+        for value in ["", "latest", "2026-09-13", "20269913T120000Z",
+                      "20990101T120000Z", "20260913T120000Z; rm -rf /"]:
+            with self.subTest(snapshot=value):
+                changed = copy.deepcopy(self.lock)
+                changed["ubuntu_snapshot"] = value
+                with self.assertRaises(ValueError):
+                    payload.validate(changed)
         for key, value in [("sha256", "bad"), ("url", "https://example.org/app.deb"),
                            ("architecture", "arm64"), ("size_bytes", 0)]:
             with self.subTest(key=key):
@@ -77,6 +85,32 @@ class PayloadTests(unittest.TestCase):
                 with patch.object(payload, "PACKAGE_LOCK", replacement):
                     with self.assertRaises(ValueError):
                         payload.validate(self.lock)
+
+    def test_apt_provenance_tar_hashes_regular_files_without_extracting(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "archives.tar"
+            with tarfile.open(target, "w") as archive:
+                blob = b"package bytes"
+                entry = tarfile.TarInfo("archives/example.deb")
+                entry.size = len(blob)
+                archive.addfile(entry, io.BytesIO(blob))
+            self.assertEqual(payload.manifest_tar(target, suffix=".deb"), {
+                "archives/example.deb": {"size_bytes": len(blob),
+                                          "sha256": hashlib.sha256(blob).hexdigest()}
+            })
+
+    def test_apt_provenance_tar_refuses_unsafe_paths_and_links(self):
+        for name, kind in [("../escape.deb", tarfile.REGTYPE),
+                           ("/absolute.deb", tarfile.REGTYPE),
+                           ("archives/link.deb", tarfile.SYMTYPE)]:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory) / "archives.tar"
+                with tarfile.open(target, "w") as archive:
+                    entry = tarfile.TarInfo(name)
+                    entry.type = kind
+                    archive.addfile(entry)
+                with self.assertRaises(ValueError):
+                    payload.manifest_tar(target, suffix=".deb")
 
 
 if __name__ == "__main__":

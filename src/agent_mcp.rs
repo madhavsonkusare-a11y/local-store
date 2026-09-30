@@ -10,6 +10,8 @@ const MAX_LINE: usize = 64 * 1024;
 const PROTOCOL_VERSION: &str = "2025-06-18";
 const TOOL_NAME: &str = "local_store_get_status";
 const LIST_TOOL_NAME: &str = "local_store_list_granted_apps";
+const START_TOOL_NAME: &str = "local_store_start_app";
+const STOP_TOOL_NAME: &str = "local_store_stop_app";
 
 pub fn serve_stdio() -> Result<(), String> {
     let secret = std::env::var("LOCAL_STORE_AGENT_BEARER")
@@ -39,6 +41,15 @@ pub fn serve_stdio() -> Result<(), String> {
                 .list_granted_apps(&secret, now)
                 .map_err(|error| error.message)
         },
+        |app_id, start| {
+            let now = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map_err(|_| "System clock is unavailable".to_owned())?
+                .as_secs();
+            gateway
+                .lifecycle(&secret, app_id, start, now)
+                .map_err(|error| error.message)
+        },
     )
     .map_err(|error| error.to_string())
 }
@@ -48,6 +59,7 @@ fn serve<R: BufRead, W: Write>(
     mut output: W,
     mut status: impl FnMut(&str) -> Result<ToolResult, String>,
     mut list: impl FnMut() -> Result<Vec<String>, String>,
+    mut lifecycle: impl FnMut(&str, bool) -> Result<ToolResult, String>,
 ) -> io::Result<()> {
     let mut initialized = false;
     loop {
@@ -70,7 +82,13 @@ fn serve<R: BufRead, W: Write>(
                 continue;
             }
         };
-        if let Some(response) = handle(&request, &mut initialized, &mut status, &mut list) {
+        if let Some(response) = handle(
+            &request,
+            &mut initialized,
+            &mut status,
+            &mut list,
+            &mut lifecycle,
+        ) {
             write_json(&mut output, &response)?;
         }
     }
@@ -87,6 +105,7 @@ fn handle(
     initialized: &mut bool,
     status: &mut impl FnMut(&str) -> Result<ToolResult, String>,
     list: &mut impl FnMut() -> Result<Vec<String>, String>,
+    lifecycle: &mut impl FnMut(&str, bool) -> Result<ToolResult, String>,
 ) -> Option<Value> {
     let id = request.get("id").cloned();
     if request.get("jsonrpc").and_then(Value::as_str) != Some("2.0")
@@ -130,6 +149,18 @@ fn handle(
             "description": "List installed Local Store app IDs with a live status grant for this client.",
             "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false},
             "annotations": {"readOnlyHint": true, "destructiveHint": false}
+        }, {
+            "name": START_TOOL_NAME,
+            "description": "Start one installed app with a live owner-granted lifecycle scope.",
+            "inputSchema": {"type": "object", "properties": {"app_id": {"type": "string"}},
+                "required": ["app_id"], "additionalProperties": false},
+            "annotations": {"readOnlyHint": false, "destructiveHint": false}
+        }, {
+            "name": STOP_TOOL_NAME,
+            "description": "Stop one installed app with a live owner-granted lifecycle scope.",
+            "inputSchema": {"type": "object", "properties": {"app_id": {"type": "string"}},
+                "required": ["app_id"], "additionalProperties": false},
+            "annotations": {"readOnlyHint": false, "destructiveHint": false}
         }]}),
         "tools/call" if *initialized => {
             let params = request.get("params");
@@ -149,7 +180,7 @@ fn handle(
                 };
                 return Some(json!({"jsonrpc": "2.0", "id": id, "result": result}));
             }
-            if name != Some(TOOL_NAME) {
+            if !matches!(name, Some(TOOL_NAME | START_TOOL_NAME | STOP_TOOL_NAME)) {
                 return Some(rpc_error(id, -32602, "Unknown tool"));
             }
             let arguments = params.and_then(|p| p.get("arguments"));
@@ -161,7 +192,13 @@ fn handle(
             {
                 return Some(rpc_error(id, -32602, "Invalid app_id"));
             }
-            match status(app_id.unwrap()) {
+            let app_id = app_id.unwrap();
+            let outcome = if name == Some(TOOL_NAME) {
+                status(app_id)
+            } else {
+                lifecycle(app_id, name == Some(START_TOOL_NAME))
+            };
+            match outcome {
                 Ok(value) => json!({"content": [{"type": "text",
                     "text": serde_json::to_string(&value).unwrap_or_default()}],
                     "structuredContent": value, "isError": false}),
@@ -198,6 +235,7 @@ mod tests {
                 Err("denied".into())
             },
             &mut || Err("denied".into()),
+            &mut |_, _| Err("denied".into()),
         )
         .unwrap();
         assert_eq!(denied["error"]["code"], -32000);
@@ -207,7 +245,8 @@ mod tests {
             &init,
             &mut initialized,
             &mut |_| Err("denied".into()),
-            &mut || Err("denied".into())
+            &mut || Err("denied".into()),
+            &mut |_, _| Err("denied".into())
         )
         .unwrap()
         .get("result")
@@ -220,6 +259,7 @@ mod tests {
                 Err("denied".into())
             },
             &mut || Err("denied".into()),
+            &mut |_, _| Err("denied".into()),
         )
         .unwrap();
         assert_eq!(denied["result"]["isError"], true);
@@ -236,6 +276,7 @@ mod tests {
             &mut initialized,
             &mut |_| panic!("status called"),
             &mut || Ok(vec!["memos".into()]),
+            &mut |_, _| panic!("lifecycle called"),
         )
         .unwrap();
         assert_eq!(
@@ -249,7 +290,8 @@ mod tests {
                 &invalid,
                 &mut initialized,
                 &mut |_| panic!("status called"),
-                &mut || panic!("list called")
+                &mut || panic!("list called"),
+                &mut |_, _| panic!("lifecycle called")
             )
             .unwrap()["error"]["code"],
             -32602
@@ -265,6 +307,7 @@ mod tests {
             &mut output,
             |_| Err("denied".into()),
             || Err("denied".into()),
+            |_, _| Err("denied".into()),
         )
         .unwrap();
         let lines: Vec<_> = output
@@ -274,5 +317,43 @@ mod tests {
         assert_eq!(lines.len(), 2);
         let tools: Value = serde_json::from_slice(lines[1]).unwrap();
         assert_eq!(tools["result"]["tools"][0]["name"], TOOL_NAME);
+    }
+
+    #[test]
+    fn lifecycle_tools_validate_id_and_use_server_side_scope() {
+        let mut initialized = true;
+        let mut operations = Vec::new();
+        for (name, start) in [(START_TOOL_NAME, true), (STOP_TOOL_NAME, false)] {
+            let request = json!({"jsonrpc":"2.0","id":1,"method":"tools/call",
+                "params":{"name":name,"arguments":{"app_id":"memos"}},
+                "clientInfo":{"name":"pretend-owner"}});
+            let result = handle(
+                &request,
+                &mut initialized,
+                &mut |_| panic!("status called"),
+                &mut || panic!("list called"),
+                &mut |app_id, operation| {
+                    operations.push((app_id.to_owned(), operation));
+                    Err("owner grant required".into())
+                },
+            )
+            .unwrap();
+            assert_eq!(result["result"]["isError"], true);
+            assert_eq!(operations.last(), Some(&("memos".into(), start)));
+        }
+        let bad = json!({"jsonrpc":"2.0","id":2,"method":"tools/call",
+            "params":{"name":START_TOOL_NAME,
+                "arguments":{"app_id":"memos","client_id":"owner"}}});
+        assert_eq!(
+            handle(
+                &bad,
+                &mut initialized,
+                &mut |_| panic!("status called"),
+                &mut || panic!("list called"),
+                &mut |_, _| panic!("lifecycle called")
+            )
+            .unwrap()["error"]["code"],
+            -32602
+        );
     }
 }
