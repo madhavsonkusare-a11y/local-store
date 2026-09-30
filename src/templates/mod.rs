@@ -147,6 +147,18 @@ pub struct StoragePin {
     pub reason: String,
 }
 
+/// An app-specific ceiling selected after observing a real managed-engine run.
+/// The service must still exist in the pinned upstream definition.
+#[derive(Debug, Clone, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct ResourceLimit {
+    pub service: String,
+    pub memory_bytes: u64,
+    pub cpu_millicores: u32,
+    pub pids: u32,
+    pub reason: String,
+}
+
 /// Companion config from the same repository and commit as the definition.
 #[derive(Debug, Clone, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
@@ -200,6 +212,9 @@ pub struct ReviewedTemplate {
     /// definition remains verbatim and any source drift refuses the install.
     #[serde(default)]
     pub storage_pins: Vec<StoragePin>,
+    /// Per-service ceilings; omitted until a managed-engine proof can test them.
+    #[serde(default)]
+    pub resource_limits: Vec<ResourceLimit>,
     /// The files the definition's source copies into the app's data folder,
     /// carried verbatim like the definition itself so a review covers them.
     #[serde(default)]
@@ -329,6 +344,36 @@ impl ReviewedTemplate {
                 ));
             }
             template.plan.named_volumes.push(pin.volume.clone());
+        }
+
+        for limit in &self.resource_limits {
+            if limit.reason.trim().len() <= 20 {
+                return Err(format!("{}: resource limit gives no reason", self.id));
+            }
+            let service = template
+                .plan
+                .services
+                .iter_mut()
+                .find(|service| service.name == limit.service)
+                .ok_or_else(|| {
+                    format!(
+                        "{}: resource limit names no service {:?}",
+                        self.id, limit.service
+                    )
+                })?;
+            let overrides = &mut service.overrides;
+            if overrides.memory_limit_bytes.is_some()
+                || overrides.cpu_limit_millicores.is_some()
+                || overrides.pids_limit.is_some()
+            {
+                return Err(format!(
+                    "{}: resource limit for {:?} duplicates an existing ceiling",
+                    self.id, limit.service
+                ));
+            }
+            overrides.memory_limit_bytes = Some(limit.memory_bytes);
+            overrides.cpu_limit_millicores = Some(limit.cpu_millicores);
+            overrides.pids_limit = Some(limit.pids);
         }
 
         for field in &mut template.fields {
@@ -1112,6 +1157,34 @@ mod tests {
             .plan_template()
             .unwrap_err()
             .contains("no longer matches"));
+    }
+
+    #[test]
+    fn resource_limits_bind_to_one_reviewed_service_and_refuse_drift() {
+        let reviewed = reviewed_template("flatnotes").expect("flatnotes is reviewed");
+        let template = reviewed.plan_template().expect("flatnotes should map");
+        let limits = &template.plan.services[0].overrides;
+        assert_eq!(limits.memory_limit_bytes, Some(536_870_912));
+        assert_eq!(limits.cpu_limit_millicores, Some(2000));
+        assert_eq!(limits.pids_limit, Some(512));
+
+        let mut stale = reviewed.clone();
+        stale.resource_limits[0].service = "removed-service".into();
+        assert!(stale
+            .plan_template()
+            .unwrap_err()
+            .contains("names no service"));
+        let mut duplicate = reviewed.clone();
+        duplicate
+            .resource_limits
+            .push(reviewed.resource_limits[0].clone());
+        assert!(duplicate
+            .plan_template()
+            .unwrap_err()
+            .contains("duplicates an existing ceiling"));
+        let mut invalid = reviewed;
+        invalid.resource_limits[0].memory_bytes = 0;
+        assert!(invalid.plan_template().is_err());
     }
 
     /// The audit has to be about what runs, not about what the definition said

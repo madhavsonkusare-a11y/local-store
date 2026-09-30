@@ -12,11 +12,14 @@ struct Container {
     status: String,
     exit_code: i64,
     health: Option<String>,
+    memory_limit: i64,
+    nano_cpus: i64,
+    pids_limit: Option<i64>,
 }
 
 // Only fields needed for the verdict. Never read environment variables,
 // health-check output, mounts or credentials into qualification evidence.
-const FORMAT: &str = r#"{"id":{{json .Id}},"project":{{json (index .Config.Labels "com.docker.compose.project")}},"service":{{json (index .Config.Labels "com.docker.compose.service")}},"status":{{json .State.Status}},"exit_code":{{.State.ExitCode}},"health":{{with index .State "Health"}}{{json .Status}}{{else}}null{{end}}}"#;
+const FORMAT: &str = r#"{"id":{{json .Id}},"project":{{json (index .Config.Labels "com.docker.compose.project")}},"service":{{json (index .Config.Labels "com.docker.compose.service")}},"status":{{json .State.Status}},"exit_code":{{.State.ExitCode}},"health":{{with index .State "Health"}}{{json .Status}}{{else}}null{{end}},"memory_limit":{{.HostConfig.Memory}},"nano_cpus":{{.HostConfig.NanoCpus}},"pids_limit":{{json .HostConfig.PidsLimit}}}"#;
 
 fn check(plan: &DeploymentPlan, project: &str, containers: &[Container]) -> Result<(), String> {
     if containers.len() != plan.services.len() {
@@ -41,6 +44,22 @@ fn check(plan: &DeploymentPlan, project: &str, containers: &[Container]) -> Resu
             .ok_or_else(|| "service inspection returned an unexpected service".to_owned())?;
         if !seen.insert(&container.service) {
             return Err(format!("multiple containers for service {}", service.name));
+        }
+        let limits = &service.overrides;
+        if limits
+            .memory_limit_bytes
+            .is_some_and(|bytes| i64::try_from(bytes).ok() != Some(container.memory_limit))
+            || limits
+                .cpu_limit_millicores
+                .is_some_and(|millicores| i64::from(millicores) * 1_000_000 != container.nano_cpus)
+            || limits
+                .pids_limit
+                .is_some_and(|pids| Some(i64::from(pids)) != container.pids_limit)
+        {
+            return Err(format!(
+                "service {} does not enforce its reviewed resource limits",
+                service.name
+            ));
         }
         if plan.is_job(&service.name) {
             if container.status != "exited" || container.exit_code != 0 {
@@ -190,6 +209,9 @@ mod tests {
                 status: "running".into(),
                 exit_code: 0,
                 health: Some("healthy".into()),
+                memory_limit: 0,
+                nano_cpus: 0,
+                pids_limit: None,
             })
             .collect()
     }
@@ -222,6 +244,23 @@ mod tests {
         assert!(check(&plan, "owned", &containers).is_err());
         let mut containers = running(&plan);
         containers[0].project = "bystander".into();
+        assert!(check(&plan, "owned", &containers).is_err());
+    }
+
+    #[test]
+    fn missing_or_changed_docker_resource_limits_fail_health() {
+        let mut plan = plan();
+        let service = &mut plan.services[0];
+        service.overrides.memory_limit_bytes = Some(512 * 1024 * 1024);
+        service.overrides.cpu_limit_millicores = Some(2000);
+        service.overrides.pids_limit = Some(512);
+        let mut containers = running(&plan);
+        assert!(check(&plan, "owned", &containers).is_err());
+        containers[0].memory_limit = 512 * 1024 * 1024;
+        containers[0].nano_cpus = 2_000_000_000;
+        containers[0].pids_limit = Some(512);
+        assert!(check(&plan, "owned", &containers).is_ok());
+        containers[0].nano_cpus = 1_000_000_000;
         assert!(check(&plan, "owned", &containers).is_err());
     }
 

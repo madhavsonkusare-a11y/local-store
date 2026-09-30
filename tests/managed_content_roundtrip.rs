@@ -51,7 +51,7 @@ fn shared_content_driver_on_flatnotes() {
     );
     let _ = std::fs::remove_file(&state);
     let evidence = result.expect("managed qualification could run");
-    let output = root.join("docs/evidence/flatnotes-managed-content-2026-09-28.json");
+    let output = root.join("docs/evidence/flatnotes-managed-content-2026-09-30.json");
     std::fs::write(&output, format!("{}\n", evidence.to_json())).expect("evidence written");
     assert!(
         evidence.passed,

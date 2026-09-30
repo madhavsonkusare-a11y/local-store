@@ -5,9 +5,9 @@
     {
       "id": "flatnotes",
       "manifest": "src/templates/flatnotes.json",
-      "manifest_sha256": "30bc6a58ca97341c17b92e579026ef194d1fc93352d8473de5729b128eda6bd2",
-      "evidence": "docs/evidence/flatnotes-managed-content-2026-09-28.json",
-      "evidence_sha256": "8055c8e7475cf09b3d99706df2850695e986eb2f47905a23dd4f5ef2827328b8",
+      "manifest_sha256": "66ce24eb18af14d1361902ec3a2e6ecd725a0ed14a765a4bb74ce8fbcfe641fa",
+      "evidence": "docs/evidence/flatnotes-managed-content-2026-09-30.json",
+      "evidence_sha256": "e9e3e54969e712f45934167da1628f99e2a3cde412839a36f3660ce2e84c8d3f",
       "probe": "scripts/content-roundtrip-probe.mjs",
       "task": "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall"
     },

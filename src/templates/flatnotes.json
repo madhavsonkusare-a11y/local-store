@@ -10,7 +10,7 @@
   "documentation_url": "https://github.com/Dullage/flatnotes#configuration",
   "verified_at": "2026-09-10",
   "version": "v5.5.5",
-  "lifecycle_proof": "docs/evidence/flatnotes-qualification.json",
+  "lifecycle_proof": "docs/evidence/flatnotes-managed-content-2026-09-30.json",
   "origin": {
     "importer": "runtipi",
     "repository": "runtipi/runtipi-appstore",
@@ -70,5 +70,14 @@
   "config": {
     "path": "apps/flatnotes/config.json",
     "content": "{\n  \"$schema\": \"../app-info-schema.json\",\n  \"name\": \"flatnotes\",\n  \"available\": true,\n  \"exposable\": true,\n  \"dynamic_config\": true,\n  \"id\": \"flatnotes\",\n  \"port\": 8137,\n  \"tipi_version\": 42,\n  \"version\": \"v5.5.5\",\n  \"categories\": [\"utilities\"],\n  \"description\": \"A self-hosted, database-less note taking web app that utilises a flat folder of markdown files for storage.\",\n  \"short_desc\": \"A self-hosted, database-less note taking web app\",\n  \"author\": \"Dullage\",\n  \"source\": \"https://github.com/Dullage/flatnotes\",\n  \"website\": \"https://demo.flatnotes.io/\",\n  \"form_fields\": [\n    {\n      \"type\": \"text\",\n      \"label\": \"Flatnotes Auth Type\",\n      \"hint\": \"Either `password` or `totp` for 2FA\",\n      \"placeholder\": \"password\",\n      \"required\": true,\n      \"env_variable\": \"FLATNOTES_AUTH_TYPE\"\n    },\n    {\n      \"type\": \"text\",\n      \"label\": \"Flatnotes Username\",\n      \"min\": 2,\n      \"required\": true,\n      \"env_variable\": \"FLATNOTES_USERNAME\"\n    },\n    {\n      \"type\": \"text\",\n      \"label\": \"Flatnotes Password\",\n      \"min\": 5,\n      \"required\": true,\n      \"env_variable\": \"FLATNOTES_PASSWORD\"\n    },\n    {\n      \"type\": \"random\",\n      \"label\": \"FLATNOTES_SECRET_KEY\",\n      \"min\": 32,\n      \"env_variable\": \"FLATNOTES_SECRET_KEY\"\n    },\n    {\n      \"type\": \"random\",\n      \"label\": \"FLATNOTES_TOTP_KEY\",\n      \"min\": 32,\n      \"env_variable\": \"FLATNOTES_TOTP_KEY\"\n    }\n  ],\n  \"supported_architectures\": [\"arm64\", \"amd64\"],\n  \"created_at\": 1691943801422,\n  \"updated_at\": 1788001853870,\n  \"min_tipi_version\": \"4.5.0\"\n}\n"
-  }
+  },
+  "resource_limits": [
+    {
+      "service": "flatnotes",
+      "memory_bytes": 536870912,
+      "cpu_millicores": 2000,
+      "pids": 512,
+      "reason": "The managed-engine proof peaked near 59 MB; this ceiling leaves ample room for larger note collections while bounding a runaway service."
+    }
+  ]
 }

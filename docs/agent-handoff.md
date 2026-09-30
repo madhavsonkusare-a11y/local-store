@@ -21,6 +21,12 @@ and download task](evidence/immich-managed-photo-2026-09-30.json) with 21/21
 steps through both transitions. The curated validator is **10/10**. This clears
 the selected-app proof count, not the full V1 release gate. Keep 52 current offerings and the 100-app planning
 roster as discovery/replacement pools rather than treating them as verified.
+Q02 now has its first enforced resource ceiling: Flatnotes' reviewed plan caps
+one service at 512 MiB, 2 CPUs and 512 PIDs. Its [new managed task proof](evidence/flatnotes-managed-content-2026-09-30.json)
+passed 18/18 steps; all-service checks read Docker's actual memory, CPU and PID
+configuration after install, restart and keep-data reinstall. The previous
+Flatnotes evidence is historical. The other nine release apps still need
+app-specific limits and fresh proofs before Q02 can close.
 Work is split into non-overlapping lanes: E01 reproducible bundled-engine
 payload, A03 bounded agent management tools, F03 approved V2 screen integration,
 and one managed-engine qualification worker. E01's dated Ubuntu snapshot produced
