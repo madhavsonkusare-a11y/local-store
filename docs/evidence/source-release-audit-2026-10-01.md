@@ -44,7 +44,8 @@ it does not disable a detection rule or skip a source directory.
 The candidate source scan passes with zero unexcluded findings. An inert
 GitHub-token fixture at the same candidate metadata path remains detected,
 proving that the exceptions do not exclude the whole file. The exact final
-tagged snapshot is scanned again before publication. This scanner result is
+tagged snapshot was scanned again before publication with zero findings. The
+downloaded published ZIP also passes the scan. This scanner result is
 bounded detection evidence, not a guarantee that no possible secret exists.
 
 ## Targeted validation
@@ -61,6 +62,11 @@ bounded detection evidence, not a guarantee that no possible secret exists.
 
 The source-only tag is outside the existing `v*` installer workflow trigger.
 Publication uses the saved [release notes](../releases/source-v1.0.0.md).
-After publication, the final verification record will identify the actual tag,
-commit, generated ZIP/tar.gz inventory and release asset list. The post-release
-completion update belongs on `main`; the published source tag stays immutable.
+The [final verification record](source-release-verification-2026-10-01.json)
+identifies the actual tag, commit, generated ZIP/tar.gz inventory and release
+asset list. Every file in both downloads matches its committed Git blob,
+independent of Windows archive line-ending conversion. Published-source secret
+and icon checks pass. Catalog generation was checked in the full checkout;
+it intentionally requires Git history for first-party provenance and cannot run
+in a plain extracted archive. Committed generated data is present for building.
+The post-release completion update belongs on `main`; the published tag stays immutable.

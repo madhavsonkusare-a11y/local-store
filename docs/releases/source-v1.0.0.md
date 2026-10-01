@@ -43,6 +43,12 @@ and contribution checks, read the
 [contributor guide](https://github.com/madhavsonkusare-a11y/local-store/blob/source-v1.0.0/CONTRIBUTING.md)
 and [publishing guide](https://github.com/madhavsonkusare-a11y/local-store/blob/source-v1.0.0/PUBLISH.md).
 
+Source archives already contain the generated catalog and icons. Catalog
+regeneration and provenance checks require a full Git checkout, because they
+record the last commit that changed each first-party definition. Use a full
+clone for those developer checks; regeneration is not needed to build the
+launcher from the archives.
+
 ## Current limits
 
 Fresh-PC engine bootstrap and consent, complete V2 flows, agent content access,

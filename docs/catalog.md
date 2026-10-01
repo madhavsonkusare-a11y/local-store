@@ -26,7 +26,13 @@ separate from the licenses of the imported catalog material.
 
 ## Reproduce or refresh
 
-Requires Python 3.10+ and the pinned parser in `scripts/requirements-catalog.txt`.
+Requires Python 3.10+, the pinned parser in `scripts/requirements-catalog.txt`,
+and a full Git checkout. Generation records the last commit that changed each
+first-party definition; ZIP/tar.gz source downloads and shallow clones cannot
+supply that history. Source archives already include the generated catalog
+and icons for building the launcher; do not regenerate them just to build.
+For catalog contribution checks, clone the repository without `--depth` and
+check out the desired source tag or branch.
 Normal generation and validation do not use the network.
 
 ```sh

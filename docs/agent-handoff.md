@@ -3,18 +3,28 @@
 Updated October 1, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
 
-## October 1 source release preparation
+## October 1 source release complete — 100%
 
-The owner authorized completing the source-only release. G02 source review and
-G03 saved notes/tag preparation are complete; G04 publication/archive
-verification follows the final exact-source scan. Use `source-v1.0.0` outside
-the `v*` installer workflow and the [saved notes](releases/source-v1.0.0.md).
-[Audit evidence](evidence/source-release-audit-2026-10-01.md) records the checks,
-corrected embedded-source build, narrow scanner exceptions, missing CapRover
-license preservation and eight undeclared-license artwork replacements. No
-Windows product row closed: active product progress remains 9/31 (29.0%).
-Preserve the owner's unstaged `CHANGELOG.md`. Keep the published source tag
-immutable and record G04 completion in a follow-up commit on `main`.
+G01–G04 are DONE. The owner authorized publication, and
+[source-v1.0.0](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0)
+is public/latest at audited commit `a53e370`; the annotated tag remains immutable.
+Both downloaded ZIP/tar.gz have 2,700 files matching committed Git blob hashes,
+with identical SHA-256 content inventories. There are zero uploaded binary
+assets, installer files or private-key files. The published ZIP passes secret
+and icon validation; catalog generation passed in the full checkout and needs
+Git history. Archives contain the committed generated data, so building does
+not require regeneration. [Verification JSON](evidence/source-release-verification-2026-10-01.json)
+records the actual release, tag, commit and observed archive hashes.
+[Audit evidence](evidence/source-release-audit-2026-10-01.md) records the
+corrected embedded-source build, narrow scanner exceptions, CapRover license
+preservation and eight unlicensed artwork replacements using existing monograms.
+
+Windows product progress remains **9/31 (29.0%)**. Next prioritize E03's owned
+engine setup/consent and recovery in the approved V2 flow; E01's independent
+engine provenance review and Q02's remaining nine resource ceilings are also
+open. Agent content access and complete V2 workflows remain unfinished. Keep
+Docker proof runs serial on this host. Preserve the owner's unstaged
+`CHANGELOG.md`; do not recreate this source release or move its tag.
 
 ## September 30 release-scope correction
 

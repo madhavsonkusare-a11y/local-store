@@ -10,7 +10,7 @@ The product goal is a Windows desktop app store that installs supported self-hos
 opens them in native windows, manages its own container engine, and gives
 agents controlled access to the store and installed apps. The source is
 already public on [GitHub](https://github.com/madhavsonkusare-a11y/local-store).
-The next **V1 GitHub milestone is source-only**: a tagged source release with
+The **V1 GitHub milestone is published as a source-only release**: a tagged snapshot with
 accurate docs, license/notices, and a reviewed source archive. It has no Windows
 installer or automatic update channel. The Windows product remains active
 development after that source milestone; its functional gates below are not
@@ -49,8 +49,8 @@ later evidence and task completions are recorded below:
 The generic app proof demonstrates startup, an actionable page, persistence and
 cleanup. It does not establish that every app can finish a real task. Some
 individual recipes/probes have stronger evidence; inspect them separately.
-The public-repository goal is already complete; the tagged source-only V1
-release is not yet published. In the separate Windows-product roadmap below,
+The public repository and [tagged source-only V1 release](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0)
+are complete. In the separate Windows-product roadmap below,
 **9 of 31 active rows are DONE (29.0%)**. Two qualification rows now close
 because all 10 selected apps have current managed-engine lifecycle and
 meaningful-task evidence. Five signing/update rows are deferred, not completed,
@@ -72,23 +72,24 @@ Use one bounded batch at a time. Do not run concurrent Docker qualifications.
 
 ## Source-only V1 GitHub release gate
 
-This is the **only publication gate for the next V1 tag**. The repository is
-already public, but a tagged V1 source release has not been made. The `v*`
-tag workflow currently builds and publishes a Windows installer, so the
-source-only procedure uses a `source-v1.0.0` tag (or another reviewed prefix
-outside `v*`) until that workflow is changed. Do not publish a binary by
-accident. See [PUBLISH.md](../PUBLISH.md) for the procedure.
+This publication gate is **complete** for
+[source-v1.0.0](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0),
+published October 1 at `a53e370d6b6280eb3d54978ce92e94a932450025`.
+The tag is outside the `v*` installer workflow and remains immutable.
+See [verification evidence](evidence/source-release-verification-2026-10-01.json)
+and [PUBLISH.md](../PUBLISH.md). Future source releases need a newly reviewed
+commit and tag, without implying Windows product completion.
 
 | ID | Status | Acceptance |
 | --- | --- | --- |
 | G01 | DONE | [GitHub repository](https://github.com/madhavsonkusare-a11y/local-store) is public, with `main` as the default branch; verified September 30. This is source visibility, not a V1 tag. |
-| G02 | DONE | [October 1 source audit](evidence/source-release-audit-2026-10-01.md) reviews secrets, notices, build instructions and limitations. Pinned Gitleaks with narrow metadata exceptions passes; 512 Rust dependency licenses pass. Eight undeclared-license icons use existing monograms, CapRover's original license is preserved, and corrected embedded-source build/CLI, 12 catalog tests, icon/catalog checks and 10-app validation pass. Final tagged-tree scanning precedes publication. |
+| G02 | DONE | [October 1 source audit](evidence/source-release-audit-2026-10-01.md) reviews secrets, notices, build instructions and limitations. Pinned Gitleaks passes on the final tagged source; 512 Rust dependency licenses pass. Eight undeclared-license icons use existing monograms, CapRover's original license is preserved, and corrected embedded-source build/CLI, 12 catalog tests, icon/catalog checks and 10-app validation pass. [Published-source verification](evidence/source-release-verification-2026-10-01.json) records the final result. |
 | G03 | DONE | Saved [V1 source release notes](releases/source-v1.0.0.md) and selected `source-v1.0.0`, outside the `v*` installer workflow. The owner's October 1 request to complete the source release authorizes publication. The annotated tag records the exact reviewed source commit. No installer, signing key or updater endpoint is needed. |
-| G04 | TODO | Publish the GitHub Release, verify its tag resolves to the reviewed commit, inspect the generated source archives and release text, and confirm no installer asset was attached. |
+| G04 | DONE | [GitHub Release](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0) is public and latest, at audited commit `a53e370`. Both downloaded ZIP and tar.gz contain exactly 2,700 files; every file matches its committed Git blob. Notes match the saved Markdown, uploaded asset count is zero, and no installer or private-key file is in either archive. The published ZIP passes secret and icon checks; catalog generation was checked in the full checkout because it requires Git history. [Machine-readable proof](evidence/source-release-verification-2026-10-01.json) records tag/commit, archive hashes and inventory. |
 
-**Source-release progress: 3/4 DONE (75%).** The percentage is deliberately
-separate from the Windows-product roadmap below. The source milestone may
-finish while the engine, V2 UI and agent access remain in development.
+**Source-release progress: 4/4 DONE (100%).** The percentage is deliberately
+separate from the Windows-product roadmap below. The source milestone is
+complete; engine setup, complete V2 flows and agent access remain in development.
 
 ## 0 — Integration and scope
 
@@ -192,10 +193,8 @@ or HTTPS update channel is needed to publish the source milestone.
 
 ## Recommended execution order
 
-1. Complete G02 source audit and release notes; use the source-only tag and
-   GitHub verification in G03–G04 after owner authorization. Do not wait for
-   signing keys, the bundled-engine installer or agent integration to publish
-   this source milestone.
+1. G01–G04 are complete. Keep `source-v1.0.0` immutable; its source-publication
+   evidence does not certify a Windows installer or complete product flows.
 2. Continue E01–E04 and Q02 for the usable Windows product. Q03/Q04's 10-app
    managed task proof is complete; keep it fresh when definitions or images move.
 3. Complete A02–A08, C03–C05 and F02–F04 for the approved V2 experience and

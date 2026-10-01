@@ -19,7 +19,8 @@ and native dialogs with keyboard and reduced-motion support.
 See the [refined brand deck](branding/brand-deck.html) and
 [identity guidelines](branding/README.md).
 
-The repository is public, but the planned **V1 GitHub Release is source-only**.
+The [V1 GitHub Release](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0)
+is **source-only**.
 It has no Windows installer or automatic updater. The Windows product is still
 in development: ten selected apps have managed-engine lifecycle and
 meaningful-task proof, while the bundled-engine setup, complete V2 interface
@@ -114,7 +115,7 @@ Compatibility (one release): previous registry locations and launch links are im
 - [x] **GUI parity with CLI** — icon, compose, and health inputs; per-row Remove button; app icon + 🐳 compose badge in the launcher
 - [x] **macOS `localstore://`** registered via bundle `Info.plist` (`CFBundleURLTypes`)
 
-### v0.4 (shipped ✅ — current release)
+### v0.4 (shipped ✅ — previous binary release)
 - [x] **Embedded app catalog** — 1,257 self-hosted app entries bundled into the binary
 - [x] **Catalog-backed setup wizard** — browse and configure catalog apps from the launcher
 - [x] **Reference recipe data** — 12 curated entries document Compose and health-check metadata for future integration

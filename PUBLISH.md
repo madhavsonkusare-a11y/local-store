@@ -1,12 +1,19 @@
 # Release checklist
 
 The [GitHub repository](https://github.com/madhavsonkusare-a11y/local-store)
-is already public. The next V1 milestone is a **source-only GitHub Release**;
+is public. [V1 is published as a source-only GitHub Release](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0);
 it does not publish an installer and needs no Windows code-signing certificate,
 updater key or HTTPS update channel. The Windows-product and signed-update
 checklists below remain for later distribution work.
 
-## Current V1: source-only GitHub Release
+## Published V1: source-only GitHub Release
+
+`source-v1.0.0` is published at audited commit `a53e370`. Both generated source
+archives were downloaded and every file matched its Git blob; no installer
+assets are attached. The [verification record](docs/evidence/source-release-verification-2026-10-01.json)
+contains the actual release identity and observed archive hashes. The procedure
+below records that completed sequence; use a new reviewed tag for a future
+source release instead of recreating or moving this tag.
 
 The existing workflow matches `v*` tags and publishes a Windows installer.
 Use a reviewed source-only tag such as `source-v1.0.0`, which does not match

@@ -1,6 +1,6 @@
 # Parallel V1 execution
 
-The release ledger is [V1_TASKS.md](../V1_TASKS.md). This is a work allocation plan, not a second source of completion status. As of September 30, the source-only GitHub gate is 1/4 DONE; the separate active Windows-product roadmap is 9/31 DONE (29.0%). Five signing/update rows are deferred, not completed. Recalculate from the master ledger after each change; partial implementation does not increment DONE.
+The release ledger is [V1_TASKS.md](../V1_TASKS.md). This is a work allocation plan, not a second source of completion status. As of October 1, the source-only GitHub gate is 4/4 DONE (100%); the separate active Windows-product roadmap is 9/31 DONE (29.0%). Five signing/update rows are deferred, not completed. Recalculate from the master ledger after each change; partial implementation does not increment DONE.
 
 ## Independent lanes
 
@@ -11,7 +11,7 @@ The release ledger is [V1_TASKS.md](../V1_TASKS.md). This is a work allocation p
 | Agent access | A02–A05, later A06/A08 | Durable policy, authenticated MCP gateway, reviewed providers, denial and revocation proof | Keep grants and identity server-side; real provider proof needs installed apps |
 | GitHub/catalog | C01–C02/C04 and provenance review | Bounded, pinned source inspection, measured importer coverage, preview contract | Offline work independent of WSL; no automatic approval of a repository URL |
 | Product contracts | F02, C05, A07 | Typed backend projections and state contracts | Approved V2 handoff is the active interface; there is no V3 gate |
-| Source publication | G02–G04 | Audited source, notes, source-only tag and verified GitHub Release | Existing `v*` workflow publishes an installer; use a source-only tag prefix |
+| Source publication (complete) | G01–G04 | Published `source-v1.0.0`, audited source and verified archives | Keep the tag immutable; evidence does not close Windows product work |
 | Later Windows delivery | R04–R05; S01–S05 deferred | Clean product run, then optional signed/update distribution | Signing inputs are not needed for the source-only V1 tag |
 
 Assign file ownership per batch and give each agent a narrow acceptance test. Agents can develop probes, policy, source inspection and UI contracts concurrently; one integrator reviews conflicts and updates the sole ledger after evidence lands. Treat Cargo.toml/Cargo.lock, central commands, docs/V1_TASKS.md and docs/agent-handoff.md as integration-owned files to avoid simultaneous edits. Run one Rust compile/test batch after code lanes settle instead of contending for the target directory.
@@ -35,4 +35,4 @@ mocked test is never a managed-engine qualification.
 
 ## Next milestone
 
-Next finish G02's source review and G03 release notes before the owner authorizes a source-only tag. Continue engine packaging, approved V2 flows and agent access on independent files; the 10-app managed task gate already passes. Only one Docker qualification runs on the shared host at a time. Keep source-publication progress separate from the Windows-product roadmap and do not count deferred signing work as done.
+The source-only GitHub milestone is complete. Next finish owned engine setup/consent and recovery, engine provenance review, approved V2 flows and agent access on independent files; the 10-app managed task gate already passes. Only one Docker qualification runs on the shared host at a time. Keep source-publication progress separate from the Windows-product roadmap and do not count deferred signing work as done.

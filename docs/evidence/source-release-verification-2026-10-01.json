@@ -1,0 +1,75 @@
+{
+  "archives": [
+    {
+      "bytes": 31028039,
+      "downloaded_filename": "local-store-source-v1.0.0.zip",
+      "every_file_matches_committed_git_blob": true,
+      "file_count": 2700,
+      "file_sha256_inventory_digest": "121136efc9ba59e482e967507ffe9a82946bc634d691b9c1953e9f5d5e12382b",
+      "format": "zip",
+      "installer_or_private_key_files": [],
+      "sha256_observed": "8e9b9f40c902776996d0960740168d13ba509ae0d812a3bb8f63548865204228"
+    },
+    {
+      "bytes": 29699051,
+      "downloaded_filename": "local-store-source-v1.0.0.tar.gz",
+      "every_file_matches_committed_git_blob": true,
+      "file_count": 2700,
+      "file_sha256_inventory_digest": "121136efc9ba59e482e967507ffe9a82946bc634d691b9c1953e9f5d5e12382b",
+      "format": "tar.gz",
+      "installer_or_private_key_files": [],
+      "sha256_observed": "b6a7e8a29bae8e9ec32459fcae8597f549b4e5c9602415c23acecd56d3203d4b"
+    }
+  ],
+  "commit": "a53e370d6b6280eb3d54978ce92e94a932450025",
+  "file_count": 2700,
+  "file_sha256_inventory_digest": "121136efc9ba59e482e967507ffe9a82946bc634d691b9c1953e9f5d5e12382b",
+  "notes": "Observed archive hashes identify these downloads. Published files are matched to committed Git blob hashes, independent of Windows core.autocrlf conversion. The release tag is immutable; completion documentation follows on main.",
+  "release": {
+    "draft": false,
+    "id": 400633465,
+    "latest": true,
+    "notes_match_saved_source": true,
+    "notes_sha256_normalized": "3c7c6d33e92541589d9218d0461eb5dc84d15de6d6e654702d780b4adf18daf9",
+    "prerelease": false,
+    "published_at": "2026-10-01T03:45:53Z",
+    "updated_at": "2026-10-01T03:57:25Z",
+    "uploaded_assets": [],
+    "url": "https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0"
+  },
+  "repository": "madhavsonkusare-a11y/local-store",
+  "schema_version": 1,
+  "scope": "V1 source-only GitHub Release; Windows product remains in development",
+  "secret_scan": {
+    "default_rules_enabled": true,
+    "exit_code": 0,
+    "ignore_inline_allow_comments": true,
+    "max_archive_depth": 2,
+    "project_config": ".gitleaks.toml",
+    "published_zip_exit_code": 0,
+    "published_zip_unexcluded_findings": 0,
+    "same_metadata_path_credential_detection_fixture_passed": true,
+    "scanner": "Gitleaks",
+    "scope": "exact committed source archive before publication, and downloaded published ZIP after publication",
+    "unexcluded_findings": 0,
+    "version": "8.30.1",
+    "windows_x64_zip_sha256": "d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e"
+  },
+  "tag": "source-v1.0.0",
+  "tag_object": "ef6f1c7453ada230945120a6e791975c1279d98c",
+  "tree": "a953be2d2478f814352d25b523d0da8e7413f7ed",
+  "validation": {
+    "archive_catalog_regeneration": "Requires full Git history for first-party definition provenance; not available in extracted archives. Committed generated catalog and icons are included for building.",
+    "bundled_icon_count": 1678,
+    "catalog_pipeline_check_scope": "full Git checkout before publication",
+    "catalog_pipeline_current": true,
+    "catalog_tests_passed": 12,
+    "installer_tag_workflow_triggered": false,
+    "published_zip_icon_validation_passed": true,
+    "rust_dependency_license_count": 512,
+    "source_build_version_check": "local-store 0.5.0-1",
+    "task_qualified_apps": 10,
+    "undeclared_icon_license_count": 0
+  },
+  "verification_date": "2026-10-01"
+}
