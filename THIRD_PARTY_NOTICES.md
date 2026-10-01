@@ -17,6 +17,7 @@ Every generated project includes original listing URLs and upstream revisions.
 | Runtipi app-store contributors, [repository](https://github.com/runtipi/runtipi-appstore) | [GPL-3.0](catalog/notices/runtipi/LICENSE) |
 | IceWhale Technology and CasaOS/ZimaOS app-store contributors, [repository](https://github.com/IceWhaleTech/CasaOS-AppStore) | [Apache-2.0](catalog/notices/casaos/LICENSE) |
 | Coolify contributors, [repository](https://github.com/coollabsio/coolify) | [Apache-2.0](catalog/notices/coolify/LICENSE) |
+| CapRover one-click app contributors, [repository](https://github.com/caprover/one-click-apps) | [Apache-2.0](catalog/notices/caprover/LICENSE); source revision and archive digest are recorded in `catalog/import-audit-sources.json` |
 
 Adapted awesome-selfhosted material remains available under CC-BY-SA-3.0;
 adapted Runtipi material remains available under GPL-3.0. Consult each preserved
@@ -36,10 +37,12 @@ upstream app, independently of these data licenses.
   remain the property of their respective owners; inclusion implies no endorsement.
 - App artwork from an app's own repository: Paperclip's logo, Paperclip AI,
   [MIT](catalog/notices/paperclip/LICENSE), pinned in `catalog/icon-sources.lock.json`.
-- App artwork from the [Umbrel app gallery](https://github.com/getumbrel/umbrel-apps-gallery):
-  eight icons. That repository declares no licence, so they are recorded as
-  `NOASSERTION`; see [its notice](catalog/notices/umbrel-apps-gallery/NOTICE.md) before any
-  broad redistribution.
+- The [Umbrel app gallery](https://github.com/getumbrel/umbrel-apps-gallery)
+  remains a recorded research source with `NOASSERTION`. Its eight formerly
+  imported icons were replaced with Local Store monograms before the V1 source
+  release. No artwork from that source remains in the current icon manifest.
+  [The historical notice](catalog/notices/umbrel-apps-gallery/NOTICE.md) is
+  retained; the icon validator and refresh exclude undeclared licenses.
 - Monogram icons for apps no source covers are drawn by Local Store from glyph
   outlines of Instrument Sans, The Instrument Sans Project Authors,
   [SIL Open Font License 1.1](src/fonts/InstrumentSans-OFL.txt).
@@ -53,7 +56,7 @@ upstream app, independently of these data licenses.
 
 ## Rust dependencies
 
-Local Store links 495 Rust crates. Every one declares an SPDX license, and
+The locked Rust dependency graph declares SPDX licenses, and
 `scripts/check-licenses.py` fails the build if any of them cannot be
 redistributed under a permissive choice — an upstream bump introducing a GPL or
 AGPL dependency stops the build rather than changing what may be shipped

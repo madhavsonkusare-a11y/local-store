@@ -55,12 +55,19 @@ for current evidence and release status.
 
 ## Build
 
-```bash
-# Rust + Tauri v2 toolchain required
-cargo tauri build          # produces release binary + installer
-# or just run it:
-cargo run
+On Windows x64, install Rust, Visual Studio C++ Build Tools and the WebView2
+runtime. The repository selects its Rust version through `rust-toolchain.toml`.
+Run the source with its committed interface embedded:
+
+```powershell
+cargo run --locked --release --features tauri/custom-protocol --bin local-store
 ```
+
+Docker Desktop or an explicitly configured Local Store managed engine is
+needed for app installation. Engine setup on a fresh PC is still in development.
+For an optional local installer with the MCP sidecar, follow
+[the local preview build procedure](PUBLISH.md#unsigned-local-windows-preview).
+The V1 source release does not include that installer.
 
 Add your own connection through the launcher or CLI:
 
@@ -131,9 +138,10 @@ and [catalog contribution guide](docs/catalog.md).
 
 ## Security and privacy
 
-Local Store makes no network requests of its own beyond the addresses you
-configure: no account, no telemetry, no analytics, and the catalog is browsed
-entirely offline. [Security and privacy](docs/security-and-privacy.md) covers
+Browsing the bundled catalog is entirely offline. Local Store has no account,
+telemetry or analytics. Explicit installs pull images, app windows load their
+pages, and opt-in GitHub inspection contacts GitHub's public API.
+[Security and privacy](docs/security-and-privacy.md) covers
 what is stored, the boundaries the app enforces, what it does **not** protect
 you from, and how to report a vulnerability.
 

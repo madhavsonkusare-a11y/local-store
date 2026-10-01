@@ -1,11 +1,12 @@
 # Documentation
 
 Start with [V1 release tasks](V1_TASKS.md), then the [agent handoff](agent-handoff.md).
-Only the master ledger owns task status and release scope. Updated September 30, 2026.
+Only the master ledger owns task status and release scope. Updated October 1, 2026.
 
 | Area | Read | Purpose |
 | --- | --- | --- |
 | Release | [V1 tasks](V1_TASKS.md), [Hermes traceability](upgrade-status.md), [publishing](../PUBLISH.md) | Current commitments, original 33-task mapping, release procedure |
+| Source milestone | [V1 source release notes](releases/source-v1.0.0.md) | Tagged source snapshot, build instructions, current capabilities and limits |
 | Next session | [Agent handoff](agent-handoff.md) | Exact checkout state, next bounded work, validation and known blockers |
 | Architecture | [Backend coverage](backend-app-coverage-plan.md), [command contract](command-contract.md) | Reused installation pipeline and frontend/backend semantics |
 | Detailed plans | [Managed engine](plans/bundled-engine.md), [qualification](plans/qualification.md), [agent access](plans/agent-access.md), [parallel execution](plans/parallel-v1-execution.md) | Implementation detail and work allocation subordinate to the master ledger |

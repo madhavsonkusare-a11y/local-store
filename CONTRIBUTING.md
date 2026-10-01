@@ -4,12 +4,23 @@ Local Store is small by design. Contributions welcome.
 
 ## Dev setup
 
-```bash
-# Rust + Tauri v2 toolchain
-cargo install tauri-cli --version "^2" --locked
-cargo run            # launches the launcher
-cargo tauri build    # release binary + installer in target/release/bundle
+Windows x64 development needs Rust (the repository pins the toolchain in
+`rust-toolchain.toml`), Visual Studio C++ Build Tools and the WebView2 runtime.
+Docker Desktop or an explicitly configured Local Store managed engine is
+needed to install apps; it is not needed just to compile the launcher.
+
+```powershell
+# Compile and launch with the committed interface embedded.
+cargo run --locked --release --features tauri/custom-protocol --bin local-store
+
+# Optional browser-only UI preview; backend commands are unavailable here.
+npm run preview
 ```
+
+For an optional local Windows installer with its MCP sidecar, install the
+same CLI version as CI (`cargo install tauri-cli --version "=2.11.4" --locked`)
+and follow [the local preview build procedure](PUBLISH.md#unsigned-local-windows-preview).
+The V1 GitHub Release contains source archives only.
 
 ## Conventions
 
@@ -35,11 +46,15 @@ validation commands and current limitations without requiring chat history.
 
 ## Current focus
 
-The integrated baseline has 52 offerings. V1 requires a managed container
-engine, 100 distinct accepted apps, controlled agent access across the roster,
-owner-led V3, signed Windows delivery and an automatic updater. Use the master
-ledger rather than historical phase notes to choose a task. Reuse the existing
-runtime and adapters; do not promote imported definitions automatically.
+The baseline has 52 offerings and 1,678 discovery entries. The source-only V1
+GitHub milestone requires audited source, accurate docs and a verified tag;
+signing and updates belong to later Windows distribution. The Windows product
+targets ten task-verified apps, a managed container engine, the approved V2
+interface and controlled agent access. The ten-app proof count passes, while
+complete engine setup, interface flows and agent content access remain active
+work. Use the master ledger rather than historical phase notes to choose a
+task. Reuse the existing runtime and adapters; do not promote imported
+definitions automatically.
 
 See the [documentation index](docs/README.md). Keep detailed plans under
 `docs/plans`, unapproved studies under `docs/research`, and the handoff short.

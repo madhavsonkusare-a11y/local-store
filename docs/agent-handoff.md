@@ -1,7 +1,20 @@
 # Agent handoff
 
-Updated September 30, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
+Updated October 1, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
+
+## October 1 source release preparation
+
+The owner authorized completing the source-only release. G02 source review and
+G03 saved notes/tag preparation are complete; G04 publication/archive
+verification follows the final exact-source scan. Use `source-v1.0.0` outside
+the `v*` installer workflow and the [saved notes](releases/source-v1.0.0.md).
+[Audit evidence](evidence/source-release-audit-2026-10-01.md) records the checks,
+corrected embedded-source build, narrow scanner exceptions, missing CapRover
+license preservation and eight undeclared-license artwork replacements. No
+Windows product row closed: active product progress remains 9/31 (29.0%).
+Preserve the owner's unstaged `CHANGELOG.md`. Keep the published source tag
+immutable and record G04 completion in a follow-up commit on `main`.
 
 ## September 30 release-scope correction
 

@@ -22,7 +22,8 @@ These actions also involve the network:
 
 | Action | What happens |
 | --- | --- |
-| Installing a reviewed recipe | Docker pulls the pinned image from its registry. The future managed-engine bootstrap is not implemented yet. |
+| Installing a reviewed recipe | The selected Docker engine pulls pinned images from their registries. The development managed engine imports a reviewed local rootfs; a complete fresh-PC setup flow remains unfinished. |
+| Opt-in GitHub source inspection | The Rust backend contacts GitHub's public API to inspect the requested repository and pin metadata. This does not approve installation or run repository code. |
 | Opening a link that leaves an app | The URL is handed to your default browser, which then does whatever it normally does. |
 | Checking an address | A single TCP connection and one plain HTTP request to the address you typed. |
 | Opening an app window | The embedded browser loads that app's page and resources. Third-party app code may contact additional services according to its own behavior and privacy policy. The launcher's network restriction does not apply to those pages. |
@@ -49,6 +50,10 @@ contains 1,678 entries, each with a local icon or generated monogram.
 - **Browser data** — the platform WebView may retain cookies, caches and web
   storage in its browser profile. Removing a connection deletes its registry
   entry; it does not clear that browser profile or the remote server's data.
+- **Agent policy** — `agent-policy-v1.json` under the Local Store configuration
+  directory contains owner-enrolled credential hashes, scoped grants and bounded
+  redacted audit. Raw bearer credentials are returned at enrollment and must be
+  kept by the owner/client; the policy store does not retain their plaintext.
 - **OS integration** — protocol registrations and requested desktop shortcuts
   are stored by the operating system. Docker also maintains its own images,
   containers and volumes outside the registry directory.
@@ -92,20 +97,22 @@ Each of these is a deliberate boundary with a test behind it.
   most 256 KiB per stream. On timeout or cancellation the process tree Local
   Store created is terminated — never your Docker daemon or unrelated
   containers, which are not in that tree.
-- **Dependency licences are checked.** The build fails if any of the 495 Rust
+- **Dependency licences are checked.** The build fails if any resolved Rust
   dependencies cannot be redistributed under a permissive licence.
 
 ## What this does not protect you from
 
-- **The baseline installers are unsigned and no automatic updater ships yet.**
-  Signed delivery and an updater are now required V1 tasks; verify what you
-  download until that release is actually proven.
+- **The V1 GitHub Release contains source only.** Local Windows previews are
+  unsigned and have no automatic updater. Signing and update distribution are
+  deferred; this source release does not certify an installer.
 - **The apps you run are not audited.** Local Store gives an app a window; it
   does not review that app's own security, authentication or update practices.
   A self-hosted app on your network is as exposed as you configure it to be.
 - **Installation proof is bounded.** Recipes and approved templates carry
   lifecycle evidence, and Memos has historical upgrade evidence. Generic
   first-page checks do not prove every meaningful app task or future upgrade.
+  Ten selected apps have exact-state task proof through restart and keep-data
+  reinstall; the other offerings and future versions do not inherit that proof.
 - **The address check speaks plain HTTP.** An `https://` address is reported as
   "cannot be checked from here" rather than verified; no certificate is
   validated, because no HTTPS request is made.
@@ -115,11 +122,12 @@ Each of these is a deliberate boundary with a test behind it.
   a security boundary against another process running as the same user.
 - **Native privilege review is incomplete.** The Windows release-image smoke
   test proves denial of four launcher commands from a remote page. It does not
-  certify the new agent gateway or future V3; macOS and Linux native proof
+  certify complete agent access or every approved V2 flow; macOS and Linux native proof
   remains outside the Windows release target.
 - **Installer evidence is version-specific.** A clean Windows installer
   run is recorded in `evidence/windows-installer-2026-09-08.json`. The future
-  V1 engine, V3, agent gateway and updater still need their own release proof.
+  Windows engine setup, complete V2 flows and agent access still need their own
+  product release proof; updates are later scope.
 
 ## Reporting a vulnerability
 

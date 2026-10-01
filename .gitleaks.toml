@@ -1,0 +1,30 @@
+title = "Local Store source release audit"
+
+[extend]
+useDefault = true
+
+# These are immutable public Git commit IDs in checksum-pinned source metadata,
+# not Sourcegraph credentials. Keep both the path and exact field/value scoped.
+[[allowlists]]
+description = "Pinned CapRover and Runtipi commit revisions"
+targetRules = ["sourcegraph-access-token"]
+condition = "AND"
+paths = ['''(^|[/\\])catalog[/\\]candidate-queue\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"revision": "(7f1f329125dde0cb915f47c8b33293eca45f7d0e|3c878baaf22361a515abc9fc648d0e4821c6d593)",\s*$''']
+
+[[allowlists]]
+description = "Generated CapRover report's public commit revision"
+targetRules = ["sourcegraph-access-token"]
+condition = "AND"
+paths = ['''(^|[/\\])docs[/\\]caprover-import-report\.md$''']
+regexTarget = "secret"
+regexes = ['''^7f1f329125dde0cb915f47c8b33293eca45f7d0e$''']
+
+[[allowlists]]
+description = "A declared environment variable name, not its value"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''(^|[/\\])catalog[/\\]candidate-queue\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"key": "CAP_N8N_DIAGNOSTICS_ENABLED",\s*$''']

@@ -17,8 +17,9 @@ Before tagging, review the exact commit for accidental secrets, the launcher
 license and third-party notices, current build instructions and honest feature
 limitations. Prepare release notes in a saved Markdown file. The master
 [source-release gate](docs/V1_TASKS.md#source-only-v1-github-release-gate)
-records the remaining checks. Obtain the owner's publication approval only
-after the source commit, notes and tag name are reviewable.
+records the remaining checks. Publication needs owner authorization; the
+October 1 request to complete this source release supplies it. Keep the exact
+source commit, saved notes and tag name reviewable before publishing.
 
 When the gate is complete and publication is authorized, the source-only
 procedure is:
@@ -32,6 +33,9 @@ gh release view source-v1.0.0
 
 Verify the release tag points to the reviewed commit, inspect the generated
 source archives and notes, and confirm that no installer asset is attached.
+Record the result and G04 completion in a follow-up commit on `main`, preserving
+the already published tag. The [source audit](docs/evidence/source-release-audit-2026-10-01.md)
+and [saved notes](docs/releases/source-v1.0.0.md) provide the preparation evidence.
 This publishes source, not a claim that a fresh Windows computer can already
 install and run every planned V1 feature.
 

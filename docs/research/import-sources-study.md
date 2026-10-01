@@ -246,10 +246,10 @@ reservations and is trivially droppable.
 are the same on every CasaOS installation in the world:
 
 ```
-SECRET_KEY_BASE=a7523c3d0ae56415046ad8abae168d7107
-POSTGRES_PASSWORD=maybe_password
-DB_PASSWORD=difyai123456
-MEILI_MASTER_KEY=change_this_to_a_long_random_strin
+SECRET_KEY_BASE=<upstream-shared-default-redacted>
+POSTGRES_PASSWORD=<upstream-shared-default-redacted>
+DB_PASSWORD=<upstream-shared-default-redacted>
+MEILI_MASTER_KEY=<upstream-shared-default-redacted>
 ```
 
 Any CasaOS importer must treat a credential-shaped literal as a `SecretSpec`

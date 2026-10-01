@@ -35,6 +35,7 @@ ALLOWED_PNG_MIME = ("image/png", "application/octet-stream")
 ACTIVE_ELEMENTS = {"script", "foreignObject", "image", "iframe", "animate", "animateTransform", "set"}
 GRAPHIC_ELEMENTS = {"path", "rect", "circle", "ellipse", "polygon", "polyline", "line", "text", "use"}
 GENERATOR_VERSION = "monogram-v1"
+UNREVIEWED_LICENSES = {None, "", "NONE", "NOASSERTION", "UNLICENSED"}
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -310,6 +311,8 @@ def load_overrides(sources):
     for project_id, override in overrides.items():
         if override.get("source") not in sources:
             raise ValueError(f"Icon override for {project_id} names an unlocked source")
+        if sources[override["source"]].get("license") in UNREVIEWED_LICENSES:
+            raise ValueError(f"Icon override for {project_id} has no reviewed artwork license")
         if not re.fullmatch(r"[A-Za-z0-9._/-]+\.(svg|png)", override.get("path", "")) or ".." in override["path"]:
             raise ValueError(f"Icon override for {project_id} names an unusable path")
     return overrides
@@ -320,6 +323,8 @@ def validate_manifest(manifest, projects, sources):
     if manifest.get("schema_version") != 2 or set(manifest.get("icons", {})) != expected:
         raise ValueError("Icon manifest does not provide exact catalog coverage")
     for project_id, record in manifest["icons"].items():
+        if record.get("license") in UNREVIEWED_LICENSES:
+            raise ValueError(f"Icon has no reviewed artwork license: {project_id}")
         path = record["path"]
         if not re.fullmatch(ICON_PATH, path):
             raise ValueError(f"Invalid cached icon path: {project_id}")
@@ -370,7 +375,8 @@ def main():
     previous = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"icons": {}}
     homarr, umbrel, coolify = (sources[key] for key in ("homarr-dashboard-icons", "umbrel-apps-gallery", "coolify"))
     homarr_paths = {path for path in source_tree(homarr) if re.fullmatch(r"(svg|png)/[^/]+\.(svg|png)", path)}
-    umbrel_paths = {path for path in source_tree(umbrel) if re.fullmatch(r"[a-z0-9-]+/icon\.(svg|png)", path)}
+    umbrel_paths = ({path for path in source_tree(umbrel) if re.fullmatch(r"[a-z0-9-]+/icon\.(svg|png)", path)}
+                    if umbrel.get("license") not in UNREVIEWED_LICENSES else set())
     homarr_aliases = json.loads((ROOT / "catalog/icon-aliases.json").read_text())
     umbrel_aliases = json.loads((ROOT / "catalog/umbrel-icon-aliases.json").read_text())
     supplemental = coolify_icons(coolify)
@@ -400,6 +406,8 @@ def main():
             candidates = matching_old + [candidate for candidate in candidates if candidate not in matching_old]
         errors = []
         for source_key, source, url, match in candidates:
+            if source.get("license") in UNREVIEWED_LICENSES:
+                continue
             suffix = Path(urllib.parse.urlsplit(url).path).suffix.lower()
             path = f"assets/catalog/{entry['id']}{suffix}"
             output = ROOT / "src" / path

@@ -1,6 +1,6 @@
 # Local Store V1 release tasks
 
-Updated September 30, 2026. **This is the only active release task ledger.**
+Updated October 1, 2026. **This is the only active release task ledger.**
 The handoff records the next action; detailed plans explain implementation;
 research documents are proposals, not additional commitments.
 
@@ -82,11 +82,11 @@ accident. See [PUBLISH.md](../PUBLISH.md) for the procedure.
 | ID | Status | Acceptance |
 | --- | --- | --- |
 | G01 | DONE | [GitHub repository](https://github.com/madhavsonkusare-a11y/local-store) is public, with `main` as the default branch; verified September 30. This is source visibility, not a V1 tag. |
-| G02 | PARTIAL | Review the exact tagged source for secrets, licenses/notices, build instructions and truthful current limitations. `LICENSE`, `CONTRIBUTING.md`, `THIRD_PARTY_NOTICES.md` and security/privacy guidance already exist; their presence alone does not complete the release review. |
-| G03 | TODO | Prepare versioned release notes and a source-only tag that does not trigger the `v*` installer workflow. Record the commit and obtain owner authorization for publication. No installer, checksum file for a binary, signing key or updater endpoint is needed. |
+| G02 | DONE | [October 1 source audit](evidence/source-release-audit-2026-10-01.md) reviews secrets, notices, build instructions and limitations. Pinned Gitleaks with narrow metadata exceptions passes; 512 Rust dependency licenses pass. Eight undeclared-license icons use existing monograms, CapRover's original license is preserved, and corrected embedded-source build/CLI, 12 catalog tests, icon/catalog checks and 10-app validation pass. Final tagged-tree scanning precedes publication. |
+| G03 | DONE | Saved [V1 source release notes](releases/source-v1.0.0.md) and selected `source-v1.0.0`, outside the `v*` installer workflow. The owner's October 1 request to complete the source release authorizes publication. The annotated tag records the exact reviewed source commit. No installer, signing key or updater endpoint is needed. |
 | G04 | TODO | Publish the GitHub Release, verify its tag resolves to the reviewed commit, inspect the generated source archives and release text, and confirm no installer asset was attached. |
 
-**Source-release progress: 1/4 DONE (25%).** The percentage is deliberately
+**Source-release progress: 3/4 DONE (75%).** The percentage is deliberately
 separate from the Windows-product roadmap below. The source milestone may
 finish while the engine, V2 UI and agent access remain in development.
 

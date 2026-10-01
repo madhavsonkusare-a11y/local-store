@@ -361,19 +361,9 @@
   "source_counts": {
     "coolify": 81,
     "homarr-dashboard-icons": 669,
-    "local-store-monogram": 919,
-    "paperclip": 1,
-    "umbrel-apps-gallery": 8
+    "local-store-monogram": 927,
+    "paperclip": 1
   },
   "suspicious": [],
-  "umbrel_matches": [
-    "chatbot-ui",
-    "databag",
-    "electrs",
-    "fx",
-    "jupyterlab",
-    "kan",
-    "matter-server",
-    "strix"
-  ]
+  "umbrel_matches": []
 }

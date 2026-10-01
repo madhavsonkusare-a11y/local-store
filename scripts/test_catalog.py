@@ -132,12 +132,13 @@ class CatalogTests(unittest.TestCase):
     def test_icon_overrides_must_name_a_locked_source_and_a_plain_file(self):
         import json, tempfile
         from pathlib import Path as P
-        sources = {"paperclip": {}}
+        sources = {"paperclip": {"license": "MIT"}, "unlicensed": {"license": "NOASSERTION"}}
         original = v2_icons.OVERRIDES
         try:
             with tempfile.TemporaryDirectory() as folder:
                 v2_icons.OVERRIDES = P(folder) / "overrides.json"
                 for override in ({"source": "unlocked", "path": "logo.svg"},
+                                 {"source": "unlicensed", "path": "logo.svg"},
                                  {"source": "paperclip", "path": "../escape.svg"},
                                  {"source": "paperclip", "path": "logo.exe"}):
                     v2_icons.OVERRIDES.write_text(json.dumps({"app": override}))
@@ -147,6 +148,12 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(list(v2_icons.load_overrides(sources)), ["app"])
         finally:
             v2_icons.OVERRIDES = original
+
+    def test_icon_manifest_refuses_unlicensed_artwork_before_publication(self):
+        for license_name in (None, "", "NONE", "NOASSERTION", "UNLICENSED"):
+            manifest = {"schema_version": 2, "icons": {"app": {"license": license_name}}}
+            with self.assertRaisesRegex(ValueError, "no reviewed artwork license"):
+                v2_icons.validate_manifest(manifest, [{"id": "app"}], {})
 
     def test_v2_matching_never_uses_unreviewed_fuzzy_names(self):
         paths = {'netbird/icon.svg', 'reader/icon.svg', 'readwise-reader/icon.svg'}
