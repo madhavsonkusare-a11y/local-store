@@ -53,6 +53,10 @@ candidate acceptance; it does not replace native close/sleep/wake/removal gates.
 Stop only the exact owned worker through `engine stop-supervisor` before relinking
 its running executable. Never stop global WSL or kill processes by broad name.
 
+Implementation commit: `ca5746c` (owned runtime, ten-app access and V2 updates).
+Post-commit catalog generation/check passes with no changed generated files.
+Only the owner's two files remain outside the implementation commit.
+
 Preserve owner's `CHANGELOG.md` and untracked `pnpm-lock.yaml`; they are excluded
 from this implementation batch. Actual checkout: `D:\06 Projects\dockwrap`.
 The sandbox names the old vault path; use an explicit workdir/escalated approval.
