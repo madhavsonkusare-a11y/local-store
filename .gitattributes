@@ -1,6 +1,34 @@
 * text=auto
 # Generated checksums must survive Windows checkouts unchanged.
 *.json text eol=lf
+# Lifecycle receipts hash original probe bytes, including accepted line endings.
+# Preserve them on every platform rather than silently changing the tested source.
+scripts/content-roundtrip-probe.mjs -text
+scripts/gitea-repository-probe.mjs -text
+scripts/immich-photo-probe.mjs -text
+scripts/jellyfin-media-probe.mjs -text
+scripts/kanboard-task-probe.mjs -text
+scripts/memos-content-probe.mjs -text
+scripts/n8n-workflow-probe.mjs -text
+scripts/privatebin-browser-probe.mjs -text
+scripts/uptime-kuma-monitor-probe.mjs -text
+scripts/wordpress-post-probe.mjs -text
+# New candidate task hashes cover exact source bytes on every checkout.
+scripts/linkding-bookmark-probe.mjs text eol=lf
+scripts/picoshare-file-probe.mjs text eol=lf
+# Reviewed browser resource hashes cover the exact accepted bytes.
+providers/privatebin/seccomp_profile.json -text
+# New provider receipts fingerprint exact source bytes across platforms.
+src/agent_content.rs text eol=lf
+src/agent_content/*.rs text eol=lf
+src/agent_data.rs text eol=lf
+src/agent_data/*.rs text eol=lf
+tests/managed_agent_content.rs text eol=lf
+tests/managed_n8n_content.rs text eol=lf
+tests/managed_privatebin_content.rs text eol=lf
+tests/managed_app_api_content.rs text eol=lf
+scripts/app-api-read-fixture.mjs text eol=lf
+providers/privatebin/runner.mjs text eol=lf
 docs/evidence/engine-packages-*.tsv text eol=lf
 *.svg text eol=lf
 # Upstream icon checksums cover the exact downloaded bytes, including newlines.

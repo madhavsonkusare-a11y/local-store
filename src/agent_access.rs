@@ -1,4 +1,4 @@
-//! The installed-app access directory consumed by a future authenticated broker.
+//! Installed-app capability directory; live authorization belongs to the broker.
 //! This module is internal Rust API; it grants no agent or WebView access.
 
 use crate::{
@@ -44,6 +44,7 @@ pub enum RequiredSetup {
     ProviderReview,
     UserLogin,
     CredentialGrant,
+    OwnerGrant,
     Ready,
 }
 
@@ -64,7 +65,7 @@ pub struct AppAccess {
     pub offering_id: Option<String>,
     pub content_access: Option<ContentAccess>,
     pub required_setup: Option<RequiredSetup>,
-    /// There is no agent identity or grant store yet (A02).
+    /// This directory has no authenticated caller; it cannot report their grants.
     pub grant_state: GrantState,
     /// A local address does not establish that the app accepted a login.
     pub login_state: LoginState,
@@ -139,19 +140,50 @@ impl AccessDirectory {
     }
 
     fn describe(&self, app: &InstalledApp) -> AppAccess {
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0, |time| time.as_secs());
+        self.describe_at(app, now)
+    }
+
+    fn describe_at(&self, app: &InstalledApp, now: u64) -> AppAccess {
+        let offering_id = app.catalog_id.as_deref().unwrap_or(&app.id);
         let row = app
             .is_managed()
-            .then(|| self.apps.iter().find(|row| row.offering_id == app.id))
+            .then(|| self.apps.iter().find(|row| row.offering_id == offering_id))
             .flatten();
+        let proven = row.is_some_and(|row| {
+            let actual = crate::agent_provider_evidence::access(offering_id, now);
+            matches!(
+                (row.content_access, actual),
+                (ContentAccess::VerifiedRead, "verified_read")
+                    | (ContentAccess::VerifiedReadWrite, "verified_read_write")
+            )
+        });
         AppAccess {
             installed_id: app.id.clone(),
             display_name: app.display_name.clone(),
             offering_id: row.map(|row| row.offering_id.clone()),
-            content_access: row.map(|row| row.content_access),
-            required_setup: row.map(|row| row.required_setup),
+            content_access: row.map(|row| {
+                if proven {
+                    row.content_access
+                } else {
+                    ContentAccess::Unverified
+                }
+            }),
+            required_setup: row.map(|row| {
+                if proven {
+                    row.required_setup
+                } else {
+                    RequiredSetup::ProviderReview
+                }
+            }),
             grant_state: GrantState::Unavailable,
             login_state: LoginState::Unknown,
-            content_methods: row.map(|row| row.methods.clone()).unwrap_or_default(),
+            content_methods: row
+                .filter(|_| proven)
+                .map(|row| row.methods.clone())
+                .unwrap_or_default(),
             management_tools: vec![StoreTool::GetStatus],
         }
     }
@@ -284,17 +316,35 @@ mod tests {
 
     #[test]
     fn discovery_follows_installed_state_and_does_not_invent_content_access() {
-        let registry =
-            RegistryV2::new(vec![installed("memos", true), installed("external", false)]);
-        let apps = list_from(&registry).unwrap();
+        let directory = AccessDirectory::load().unwrap();
+        let apps: Vec<_> = [installed("memos", true), installed("external", false)]
+            .iter()
+            .map(|app| directory.describe_at(app, 1790940000))
+            .collect();
         assert_eq!(apps.len(), 2);
         assert_eq!(apps[0].offering_id.as_deref(), Some("memos"));
-        assert_eq!(apps[0].content_access, Some(ContentAccess::Unverified));
-        assert!(apps[0].content_methods.is_empty());
+        assert_eq!(
+            apps[0].content_access,
+            Some(ContentAccess::VerifiedReadWrite)
+        );
+        assert_eq!(apps[0].content_methods, vec![ContentMethod::TypedApi]);
         assert_eq!(apps[0].grant_state, GrantState::Unavailable);
         assert_eq!(apps[0].login_state, LoginState::Unknown);
         assert_eq!(apps[1].offering_id, None);
         assert_eq!(apps[1].content_access, None);
+        let expired = directory.describe_at(&installed("memos", true), 1790940000 + 31 * 86400);
+        assert_eq!(expired.content_access, Some(ContentAccess::Unverified));
+        assert!(expired.content_methods.is_empty());
+        let mut alias = installed("memos-owner-copy", true);
+        alias.catalog_id = Some("memos".into());
+        assert_eq!(
+            directory.describe_at(&alias, 1790940000).installed_id,
+            "memos-owner-copy"
+        );
+        assert_eq!(
+            directory.describe_at(&alias, 1790940000).content_access,
+            apps[0].content_access
+        );
     }
 
     #[test]

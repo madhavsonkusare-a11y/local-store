@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790765267,
+  "recorded_at_unix": 1790840980,
   "app": "immich",
   "passed": true,
   "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
@@ -20,30 +20,30 @@
   },
   "first_use": "an administrator uploads an owned photo, finds it by filename, and downloads identical original bytes after restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 26652,
+    "first_start_millis": 360107,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-immich-qualify-17800-1790764991143497900-immich": 1658931118,
-      "local-store-immich-qualify-17800-1790764991143497900-immich-db": 460220006,
-      "local-store-immich-qualify-17800-1790764991143497900-immich-machine-learning": 253965107,
-      "local-store-immich-qualify-17800-1790764991143497900-immich-redis": 14575206
+      "local-store-immich-qualify-17164-1790840496813722600-immich": 1534377066,
+      "local-store-immich-qualify-17164-1790840496813722600-immich-db": 464099737,
+      "local-store-immich-qualify-17164-1790840496813722600-immich-machine-learning": 195454566,
+      "local-store-immich-qualify-17164-1790840496813722600-immich-redis": 9007267
     },
     "peak_memory_bytes": {
-      "local-store-immich-qualify-17800-1790764991143497900-immich": 1658931118,
-      "local-store-immich-qualify-17800-1790764991143497900-immich-db": 460220006,
-      "local-store-immich-qualify-17800-1790764991143497900-immich-machine-learning": 266967449,
-      "local-store-immich-qualify-17800-1790764991143497900-immich-redis": 14575206
+      "local-store-immich-qualify-17164-1790840496813722600-immich": 1534377066,
+      "local-store-immich-qualify-17164-1790840496813722600-immich-db": 464099737,
+      "local-store-immich-qualify-17164-1790840496813722600-immich-machine-learning": 195454566,
+      "local-store-immich-qualify-17164-1790840496813722600-immich-redis": 9007267
     },
-    "peak_total_memory_bytes": 2387691437,
-    "idle_managed_storage_bytes": 5183,
-    "peak_managed_storage_bytes": 5183,
+    "peak_total_memory_bytes": 2202938636,
+    "idle_managed_storage_bytes": 5697,
+    "peak_managed_storage_bytes": 5697,
     "idle_named_volume_bytes": {
-      "immich-db": 326140236,
+      "immich-db": 260208281,
       "immich-ml-cache": 0
     },
     "peak_named_volume_bytes": {
-      "immich-db": 326597935,
-      "immich-ml-cache": 5778
+      "immich-db": 325780158,
+      "immich-ml-cache": 839680
     },
     "image_virtual_bytes": {
       "sha256:143f7bfc2358911d6b36138eabfbfffea46273c5d4b5696d90e5cbf23d633cf8": 151213707,
@@ -145,7 +145,7 @@
     "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
     "source_observed_on": "2026-09-12",
     "images_observed_on": "2026-09-12",
-    "plan_sha256": "fb12025534e378e0ab02d2cdfaeb4be8e28ccf90834d958d19acacc61e04f80e",
+    "plan_sha256": "5e619d2fd4083b01c0a8218a4b1d943aa2e15d01d8d301b592573e58267980e9",
     "requested_images": [
       "ghcr.io/immich-app/immich-server:v3.2.0",
       "ghcr.io/immich-app/immich-machine-learning:v3.2.0",
@@ -166,7 +166,7 @@
       "endpoint": "wsl://local-store-engine-v1"
     },
     "compose_version": "5.5.1",
-    "probe_sha256": "c1338af4bc89cd57a07e9da75571edc40a77ab1197690a5c41a1393fb885e079",
+    "probe_sha256": "498a24cba002fc6982e63d1bb94bd5546085f08b81671f831730d3493bac20b4",
     "level": "lifecycle_and_first_use"
   }
 }

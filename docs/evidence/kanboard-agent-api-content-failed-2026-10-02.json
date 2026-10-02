@@ -1,0 +1,24 @@
+{
+  "app": "kanboard",
+  "bystanders_unchanged": true,
+  "cleanup_passed": true,
+  "content_boundary_sha256": "c1b6494bd87de1d52dd428a6db03e89a62fc0e8df12fcbcd72d87891f379465b",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "failure": "App content access denied.",
+  "fixture_sha256": "577773f48561b20686586d9d42d8a341f628cb411c496c1d5ec6c9e44cb6d7c1",
+  "passed": false,
+  "provider": "kanboard-dashboard-read-v1@1.2.54",
+  "provider_sha256": "ba9e130273d883bdd7d34171be5a198ab41ee263662c96d7ba2d0c923f6e3215",
+  "recorded_at_unix": 1790961464,
+  "schema_version": 1,
+  "scope": "real reviewed read-only API summary path; no app writes, generic APIs, native WebView or full app functionality claim",
+  "steps": [
+    "reviewed pinned app installed under a unique private project and app ID on the selected owned engine",
+    "exact fixture cleaned including generated credentials; existing containers unchanged"
+  ],
+  "test_sha256": "c6603bd757a2d176229c964e926d475d5265df9dad3ab39be605d4c0858cb456"
+}

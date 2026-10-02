@@ -1,0 +1,27 @@
+{
+  "app": "n8n",
+  "content_boundary_sha256": "c1b6494bd87de1d52dd428a6db03e89a62fc0e8df12fcbcd72d87891f379465b",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "failure": null,
+  "passed": true,
+  "provider": "n8n-official-mcp-v1@2.37.10",
+  "provider_sha256": "f01ee2f5d162e742905bd0f7ceb4c12962b31fe53f6bdd7e0eb5c4b9f2b326b7",
+  "recorded_at_unix": 1790940157,
+  "schema_version": 1,
+  "scope": "real official MCP metadata and exact fixed note-table creation; no workflow execution, arbitrary MCP proxy, all-app coverage or native WebView proof",
+  "steps": [
+    "isolated reviewed n8n installed on the selected self engine",
+    "official MCP workflow list contains the exact synthetic workflow",
+    "official MCP workflow detail strips parameters and credentials",
+    "official MCP metadata read; workflow parameters, credentials and server hints are withheld",
+    "read-only scope cannot request writes; exact owner-approved fixed-column table created and read; cross-client and replay denied",
+    "created table persists through restart after bounded read-only MCP readiness wait",
+    "destructive and workflow-execution tools denied; table survives restart; token replacement cancels approvals and prior read scope; fresh owner regrant restores reads; live revocation and disconnect/reconnect deny old scope; audit contains no secrets or table name",
+    "ownership-safe fixture cleanup; existing containers unchanged"
+  ],
+  "test_sha256": "81922db593c1023a61ff59653a9dcb6e88440db30dfc73db5a28874821e7ce34"
+}

@@ -2103,6 +2103,7 @@ dependencies = [
  "libc",
  "open",
  "pico-args",
+ "quick-xml",
  "regex",
  "reqwest",
  "serde",

@@ -38,7 +38,7 @@ pub(crate) fn ensure_console() {
 pub(crate) fn ensure_console() {}
 
 fn usage() -> String {
-    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} agent-client list|enroll <id>|revoke <id>\n  {CLI_NAME} agent-grant status <client-id> <installed-app-id> --hours <1..720>\n  {CLI_NAME} agent-grant lifecycle <client-id> <installed-app-id> --hours <1..24>\n  {CLI_NAME} agent-grant revoke <client-id> <app-id>\n  {CLI_NAME} version")
+    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair|setup-preview|supervisor-status|stop-supervisor\n  {CLI_NAME} engine use-self-engine --consent\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} agent-client list|enroll <id>|revoke <id>\n  {CLI_NAME} agent-grant status <client-id> <installed-app-id> --hours <1..720>\n  {CLI_NAME} agent-grant lifecycle <client-id> <installed-app-id> --hours <1..24>\n  {CLI_NAME} agent-grant revoke <client-id> <app-id>\n  {CLI_NAME} version")
 }
 fn get_flag(args: &[String], flag: &str) -> Option<String> {
     args.iter()
@@ -320,8 +320,85 @@ pub fn run_cli() -> i32 {
                 }
             }
         }
-        "doctor" => query_result(queries::doctor(&args[1..], &runtime::SystemProcessRunner)),
+        "doctor" => query_result(queries::doctor(&args[1..], runtime::doctor)),
         "engine" => match args.get(1).map(String::as_str) {
+            Some("supervise") => match runtime::engine::wsl::supervisor::run() {
+                Ok(()) => 0,
+                Err(error) => {
+                    eprintln!("{error}");
+                    1
+                }
+            },
+            Some("supervisor-status") => match runtime::engine::wsl::supervisor::status() {
+                Ok(status) => match serde_json::to_string_pretty(&status) {
+                    Ok(json) => emit(&format!("{json}\n")).err().unwrap_or(0),
+                    Err(error) => {
+                        eprintln!("{error}");
+                        1
+                    }
+                },
+                Err(error) => {
+                    eprintln!("{error}");
+                    1
+                }
+            },
+            Some("stop-supervisor") => match runtime::engine::wsl::supervisor::stop() {
+                Ok(()) => {
+                    println!("Background lease stop requested. App containers and Windows distributions were not stopped.");
+                    0
+                }
+                Err(error) => {
+                    eprintln!("{error}");
+                    1
+                }
+            },
+            Some("setup-preview") => {
+                let result = std::env::current_exe()
+                    .map_err(AppError::from)
+                    .and_then(|exe| {
+                        let payload = exe
+                            .parent()
+                            .ok_or_else(|| AppError::internal("Launcher folder unavailable."))?
+                            .join("engine/rootfs.tar");
+                        local_store::engine_setup::preview(&runtime::SystemProcessRunner, &payload)
+                    });
+                match result {
+                    Ok(preview) => match serde_json::to_string_pretty(&preview) {
+                        Ok(json) => emit(&format!("{json}\n")).err().unwrap_or(0),
+                        Err(error) => {
+                            eprintln!("{error}");
+                            1
+                        }
+                    },
+                    Err(error) => {
+                        eprintln!("{error}");
+                        1
+                    }
+                }
+            }
+            Some("use-self-engine") if args.len() == 3 && args[2] == "--consent" => {
+                use local_store::engine_setup::{EngineSetupAction, EngineSetupConsent};
+                // This explicit development adoption never moves or deletes a VHD.
+                match local_store::engine_setup::execute(
+                    &runtime::SystemProcessRunner,
+                    std::path::Path::new("engine/rootfs.tar"),
+                    EngineSetupAction::AdoptDevelopment,
+                    EngineSetupConsent {
+                        create_owned_engine: true,
+                        use_disk_space: true,
+                        acknowledge_existing_apps_unchanged: true,
+                    },
+                ) {
+                    Ok(_) => {
+                        println!("Local Store's verified engine is selected for new installs. Existing app bindings and data are unchanged.");
+                        0
+                    }
+                    Err(error) => {
+                        eprintln!("{error}");
+                        1
+                    }
+                }
+            }
             Some("status") => {
                 match runtime::engine::wsl::bootstrap::status(
                     &runtime::SystemProcessRunner,
@@ -368,7 +445,7 @@ pub fn run_cli() -> i32 {
                 }
             }
             _ => {
-                eprintln!("Usage: {CLI_NAME} engine status|repair");
+                eprintln!("Usage: {CLI_NAME} engine status|repair|setup-preview|supervisor-status|stop-supervisor, or engine use-self-engine --consent");
                 2
             }
         },
@@ -718,6 +795,7 @@ fn normalize_action_args(args: Vec<String>) -> Result<Vec<String>, String> {
     let flag = match command.as_str() {
         "open" if parser.contains("--browser") => Some("--browser"),
         "uninstall" if parser.contains("--delete-data") => Some("--delete-data"),
+        "engine" if parser.contains("--consent") => Some("--consent"),
         _ => None,
     };
     let remaining = parser.finish();
@@ -734,6 +812,26 @@ fn normalize_action_args(args: Vec<String>) -> Result<Vec<String>, String> {
             return Err(format!("Invalid name or option for {command}: {arg}"));
         }
         normalized.push(arg);
+    }
+    if command == "engine" {
+        let action = normalized[1].as_str();
+        if ![
+            "status",
+            "repair",
+            "setup-preview",
+            "use-self-engine",
+            "supervise",
+            "supervisor-status",
+            "stop-supervisor",
+        ]
+        .contains(&action)
+            || (action == "use-self-engine") != (flag == Some("--consent"))
+        {
+            return Err(
+                "Use engine status|repair|setup-preview|supervisor-status|stop-supervisor, or engine use-self-engine --consent."
+                    .into(),
+            );
+        }
     }
     if let Some(url) = url {
         // Validate before loading or migrating the registry.
@@ -759,10 +857,26 @@ mod tests {
             normalize_action_args(args(&["add", "--url=https://example.com", "My notes"])).unwrap(),
             args(&["add", "My notes", "--url", "https://example.com"])
         );
+        assert_eq!(
+            normalize_action_args(args(&["engine", "--consent", "use-self-engine"])).unwrap(),
+            args(&["engine", "use-self-engine", "--consent"])
+        );
+        for action in ["supervise", "supervisor-status", "stop-supervisor"] {
+            assert_eq!(
+                normalize_action_args(args(&["engine", action])).unwrap(),
+                args(&["engine", action])
+            );
+            assert!(normalize_action_args(args(&["engine", action, "D:/other-engine"])).is_err());
+            assert!(normalize_action_args(args(&["engine", action, "--consent"])).is_err());
+        }
         for values in [
             vec!["bind-engine"],
             vec!["engine", "repair", "extra"],
             vec!["engine", "--repair"],
+            vec!["engine", "use-self-engine"],
+            vec!["engine", "repair", "--consent"],
+            vec!["engine", "use-self-engine", "--consent", "--consent"],
+            vec!["engine", "unknown"],
             vec!["bind-engine", "memos", "--force"],
             vec!["uninstall", "memos", "--delete-dtaa"],
             vec!["remove", "memos", "--delete-data"],

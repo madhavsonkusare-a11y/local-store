@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "id": "picoshare",
+  "display_name": "PicoShare",
+  "catalog_name": "PicoShare",
+  "description": "Minimalist, easy-to-host service for sharing images and other files.",
+  "category": "File Transfer - Single-click & Drag-n-drop Upload",
+  "license": "AGPL-3.0-or-later",
+  "source_url": "https://github.com/mtlynch/picoshare",
+  "documentation_url": "https://github.com/mtlynch/picoshare",
+  "verified_at": "2026-10-01",
+  "lifecycle_proof": "",
+  "origin": {
+    "importer": "caprover",
+    "repository": "caprover/one-click-apps",
+    "revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
+    "path": "public/v4/apps/picoshare.yml",
+    "license": "Apache-2.0"
+  },
+  "requirements": {
+    "docker_engine_os": "linux",
+    "compose_major": 2,
+    "local_storage_required": true,
+    "images": [
+      {
+        "image": "mtlynch/picoshare:v1.5.4",
+        "source_url": "https://hub.docker.com/v2/repositories/mtlynch/picoshare/tags/v1.5.4",
+        "checked_at": "2026-10-01",
+        "last_updated": "2026-05-26",
+        "container_platforms": [
+          "linux/amd64",
+          "linux/arm/v7",
+          "linux/arm64"
+        ],
+        "digests": {
+          "linux/amd64": "sha256:889d1b7ea4543a055582eaeffdb068d01944e4c0d06f1ea57b803ef81f6441ea",
+          "linux/arm/v7": "sha256:099ce329de34443c8656674e275a0c00d93b89d4ba0aedc0511e557f2ed9b10f",
+          "linux/arm64": "sha256:1b48e9e5ac21715026469f9c7f2b1f2baa752ac8d76d01a8e7ab8682336eb03e"
+        },
+        "index_digest": "sha256:053fee7cbdc64894e924733d5405158a9baadbecd231bfe97ae69d16fd2c2639"
+      }
+    ]
+  },
+  "promotion": {
+    "state": "withheld",
+    "reason": "Withheld pending real managed Windows file-sharing, passphrase refusal, expiration and persistence qualification, then an explicit reviewed promotion decision. Source license and image pin were reviewed on October 1, 2026."
+  },
+  "data_storage": "A Docker volume Local Store manages for picoshare",
+  "risk_notes": [
+    "Creates 1 Docker container and publishes one port on this computer's loopback interface only.",
+    "Keeps its data in a Docker volume that Local Store manages for it. A keep-data uninstall leaves the volume; deleting data removes it permanently.",
+    "Not qualified on the Local Store managed engine. This withheld proposal is not installable from the catalog.",
+    "Choose an administrator passphrase before installing. Local Store keeps it with private setup answers; the app uses it to authorize uploads and management.",
+    "Anyone who has a shared file link can download that file without an administrator session until it expires or is deleted. Keep private links private.",
+    "No cloud replication is configured. Data remains in the owned local volume.",
+    "The official v1.5.4 Dockerfile uses Alpine 3.15, whose normal support ended November 1, 2023. Alpine lists it as on-request support only. A recent app release does not establish maintained operating-system packages; an explicit maintenance review is needed before promotion. No vulnerability scan or patched-base proof is claimed."
+  ],
+  "fields": {
+    "CAP_PS_SHARED_SECRET": {
+      "label": "Administrator passphrase",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "definition": "{\"captainVersion\": 4, \"services\": {\"$$cap_appname\": {\"image\": \"mtlynch/picoshare:$$cap_version\", \"environment\": {\"PS_SHARED_SECRET\": \"$$cap_ps_shared_secret\", \"PORT\": 4001}, \"volumes\": [\"$$cap_appname-data:/data\"], \"caproverExtra\": {\"containerHttpPort\": \"4001\"}}}, \"caproverOneClickApp\": {\"variables\": [{\"id\": \"$$cap_version\", \"label\": \"PicoShare Version\", \"defaultValue\": \"1.4.4\", \"description\": \"Check out their Docker page for the valid tags https://github.com/mtlynch/picoshare/releases\", \"validRegex\": \"/^([^\\\\s^\\\\/])+$/\"}, {\"id\": \"$$cap_ps_shared_secret\", \"label\": \"PS Shared Secret\", \"description\": \"Specifies a passphrase for the admin user to log in to PicoShare.\"}], \"instructions\": {\"start\": \"PicoShare is a minimalist service that allows you to share files easily.\\nSee https://github.com/mtlynch/picoshare for more information.\", \"end\": \"PicoShare has been successfully deployed!\"}, \"displayName\": \"PicoShare\", \"isOfficial\": true, \"description\": \"A minimalist, easy-to-host service for sharing images and other files\", \"documentation\": \"See https://github.com/mtlynch/picoshare/releases\"}}",
+  "image_pins": [
+    {
+      "definition": "mtlynch/picoshare:1.4.4",
+      "replacement": "mtlynch/picoshare:v1.5.4",
+      "reason": "The frozen CapRover definition names 1.4.4 from June 2024. The current official v1.5.4 release and registry tag were checked on October 1, 2026; retain the same image repository and require qualification of this exact digest before promotion."
+    }
+  ],
+  "resource_limits": [
+    {
+      "service": "picoshare",
+      "memory_bytes": 268435456,
+      "cpu_millicores": 1000,
+      "pids": 256,
+      "reason": "This small file-sharing candidate receives a conservative 256 MiB, one CPU and 256 PID ceiling for isolated qualification. Actual resource measurements and successful persistence are required before it can be offered."
+    }
+  ]
+}

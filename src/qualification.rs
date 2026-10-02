@@ -951,6 +951,10 @@ pub fn qualify_template_on_engine_at(
                 "The managed WSL engine has no verified ownership footprint.",
             ));
         }
+        crate::runtime::engine::wsl::lease::ensure_owned(
+            &crate::runtime::SystemProcessRunner,
+            managed_state_dir,
+        )?;
     }
     let binding = binding.clone();
     let runner = crate::runtime::engine::EngineRunner {
@@ -970,6 +974,9 @@ pub fn qualify_template_on_engine_at(
         .unwrap_or_default();
     let probe = crate::runtime::HttpHealthProbe;
     let health = health_allowance(template.first_start);
+    // Fingerprint the reviewed plan before test-only project/port rewriting.
+    // Random qualification identities must not prevent comparison to production.
+    let reviewed_template = template.clone();
     let mut template = template;
     let display_name = app.to_owned();
 
@@ -1189,7 +1196,7 @@ pub fn qualify_template_on_engine_at(
 
     Ok(finish(
         about,
-        (&template, &binding, &compose_version),
+        (&reviewed_template, &binding, &compose_version),
         images,
         image_ids,
         measurements,

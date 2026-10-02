@@ -1,0 +1,27 @@
+{
+  "app": "n8n",
+  "content_boundary_sha256": "d7def7bd7914d3318ed01b08e5617e72b7d250fe34511a377ae476df3e810187",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "failure": null,
+  "passed": true,
+  "provider": "n8n-official-mcp-v1@2.37.10",
+  "provider_sha256": "05edd83b63b5c271f203699c8907f2749e1bfd4a5edba8c6772ef6e75fd293c2",
+  "recorded_at_unix": 1790938447,
+  "schema_version": 1,
+  "scope": "real official MCP metadata and exact fixed note-table creation; no workflow execution, arbitrary MCP proxy, all-app coverage or native WebView proof",
+  "steps": [
+    "isolated reviewed n8n installed on the selected self engine",
+    "official MCP workflow list contains the exact synthetic workflow",
+    "official MCP workflow detail strips parameters and credentials",
+    "official MCP metadata read; workflow parameters, credentials and server hints are withheld",
+    "read-only scope cannot request writes; exact owner-approved fixed-column table created and read; cross-client and replay denied",
+    "created table persists through restart after bounded read-only MCP readiness wait",
+    "destructive and workflow-execution tools denied; table survives restart; token replacement cancels approval; live revocation denies access; audit contains no secrets or table name",
+    "ownership-safe fixture cleanup; existing containers unchanged"
+  ],
+  "test_sha256": "dcc30da0225e8dcdf3d45507374e8a3e7dad82a07a5b2d205513d5761379275e"
+}

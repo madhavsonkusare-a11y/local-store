@@ -83,5 +83,14 @@
       "volume": "jellyfin-config",
       "reason": "The LinuxServer app maintains permission-sensitive settings and database files; keep them on the engine Linux filesystem."
     }
+  ],
+  "resource_limits": [
+    {
+      "service": "jellyfin",
+      "memory_bytes": 1073741824,
+      "cpu_millicores": 4000,
+      "pids": 1024,
+      "reason": "Managed-engine launch task measured 186227097 bytes at peak for this service. The 1024 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    }
   ]
 }

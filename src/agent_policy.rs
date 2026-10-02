@@ -12,14 +12,20 @@ pub enum AgentAction {
     Status,
     Start,
     Stop,
+    Install,
+    Uninstall,
     ReadContent,
+    ReadFiles,
     WriteContent,
     Destructive,
 }
 
 impl AgentAction {
     pub fn needs_approval(self) -> bool {
-        matches!(self, Self::WriteContent | Self::Destructive)
+        matches!(
+            self,
+            Self::Install | Self::Uninstall | Self::WriteContent | Self::Destructive
+        )
     }
 }
 

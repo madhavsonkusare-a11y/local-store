@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790740057,
+  "recorded_at_unix": 1790841209,
   "app": "n8n",
   "passed": true,
   "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
@@ -14,17 +14,17 @@
   },
   "first_use": "an owner creates a two-node workflow, executes it, and reads the exact persisted output after restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 7419,
+    "first_start_millis": 9881,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-n8n-qualify-33776-1790739990223807300-n8n": 395418009
+      "local-store-n8n-qualify-9408-1790841126184798400-n8n": 335649177
     },
     "peak_memory_bytes": {
-      "local-store-n8n-qualify-33776-1790739990223807300-n8n": 1068498944
+      "local-store-n8n-qualify-9408-1790841126184798400-n8n": 638792499
     },
-    "peak_total_memory_bytes": 1068498944,
-    "idle_managed_storage_bytes": 1090,
-    "peak_managed_storage_bytes": 1090,
+    "peak_total_memory_bytes": 638792499,
+    "idle_managed_storage_bytes": 1218,
+    "peak_managed_storage_bytes": 1218,
     "idle_named_volume_bytes": {
       "n8n-data": 5688952
     },
@@ -116,7 +116,7 @@
     "source_revision": "",
     "source_observed_on": "2026-09-05",
     "images_observed_on": "2026-09-07",
-    "plan_sha256": "d905ec3880967fa346e51048e96027cee8e9baa9556db3f3c7dcb7fc20020537",
+    "plan_sha256": "5f6f2094bf8b282ca00a4de5834f1cca7f2bb9b542728eace2375e68a46508ca",
     "requested_images": [
       "docker.n8n.io/n8nio/n8n:2.37.10"
     ],

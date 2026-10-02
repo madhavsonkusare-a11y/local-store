@@ -121,6 +121,9 @@ fn main() {
         .plugin(tauri_plugin_deep_link::init())
         .setup(move |app| {
             storage::load_or_migrate_registry().map_err(std::io::Error::other)?;
+            // Only a previously consented selection is warmed. Missing setup
+            // remains a visible owner action and never chooses an ambient daemon.
+            tauri::async_runtime::spawn_blocking(runtime::doctor);
             let win = tauri::WebviewWindowBuilder::new(
                 app,
                 "launcher",
@@ -165,6 +168,26 @@ fn main() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::list_apps,
+            commands::launch_readiness,
+            commands::launch_readiness_batch,
+            commands::engine_setup_preview,
+            commands::engine_setup_action,
+            local_store::agent_owner::agent_connections,
+            local_store::agent_content::agent_content_connections,
+            local_store::agent_content::agent_content_connect,
+            local_store::agent_content::agent_content_disconnect,
+            local_store::agent_content::agent_content_grant,
+            local_store::agent_content::agent_content_requests,
+            local_store::agent_content::agent_content_decide,
+            local_store::agent_data::agent_data_grant,
+            local_store::agent_requests::agent_mutation_requests,
+            local_store::agent_requests::agent_mutation_decide,
+            local_store::agent_owner::agent_enrollment_begin,
+            local_store::agent_owner::agent_enrollment_export,
+            local_store::agent_owner::agent_enrollment_cancel,
+            local_store::agent_owner::agent_client_revoke,
+            local_store::agent_owner::agent_grant_set,
+            local_store::agent_owner::agent_grant_revoke,
             local_store::native::take_activation_errors,
             commands::add_app,
             open_app,

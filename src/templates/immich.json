@@ -145,5 +145,35 @@
       "reason": "Keep downloaded model cache files on the engine Linux filesystem."
     }
   ],
-  "first_start_seconds": 600
+  "first_start_seconds": 600,
+  "resource_limits": [
+    {
+      "service": "immich",
+      "memory_bytes": 4294967296,
+      "cpu_millicores": 4000,
+      "pids": 2048,
+      "reason": "Managed-engine launch task measured 1658931118 bytes at peak for this service. The 4096 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    },
+    {
+      "service": "immich-db",
+      "memory_bytes": 1073741824,
+      "cpu_millicores": 2000,
+      "pids": 512,
+      "reason": "Managed-engine launch task measured 460220006 bytes at peak for this service. The 1024 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    },
+    {
+      "service": "immich-machine-learning",
+      "memory_bytes": 2147483648,
+      "cpu_millicores": 2000,
+      "pids": 1024,
+      "reason": "Managed-engine launch task measured 266967449 bytes at peak for this service. The 2048 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    },
+    {
+      "service": "immich-redis",
+      "memory_bytes": 268435456,
+      "cpu_millicores": 1000,
+      "pids": 256,
+      "reason": "Managed-engine launch task measured 14575206 bytes at peak for this service. The 256 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    }
+  ]
 }

@@ -1,0 +1,10 @@
+/* Extend the approved V2 dialog; keep repository identifiers readable. */
+.github-review { overflow-wrap: anywhere; }
+#github-result:not(:empty) { margin-top: var(--space-6, 24px); }
+#github-result h3 { font-size: 14px; font-weight: 550; }
+#github-result > .text-button { margin-top: 8px; }
+#github-result > .primary { margin-top: 8px; }
+.github-candidate { padding-top: 20px; margin-top: 20px; border-top: 1px solid var(--border); }
+.github-candidate .github-stage { margin-top: 8px; color: var(--muted); font-size: 12px; }
+.github-candidate ul { margin: 12px 0; padding-left: 20px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.github-candidate .provenance { margin-bottom: 0; }

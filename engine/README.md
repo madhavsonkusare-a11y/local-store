@@ -1,6 +1,6 @@
 # Development engine payload
 
-E01 implementation checkpoint, September 13, 2026. This is a buildable Linux
+E01 implementation checkpoint, updated October 1, 2026. This is a buildable Linux
 rootfs for the future managed WSL2 engine, not a shipping installer.
 
 ```text
@@ -8,6 +8,7 @@ python scripts/build-engine-payload.py
 python scripts/test_engine_payload.py
 python scripts/build-engine-payload.py --inspect-inventory
 python scripts/build-engine-payload.py --build
+python scripts/build-engine-payload.py --build --managed-engine
 ```
 
 The validation and test commands are offline. `--inspect-inventory` uses Docker
@@ -19,6 +20,22 @@ the package inventory and notices, then export `rootfs.tar` with SHA-256 evidenc
 under `.cache/engine/build-<unique-id>/`. It does not register a WSL distro,
 start an engine daemon, mount a host socket or run privileged containers.
 Only the exact export container is removed. Build images/cache remain available.
+
+`--managed-engine` builds through Local Store's already verified development
+WSL engine instead of an ambient host Docker CLI. It checks both ownership
+records, uses the fixed distro and local socket, and passes paths with spaces
+as separate arguments. It does not require or start Docker Desktop. On a first
+build, use an existing Linux container builder; the bootstrap-builder dependency
+is separate from the Windows product's runtime requirements.
+
+The [October 1 development export](../docs/evidence/engine-session-payload-development-2026-10-01.json)
+locks 138 packages and measures 572,798,976 bytes. Adding `libpam-systemd` and
+`dbus-user-session` resolves a measured root-session startup delay in the owned
+development engine. The original 128 package versions are unchanged. The
+[local repair](../docs/evidence/engine-session-local-repair-2026-10-01.json)
+used a newer `libexpat1` patch (.6); the rebuilt payload uses snapshot patch .4.
+These are distinct artifacts. The local repair does not prove a fresh boot of
+the new archive, and the export remains unapproved for distribution.
 
 ## Package choice
 
@@ -45,7 +62,7 @@ then switches APT to the snapshot. Both index updates fail on fetch errors;
 the final full inventory lock rejects any bootstrap package drift. The final
 install explicitly downgrades the bootstrap OpenSSL pair to the snapshot-locked
 versions, since the initial current index may supply newer versions.
-The full observed 128-package result is frozen in [packages.lock.tsv](packages.lock.tsv).
+The current 138-package result is frozen in [packages.lock.tsv](packages.lock.tsv).
 The Dockerfile and exporter refuse a build if the installed inventory differs
 byte-for-byte from this lock. This prevents silent dependency drift, but old
 package versions may disappear from Ubuntu's moving repositories. The diagnostic

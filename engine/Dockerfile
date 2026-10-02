@@ -22,7 +22,7 @@ RUN printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d \
     && apt-get -o APT::Update::Error-Mode=any update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --no-install-recommends \
        "openssl=$UBUNTU_OPENSSL_VERSION" "libssl3t64=$UBUNTU_OPENSSL_VERSION" \
-       ca-certificates systemd systemd-sysv iproute2 procps \
+       ca-certificates systemd systemd-sysv libpam-systemd dbus-user-session iproute2 procps \
        /tmp/local-store-packages/*.deb \
     && mkdir -p /usr/share/local-store /etc/docker \
     && dpkg-query -W -f='${Package}\t${Version}\t${Architecture}\n' \

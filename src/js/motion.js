@@ -10,19 +10,24 @@ function transition(dialog, opening) {
   const previous = transitions.get(dialog);
   const current = previous ? { opacity: getComputedStyle(dialog).opacity, transform: getComputedStyle(dialog).transform } : null;
   previous?.cancel();
-  if (opening && !dialog.open) dialog.showModal();
+  if (opening && !dialog.open) {
+    dialog.showModal();
+    const parent = document.getElementById(dialog.dataset.parentNav);
+    if (parent) { dialog.dataset.previousCurrent = parent.getAttribute('aria-current') || ''; parent.setAttribute('aria-current','location'); }
+  }
   if (!opening && !dialog.open) return Promise.resolve();
   if (keyboardInput || reducedMotion.matches) {
     if (!opening) dialog.close();
     transitions.delete(dialog);
     return Promise.resolve();
   }
-  const hidden = { opacity: 0, transform: 'scale(.96)' };
-  const visible = { opacity: 1, transform: 'scale(1)' };
+  const drawer = dialog.classList.contains('drawer');
+  const hidden = { opacity: drawer ? 1 : 0, transform: drawer ? 'translateX(100%)' : 'scale(.96)' };
+  const visible = { opacity: 1, transform: drawer ? 'translateX(0)' : 'scale(1)' };
   const tokens = getComputedStyle(document.documentElement);
   const animation = dialog.animate(
     [current || (opening ? hidden : visible), opening ? visible : hidden],
-    { duration: parseFloat(tokens.getPropertyValue('--duration-dialog')), easing: tokens.getPropertyValue('--ease-out').trim(), fill: 'both' }
+    { duration: parseFloat(tokens.getPropertyValue('--v2-duration-panel')), easing: tokens.getPropertyValue(drawer ? '--v2-ease-drawer' : '--v2-ease-out').trim(), fill: 'both' }
   );
   transitions.set(dialog, animation);
   return animation.finished.then(() => {
@@ -44,6 +49,11 @@ export function setDialogBusy(dialog, busy) {
 }
 document.querySelectorAll('dialog').forEach(dialog => {
   dialog.addEventListener('cancel', event => { event.preventDefault(); closeDialog(dialog); });
+  if (dialog.classList.contains('drawer')) dialog.addEventListener('click', event => {
+    if (event.target !== dialog) return;
+    const bounds = dialog.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) void closeDialog(dialog);
+  });
 });
 export function revealToast(element) {
   element.getAnimations().forEach(animation => animation.cancel());
@@ -52,3 +62,5 @@ export function revealToast(element) {
       { duration: 250, easing: 'cubic-bezier(.23, 1, .32, 1)' });
   }
 }
+
+for (const task of document.querySelectorAll('dialog.focused-task')) task.addEventListener('close', () => { const parent = document.getElementById(task.dataset.parentNav); if (!parent) return; if (task.dataset.previousCurrent) parent.setAttribute('aria-current', task.dataset.previousCurrent); else parent.removeAttribute('aria-current'); });

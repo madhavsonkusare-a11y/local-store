@@ -5,6 +5,13 @@ export const defaultFilters = () => ({ capability: '', license: '', architecture
 export function catalogControls(state, render) {
   const $ = id => document.getElementById(id);
   let page, draft;
+  $('filters-dialog').addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
+    const controls = [...$('filters-dialog').querySelectorAll('button,input,select,a[href]')].filter(control => !control.disabled && control.getClientRects().length);
+    const first = controls[0], last = controls.at(-1);
+    if (!event.shiftKey && document.activeElement === last) {event.preventDefault(); first?.focus();}
+    else if (event.shiftKey && document.activeElement === first) {event.preventDefault(); last?.focus();}
+  });
   function categories() {
     const query = $('category-search').value.trim().toLowerCase();
     const facets = page?.category_counts ?? (page?.categories ?? []).map(value => ({ value, count: 0 }));
@@ -12,6 +19,13 @@ export function catalogControls(state, render) {
     $('category-options').innerHTML = values.filter(item => !query || (item.value || 'All categories').toLowerCase().includes(query)).map(item => `<button type="button" data-category="${escapeHtml(item.value)}" aria-pressed="${draft.category === item.value}"><span>${escapeHtml(item.value || 'All categories')}</span><span>${item.count.toLocaleString()}</span></button>`).join('') || '<p class="field-hint">No matching categories. Try another word.</p>';
   }
   $('filter-open').onclick = () => {
+    const popup = $('filters-dialog'), anchor = $('filter-open').getBoundingClientRect();
+    const inset = 16, width = Math.min(330, window.innerWidth - inset*2);
+    const height = Math.min(620, window.innerHeight-inset*2);
+    const top = Math.max(inset, Math.min(anchor.bottom + 8, window.innerHeight-height-inset));
+    popup.style.left = `${Math.max(inset, Math.min(anchor.left, window.innerWidth-width-inset))}px`;
+    popup.style.top = `${top}px`;
+    popup.style.maxHeight = `${window.innerHeight-top-inset}px`;
     draft = { ...state.filters, category: state.category };
     $('category-search').value = '';
     for (const [id, values, selected, label] of [

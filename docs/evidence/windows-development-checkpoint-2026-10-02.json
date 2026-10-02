@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "recorded_at_unix": 1790963365,
+  "scope": "Windows development checkpoint; source tag remains immutable; not installer or clean-host acceptance",
+  "windows_progress": {
+    "done": 22,
+    "active": 31,
+    "percent": 71.0,
+    "done_ids": [
+      "R01",
+      "R02",
+      "R03",
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q04",
+      "Q05",
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "C01",
+      "C02",
+      "C03",
+      "C05",
+      "F01",
+      "F02"
+    ],
+    "remaining_ids": [
+      "E01",
+      "E02",
+      "E03",
+      "E04",
+      "C04",
+      "F03",
+      "F04",
+      "R04",
+      "R05"
+    ]
+  },
+  "provider_gate": {
+    "target": 10,
+    "verified": [
+      "flatnotes",
+      "gitea",
+      "immich",
+      "jellyfin",
+      "kanboard",
+      "memos",
+      "n8n",
+      "privatebin",
+      "uptime-kuma",
+      "wordpress"
+    ],
+    "pending": []
+  },
+  "checks": {
+    "current_source_provider_receipts": 10,
+    "managed_app_task_receipts": 10,
+    "focused_rust_checks": 11,
+    "focused_browser_checks": 23,
+    "provider_checker_refusal_checks": 3,
+    "release_library_clippy": "passed",
+    "formatting": "passed",
+    "staged_source_provider_gate": "passed",
+    "staged_source_task_gate": "passed",
+    "staged_source_secret_scan": "passed",
+    "scanner": "gitleaks 8.30.1; pinned archive and extracted executable verified",
+    "frozen_design": "135 tokens / 3 contexts / 5 fonts / 9 screens / 88 states unchanged",
+    "planning_roster": "100 unchanged identities; 52 offerings + 48 candidates"
+  },
+  "limits": [
+    "three useful scoped read/write paths; seven read-only paths; not all app functions",
+    "live owner connection, separate client grant and per-write approval still required",
+    "other 42 offerings unverified for content",
+    "Linkding candidate withheld; no registration or extra launch app",
+    "fresh engine bootstrap, native Windows flows and distribution gates remain open",
+    "owner CHANGELOG.md and pnpm-lock.yaml excluded"
+  ],
+  "source_inputs": [
+    {
+      "path": "src/agent_provider_evidence.rs",
+      "sha256": "43be570ea5305eab25c4f90a157e07e3b4b57115c2e6d9cba57698f23a3da3ef"
+    },
+    {
+      "path": "src/agent_content/app_api.rs",
+      "sha256": "645055ab54a8ea8ee17224565fd3c4ebd9456d3e68900dbb2236d0e5ac8c17d2"
+    },
+    {
+      "path": "scripts/app-api-read-fixture.mjs",
+      "sha256": "577773f48561b20686586d9d42d8a341f628cb411c496c1d5ec6c9e44cb6d7c1"
+    },
+    {
+      "path": "catalog/agent-access.json",
+      "sha256": "dd56166aa1af95f167a0c572643c5b4fd915c785c062352190e2a7ba355cbc1c"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790184544,
+  "recorded_at_unix": 1790841325,
   "app": "n8n",
   "passed": true,
   "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
@@ -14,19 +14,19 @@
   },
   "first_use": "the app answers on its address (no first-use check was supplied)",
   "measurements": {
-    "first_start_millis": 9833,
+    "first_start_millis": 7518,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-n8n-qualify-18816-1790184494913534400-n8n": 474900070
+      "local-store-n8n-qualify-17796-1790841261869933500-n8n": 288987545
     },
     "peak_memory_bytes": {
-      "local-store-n8n-qualify-18816-1790184494913534400-n8n": 1151051235
+      "local-store-n8n-qualify-17796-1790841261869933500-n8n": 758959308
     },
-    "peak_total_memory_bytes": 1151051235,
-    "idle_managed_storage_bytes": 1024,
-    "peak_managed_storage_bytes": 1024,
+    "peak_total_memory_bytes": 758959308,
+    "idle_managed_storage_bytes": 1220,
+    "peak_managed_storage_bytes": 1220,
     "idle_named_volume_bytes": {
-      "n8n-data": 5689024
+      "n8n-data": 5688952
     },
     "peak_named_volume_bytes": {
       "n8n-data": 5689024
@@ -116,7 +116,7 @@
     "source_revision": "",
     "source_observed_on": "2026-09-05",
     "images_observed_on": "2026-09-07",
-    "plan_sha256": "bf302813592aa5b569d9c8f4c019cb98887c8a75cb95315215b4864f93db785d",
+    "plan_sha256": "5f6f2094bf8b282ca00a4de5834f1cca7f2bb9b542728eace2375e68a46508ca",
     "requested_images": [
       "docker.n8n.io/n8nio/n8n:2.37.10"
     ],

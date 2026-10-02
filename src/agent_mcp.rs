@@ -12,6 +12,11 @@ const TOOL_NAME: &str = "local_store_get_status";
 const LIST_TOOL_NAME: &str = "local_store_list_granted_apps";
 const START_TOOL_NAME: &str = "local_store_start_app";
 const STOP_TOOL_NAME: &str = "local_store_stop_app";
+const REQUEST_INSTALL: &str = "local_store_request_install";
+const REQUEST_UNINSTALL: &str = "local_store_request_uninstall";
+const EXECUTE_REQUEST: &str = "local_store_execute_request";
+const REQUEST_STATUS: &str = "local_store_request_status";
+const CANCEL_REQUEST: &str = "local_store_cancel_request";
 
 pub fn serve_stdio() -> Result<(), String> {
     let secret = std::env::var("LOCAL_STORE_AGENT_BEARER")
@@ -20,7 +25,7 @@ pub fn serve_stdio() -> Result<(), String> {
         return Err("LOCAL_STORE_AGENT_BEARER is invalid".to_owned());
     }
     let gateway = AgentGateway::open_local().map_err(|error| error.message)?;
-    serve(
+    let outcome = serve_with_mutations(
         io::stdin().lock(),
         io::stdout().lock(),
         |app_id| {
@@ -50,16 +55,35 @@ pub fn serve_stdio() -> Result<(), String> {
                 .lifecycle(&secret, app_id, start, now)
                 .map_err(|error| error.message)
         },
+        |name, identity| {
+            use crate::agent_requests::{AgentRequests, MutationKind};
+            let requests = AgentRequests::open_local().map_err(|error| error.message)?;
+            let result = match name {
+                REQUEST_INSTALL => requests.request(&secret, MutationKind::Install, identity),
+                REQUEST_UNINSTALL => {
+                    requests.request(&secret, MutationKind::UninstallKeepData, identity)
+                }
+                EXECUTE_REQUEST => requests.execute(&secret, identity),
+                REQUEST_STATUS => requests.status(&secret, identity),
+                CANCEL_REQUEST => requests.cancel(&secret, identity),
+                _ => return Err("Unknown mutation tool".into()),
+            }
+            .map_err(|error| error.message)?;
+            serde_json::to_value(result).map_err(|_| "Could not encode operation status".to_owned())
+        },
     )
-    .map_err(|error| error.to_string())
+    .map_err(|error| error.to_string());
+    crate::agent_requests::finish_transport_workers();
+    outcome
 }
 
-fn serve<R: BufRead, W: Write>(
+fn serve_with_mutations<R: BufRead, W: Write>(
     mut input: R,
     mut output: W,
     mut status: impl FnMut(&str) -> Result<ToolResult, String>,
     mut list: impl FnMut() -> Result<Vec<String>, String>,
     mut lifecycle: impl FnMut(&str, bool) -> Result<ToolResult, String>,
+    mut mutations: impl FnMut(&str, &str) -> Result<Value, String>,
 ) -> io::Result<()> {
     let mut initialized = false;
     loop {
@@ -82,12 +106,13 @@ fn serve<R: BufRead, W: Write>(
                 continue;
             }
         };
-        if let Some(response) = handle(
+        if let Some(response) = handle_with_mutations(
             &request,
             &mut initialized,
             &mut status,
             &mut list,
             &mut lifecycle,
+            &mut mutations,
         ) {
             write_json(&mut output, &response)?;
         }
@@ -100,12 +125,13 @@ fn write_json(output: &mut impl Write, value: &Value) -> io::Result<()> {
     output.flush()
 }
 
-fn handle(
+fn handle_with_mutations(
     request: &Value,
     initialized: &mut bool,
     status: &mut impl FnMut(&str) -> Result<ToolResult, String>,
     list: &mut impl FnMut() -> Result<Vec<String>, String>,
     lifecycle: &mut impl FnMut(&str, bool) -> Result<ToolResult, String>,
+    mutations: &mut impl FnMut(&str, &str) -> Result<Value, String>,
 ) -> Option<Value> {
     let id = request.get("id").cloned();
     if request.get("jsonrpc").and_then(Value::as_str) != Some("2.0")
@@ -138,7 +164,8 @@ fn handle(
                 "serverInfo": {"name": "local-store", "version": env!("CARGO_PKG_VERSION")}})
         }
         "ping" if *initialized => json!({}),
-        "tools/list" if *initialized => json!({"tools": [{
+        "tools/list" if *initialized => {
+            let mut result = json!({"tools": [{
             "name": TOOL_NAME,
             "description": "Read the status of one installed Local Store app when the owner granted this client access.",
             "inputSchema": {"type": "object", "properties": {"app_id": {"type": "string"}},
@@ -161,10 +188,83 @@ fn handle(
             "inputSchema": {"type": "object", "properties": {"app_id": {"type": "string"}},
                 "required": ["app_id"], "additionalProperties": false},
             "annotations": {"readOnlyHint": false, "destructiveHint": false}
-        }]}),
+        }, mutation_tool(REQUEST_INSTALL, "Request owner approval to install a reviewed zero-input recipe; this never installs without approval.", "app_id", false),
+           mutation_tool(REQUEST_UNINSTALL, "Request owner approval to uninstall an installed managed app while keeping all app data.", "app_id", false),
+           mutation_tool(EXECUTE_REQUEST, "Execute one unexpired owner-approved request once. Returns a running operation to poll; never grants or approves itself.", "request_id", false),
+           mutation_tool(REQUEST_STATUS, "Read this client's exact mutation request and operation status.", "request_id", true),
+           mutation_tool(CANCEL_REQUEST, "Cancel this client's pending request or running install before its registry commit cutoff.", "request_id", false)]});
+            if let Some(tools) = result["tools"].as_array_mut() {
+                tools.extend(crate::agent_content::tools());
+            }
+            result
+        }
         "tools/call" if *initialized => {
             let params = request.get("params");
             let name = params.and_then(|p| p.get("name")).and_then(Value::as_str);
+            if name.is_some_and(|name| {
+                crate::agent_content::tools()
+                    .iter()
+                    .any(|tool| tool["name"] == name)
+            }) {
+                let name = name.unwrap();
+                let arguments = params
+                    .and_then(|p| p.get("arguments"))
+                    .unwrap_or(&Value::Null);
+                if !crate::agent_content::tool_arguments_valid(name, arguments) {
+                    return Some(rpc_error(id, -32602, "Invalid content arguments"));
+                }
+                let outcome = std::env::var("LOCAL_STORE_AGENT_BEARER")
+                    .map_err(|_| "Agent connection is unavailable".to_owned())
+                    .and_then(|bearer| {
+                        crate::agent_content::call_tool(&bearer, name, arguments)
+                            .map_err(|e| e.message)
+                    });
+                let result = match outcome {
+                    Ok(value) => {
+                        json!({"content":[{"type":"text","text":serde_json::to_string(&value).unwrap_or_default()}],"structuredContent":value,"isError":false})
+                    }
+                    Err(error) => json!({"content":[{"type":"text","text":error}],"isError":true}),
+                };
+                return Some(json!({"jsonrpc":"2.0","id":id,"result":result}));
+            }
+            if matches!(
+                name,
+                Some(
+                    REQUEST_INSTALL
+                        | REQUEST_UNINSTALL
+                        | EXECUTE_REQUEST
+                        | REQUEST_STATUS
+                        | CANCEL_REQUEST
+                )
+            ) {
+                let name = name.unwrap();
+                let key = if matches!(name, REQUEST_INSTALL | REQUEST_UNINSTALL) {
+                    "app_id"
+                } else {
+                    "request_id"
+                };
+                let arguments = params.and_then(|p| p.get("arguments"));
+                let identity = arguments.and_then(|a| a.get(key)).and_then(Value::as_str);
+                if !arguments.is_some_and(|a| a.as_object().is_some_and(|obj| obj.len() == 1))
+                    || identity.is_none_or(|v| v.is_empty() || v.len() > 128)
+                {
+                    return Some(rpc_error(id, -32602, "Invalid mutation identity"));
+                }
+                let result = match mutations(name, identity.unwrap()) {
+                    Ok(value) => {
+                        json!({"content": [{"type":"text", "text": serde_json::to_string(&value).unwrap_or_default()}], "structuredContent": value, "isError": false})
+                    }
+                    Err(error) => {
+                        let retry_safe = matches!(
+                            error.as_str(),
+                            "Agent requests are being updated. Retry shortly."
+                                | "Agent credentials are in use by another process."
+                        );
+                        json!({"content": [{"type":"text", "text": error}], "structuredContent":{"error":{"code":if retry_safe {"operation_busy"} else {"request_failed"},"retry_safe":retry_safe}}, "isError": true})
+                    }
+                };
+                return Some(json!({"jsonrpc":"2.0", "id":id, "result":result}));
+            }
             if name == Some(LIST_TOOL_NAME) {
                 let args = params.and_then(|p| p.get("arguments"));
                 if !args.is_none_or(|a| a.as_object().is_some_and(|obj| obj.is_empty())) {
@@ -213,6 +313,43 @@ fn handle(
     Some(json!({"jsonrpc": "2.0", "id": id, "result": result}))
 }
 
+fn mutation_tool(name: &str, description: &str, key: &str, read_only: bool) -> Value {
+    json!({"name": name, "description": description,
+        "inputSchema": {"type":"object", "properties": {key: {"type":"string"}}, "required":[key], "additionalProperties":false},
+        "annotations": {"readOnlyHint":read_only, "destructiveHint": name == EXECUTE_REQUEST}})
+}
+
+#[cfg(test)]
+fn handle(
+    request: &Value,
+    initialized: &mut bool,
+    status: &mut impl FnMut(&str) -> Result<ToolResult, String>,
+    list: &mut impl FnMut() -> Result<Vec<String>, String>,
+    lifecycle: &mut impl FnMut(&str, bool) -> Result<ToolResult, String>,
+) -> Option<Value> {
+    handle_with_mutations(
+        request,
+        initialized,
+        status,
+        list,
+        lifecycle,
+        &mut |_, _| Err("Owner approval required".into()),
+    )
+}
+
+#[cfg(test)]
+fn serve<R: BufRead, W: Write>(
+    input: R,
+    output: W,
+    status: impl FnMut(&str) -> Result<ToolResult, String>,
+    list: impl FnMut() -> Result<Vec<String>, String>,
+    lifecycle: impl FnMut(&str, bool) -> Result<ToolResult, String>,
+) -> io::Result<()> {
+    serve_with_mutations(input, output, status, list, lifecycle, |_, _| {
+        Err("Owner approval required".into())
+    })
+}
+
 fn rpc_error(id: Value, code: i64, message: &str) -> Value {
     json!({"jsonrpc": "2.0", "id": id, "error": {"code": code, "message": message}})
 }
@@ -220,6 +357,65 @@ fn rpc_error(id: Value, code: i64, message: &str) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn mutation_tools_require_initialization_exact_arguments_and_never_approve() {
+        let mut initialized = false;
+        let request = json!({"jsonrpc":"2.0","id":1,"method":"tools/call",
+            "params":{"name":REQUEST_INSTALL,"arguments":{"app_id":"memos"}}});
+        let response = handle_with_mutations(
+            &request,
+            &mut initialized,
+            &mut |_| panic!("status dispatched"),
+            &mut || panic!("list dispatched"),
+            &mut |_, _| panic!("lifecycle dispatched"),
+            &mut |_, _| panic!("uninitialized mutation dispatched"),
+        )
+        .unwrap();
+        assert_eq!(response["error"]["code"], -32000);
+        initialized = true;
+        for (name, key) in [
+            (REQUEST_INSTALL, "app_id"),
+            (REQUEST_UNINSTALL, "app_id"),
+            (EXECUTE_REQUEST, "request_id"),
+            (REQUEST_STATUS, "request_id"),
+            (CANCEL_REQUEST, "request_id"),
+        ] {
+            let request = json!({"jsonrpc":"2.0","id":2,"method":"tools/call",
+                "params":{"name":name,"arguments":{key:"memos"}}});
+            let response = handle_with_mutations(
+                &request,
+                &mut initialized,
+                &mut |_| panic!("status dispatched"),
+                &mut || panic!("list dispatched"),
+                &mut |_, _| panic!("lifecycle dispatched"),
+                &mut |actual_name, identity| {
+                    assert_eq!(actual_name, name);
+                    assert_eq!(identity, "memos");
+                    Ok(json!({"state":"pending"}))
+                },
+            )
+            .unwrap();
+            assert_eq!(response["result"]["structuredContent"]["state"], "pending");
+            assert_eq!(
+                mutation_tool(name, "reviewed operation", key, false)["inputSchema"]["properties"]
+                    [key]["type"],
+                "string"
+            );
+            let invalid = json!({"jsonrpc":"2.0","id":3,"method":"tools/call",
+                "params":{"name":name,"arguments":{key:"memos","approve":true}}});
+            let response = handle_with_mutations(
+                &invalid,
+                &mut initialized,
+                &mut |_| panic!("status dispatched"),
+                &mut || panic!("list dispatched"),
+                &mut |_, _| panic!("lifecycle dispatched"),
+                &mut |_, _| panic!("client approval argument dispatched"),
+            )
+            .unwrap();
+            assert_eq!(response["error"]["code"], -32602);
+        }
+    }
+
     #[test]
     fn call_requires_initialization_and_uses_gateway_result() {
         let mut initialized = false;

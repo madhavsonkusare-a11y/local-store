@@ -83,6 +83,10 @@ pub struct FieldReview {
     /// everything; saying no here is a decision somebody made after reading
     /// what the app does with the value.
     pub sensitive: bool,
+    /// A review may make an optional upstream answer required. It may never
+    /// make a required answer optional or invent an undeclared setup field.
+    #[serde(default)]
+    pub required: Option<bool>,
 }
 
 /// A tag this review runs instead of the one its definition names.
@@ -149,7 +153,7 @@ pub struct StoragePin {
 
 /// An app-specific ceiling selected after observing a real managed-engine run.
 /// The service must still exist in the pinned upstream definition.
-#[derive(Debug, Clone, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, serde::Serialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub struct ResourceLimit {
     pub service: String,
@@ -385,6 +389,15 @@ impl ReviewedTemplate {
             })?;
             field.label = review.label.clone();
             field.sensitive = review.sensitive;
+            if let Some(required) = review.required {
+                if field.required && !required {
+                    return Err(format!(
+                        "{}: review cannot make required setup field {:?} optional",
+                        self.id, field.key
+                    ));
+                }
+                field.required = required;
+            }
         }
         for key in self.fields.keys() {
             if !template.fields.iter().any(|field| &field.key == key) {
@@ -1228,9 +1241,60 @@ mod tests {
             FieldReview {
                 label: "Gone".into(),
                 sensitive: false,
+                required: None,
             },
         );
         let error = stale.plan_template().unwrap_err();
         assert!(error.contains("no longer declares"), "{error}");
+    }
+
+    #[test]
+    fn a_review_can_require_an_optional_setup_answer() {
+        let mut reviewed = reviewed_template("codimd").unwrap();
+        assert!(
+            !reviewed
+                .plan_template()
+                .unwrap()
+                .fields
+                .iter()
+                .find(|field| field.key == "CAP_TIMEZONE")
+                .unwrap()
+                .required
+        );
+        reviewed.fields.get_mut("CAP_TIMEZONE").unwrap().required = Some(true);
+        assert!(
+            reviewed
+                .plan_template()
+                .unwrap()
+                .fields
+                .iter()
+                .find(|field| field.key == "CAP_TIMEZONE")
+                .unwrap()
+                .required
+        );
+    }
+
+    #[test]
+    fn a_review_cannot_make_a_required_setup_answer_optional() {
+        let (mut reviewed, key) = reviewed_templates()
+            .into_iter()
+            .find_map(|reviewed| {
+                let key = reviewed
+                    .plan_template()
+                    .ok()?
+                    .fields
+                    .iter()
+                    .find(|field| field.required)?
+                    .key
+                    .clone();
+                Some((reviewed, key))
+            })
+            .expect("reviewed templates include required setup answers");
+        reviewed.fields.get_mut(&key).unwrap().required = Some(false);
+        let error = reviewed.plan_template().unwrap_err();
+        assert!(
+            error.contains("cannot make required setup field"),
+            "{error}"
+        );
     }
 }

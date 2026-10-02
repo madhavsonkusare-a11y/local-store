@@ -12,7 +12,8 @@ if (base.protocol !== 'http:' || !['localhost', '127.0.0.1', '[::1]'].includes(b
     base.username || base.password || base.pathname !== '/' || base.search || base.hash) {
   throw new Error('Immich proof requires an unadorned loopback HTTP address');
 }
-base.hostname = '127.0.0.1';
+// Exercise the same validated loopback address the launcher opens. Rewriting
+// localhost to IPv4 can miss a working Windows/WSL IPv6 localhost relay.
 const photo = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAE0lEQVR4nGP8lK3NAANMcBZeDgBOWwGQrEUIaQAAAABJRU5ErkJggg==', 'base64');
 const photoHash = createHash('sha256').update(photo).digest('hex');
 const state = phase === 'first-use' ? {

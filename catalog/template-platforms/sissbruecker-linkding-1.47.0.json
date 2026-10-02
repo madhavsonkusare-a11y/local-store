@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "audit": {
+    "image": "sissbruecker/linkding:1.47.0",
+    "source_url": "https://hub.docker.com/v2/repositories/sissbruecker/linkding/tags/1.47.0",
+    "checked_at": "2026-10-02",
+    "last_updated": "2026-09-13",
+    "container_platforms": [
+      "linux/amd64",
+      "linux/arm/v7",
+      "linux/arm64"
+    ],
+    "digests": {
+      "linux/amd64": "sha256:b44256a4ff37e4cb1a39c40d3a5b560337f1477a55428b3320e813d6004d8001",
+      "linux/arm/v7": "sha256:e89b92389ccc0eec0dcd5b723c1da1bac8b4e50e8a56fd87f66df288eb5e51b9",
+      "linux/arm64": "sha256:36318731b9be48b516c0d27cbebd0d98588e4d4a849cbf5cc7cbdcb9a41ea02e"
+    }
+  }
+}

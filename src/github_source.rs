@@ -219,6 +219,9 @@ fn reviewed_candidates(repository: &str) -> Result<Vec<CandidateReference>, Stri
 }
 
 fn repository(url: &str) -> Result<String, String> {
+    if url.len() > 2048 {
+        return Err("GitHub repository links must be at most 2048 bytes.".into());
+    }
     let parsed = Url::parse(url.trim()).map_err(|_| "Enter a valid GitHub repository URL.")?;
     if parsed.scheme() != "https"
         || parsed.host_str() != Some("github.com")
@@ -1009,5 +1012,16 @@ mod tests {
         ] {
             assert!(resolve(url).is_err(), "{url}");
         }
+    }
+
+    #[test]
+    fn oversized_repository_link_is_refused_before_any_http() {
+        let url = format!(
+            "https://github.com/usememos/memos?tracking={}",
+            "x".repeat(2048)
+        );
+        let http = fake_http(Vec::new());
+        assert!(inspect_with(&url, &http).is_err());
+        assert!(http.0.lock().unwrap().is_empty());
     }
 }

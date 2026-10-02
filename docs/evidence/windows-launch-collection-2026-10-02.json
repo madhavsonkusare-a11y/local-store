@@ -1,0 +1,151 @@
+{
+  "apps": [
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "setup_assisted",
+      "lifecycle_proven": true,
+      "offering_id": "flatnotes",
+      "prerequisites": [
+        "Provide Sign-in method before installing.",
+        "Provide Username before installing.",
+        "Provide Password before installing (kept private)."
+      ],
+      "recorded_at_unix": 1790839732,
+      "task": "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "zero_input",
+      "lifecycle_proven": true,
+      "offering_id": "gitea",
+      "prerequisites": [
+        "Opens an installer page: check the settings it shows, then create the administrator account."
+      ],
+      "recorded_at_unix": 1790839784,
+      "task": "an administrator creates a private repository and commits an exact file; the repository, commit and file survive restart and keep-data reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "setup_assisted",
+      "lifecycle_proven": true,
+      "offering_id": "immich",
+      "prerequisites": [
+        "Choose Folder to keep your photos and videos in before installing.",
+        "Asks you to create the first account, which becomes the administrator."
+      ],
+      "recorded_at_unix": 1790840980,
+      "task": "an administrator uploads an owned photo, finds it by filename, and downloads identical original bytes after restart and keep-data reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "setup_assisted",
+      "lifecycle_proven": true,
+      "offering_id": "jellyfin",
+      "prerequisites": [
+        "Choose Folder containing your media before installing.",
+        "Opens a setup wizard to create the first administrator and add a media library."
+      ],
+      "recorded_at_unix": 1790841068,
+      "task": "an administrator imports an owned sample audio file, streams its exact bytes, and repeats playback after restart and keep-data reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "zero_input",
+      "lifecycle_proven": true,
+      "offering_id": "kanboard",
+      "prerequisites": [
+        "Kanboard starts with one account, username admin and password admin, and does not force a change. Anyone who can reach the address is an administrator until you change it, so change it the first time you sign in."
+      ],
+      "recorded_at_unix": 1790841125,
+      "task": "a project and exact task are created, the task moves to a second column, and both survive restart and keep-data reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "zero_input",
+      "lifecycle_proven": true,
+      "offering_id": "memos",
+      "prerequisites": [
+        "Complete Memos setup and review its access settings before storing private notes."
+      ],
+      "recorded_at_unix": 1790841261,
+      "task": "an admin signs in, creates a private memo, and reads the same content after restart and reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "zero_input",
+      "lifecycle_proven": true,
+      "offering_id": "n8n",
+      "prerequisites": [],
+      "recorded_at_unix": 1790841209,
+      "task": "an owner creates a two-node workflow, executes it, and reads the exact persisted output after restart and keep-data reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "zero_input",
+      "lifecycle_proven": true,
+      "offering_id": "privatebin",
+      "prerequisites": [],
+      "recorded_at_unix": 1790841237,
+      "task": "an encrypted paste is created in the browser, and its exact plaintext is read after restart and keep-data reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "zero_input",
+      "lifecycle_proven": true,
+      "offering_id": "uptime-kuma",
+      "prerequisites": [],
+      "recorded_at_unix": 1790841374,
+      "task": "a local admin creates a unique HTTP monitor of the app's own page, it records Up, and that exact monitor remains Up after restart and keep-data reinstall",
+      "task_verified": true
+    },
+    {
+      "agent_content_access": "unverified",
+      "caution": null,
+      "current_evidence": true,
+      "install_mode": "zero_input",
+      "lifecycle_proven": true,
+      "offering_id": "wordpress",
+      "prerequisites": [
+        "Opens to WordPress's own installer, which asks you to name the site and create the administrator account. Themes and plugins you add later are code that runs on your computer, so install them from sources you trust."
+      ],
+      "recorded_at_unix": 1790841423,
+      "task": "an administrator installs WordPress, publishes an exact unique post, and reads the same published content after restart and keep-data reinstall",
+      "task_verified": true
+    }
+  ],
+  "current_verified_tasks": 10,
+  "selected": 10,
+  "setup_assisted": 3,
+  "zero_input": 7,
+  "schema_version": 1,
+  "recorded_at_unix": 1790938504,
+  "scope": "read-only production readiness projection; installer input count is separate from each app first-login setup and agent content proof",
+  "projection_sha256": "444ff56180a155e8bac90975c0706f96e7f7c6cc6ab385aa9fe1f97da9daa08d",
+  "cohort_sha256": "28307798a95fbc9aa2ddfec34f1b477b9428e6d663cddde78a028c35b9c9416b"
+}

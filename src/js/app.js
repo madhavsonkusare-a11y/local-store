@@ -9,6 +9,16 @@ import { refreshEngineStatus } from './engine-settings.js';
 import { renderOverview } from './overview.js';
 import { myAppsDetail } from './my-apps.js';
 import './recovery.js';
+import {refreshAgents} from './agent-controls.js';
+import './agent-content-controls.js';
+import './agent-data-controls.js';
+import {initializeGithubReview} from './github-review.js';
+import {readinessView} from './launch-readiness.js';
+import {showFirstRun, initializeFirstRun, returnToStarterChoice, finishStarterIntroduction} from './first-run.js';
+import {showInstallResult} from './install-result.js';
+import {resetInstallTask,renderInstallStage,renderInstallFailure} from './install-task-view.js';
+import {refreshLaunchCollection} from './launch-collection.js';
+import {beginActivity, finishActivity, receiveActivity, renderActivity} from './activity.js';
 
 const $ = id => document.getElementById(id);
 const state = { view: 'discover', filters: defaultFilters(), query: '', category: '', offset: 0, limit: 12, entries: [], apps: [], visibleApps: [], total: 0 };
@@ -17,6 +27,7 @@ let selectedAppId = null, detailTab = 'overview', detailLog = {state:'idle'};
 // Set when a failed install could not clean up after itself; blocks a retry
 // that would run over containers or files still on disk.
 let installNeedsReview = false;
+let starterReview = false;
 const controls = catalogControls(state, render);
 const message = error => error?.message || String(error);
 const operations = createOperations(paintOperations);
@@ -28,12 +39,14 @@ const readiness = createReadinessMonitor({
   changed: paintOperations,
 });
 const readinessLabel = { ready: 'ready', unreachable: 'not responding' };
+function selectedDetail(app, tab, log) { return myAppsDetail(app, tab, log, state.visibleApps.findIndex(item => item.id === app?.id)); }
 function paintOperations() {
   readiness.update(state.visibleApps.map(app => ({...app, busy: Boolean(operations.get(app.id)?.pending)})),
     state.view === 'apps' && !document.hidden && !refreshError);
   const installing = activeRecipe && operations.get(activeRecipe.id);
   if (installing?.pending && installing.stage) {
     $('install-progress-title').textContent = installStageLabel(installing.stage);
+    renderInstallStage(installing.stage);
   }
   // The control disappears once the commit stage is reported: past that point
   // the backend ignores a cancel, so offering one would be a false promise.
@@ -69,6 +82,14 @@ function paintOperations() {
     const text = diagnosticText(entry?.error || (!busy && app?.status_error));
     if (diagnostic.textContent !== text) diagnostic.textContent = text;
   });
+  const detailActions = document.querySelector('.my-apps-manage .installed-actions');
+  if (detailActions) {
+    const busy = Boolean(operations.get(selectedAppId)?.pending);
+    detailActions.setAttribute('aria-busy', String(busy));
+    detailActions.querySelectorAll('button:not([data-logs])').forEach(button => {
+      if (busy) button.setAttribute('aria-disabled', 'true'); else button.removeAttribute('aria-disabled');
+    });
+  }
   const selectedStatus = document.querySelector('.installed-app.selected .status');
   const detailStatus = $('my-apps-detail-status');
   if (selectedStatus && detailStatus) detailStatus.textContent = selectedStatus.textContent;
@@ -76,10 +97,11 @@ function paintOperations() {
 async function invokeOperation(kind, appId, command, args, settled = async () => {}) {
   const token = operations.begin(appId, kind);
   if (!token) throw {code: 'operation_busy', message: 'This app already has an operation in progress.'};
+  const activityId = beginActivity(kind, appId, state.apps.find(app => app.id === appId)?.display_name || (activeRecipe?.id === appId ? activeRecipe.display_name : appId));
   let failure = null;
   try { const result = await invoke(command, args); await settled(); return result; }
   catch (error) { failure = error; throw error; }
-  finally { operations.finish(appId, token, failure); }
+  finally { operations.finish(appId, token, failure); finishActivity(activityId, failure); }
 }
 function toast(text) {
   clearTimeout(toastTimer);
@@ -98,7 +120,7 @@ async function refreshApps() {
 }
 async function render() {
   const token = ++request;
-  if (state.view === 'overview') return;
+  if (state.view === 'overview' || state.view === 'activity') return;
   $('pagination').hidden = true;
   if (state.view === 'apps') {
     loadState(false);
@@ -115,7 +137,7 @@ async function render() {
     const focusedAction = focusedId && Object.keys(focused.dataset)[0];
     const focusedIndex = [...document.querySelectorAll('.installed-app')].findIndex(row => row.dataset.appId === focusedId);
     $('content').innerHTML = state.visibleApps.length
-      ? `${refreshError ? `<p class="my-apps-refresh-error" role="alert">App refresh failed. Showing the last loaded records. <button class="text-button" data-action="retry">Try again</button></p>` : ''}<div class="my-apps-layout"><div class="installed-list" role="group" aria-label="Saved apps">${state.visibleApps.map((app, index) => installedRow(app, index, app.id === selectedAppId)).join('')}</div><aside id="my-apps-detail" class="my-apps-detail" aria-label="Selected app details">${myAppsDetail(state.visibleApps.find(app => app.id === selectedAppId), detailTab, detailLog)}</aside></div>`
+      ? `${refreshError ? `<p class="my-apps-refresh-error" role="alert">App refresh failed. Showing the last loaded records. <button class="text-button" data-action="retry">Try again</button></p>` : ''}<div class="my-apps-layout"><div class="installed-list" role="group" aria-label="Saved apps">${state.visibleApps.map((app, index) => installedRow(app, index, app.id === selectedAppId)).join('')}</div><aside id="my-apps-detail" class="my-apps-detail" aria-label="Selected app details">${selectedDetail(state.visibleApps.find(app => app.id === selectedAppId), detailTab, detailLog)}</aside></div>`
       : emptyState(state.query ? 'No matching apps' : 'Your apps belong here.', state.query ? 'Try another name or address.' : 'Install a reviewed recipe or connect an app you already run.', state.query ? 'clear' : 'discover', state.query ? 'Clear search' : 'Discover apps');
     paintOperations();
     if (focusedId) {
@@ -132,7 +154,11 @@ async function render() {
   try {
     const page = await invoke('search_catalog', { query: state.query, category: state.category, offset: state.offset, limit: state.limit, filters: state.filters });
     if (token !== request) return;
-    state.entries = page.entries.map(app => ({...app, snapshot_date:page.snapshot_date}));
+    let facts = [];
+    try { facts = await invoke('launch_readiness_batch', {ids: page.entries.filter(app => app.recipe_id).map(app => app.recipe_id)}) || []; } catch { /* A proof failure never promotes a listing. */ }
+    if (token !== request) return;
+    page.entries = page.entries.map(app => ({...app, snapshot_date:page.snapshot_date, launch_readiness: facts.find(item => item.offering_id === app.recipe_id)}));
+    state.entries = page.entries;
     state.total = page.total;
     controls.update(page);
     $('results-count').textContent = `${page.total.toLocaleString()} ${page.total === 1 ? 'project' : 'projects'}`;
@@ -154,14 +180,18 @@ function navigate(view) {
   readiness.update([], false);
   $('search').value = ''; controls.reset();
   const overview = view === 'overview';
+  const activity = view === 'activity';
+  $('activity-screen').hidden = !activity;
+  document.querySelector('.workspace').classList.toggle('activity-active', activity);
   $('overview-screen').hidden = !overview;
   document.querySelector('.workspace').classList.toggle('overview-active', overview);
   const discover = view === 'discover';
-  for (const [id, active] of [['nav-overview', overview], ['nav-discover', discover], ['nav-apps', view === 'apps']]) {
+  for (const [id, active] of [['nav-overview', overview], ['nav-discover', discover], ['nav-apps', view === 'apps'], ['nav-activity', activity]]) {
     $(id).classList.toggle('selected', active);
     if (active) $(id).setAttribute('aria-current', 'page'); else $(id).removeAttribute('aria-current');
   }
-  $('breadcrumb').textContent = overview ? 'Overview' : discover ? 'Discover' : 'My Apps';
+  $('breadcrumb').textContent = overview ? 'Overview' : activity ? 'Activity' : discover ? 'Discover' : 'My Apps';
+  if (activity) { renderActivity(); $('activity-title').focus({preventScroll: true}); window.scrollTo({top: 0, behavior: 'instant'}); return; }
   if (overview) {
     renderOverview(state.apps, null, refreshError, null);
     $('overview-title').focus({preventScroll: true});
@@ -236,29 +266,42 @@ function chosenPort() {
   const value = Number(input.value);
   return Number.isInteger(value) && value >= 1024 && value <= 65535 ? value : null;
 }
-async function reviewInstall(recipeId) {
+async function reviewInstall(recipeId, starterPort = null) {
   const token = ++recipeRequest;
+  starterReview = starterPort !== null;
+  $('install-dialog').querySelector('.modal-top button').setAttribute('aria-label', starterReview ? 'Back to starter choices' : 'Back to Discover');
   activeRecipe = null;
   installNeedsReview = false;
+  resetInstallTask();
   $('install-title').textContent = 'Review installation';
-  $('install-content').innerHTML = '<div class="loading" role="status">Checking Docker and recipe…</div>';
+  $('install-content').innerHTML = '<div class="loading" role="status">Checking local engine and recipe…</div>';
   $('install-error').textContent = '';
   $('install-confirm').textContent = 'Checking system…';
   $('install-confirm').disabled = true;
   showDialog($('install-dialog'));
   try {
-    const [recipe, report] = await Promise.all([invoke('recipe_details', { id: recipeId }), invoke('doctor')]);
+    const [recipe, report, facts] = await Promise.all([invoke('recipe_details', { id: recipeId }), invoke('doctor'), invoke('launch_readiness', {id: recipeId}).catch(() => null)]);
     if (token !== recipeRequest || !$('install-dialog').open) return;
     activeRecipe = recipe;
     $('install-title').textContent = `Review ${recipe.display_name} installation`;
     $('install-confirm').textContent = `Install ${recipe.display_name}`;
     $('install-confirm').disabled = !report.ready;
-    $('install-content').innerHTML = recipeView(recipe, report);
+    $('install-content').innerHTML = recipeView(recipe, report, facts);
     wirePortChoice(recipe);
+    if (starterPort !== null && $('recipe-port')) {
+      if ($('port-field').hidden) $('change-port').click();
+      $('recipe-port').value = starterPort;
+      $('recipe-port').dispatchEvent(new Event('input', {bubbles:true}));
+    }
     // Rebuilt from the projection every time the review opens, so nothing a
     // previous review was given survives into this one.
     renderSetupFields($('install-content'), recipe.setup_review);
-    if (!report.ready) $('install-error').textContent = 'Start Docker Desktop and make sure Docker Compose is available, then reopen this review.';
+    if (!report.ready) {
+      $('install-error').textContent = 'Set up or select the Local Store engine in Settings, then reopen this review.';
+      const setup = document.createElement('button'); setup.className = 'secondary'; setup.id = 'install-engine-settings'; setup.textContent = 'Set up local engine';
+      setup.onclick = async () => { starterReview = false; await closeDialog($('install-dialog')); $('settings').click(); };
+      $('install-content').append(setup);
+    }
   } catch (error) {
     if (token !== recipeRequest || !$('install-dialog').open) return;
     $('install-content').innerHTML = '';
@@ -266,6 +309,9 @@ async function reviewInstall(recipeId) {
     $('install-confirm').textContent = 'Install unavailable';
   }
 }
+initializeGithubReview({reviewInstall});
+initializeFirstRun({reviewInstall});
+$('install-dialog').addEventListener('close', () => {if (starterReview) {starterReview = false; void returnToStarterChoice();}});
 function showDetail(app) {
   $('detail-content').innerHTML = detail(app);
   if (app.capability === 'preview_install') {
@@ -299,7 +345,7 @@ async function refreshSelectedLogs() {
   if (!app || app.runtime?.kind !== 'compose') return;
   const appId = app.id;
   detailLog = {state:'loading'};
-  $('my-apps-detail').innerHTML = myAppsDetail(app, 'logs', detailLog);
+  $('my-apps-detail').innerHTML = selectedDetail(app, 'logs', detailLog);
   try {
     const text = await invoke('app_logs', {id: appId});
     if (state.view !== 'apps' || selectedAppId !== appId || detailTab !== 'logs') return;
@@ -308,16 +354,18 @@ async function refreshSelectedLogs() {
     if (state.view !== 'apps' || selectedAppId !== appId || detailTab !== 'logs') return;
     detailLog = {state:'error', error: message(error)};
   }
-  $('my-apps-detail').innerHTML = myAppsDetail(app, 'logs', detailLog);
+  $('my-apps-detail').innerHTML = selectedDetail(app, 'logs', detailLog);
 }
 $('nav-discover').onclick = () => navigate('discover');
 $('nav-overview').onclick = () => navigate('overview');
+$('nav-activity').onclick = () => navigate('activity');
+$('nav-agents').onclick = async () => { await showDialog($('settings-dialog')); await refreshAgents(); $('agent-client-name')?.focus(); };
 $('nav-apps').onclick = async () => { await refreshApps(); navigate('apps'); };
 $('overview-refresh').onclick = refreshOverview;
 document.querySelector('.brand').onclick = event => { event.preventDefault(); navigate('discover'); };
 $('connect-top').onclick = $('connect-note').onclick = () => openConnect();
 $('about').onclick = () => showDialog($('about-dialog'));
-$('settings').onclick = () => { showDialog($('settings-dialog')); void refreshEngineStatus(); };
+$('settings').onclick = () => { showDialog($('settings-dialog')); void refreshEngineStatus(); void refreshLaunchCollection(); };
 $('run-doctor').onclick = async () => {
   const button = $('run-doctor'); button.disabled = true; button.textContent = 'Checking…';
   $('doctor-error').textContent = ''; $('doctor-output').innerHTML = '';
@@ -364,7 +412,7 @@ document.addEventListener('click', async event => {
       row.classList.toggle('selected', selected);
       row.querySelector('.installed-select').setAttribute('aria-pressed', String(selected));
     });
-    $('my-apps-detail').innerHTML = myAppsDetail(app, detailTab, detailLog);
+    $('my-apps-detail').innerHTML = selectedDetail(app, detailTab, detailLog);
     paintOperations();
     return;
   }
@@ -372,9 +420,27 @@ document.addEventListener('click', async event => {
     detailTab = button.dataset.myAppsTab;
     const app = state.visibleApps.find(item => item.id === selectedAppId);
     if (!app) return;
-    $('my-apps-detail').innerHTML = myAppsDetail(app, detailTab, detailLog);
+    $('my-apps-detail').innerHTML = selectedDetail(app, detailTab, detailLog);
     $('my-apps-detail').querySelector(`[data-my-apps-tab="${detailTab}"]`)?.focus();
+    paintOperations();
     if (detailTab === 'logs' && detailLog.state === 'idle') void refreshSelectedLogs();
+    return;
+  }
+  if (button.dataset.myAppsLog === 'copy') {
+    const appId = selectedAppId, original = detailLog;
+    if (detailLog.state !== 'ready') return;
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard is unavailable. Select the log text and copy it manually.');
+      await navigator.clipboard.writeText(detailLog.text || '');
+      if (selectedAppId === appId && detailLog === original) detailLog = {...original, copyStatus:'Logs copied. They may contain private app data.'};
+    } catch (error) {
+      if (selectedAppId === appId && detailLog === original) detailLog = {...original, copyStatus:error.message || 'Could not copy logs. Select the text and copy it manually.'};
+    }
+    if (selectedAppId === appId && detailTab === 'logs') {
+      const restoreFocus = document.activeElement === button;
+      $('my-apps-detail').innerHTML = selectedDetail(state.visibleApps.find(app => app.id === appId), 'logs', detailLog);
+      if (restoreFocus) $('my-apps-detail').querySelector('[data-my-apps-log="copy"]')?.focus();
+    }
     return;
   }
   if (button.dataset.myAppsLog === 'refresh') { void refreshSelectedLogs(); return; }
@@ -457,7 +523,9 @@ $('connect-form').onsubmit = async event => {
     await invoke('add_app', { name, url: rawUrl, ...(activeCatalogId ? { catalogId: activeCatalogId } : {}) });
     setDialogBusy($('connect-dialog'), false);
     await closeDialog($('connect-dialog'));
-    await refreshApps(); navigate('apps'); toast(`${name} added to My Apps.`);
+    await refreshApps();
+    if (!refreshError) selectedAppId = state.apps.find(app => app.display_name === name)?.id || selectedAppId;
+    navigate('apps'); toast(`${name} added to My Apps.`);
   } catch (error) {
     const text = message(error);
     $('connect-error').textContent = text;
@@ -479,6 +547,7 @@ $('install-stop').onclick = async () => {
 $('install-confirm').onclick = async () => {
   if (!activeRecipe || operations.get(activeRecipe.id)?.pending) return;
   const recipe = activeRecipe;
+  resetInstallTask();
   if (!$('port-field')?.hidden && chosenPort() === null) {
     $('install-error').textContent = 'Choose a port between 1024 and 65535.';
     $('recipe-port').setAttribute('aria-invalid', 'true');
@@ -512,14 +581,17 @@ $('install-confirm').onclick = async () => {
       ...(chosen === null ? {} : { hostPort: chosen }),
       ...(Object.keys(answers).length ? { answers } : {}),
     });
+    if (starterReview) {starterReview = false; void finishStarterIntroduction();}
     setDialogBusy($('install-dialog'), false);
     await closeDialog($('install-dialog'));
-    await refreshApps(); navigate('apps'); toast(`${recipe.display_name} installed and ready.`);
+    await refreshApps(); selectedAppId = recipe.id; navigate('apps');
+    await showInstallResult(recipe, refreshError ? null : state.apps.find(app => app.id === recipe.id));
   } catch (error) {
     const text = diagnosticText(error);
     $('install-error').textContent = text;
     markInvalidAnswer(text);
     installNeedsReview = retryIsUnsafe(error);
+    renderInstallFailure(error);
   }
   finally {
     $('install-progress').hidden = true; $('install-stop').hidden = true;
@@ -535,6 +607,7 @@ $('install-confirm').onclick = async () => {
     }
   }
 };
+$('install-outcome-recovery').onclick=async()=>{starterReview=false;await closeDialog($('install-dialog'));$('settings').click();$('scan-recovery').click();};
 $('remove-confirm').onclick = async () => {
   const app = pendingApp;
   $('remove-confirm').disabled = true; setDialogBusy($('remove-dialog'), true);
@@ -560,11 +633,14 @@ $('uninstall-confirm').onclick = async () => {
 };
 // Subscribe before actions are enabled. Missing event support must not block IPC.
 let unlisten = () => {};
-try { unlisten = await listenOperations(event => operations.receive(event)); } catch { /* IPC is authoritative. */ }
+try { unlisten = await listenOperations(event => {operations.receive(event); receiveActivity(event);}); } catch { /* IPC is authoritative. */ }
 try { await listenBrowserFailures(error => toast(diagnosticText(error))); } catch { /* A missing channel must not break the launcher. */ }
 let unlistenActivation = () => {};
 try { unlistenActivation = await listenActivationFailures(error => toast(diagnosticText(error))); } catch { /* Keep ordinary launcher actions available. */ }
 document.addEventListener('visibilitychange', paintOperations);
+window.addEventListener('local-store:apps-changed', async () => { await refreshApps(); if (state.view === 'apps') render(); });
 window.addEventListener('pagehide', () => { readiness.dispose(); unlisten(); unlistenActivation(); }, {once: true});
 await refreshApps();
 render();
+
+void showFirstRun();

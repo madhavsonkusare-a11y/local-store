@@ -1,0 +1,24 @@
+{
+  "bystanders_preserved": true,
+  "failure": null,
+  "limits": [
+    "read-only ordinary Markdown notes; no credentials, DB, other folders or writes",
+    "gateway grants do not sandbox same-Windows-user shell access",
+    "does not certify native WebView or clean-machine setup"
+  ],
+  "native_engine_files_unchanged": true,
+  "owned_cleanup": true,
+  "passed": true,
+  "proof": "flatnotes-scoped-markdown-files",
+  "provider_sha256": "5a9cd9cf9a478afb98350a930ef4e9c23da442728cc4c45fbee85909b20c370d",
+  "recorded_at_unix": 1790940763,
+  "schema_version": 1,
+  "steps": [
+    "isolated reviewed Flatnotes installed with typed synthetic credentials",
+    "no implicit access; explicit exact read grant returns same private app note",
+    "other clients, app IDs, credentials, traversal, devices and all writes denied",
+    "exact private note remains readable after managed restart",
+    "live revocation denies reads and durable audit contains no note or credential"
+  ],
+  "test_sha256": "b0c7f30d024120d20ec25cc079d67c2dcf86d48549aee1e205b3e370757888f0"
+}

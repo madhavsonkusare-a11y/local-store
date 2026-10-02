@@ -45,9 +45,11 @@
     },
     {
       "offering_id": "flatnotes",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read",
+      "required_setup": "owner_grant",
+      "methods": [
+        "app_files"
+      ]
     },
     {
       "offering_id": "flowise",
@@ -63,9 +65,11 @@
     },
     {
       "offering_id": "gitea",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read",
+      "required_setup": "credential_grant",
+      "methods": [
+        "typed_api"
+      ]
     },
     {
       "offering_id": "glance",
@@ -99,15 +103,19 @@
     },
     {
       "offering_id": "immich",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read",
+      "required_setup": "credential_grant",
+      "methods": [
+        "typed_api"
+      ]
     },
     {
       "offering_id": "jellyfin",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read",
+      "required_setup": "credential_grant",
+      "methods": [
+        "typed_api"
+      ]
     },
     {
       "offering_id": "joplin",
@@ -117,9 +125,11 @@
     },
     {
       "offering_id": "kanboard",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read",
+      "required_setup": "credential_grant",
+      "methods": [
+        "typed_api"
+      ]
     },
     {
       "offering_id": "khoj",
@@ -159,9 +169,11 @@
     },
     {
       "offering_id": "memos",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read_write",
+      "required_setup": "credential_grant",
+      "methods": [
+        "typed_api"
+      ]
     },
     {
       "offering_id": "metabase",
@@ -177,9 +189,11 @@
     },
     {
       "offering_id": "n8n",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read_write",
+      "required_setup": "credential_grant",
+      "methods": [
+        "official_mcp"
+      ]
     },
     {
       "offering_id": "navidrome",
@@ -225,9 +239,11 @@
     },
     {
       "offering_id": "privatebin",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read_write",
+      "required_setup": "credential_grant",
+      "methods": [
+        "isolated_browser"
+      ]
     },
     {
       "offering_id": "sillytavern",
@@ -267,9 +283,11 @@
     },
     {
       "offering_id": "uptime-kuma",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read",
+      "required_setup": "credential_grant",
+      "methods": [
+        "typed_api"
+      ]
     },
     {
       "offering_id": "vane",
@@ -309,9 +327,11 @@
     },
     {
       "offering_id": "wordpress",
-      "content_access": "unverified",
-      "required_setup": "provider_review",
-      "methods": []
+      "content_access": "verified_read",
+      "required_setup": "credential_grant",
+      "methods": [
+        "typed_api"
+      ]
     }
   ]
 }

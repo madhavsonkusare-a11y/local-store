@@ -64,8 +64,11 @@ Run the source with its committed interface embedded:
 cargo run --locked --release --features tauri/custom-protocol --bin local-store
 ```
 
-Docker Desktop or an explicitly configured Local Store managed engine is
-needed for app installation. Engine setup on a fresh PC is still in development.
+App installation uses Local Store's explicitly selected, owned WSL 2 engine;
+Docker Desktop is not required. Open Settings → Local Store engine to review
+setup, disk use and consent. Windows may need WSL 2 enabled and a restart.
+The engine uses Docker and Compose internally. Fresh-PC payload delivery remains
+in development; the source-only release does not contain an engine archive.
 For an optional local installer with the MCP sidecar, follow
 [the local preview build procedure](PUBLISH.md#unsigned-local-windows-preview).
 The V1 source release does not include that installer.

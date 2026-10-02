@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "reference": "sha256:0f42497a69fa0441bfd5f9d6bba8694f2a656ec984e571d0ac04c6dd91250039",
+  "audit": {
+    "image": "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48",
+    "source_url": "https://lscr.io/v2/linuxserver/jellyfin/manifests/sha256:0f42497a69fa0441bfd5f9d6bba8694f2a656ec984e571d0ac04c6dd91250039",
+    "checked_at": "2026-10-01",
+    "last_updated": "2026-09-08",
+    "container_platforms": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "digests": {
+      "linux/amd64": "sha256:4579600fea6bc9a89054e3e79dc6c13d7f3c8f9a7f4b5942051b9cdc252875d5",
+      "linux/arm64": "sha256:d7ab5db2294f23ee5e441f3dbefe5240c5884129647eb34bd0b9b62c203dea33"
+    }
+  }
+}

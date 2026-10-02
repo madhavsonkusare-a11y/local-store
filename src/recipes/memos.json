@@ -25,7 +25,7 @@
     "Stores the SQLite database and uploaded assets in the Local Store app directory.",
     "Complete Memos setup and review its access settings before storing private notes."
   ],
-  "compose": "services:\n  memos:\n    image: neosmemo/memos:0.30.0@sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327\n    container_name: local-store-memos\n    restart: unless-stopped\n    ports:\n      - \"127.0.0.1:5230:5230\"\n    environment:\n      MEMOS_PORT: \"5230\"\n      MEMOS_DRIVER: sqlite\n    volumes:\n      - ./data:/var/opt/memos\n",
+  "compose": "services:\n  memos:\n    image: neosmemo/memos:0.30.0@sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327\n    container_name: local-store-memos\n    restart: unless-stopped\n    ports:\n      - \"127.0.0.1:5230:5230\"\n    environment:\n      MEMOS_PORT: \"5230\"\n      MEMOS_DRIVER: sqlite\n    volumes:\n      - ./data:/var/opt/memos\n    mem_limit: 268435456\n    cpus: \"2.000\"\n    pids_limit: 256\n",
   "requirements": {
     "docker_engine_os": "linux",
     "compose_major": 2,
@@ -40,5 +40,14 @@
       "checked_at": "2026-09-07",
       "index_digest": "sha256:71a5b4738d1bed96e92112004054f0888e92791b64eb78afd79077c96e6f9327"
     }
-  }
+  },
+  "resource_limits": [
+    {
+      "service": "memos",
+      "memory_bytes": 268435456,
+      "cpu_millicores": 2000,
+      "pids": 256,
+      "reason": "Managed-engine launch task measured 15917383 bytes at peak for this service. The 256 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    }
+  ]
 }

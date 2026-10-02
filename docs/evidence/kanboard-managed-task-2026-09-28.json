@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790575386,
+  "recorded_at_unix": 1790841125,
   "app": "kanboard",
   "passed": true,
   "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
@@ -14,17 +14,17 @@
   },
   "first_use": "a project and exact task are created, the task moves to a second column, and both survive restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 6552,
+    "first_start_millis": 6283,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-kanboard-qualify-32160-1790575323276195100-kanboard": 26078085
+      "local-store-kanboard-qualify-20736-1790841069498744500-kanboard": 35095838
     },
     "peak_memory_bytes": {
-      "local-store-kanboard-qualify-32160-1790575323276195100-kanboard": 26466058
+      "local-store-kanboard-qualify-20736-1790841069498744500-kanboard": 35095838
     },
-    "peak_total_memory_bytes": 26466058,
-    "idle_managed_storage_bytes": 407076,
-    "peak_managed_storage_bytes": 407076,
+    "peak_total_memory_bytes": 35095838,
+    "idle_managed_storage_bytes": 407202,
+    "peak_managed_storage_bytes": 407202,
     "idle_named_volume_bytes": {},
     "peak_named_volume_bytes": {},
     "image_virtual_bytes": {
@@ -112,7 +112,7 @@
     "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
     "source_observed_on": "2026-09-10",
     "images_observed_on": "2026-09-10",
-    "plan_sha256": "15995fd4192a3071e764d671a39355e0ecf77dc2f0ea5f4180af4e8515425d29",
+    "plan_sha256": "86aa09fe0e7b8e30487e9eff002aa29df9ba0ccfece45e5e16c9f23b406b7702",
     "requested_images": [
       "kanboard/kanboard:v1.2.54"
     ],

@@ -19,6 +19,14 @@ class PayloadTests(unittest.TestCase):
     def setUp(self):
         self.lock = json.loads((payload.ENGINE / "components.lock.json").read_text(encoding="utf-8"))
 
+    def test_managed_builder_targets_only_its_fixed_socket_and_quotes_paths_as_arguments(self):
+        with patch.object(payload, "MANAGED_ENGINE", True):
+            command = payload.docker_command("build", "D:/06 Projects/dockwrap/context", "--iidfile", r"D:\06 Projects\dockwrap\image-id")
+        self.assertEqual(command[:9], ["wsl.exe", "--distribution", "local-store-engine-v1", "--user", "root", "--exec", "/usr/bin/docker", "--host", "unix:///var/run/docker.sock"])
+        self.assertEqual(command[10], "/mnt/d/06 Projects/dockwrap/context")
+        self.assertEqual(command[12], "/mnt/d/06 Projects/dockwrap/image-id")
+        self.assertNotIn("sh", command)
+
     def test_pins_and_origin_are_required(self):
         payload.validate(self.lock)
         for value in ["", "latest", "2026-09-13", "20269913T120000Z",

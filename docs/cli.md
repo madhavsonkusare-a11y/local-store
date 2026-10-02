@@ -2,7 +2,9 @@
 
 The catalog and Doctor commands can be used by people, scripts and coding
 agents without reading the app registry. Catalog search is entirely offline.
-Doctor queries Docker and Compose but does not install or start containers.
+Doctor queries Docker and Compose inside the selected Local Store engine. It
+does not install apps or directly start containers. A query can wake the owned
+WSL distribution and its existing systemd services.
 
 ## Docker diagnostics
 
@@ -14,7 +16,9 @@ local-store doctor --help
 
 JSON output uses the same `DoctorReport` as the launcher: `ready` and a `checks`
 array. Each check contains `id`, `label`, `ok` and `detail`. The IDs are `docker`
-and `compose`. Both checks are reported even when Docker is missing. Strings
+and `compose`. Selection and ownership are checked first: missing, corrupt or
+unresponsive owned-engine state returns a failed engine check without falling
+back to Docker Desktop. Once selected, both component checks are reported. Strings
 are JSON escaped; stdout contains one JSON document and a trailing newline,
 including when prerequisites are unavailable. Plain-text output remains the
 default.
@@ -36,6 +40,52 @@ the length cap, and a partial final line is dropped when the capture bound was
 reached, so a credential cannot survive as a readable prefix. `logs` output is
 deliberately not redacted: it is the app's own log, which `docker compose logs`
 would show verbatim anyway.
+
+## Explicit engine setup
+
+```sh
+local-store engine setup-preview
+local-store engine status
+local-store engine repair
+local-store engine use-self-engine --consent
+```
+
+Use Settings for normal setup and its explicit consent choices. The preview
+checks the fixed sibling `engine/rootfs.tar` against the build's pinned length
+and SHA-256; it does not import it. Missing or different bytes cannot be used.
+`use-self-engine --consent` is for this source-build development host: it reuses
+only the already verified engine at the compiled project's fixed proof path,
+copies its ownership metadata to native local state, and selects it for new
+installs. It does not move its virtual disk or change existing app bindings.
+It is not a fresh-PC bootstrap command. Docker Desktop is not required.
+
+When the Windows launcher or its agent connector uses the selected, verified
+engine, it starts one hidden Local Store background worker. That worker keeps
+the owned WSL session open after the launcher closes. It holds a singleton
+file lock, checks selection and the original ownership journal repeatedly,
+and verifies the in-distro ownership marker before replacing an exited pipe
+helper. It never terminates a distribution, changes Docker contexts or stops
+app containers. Windows sleep/wake and fresh-host resilience still need their
+own acceptance proof; this is not a login task or Windows service.
+
+```sh
+local-store engine supervisor-status
+local-store engine stop-supervisor
+```
+
+Status returns `null` when there is no live worker with recent ownership proof;
+a saved PID or status file alone does not establish liveness. Stop requests
+release of only Local Store's background lease. Existing containers are not
+stopped, but WSL's normal idle policy can apply after the lease ends. A later
+explicit app or engine operation can start the worker again. If Windows refuses
+to start a worker outside an enclosing job, Local Store reports the failure;
+it does not claim that the engine can survive that job's closure.
+
+Qualification harnesses can explicitly set
+`LOCAL_STORE_ENGINE_SUPERVISOR_PROCESS_ONLY=1` on their scoped child environment
+to retain only a process-local lease and avoid leaving background test workers.
+This does not bypass selection or ownership verification and does not change
+the chosen engine. Do not set it globally for ordinary launcher use.
 
 ## Running the installed app from a shell
 

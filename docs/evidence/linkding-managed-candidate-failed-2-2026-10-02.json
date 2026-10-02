@@ -1,0 +1,88 @@
+{
+  "schema_version": 2,
+  "recorded_at_unix": 1790940421,
+  "app": "linkding",
+  "passed": false,
+  "scope": "withheld candidate mapping, transaction, managed storage and first use, on one host and one architecture",
+  "promotion": "withheld",
+  "source_revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
+  "images": [
+    "sissbruecker/linkding:1.47.0"
+  ],
+  "image_ids": {
+    "sissbruecker/linkding:1.47.0": "sha256:e35cb50e0581178f245125ffaa909c565416c94c9f22ace305a7d234a4345522"
+  },
+  "first_use": "an isolated required administrator account signs in while wrong credentials and anonymous access fail; an exact private bookmark URL, title, description, notes and two tags survive restart and keep-data reinstall",
+  "measurements": {
+    "first_start_millis": 22012,
+    "samples": 1,
+    "idle_memory_bytes": {
+      "local-store-linkding-qualify-15464-1790940374920672900-linkding": 233622732
+    },
+    "peak_memory_bytes": {
+      "local-store-linkding-qualify-15464-1790940374920672900-linkding": 233622732
+    },
+    "peak_total_memory_bytes": 233622732,
+    "idle_managed_storage_bytes": 1518,
+    "peak_managed_storage_bytes": 1518,
+    "idle_named_volume_bytes": {
+      "linkding": 372890
+    },
+    "peak_named_volume_bytes": {
+      "linkding": 372890
+    },
+    "image_virtual_bytes": {}
+  },
+  "steps": [
+    {
+      "step": "pull sissbruecker/linkding:1.47.0",
+      "passed": true
+    },
+    {
+      "step": "installs with one action",
+      "passed": true
+    },
+    {
+      "step": "answers on its address",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after install",
+      "passed": true
+    },
+    {
+      "step": "measures resources after install",
+      "passed": true
+    },
+    {
+      "step": "is usable first install",
+      "passed": false,
+      "detail": "ExpectError: expect(locator).toBeVisible() failed"
+    }
+  ],
+  "identity": {
+    "source_kind": "withheld candidate mapping",
+    "source_adapter": "caprover",
+    "source_locator": "caprover/one-click-apps#public/v4/apps/linkding.yml",
+    "source_revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
+    "source_observed_on": "2026-10-02",
+    "images_observed_on": "2026-10-02",
+    "plan_sha256": "45c2a406049bfbbd614e65dc6e7b73f040436515f749cb3c76f1d9125187c7e5",
+    "requested_images": [
+      "sissbruecker/linkding:1.47.0"
+    ],
+    "resolved_image_ids": {
+      "sissbruecker/linkding:1.47.0": "sha256:e35cb50e0581178f245125ffaa909c565416c94c9f22ace305a7d234a4345522"
+    },
+    "host_os": "windows",
+    "host_arch": "x86_64",
+    "engine": {
+      "schema_version": 2,
+      "program": "wsl.exe",
+      "endpoint": "wsl://local-store-engine-v1"
+    },
+    "compose_version": "5.5.1",
+    "probe_sha256": "752a91ace8bbae3cbf693eb196bada2d9b94e4c0088160601336c8a2406608b3",
+    "level": "lifecycle_and_first_use"
+  }
+}

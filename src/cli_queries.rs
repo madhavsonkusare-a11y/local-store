@@ -81,7 +81,7 @@ fn number(args: &mut Arguments, key: &'static str, default: usize) -> Result<usi
 
 pub(super) fn doctor(
     values: &[String],
-    runner: &dyn runtime::ProcessRunner,
+    diagnose: impl FnOnce() -> runtime::DoctorReport,
 ) -> Result<Output, String> {
     let mut args = arguments(values);
     if args.contains(["-h", "--help"]) {
@@ -91,7 +91,7 @@ pub(super) fn doctor(
     if !args.finish().is_empty() {
         return Err(format!("Usage: {CLI_NAME} doctor [--json]"));
     }
-    let report = runtime::doctor_with(runner);
+    let report = diagnose();
     let text = if json {
         format!(
             "{}\n",
@@ -271,7 +271,7 @@ mod tests {
                 healthy,
                 calls: AtomicUsize::new(0),
             };
-            let output = doctor(&args(&["--json"]), &runner).unwrap();
+            let output = doctor(&args(&["--json"]), || runtime::doctor_with(&runner)).unwrap();
             let report: serde_json::Value = serde_json::from_str(&output.text).unwrap();
             assert_eq!(report["ready"], healthy);
             if healthy {
@@ -295,7 +295,7 @@ mod tests {
                     "Docker unavailable\nCheck \"installation\""
                 }
             );
-            let text = doctor(&[], &runner).unwrap();
+            let text = doctor(&[], || runtime::doctor_with(&runner)).unwrap();
             assert!(text.text.contains(if healthy { "ok" } else { "fail" }));
         }
     }
@@ -312,9 +312,14 @@ mod tests {
             &["extra"],
             &["--json=true"],
         ] {
-            assert!(doctor(&args(values), &runner).is_err());
+            assert!(doctor(&args(values), || runtime::doctor_with(&runner)).is_err());
         }
-        assert_eq!(doctor(&args(&["--help"]), &runner).unwrap().code, 0);
+        assert_eq!(
+            doctor(&args(&["--help"]), || runtime::doctor_with(&runner))
+                .unwrap()
+                .code,
+            0
+        );
         assert_eq!(runner.calls.load(Ordering::SeqCst), 0);
     }
 

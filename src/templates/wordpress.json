@@ -111,5 +111,21 @@
       "replacement": "mariadb:11.4.13",
       "reason": "The Runtipi definition runs its database on MariaDB 11.1.3, built 2024-02-09. 11.1 was a short-term release and reached end of life in August 2024, so it has had no security fixes for two years. 11.4 is MariaDB's current long-term release, supported until 2029, and 11.4.13 is its latest patch. WordPress supports any MariaDB from 10.6, a fresh install has no data to migrate, and the audit below covers 11.4.13 because that is what runs."
     }
+  ],
+  "resource_limits": [
+    {
+      "service": "wordpress",
+      "memory_bytes": 536870912,
+      "cpu_millicores": 2000,
+      "pids": 512,
+      "reason": "Managed-engine launch task measured 67559751 bytes at peak for this service. The 512 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    },
+    {
+      "service": "wordpress-db",
+      "memory_bytes": 536870912,
+      "cpu_millicores": 2000,
+      "pids": 512,
+      "reason": "Managed-engine launch task measured 128135987 bytes at peak for this service. The 512 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    }
   ]
 }

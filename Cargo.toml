@@ -50,6 +50,8 @@ reqwest = { version = "=0.13.4", default-features = false, features = ["blocking
 sha2 = "=0.10.9"
 # Constant-time comparison for enrolled agent credential hashes.
 subtle = "=2.6.1"
+# Already pinned through Tauri; decode bounded read-only app XML-RPC replies.
+quick-xml = "=0.41.0"
 
 # Process-group signalling for the bounded runtime process runner. `libc` is
 # already in the dependency graph through Tauri; its MSRV is far below the

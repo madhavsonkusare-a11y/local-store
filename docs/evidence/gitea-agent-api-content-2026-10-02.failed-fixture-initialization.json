@@ -1,0 +1,23 @@
+{
+  "app": "gitea",
+  "bystanders_unchanged": true,
+  "cleanup_passed": true,
+  "content_boundary_sha256": "c1b6494bd87de1d52dd428a6db03e89a62fc0e8df12fcbcd72d87891f379465b",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "failure": "the registry could not be read: v1 migration refused: live registry is absent and no recovery file is valid: The system cannot find the path specified. (os error 3)",
+  "fixture_sha256": "577773f48561b20686586d9d42d8a341f628cb411c496c1d5ec6c9e44cb6d7c1",
+  "passed": false,
+  "provider": "gitea-repositories-read-v1@1.27.3",
+  "provider_sha256": "ba9e130273d883bdd7d34171be5a198ab41ee263662c96d7ba2d0c923f6e3215",
+  "recorded_at_unix": 1790940489,
+  "schema_version": 1,
+  "scope": "real reviewed read-only API summary path; no app writes, generic APIs, native WebView or full app functionality claim",
+  "steps": [
+    "exact fixture cleaned including generated credentials; existing containers unchanged"
+  ],
+  "test_sha256": "31e510480f2a855f1e0b854a618967fa2e9df6a4bfdd5949f6bdbe2f6f29f838"
+}

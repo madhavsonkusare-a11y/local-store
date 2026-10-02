@@ -33,6 +33,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -299,6 +300,49 @@ def facts_for(candidate):
     return json.loads(done.stdout)
 
 
+def verify_candidate_source(candidate):
+    """Require cached mapping inputs to match the checksum-pinned archive."""
+    provenance = candidate['provenance']
+    source = candidate['source']
+    pin = json.loads((ROOT / 'catalog/import-audit-sources.json').read_text())[source]
+    if any(provenance.get(key) != pin.get(key) for key in ('repository', 'revision')) or provenance.get('archive_sha256') != pin.get('sha256'):
+        raise SystemExit('candidate provenance differs from pinned import source')
+    archive = ROOT / '.cache/catalog' / f"{source}-{pin['revision']}.zip"
+    if hashlib.sha256(archive.read_bytes()).hexdigest() != pin['sha256']:
+        raise SystemExit('candidate archive checksum mismatch')
+    path = ROOT / '.cache/definitions' / pin['revision'] / provenance['path']
+    with zipfile.ZipFile(archive) as bundle:
+        def read(relative):
+            members = [item for item in bundle.infolist() if item.filename.split('/', 1)[-1] == relative]
+            if len(members) != 1 or members[0].file_size > 1024 * 1024:
+                raise SystemExit('candidate definition missing, duplicate or oversized')
+            return bundle.read(members[0])
+        original = read(provenance['path'])
+        if source == 'caprover':
+            import yaml
+            if yaml.safe_load(original) != json.loads(path.with_suffix('.json').read_text()):
+                raise SystemExit('extracted candidate differs from pinned archive')
+        elif original.decode().strip() != path.read_text().strip():
+            raise SystemExit('extracted candidate differs from pinned archive')
+        if source == 'runtipi':
+            config_path = str(Path(provenance['path']).parent / 'config.json').replace('\\', '/')
+            if read(config_path).decode().strip() != path.with_name('config.json').read_text().strip():
+                raise SystemExit('candidate configuration differs from pinned archive')
+
+
+def reviewed_image_pins(values, images):
+    pins = []
+    for value in values:
+        original, separator, replacement = value.partition('=')
+        if not separator or original not in images or original == replacement or any(pin['definition'] == original for pin in pins):
+            raise SystemExit('image pin must name one actual image and a different tag')
+        left, right = split_image(original), split_image(replacement)
+        if left[:2] != right[:2] or not right[2] or right[2] == 'latest':
+            raise SystemExit('image pin may change a concrete tag, not its image repository')
+        pins.append({'definition':original, 'replacement':replacement, 'reason':REVIEW + 'review release compatibility and qualify this exact pinned replacement before promotion.'})
+    return pins
+
+
 def data_storage(facts, app):
     """Where this app's data actually lives, in the words the review shows."""
     if facts["managed_directories"]:
@@ -423,20 +467,34 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("app")
     parser.add_argument("--source", help="runtipi or caprover, when an app is in both")
+    parser.add_argument('--draft', action='store_true', help='emit a withheld proposal without claiming lifecycle proof')
+    parser.add_argument('--output', help='new proposal path under catalog/promotion-proposals/ (required with --draft)')
+    parser.add_argument('--image-pin', action='append', default=[], help='reviewable same-image tag substitution DEFINITION=REPLACEMENT')
     args = parser.parse_args()
+    if not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,79}', args.app):
+        raise SystemExit('invalid candidate ID')
+    if args.draft != bool(args.output):
+        raise SystemExit('--draft requires --output; proof-backed generation keeps its existing output path')
+    if args.image_pin and not args.draft:
+        raise SystemExit('new image pins require a withheld draft and qualification of that exact reviewed plan')
+    target = ROOT / 'src/templates' / f'{args.app}.json'
+    if args.draft:
+        target = (ROOT / args.output).resolve()
+        if not target.is_relative_to((ROOT / 'catalog/promotion-proposals').resolve()) or target.suffix != '.json' or target.exists():
+            raise SystemExit('draft output must be a new JSON file under catalog/promotion-proposals/')
 
     # A manifest for an app nobody has run is a manifest that cannot be
     # completed: the platform gate requires a lifecycle proof, and there is
     # nothing honest to point it at. Requiring the run first also means the
     # generated file is about an app that demonstrably works.
     result_path = ROOT / ".cache" / "qualification" / f"{args.app}.json"
-    if not result_path.is_file():
+    if not args.draft and not result_path.is_file():
         raise SystemExit(
             f"{args.app} has no qualification result. Run it first with "
             "LOCAL_STORE_RUN_DOCKER_TEST=1 cargo run --release --example qualify_batch"
         )
-    result = json.loads(result_path.read_text(encoding="utf-8"))
-    if not result.get("passed"):
+    result = None if args.draft else json.loads(result_path.read_text(encoding="utf-8"))
+    if result is not None and not result.get("passed"):
         failed = next((s for s in result.get("steps", []) if not s["passed"]), {})
         raise SystemExit(
             f"{args.app} did not pass qualification (failed at {failed.get('step')!r}). "
@@ -456,7 +514,7 @@ def main():
     # An app carried by two sources has two different definitions, and only one
     # of them was run. Picking the other would produce a manifest whose proof is
     # about something else, so let the run decide and only ask when it cannot.
-    proven = result.get("source_revision")
+    proven = result.get("source_revision") if result else None
     if proven and len(matches) > 1:
         matches = [c for c in matches if c["provenance"]["revision"] == proven] or matches
     if len({candidate["source"] for candidate in matches}) > 1:
@@ -472,7 +530,10 @@ def main():
             "you want to ship, so the manifest and its proof describe the same definition."
         )
 
+    verify_candidate_source(candidate)
     facts = facts_for(candidate)
+    image_pins = reviewed_image_pins(args.image_pin, facts['images'])
+    final_images = [next((pin['replacement'] for pin in image_pins if pin['definition'] == image), image) for image in facts['images']]
 
     catalog = json.loads((ROOT / "src" / "generated" / "catalog.json").read_text(encoding="utf-8"))
     entry = catalog_entry(catalog, args.app)
@@ -501,8 +562,8 @@ def main():
         "documentation_url": (entry or {}).get("website_url")
         or (entry or {}).get("source_url")
         or (REVIEW + "where its own setup instructions live"),
-        "verified_at": result["steps"] and datetime.date.today().isoformat(),
-        "lifecycle_proof": f"docs/evidence/{args.app}-qualification.json",
+        "verified_at": datetime.date.today().isoformat(),
+        "lifecycle_proof": '' if args.draft else f"docs/evidence/{args.app}-qualification.json",
         "origin": {
             "importer": candidate["source"],
             "repository": provenance["repository"],
@@ -516,7 +577,7 @@ def main():
             "local_storage_required": True,
             "images": [
             {**image_audit(image), "index_digest": index_digest(image)}
-            for image in facts["images"]
+            for image in final_images
         ],
         },
         "promotion": {
@@ -537,6 +598,11 @@ def main():
         },
         "definition": definition,
     }
+    if image_pins:
+        manifest['image_pins'] = image_pins
+    if args.draft:
+        manifest['risk_notes'] = [note for note in manifest['risk_notes'] if not note.startswith('Proven on Windows')]
+        manifest['risk_notes'].append('Not qualified on the Local Store managed engine. This withheld proposal is not installable from the catalog.')
     # What Runtipi copies into the data folder travels with the definition,
     # verbatim, so the review covers it. template_facts already refused to
     # continue quietly if any of it was binary.
@@ -558,7 +624,8 @@ def main():
 
     # The proof travels with the manifest that names it.
     evidence = ROOT / "docs" / "evidence" / f"{args.app}-qualification.json"
-    evidence.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    if result is not None:
+        evidence.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8", newline="\n")
 
     # A recent rebuild is the fact a promotion turns on most often, and eight
     # apps were once approved in a batch without anybody looking at it — three
@@ -567,10 +634,10 @@ def main():
     age_days = (datetime.date.today() - datetime.date.fromisoformat(oldest)).days
     stale = age_days > 365
 
-    target = ROOT / "src" / "templates" / f"{args.app}.json"
-    target.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     outstanding = json.dumps(manifest).count(REVIEW)
-    print(f"wrote {target.relative_to(ROOT)} and {evidence.relative_to(ROOT)}")
+    print(f"wrote {target.relative_to(ROOT)}" + (f" and {evidence.relative_to(ROOT)}" if result else '; no lifecycle proof or catalog approval claimed'))
     print(f"{outstanding} thing(s) marked {REVIEW.strip()} still need a person")
     if stale:
         print(

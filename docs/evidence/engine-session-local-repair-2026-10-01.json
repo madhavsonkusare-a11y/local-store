@@ -1,0 +1,19 @@
+{
+  "before_sha256": "1f0011d3aadb90d950c3125fdaba92327f38195c19fab44acf57e5844fb430db",
+  "after_sha256": "3716db5a171b5777187a4d68edb82d5db801664094c8843b0a14174cc72bce26",
+  "added": [
+    "adduser\t3.137ubuntu1\tall",
+    "dbus\t1.14.10-4ubuntu4.1\tamd64",
+    "dbus-bin\t1.14.10-4ubuntu4.1\tamd64",
+    "dbus-daemon\t1.14.10-4ubuntu4.1\tamd64",
+    "dbus-session-bus-common\t1.14.10-4ubuntu4.1\tall",
+    "dbus-system-bus-common\t1.14.10-4ubuntu4.1\tall",
+    "dbus-user-session\t1.14.10-4ubuntu4.1\tamd64",
+    "libdbus-1-3\t1.14.10-4ubuntu4.1\tamd64",
+    "libexpat1\t2.6.1-2ubuntu0.6\tamd64",
+    "libpam-systemd\t255.4-1ubuntu8.17\tamd64"
+  ],
+  "changed": [],
+  "removed": [],
+  "post_repair_seconds": 2.73
+}

@@ -1,0 +1,21 @@
+{
+  "app": "n8n",
+  "content_boundary_sha256": "30129f812f94351f6fb9e76364a1a1abb4cf819a5ec00f8468a23d229a443125",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "failure": "n8n refused the reviewed tool operation.",
+  "passed": false,
+  "provider": "n8n-official-mcp-v1@2.37.10",
+  "provider_sha256": "430e64c120f7325149b35385aa38bb841d5b1d52bf4d9482f589c0ac58f6fd54",
+  "recorded_at_unix": 1790916728,
+  "schema_version": 1,
+  "scope": "real official MCP metadata and exact fixed note-table creation; no workflow execution, arbitrary MCP proxy, all-app coverage or native WebView proof",
+  "steps": [
+    "isolated reviewed n8n installed on the selected self engine",
+    "ownership-safe fixture cleanup; existing containers unchanged"
+  ],
+  "test_sha256": "9fc50efafe9d4dd9a7ce5bf22db2a3828287dfe6c79b7ec958dfa884e00bba24"
+}

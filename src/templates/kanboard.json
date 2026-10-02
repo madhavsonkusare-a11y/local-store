@@ -46,7 +46,7 @@
   },
   "promotion": {
     "state": "approved",
-    "reason": "Qualified on 2026-09-10 and approved by the owner. A real install proved it starts, opens to a usable screen, survives a restart and a keep-data reinstall with its data intact, and removes everything it created. v1.2.54 is the current release — the same version upstream published on 2026-08-29 — and the image was rebuilt that day. It ships a default admin password, which the risk notes say plainly rather than hiding."
+    "reason": "Qualified on 2026-09-10 and approved by the owner. A real install proved it starts, opens to a usable screen, survives a restart and a keep-data reinstall with its data intact, and removes everything it created. v1.2.54 is the current release \u2014 the same version upstream published on 2026-08-29 \u2014 and the image was rebuilt that day. It ships a default admin password, which the risk notes say plainly rather than hiding."
   },
   "data_storage": "Local Store managed folder / kanboard",
   "risk_notes": [
@@ -65,6 +65,15 @@
   "definition": "{\n  \"services\": [\n    {\n      \"name\": \"kanboard\",\n      \"image\": \"kanboard/kanboard:v1.2.54\",\n      \"isMain\": true,\n      \"internalPort\": 80,\n      \"environment\": [\n        {\n          \"key\": \"PLUGIN_INSTALLER\",\n          \"value\": \"${PLUGIN_INSTALLER}\"\n        }\n      ],\n      \"volumes\": [\n        {\n          \"hostPath\": \"${APP_DATA_DIR}/data/kanboard_data\",\n          \"containerPath\": \"/var/www/app/data\"\n        },\n        {\n          \"hostPath\": \"${APP_DATA_DIR}/data/kanboard_plugins\",\n          \"containerPath\": \"/var/www/app/plugins\"\n        }\n      ]\n    }\n  ],\n  \"schemaVersion\": 2,\n  \"$schema\": \"https://schemas.runtipi.io/v2/dynamic-compose.json\"\n}\n",
   "config": {
     "path": "apps/kanboard/config.json",
-    "content": "{\n  \"name\": \"Kanboard\",\n  \"available\": true,\n  \"exposable\": true,\n  \"dynamic_config\": true,\n  \"port\": 8010,\n  \"id\": \"kanboard\",\n  \"description\": \"Kanboard is a free and open source Kanban project management software.\",\n  \"tipi_version\": 34,\n  \"version\": \"v1.2.54\",\n  \"categories\": [\"development\"],\n  \"short_desc\": \"Open Source Kanban Board\",\n  \"author\": \"Frédéric Guillot\",\n  \"source\": \"https://github.com/kanboard/kanboard\",\n  \"website\": \"https://kanboard.org/\",\n  \"form_fields\": [\n    {\n      \"type\": \"boolean\",\n      \"label\": \"Enable Plugin Installer\",\n      \"required\": false,\n      \"env_variable\": \"PLUGIN_INSTALLER\"\n    }\n  ],\n  \"supported_architectures\": [\"arm64\", \"amd64\"],\n  \"created_at\": 1691943801422,\n  \"updated_at\": 1788596780066,\n  \"$schema\": \"../app-info-schema.json\",\n  \"min_tipi_version\": \"4.5.0\"\n}\n"
-  }
+    "content": "{\n  \"name\": \"Kanboard\",\n  \"available\": true,\n  \"exposable\": true,\n  \"dynamic_config\": true,\n  \"port\": 8010,\n  \"id\": \"kanboard\",\n  \"description\": \"Kanboard is a free and open source Kanban project management software.\",\n  \"tipi_version\": 34,\n  \"version\": \"v1.2.54\",\n  \"categories\": [\"development\"],\n  \"short_desc\": \"Open Source Kanban Board\",\n  \"author\": \"Fr\u00e9d\u00e9ric Guillot\",\n  \"source\": \"https://github.com/kanboard/kanboard\",\n  \"website\": \"https://kanboard.org/\",\n  \"form_fields\": [\n    {\n      \"type\": \"boolean\",\n      \"label\": \"Enable Plugin Installer\",\n      \"required\": false,\n      \"env_variable\": \"PLUGIN_INSTALLER\"\n    }\n  ],\n  \"supported_architectures\": [\"arm64\", \"amd64\"],\n  \"created_at\": 1691943801422,\n  \"updated_at\": 1788596780066,\n  \"$schema\": \"../app-info-schema.json\",\n  \"min_tipi_version\": \"4.5.0\"\n}\n"
+  },
+  "resource_limits": [
+    {
+      "service": "kanboard",
+      "memory_bytes": 268435456,
+      "cpu_millicores": 2000,
+      "pids": 512,
+      "reason": "Managed-engine launch task measured 26466058 bytes at peak for this service. The 256 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    }
+  ]
 }

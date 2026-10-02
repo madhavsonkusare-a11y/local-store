@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790707013,
+  "recorded_at_unix": 1790841237,
   "app": "privatebin",
   "passed": true,
   "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
@@ -14,17 +14,17 @@
   },
   "first_use": "an encrypted paste is created in the browser, and its exact plaintext is read after restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 5659,
+    "first_start_millis": 4994,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-privatebin-qualify-27832-1790706975713329400-privatebin": 47039119
+      "local-store-privatebin-qualify-7184-1790841210217205600-privatebin": 48045752
     },
     "peak_memory_bytes": {
-      "local-store-privatebin-qualify-27832-1790706975713329400-privatebin": 47039119
+      "local-store-privatebin-qualify-7184-1790841210217205600-privatebin": 48045752
     },
-    "peak_total_memory_bytes": 47039119,
-    "idle_managed_storage_bytes": 1082,
-    "peak_managed_storage_bytes": 2611,
+    "peak_total_memory_bytes": 48045752,
+    "idle_managed_storage_bytes": 1204,
+    "peak_managed_storage_bytes": 2733,
     "idle_named_volume_bytes": {},
     "peak_named_volume_bytes": {},
     "image_virtual_bytes": {
@@ -112,7 +112,7 @@
     "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
     "source_observed_on": "2026-09-10",
     "images_observed_on": "2026-09-09",
-    "plan_sha256": "b6474c33c5490635ef167985b61ca938a48e79a31ea8c510698a2371285af054",
+    "plan_sha256": "6ab3e5db7757fe5a549fc10b424d06af70af7919af742943c36026232c7fcc41",
     "requested_images": [
       "privatebin/nginx-fpm-alpine:2.0.6"
     ],

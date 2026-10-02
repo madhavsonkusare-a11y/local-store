@@ -1,0 +1,84 @@
+{
+  "app": "memos",
+  "content_probe_sha256": "3ae0c9cdb0947814ab24b7e5b7e89229e6f45b55dadae0adb6a70389ccdc38c3",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "passed": true,
+  "recorded_at_unix": 1790874005,
+  "schema_version": 1,
+  "scope": "Windows launcher owner recovery functions and projections on owned WSL engine; not native WebView or clean-machine proof",
+  "steps": [
+    {
+      "passed": true,
+      "step": "verified owned engine and explicit native selection"
+    },
+    {
+      "passed": true,
+      "step": "refuse existing Memos resources before fixture setup"
+    },
+    {
+      "passed": true,
+      "step": "install isolated Memos on the owned engine"
+    },
+    {
+      "passed": true,
+      "step": "create first admin and exact private memo"
+    },
+    {
+      "passed": true,
+      "step": "persist viewed onboarding steps without granting engine permissions"
+    },
+    {
+      "passed": true,
+      "step": "simulate lost registry only inside the isolated root"
+    },
+    {
+      "passed": true,
+      "step": "launcher projects verified retained setup with persisted viewed steps"
+    },
+    {
+      "passed": true,
+      "step": "owner recovery adoption restores the exact address and engine binding"
+    },
+    {
+      "passed": true,
+      "step": "read the exact private memo after lost-registry recovery"
+    },
+    {
+      "passed": true,
+      "step": "owner uninstall keeps fixture data and removes its registry entry"
+    },
+    {
+      "passed": true,
+      "step": "snapshot actual persisted Memos files while stopped"
+    },
+    {
+      "passed": true,
+      "step": "launcher projects retained setup with no containers"
+    },
+    {
+      "passed": true,
+      "step": "owner discard preserves setup, engine binding and every data file"
+    },
+    {
+      "passed": true,
+      "step": "re-adopt retained setup through the locked owner recovery action"
+    },
+    {
+      "passed": true,
+      "step": "read the exact private memo after keep-data discard and re-adoption"
+    },
+    {
+      "passed": true,
+      "step": "remove only the verified fixture and its test data"
+    },
+    {
+      "passed": true,
+      "step": "existing containers retain their exact IDs and states"
+    }
+  ],
+  "test_sha256": "c2764ede4e191debe789695918757086e02a704a204abf6538d8699ee4d6061e"
+}

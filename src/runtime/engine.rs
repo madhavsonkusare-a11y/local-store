@@ -65,6 +65,15 @@ impl EngineBinding {
     /// Capture the effective local endpoint once. Never store mutable context
     /// names as the identity used by subsequent lifecycle commands.
     pub fn discover(runner: &dyn ProcessRunner) -> AppResult<Self> {
+        if let Some(selected) = crate::engine_setup::selected(runner)? {
+            return Ok(selected);
+        }
+        Err(AppError::invalid("Set up and select the Local Store engine before installing an app. Docker Desktop is not required."))
+    }
+
+    /// Explicit owner selection may inspect ambient Docker even with a saved
+    /// choice. Ordinary new installs use `discover` and honor that choice.
+    pub fn discover_ambient(runner: &dyn ProcessRunner) -> AppResult<Self> {
         let explicit_context = std::env::var("DOCKER_CONTEXT")
             .ok()
             .filter(|s| !s.is_empty());

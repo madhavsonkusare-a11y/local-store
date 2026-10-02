@@ -67,5 +67,14 @@
   "config": {
     "path": "apps/privatebin/config.json",
     "content": "{\n  \"$schema\": \"../app-info-schema.json\",\n  \"name\": \"PrivateBin\",\n  \"available\": true,\n  \"exposable\": true,\n  \"dynamic_config\": true,\n  \"port\": 8122,\n  \"id\": \"privatebin\",\n  \"tipi_version\": 27,\n  \"version\": \"2.0.6\",\n  \"categories\": [\"utilities\"],\n  \"description\": \"PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted and decrypted in the browser using 256bit AES in Galois Counter mode.\",\n  \"short_desc\": \"A minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256 bits AES.\",\n  \"author\": \"PrivateBin\",\n  \"source\": \"https://github.com/PrivateBin/PrivateBin\",\n  \"form_fields\": [],\n  \"uid\": 65534,\n  \"gid\": 82,\n  \"supported_architectures\": [\"arm64\", \"amd64\"],\n  \"created_at\": 1691943801422,\n  \"updated_at\": 1786340889077,\n  \"min_tipi_version\": \"4.5.0\"\n}\n"
-  }
+  },
+  "resource_limits": [
+    {
+      "service": "privatebin",
+      "memory_bytes": 268435456,
+      "cpu_millicores": 1000,
+      "pids": 256,
+      "reason": "Managed-engine launch task measured 47039119 bytes at peak for this service. The 256 MiB development ceiling allows headroom and bounds runaway work; larger workloads require separate sizing."
+    }
+  ]
 }

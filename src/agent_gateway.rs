@@ -14,6 +14,7 @@ use crate::{
     storage::{self, RegistryV2},
 };
 use auth::ClientCredentialStore;
+use serde::Serialize;
 use std::{
     collections::BTreeSet,
     path::{Path, PathBuf},
@@ -21,6 +22,13 @@ use std::{
 
 const MAX_STATUS_GRANT_HOURS: u64 = 24 * 30;
 const MAX_LIFECYCLE_GRANT_HOURS: u64 = 24;
+
+#[derive(Serialize)]
+pub struct OwnerPolicySnapshot {
+    pub clients: Vec<String>,
+    pub grants: Vec<Grant>,
+    pub audit: Vec<crate::agent_policy::AuditEvent>,
+}
 
 /// Only the credential verifier in this module can mint this identity.
 struct VerifiedClient {
@@ -35,12 +43,135 @@ struct LifecycleCall<'a> {
 
 /// No grant, approval, install, content, or destructive methods are exposed.
 /// Root paths are trusted owner configuration, never MCP request arguments.
+#[derive(Clone)]
 pub struct AgentGateway {
     policy_root: PathBuf,
     credentials_root: PathBuf,
 }
 
 impl AgentGateway {
+    pub(crate) fn grant_files_for_owner(
+        &self,
+        client_id: &str,
+        app_id: &str,
+        hours: u64,
+        now: u64,
+    ) -> AppResult<u64> {
+        if !(1..=24).contains(&hours) {
+            return Err(AppError::invalid("File grants last 1 to 24 hours."));
+        }
+        let expires = now
+            .checked_add(hours * 3600)
+            .ok_or_else(|| AppError::invalid("Grant expiry is invalid."))?;
+        if !ClientCredentialStore::open(&self.credentials_root)?.contains(client_id) {
+            return Err(AppError::new(
+                ErrorCode::NotFound,
+                "Agent client is not enrolled.",
+            ));
+        }
+        AgentPolicyStore::open(&self.policy_root)?.grant(Grant {
+            client_id: client_id.into(),
+            app_id: app_id.into(),
+            actions: BTreeSet::from([AgentAction::Status, AgentAction::ReadFiles]),
+            expires_at_unix: expires,
+        })?;
+        Ok(expires)
+    }
+    pub(crate) fn authorize_files(&self, bearer: &str, app_id: &str, now: u64) -> AppResult<()> {
+        let (client, _) = self.authenticate_mutation(bearer)?;
+        AgentPolicyStore::open(&self.policy_root)?.authorize(
+            &client,
+            app_id,
+            AgentAction::ReadFiles,
+            None,
+            now,
+        )
+    }
+    /// Launcher-only content grant. Scoped app validation and protected token
+    /// connection are checked by AgentContent before this owner method.
+    pub(crate) fn grant_content_for_owner(
+        &self,
+        client_id: &str,
+        app_id: &str,
+        hours: u64,
+        write: bool,
+        now: u64,
+    ) -> AppResult<u64> {
+        if !(1..=24).contains(&hours) {
+            return Err(AppError::invalid("Content grants last 1 to 24 hours."));
+        }
+        let expires = now
+            .checked_add(hours * 3600)
+            .ok_or_else(|| AppError::invalid("Grant expiry is invalid."))?;
+        let credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        if !credentials.contains(client_id) {
+            return Err(AppError::new(
+                ErrorCode::NotFound,
+                "Agent client is not enrolled.",
+            ));
+        }
+        let mut actions = BTreeSet::from([AgentAction::Status, AgentAction::ReadContent]);
+        if write {
+            actions.insert(AgentAction::WriteContent);
+        }
+        AgentPolicyStore::open(&self.policy_root)?.grant(Grant {
+            client_id: client_id.into(),
+            app_id: app_id.into(),
+            actions,
+            expires_at_unix: expires,
+        })?;
+        Ok(expires)
+    }
+
+    pub(crate) fn check_content_write_request(
+        &self,
+        bearer: &str,
+        app_id: &str,
+        now: u64,
+    ) -> AppResult<()> {
+        let (client, _) = self.authenticate_mutation(bearer)?;
+        let mut policy = AgentPolicyStore::open(&self.policy_root)?;
+        let permitted = policy.grants_for_owner().iter().any(|g| {
+            g.client_id == client
+                && g.app_id == app_id
+                && now < g.expires_at_unix
+                && g.actions.contains(&AgentAction::WriteContent)
+        });
+        policy.record_request_audit(&client, app_id, AgentAction::WriteContent, false, now)?;
+        if permitted {
+            Ok(())
+        } else {
+            Err(AppError::new(
+                ErrorCode::Forbidden,
+                "App content access denied.",
+            ))
+        }
+    }
+
+    /// The write branch is crate-private and only used after AgentContent has
+    /// atomically consumed an exact, owner-approved argument-hash proposal.
+    pub(crate) fn authorize_content(
+        &self,
+        bearer: &str,
+        app_id: &str,
+        write: bool,
+        now: u64,
+    ) -> AppResult<()> {
+        let (client, _) = self.authenticate_mutation(bearer)?;
+        let mut policy = AgentPolicyStore::open(&self.policy_root)?;
+        if write {
+            let approval = policy.approve(&client, app_id, AgentAction::WriteContent, now + 1)?;
+            policy.authorize(
+                &client,
+                app_id,
+                AgentAction::WriteContent,
+                Some(&approval),
+                now,
+            )
+        } else {
+            policy.authorize(&client, app_id, AgentAction::ReadContent, None, now)
+        }
+    }
     /// Resolve private machine-local state from the owner profile.
     pub fn open_local() -> AppResult<Self> {
         let base = std::env::var_os("LOCALAPPDATA")
@@ -93,6 +224,66 @@ impl AgentGateway {
 
     pub fn list_clients_for_owner(&self) -> AppResult<Vec<String>> {
         Ok(ClientCredentialStore::open(&self.credentials_root)?.client_ids())
+    }
+
+    /// Owner inspection is never exposed as an MCP discovery tool. Hold the
+    /// credential lock before the policy lock, matching grant/revoke ordering.
+    pub fn snapshot_for_owner(&self) -> AppResult<OwnerPolicySnapshot> {
+        let credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        let policy = AgentPolicyStore::open(&self.policy_root)?;
+        Ok(OwnerPolicySnapshot {
+            clients: credentials.client_ids(),
+            grants: policy.grants_for_owner(),
+            audit: policy.audit().to_vec(),
+        })
+    }
+
+    pub fn credential_matches_for_owner(&self, id: &str, secret: &str) -> AppResult<bool> {
+        let credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        Ok(credentials.verify(secret, Some(id)).is_ok())
+    }
+
+    pub(crate) fn authenticate_mutation(&self, secret: &str) -> AppResult<(String, String)> {
+        let credentials = ClientCredentialStore::open(&self.credentials_root)?;
+        let client = credentials.verify(secret, None)?;
+        let generation = credentials
+            .generation(&client.client_id)
+            .ok_or_else(|| AppError::new(ErrorCode::Forbidden, "Agent access denied."))?;
+        Ok((client.client_id, generation))
+    }
+
+    pub(crate) fn owner_client_generation(&self, id: &str) -> AppResult<String> {
+        ClientCredentialStore::open(&self.credentials_root)?
+            .generation(id)
+            .ok_or_else(|| AppError::new(ErrorCode::Forbidden, "Agent access denied."))
+    }
+
+    pub(crate) fn audit_mutation(
+        &self,
+        client_id: &str,
+        app_id: &str,
+        action: AgentAction,
+        allowed: bool,
+        now: u64,
+    ) -> AppResult<()> {
+        AgentPolicyStore::open(&self.policy_root)?
+            .record_request_audit(client_id, app_id, action, allowed, now)
+    }
+
+    pub(crate) fn authorize_status_request(
+        &self,
+        secret: &str,
+        app_id: &str,
+        now: u64,
+    ) -> AppResult<()> {
+        let (client, _) = self.authenticate_mutation(secret)?;
+        AgentPolicyStore::open(&self.policy_root)?.authorize(
+            &client,
+            app_id,
+            AgentAction::Status,
+            None,
+            now,
+        )
     }
 
     /// Trusted local owner CLI only. Grants exactly status for an enrolled

@@ -1,0 +1,25 @@
+{
+  "app": "memos",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "failure": null,
+  "passed": true,
+  "provider": "memos-private-api-v1@0.30.0",
+  "provider_sha256": "8a0e64018fda45067b190513bdda6ac266047c4efe52ddd790cbcc300db51784",
+  "recorded_at_unix": 1790873002,
+  "schema_version": 1,
+  "scope": "Real typed Memos provider core; not all-app content or native Windows WebView proof",
+  "steps": [
+    "isolated reviewed Memos installed on selected self engine",
+    "no implicit content access; explicit token consent; DPAPI ciphertext contains no app token",
+    "exact private memo read; read scope cannot request a write",
+    "exact untrusted text requires owner approval; cross-client and replay denied; private write/read passed",
+    "protected token reconnect and exact created memo survive managed restart",
+    "token replacement cancels pending approvals; live revocation denies content; durable audit has no token or memo text",
+    "ownership-safe cleanup removes fixture only; existing containers unchanged"
+  ],
+  "test_sha256": "35d87e75e97eeb6a14cfcb295dc090bfaf8d0c458e1f1ec0a6b7b70e8bd61343"
+}

@@ -7,88 +7,88 @@
       "manifest": "src/templates/flatnotes.json",
       "manifest_sha256": "66ce24eb18af14d1361902ec3a2e6ecd725a0ed14a765a4bb74ce8fbcfe641fa",
       "evidence": "docs/evidence/flatnotes-managed-content-2026-09-30.json",
-      "evidence_sha256": "e9e3e54969e712f45934167da1628f99e2a3cde412839a36f3660ce2e84c8d3f",
+      "evidence_sha256": "528479cd7ad3a8c4a62984c0af4feb34269b5e022eb657c3fdff42d3d7df9530",
       "probe": "scripts/content-roundtrip-probe.mjs",
       "task": "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall"
     },
     {
       "id": "gitea",
       "manifest": "src/templates/gitea.json",
-      "manifest_sha256": "c37ed0792622dcec21cc603eb4e3031b314a8a7c8364438805068261e205c0a7",
+      "manifest_sha256": "187dbda6ffb2afaa57d35cb11685b16e8e5a229db80d3cfc7b9a0d503fd28db9",
       "evidence": "docs/evidence/gitea-managed-repository-2026-09-30.json",
-      "evidence_sha256": "6a0085ec5311ac0593ba4c99262b815b15acc55f1ee470ee61f995508f14de32",
+      "evidence_sha256": "122d053583d53ba55c365f4abf32d046898981d9d30df6631252631132599ee6",
       "probe": "scripts/gitea-repository-probe.mjs",
       "task": "an administrator creates a private repository and commits an exact file; the repository, commit and file survive restart and keep-data reinstall"
     },
     {
       "id": "immich",
       "manifest": "src/templates/immich.json",
-      "manifest_sha256": "672d776c7653107094239c2397712dbc0f7ce0a6e4ecda0da8aefefa9ff87118",
+      "manifest_sha256": "30362983651fbddd5074ac4bdd3cfcc43d868b63d887584897c013aae9169a9c",
       "evidence": "docs/evidence/immich-managed-photo-2026-09-30.json",
-      "evidence_sha256": "68639bb3136340521d9b88ba2ac998b78756c02272464bf86cb13ebbc66c308c",
+      "evidence_sha256": "2d33c0ab9389ac9e77bb60a12b10c689c8d95dd1e376064a35219f5f357f582e",
       "probe": "scripts/immich-photo-probe.mjs",
       "task": "an administrator uploads an owned photo, finds it by filename, and downloads identical original bytes after restart and keep-data reinstall"
     },
     {
       "id": "jellyfin",
       "manifest": "src/templates/jellyfin.json",
-      "manifest_sha256": "9cc47ac4596a8bf59dce54838c3ca7a53411e4ebe0e6a75ace9b2a95dcd4a92f",
+      "manifest_sha256": "3ce423d935530eded9bee6772f038a821284588b05fddcd62492af5ef51da839",
       "evidence": "docs/evidence/jellyfin-managed-media-2026-09-30.json",
-      "evidence_sha256": "5e704837d1a3320ad400fa0652ec1ac3f11f8ca2db754c4b100f11acbf4dba0a",
+      "evidence_sha256": "913d5822ed40f2650f65f3d56e4461503d6788b9e4d0a2a3b72b660fd24212cf",
       "probe": "scripts/jellyfin-media-probe.mjs",
       "task": "an administrator imports an owned sample audio file, streams its exact bytes, and repeats playback after restart and keep-data reinstall"
     },
     {
       "id": "kanboard",
       "manifest": "src/templates/kanboard.json",
-      "manifest_sha256": "8743f6bb094224fb630b68c2d70ad599d07dd48ccc157e049a94b91380d17520",
+      "manifest_sha256": "cdc68b184326fefda6b90f60ea18655108f11e30a91b03e40f4642fd06b03e57",
       "evidence": "docs/evidence/kanboard-managed-task-2026-09-28.json",
-      "evidence_sha256": "7531d5197823ea47db04f1e1fd4af94720be37f9ba69bf195108d4dd974ec8eb",
+      "evidence_sha256": "117c43fc0913cf0854050cf1b4483004e9887340e793f5a13ca8860defe5c0f5",
       "probe": "scripts/kanboard-task-probe.mjs",
       "task": "a project and exact task are created, the task moves to a second column, and both survive restart and keep-data reinstall"
     },
     {
       "id": "memos",
       "manifest": "src/recipes/memos.json",
-      "manifest_sha256": "6ecab572f38fabe0337121cca07b60418c29b36af511d249a9958ba974246916",
+      "manifest_sha256": "b87724010c02bc319d406c08a06f6700511aaab639b5fd3cd52dd5468bc43931",
       "evidence": "docs/evidence/memos-managed-resource-2026-09-23.json",
-      "evidence_sha256": "639710ed14fc8c75a9a8dbf08c1605715c126e8564569a0d60f03078484d4285",
+      "evidence_sha256": "7c9c03789852ca86b4ba94df43a786d6c1f6f62cfed95f9ca8707a7a4f8aba16",
       "probe": "scripts/memos-content-probe.mjs",
       "task": "an admin signs in, creates a private memo, and reads the same content after restart and reinstall"
     },
     {
       "id": "n8n",
       "manifest": "src/recipes/n8n.json",
-      "manifest_sha256": "4e6aed52b582c003cdf35aa845342efdebe197c37f789b58b5a7e6f45d740955",
+      "manifest_sha256": "b77733b1ca146528f8d2330b2c7ea4cee399e15c1ac1ae067776fee4418ab6e1",
       "evidence": "docs/evidence/n8n-managed-workflow-2026-09-30.json",
-      "evidence_sha256": "f27fcce708523d76a7955843ae29db92d0afc9bed3ae9970348152281a171561",
+      "evidence_sha256": "c51c123ce19a38061658a79ad1ed69777cbc31f10bb67e32f101679e571509fb",
       "probe": "scripts/n8n-workflow-probe.mjs",
       "task": "an owner creates a two-node workflow, executes it, and reads the exact persisted output after restart and keep-data reinstall"
     },
     {
       "id": "privatebin",
       "manifest": "src/templates/privatebin.json",
-      "manifest_sha256": "09af373f5840c0cb33057e5844ef5712c28db92c8c1c34238d9331142e6beedc",
+      "manifest_sha256": "c5e7de0ea2b55a7c82942f4ec021d2c281a4b619435d89b863f18609b5465350",
       "evidence": "docs/evidence/privatebin-managed-paste-2026-09-30.json",
-      "evidence_sha256": "789dd259adc4f592cf3f387828bca31f38e57b2d6153efb246a46443356be0de",
+      "evidence_sha256": "d58bf122733f0f5bf445b6a922dc62e697e92791b354d033036873d44bd95237",
       "probe": "scripts/privatebin-browser-probe.mjs",
       "task": "an encrypted paste is created in the browser, and its exact plaintext is read after restart and keep-data reinstall"
     },
     {
       "id": "uptime-kuma",
       "manifest": "src/recipes/uptime-kuma.json",
-      "manifest_sha256": "cc0548bc2db4103b279254a38d8577843b63153ce25a355a454327bb2edb4e5a",
+      "manifest_sha256": "43d7e652a7ae95f6111524a1770a925449ca2f165801f9ca08678a829920862f",
       "evidence": "docs/evidence/uptime-kuma-managed-monitor-2026-09-30.json",
-      "evidence_sha256": "5a4f8c3f782c4c088ea8c8eb25beb7dc0ebb77bc0ce336b90f1c2066400ec4e7",
+      "evidence_sha256": "995f8376fab9d8f2a91c8ecbafbda57e163555a673048e398c12bad5f18f45c4",
       "probe": "scripts/uptime-kuma-monitor-probe.mjs",
       "task": "a local admin creates a unique HTTP monitor of the app's own page, it records Up, and that exact monitor remains Up after restart and keep-data reinstall"
     },
     {
       "id": "wordpress",
       "manifest": "src/templates/wordpress.json",
-      "manifest_sha256": "904921ba26420c6272872484e971596d58cd4da39432cbef62bbce5cf8e18bb5",
+      "manifest_sha256": "b0ec9c0922d851159a0ca0ad7917119a8c6f41291035f263421d491ed2b78627",
       "evidence": "docs/evidence/wordpress-managed-post-2026-09-30.json",
-      "evidence_sha256": "cfd2f9c0f9a5d665444ebdc1abab22519f3b6f01d4c4332fc9364e1d8e464536",
+      "evidence_sha256": "61ced739bb5ab44b5e28a6ae3a9bbe83f6afd319275cf2ff81a3fd214f3dd067",
       "probe": "scripts/wordpress-post-probe.mjs",
       "task": "an administrator installs WordPress, publishes an exact unique post, and reads the same published content after restart and keep-data reinstall"
     }

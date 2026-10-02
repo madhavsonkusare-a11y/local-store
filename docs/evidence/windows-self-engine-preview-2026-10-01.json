@@ -1,0 +1,29 @@
+{
+  "engine": {
+    "bootstrap": {
+      "status": "recovery",
+      "phase": "verified",
+      "disposition": "ready"
+    },
+    "prerequisites": {
+      "state": "ready",
+      "setup_requires_elevation": false,
+      "restart_may_be_required": false
+    },
+    "daemon": "responsive",
+    "disk_available_bytes": 251000537088
+  },
+  "payload": "verified_development",
+  "payload_bytes": 572798976,
+  "required_disk_bytes": 2255267840,
+  "disk_sufficient": true,
+  "payload_release_approved": false,
+  "setup_requires_administrator": false,
+  "restart_may_be_required": false,
+  "selected_engine": {
+    "schema_version": 2,
+    "program": "wsl.exe",
+    "endpoint": "wsl://local-store-engine-v1"
+  },
+  "development_engine_available": true
+}

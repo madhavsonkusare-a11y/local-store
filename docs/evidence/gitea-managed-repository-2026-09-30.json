@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790759885,
+  "recorded_at_unix": 1790839784,
   "app": "gitea",
   "passed": true,
   "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
@@ -16,25 +16,25 @@
   },
   "first_use": "an administrator creates a private repository and commits an exact file; the repository, commit and file survive restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 5482,
+    "first_start_millis": 5936,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-gitea-qualify-13404-1790759834855875600-gitea": 86077603,
-      "local-store-gitea-qualify-13404-1790759834855875600-gitea-db": 30702305
+      "local-store-gitea-qualify-17416-1790839733592552200-gitea": 158544691,
+      "local-store-gitea-qualify-17416-1790839733592552200-gitea-db": 52848230
     },
     "peak_memory_bytes": {
-      "local-store-gitea-qualify-13404-1790759834855875600-gitea": 106011033,
-      "local-store-gitea-qualify-13404-1790759834855875600-gitea-db": 31971082
+      "local-store-gitea-qualify-17416-1790839733592552200-gitea": 158544691,
+      "local-store-gitea-qualify-17416-1790839733592552200-gitea-db": 52848230
     },
-    "peak_total_memory_bytes": 133420810,
-    "idle_managed_storage_bytes": 2470,
-    "peak_managed_storage_bytes": 2470,
+    "peak_total_memory_bytes": 211392921,
+    "idle_managed_storage_bytes": 2722,
+    "peak_managed_storage_bytes": 2722,
     "idle_named_volume_bytes": {
       "gitea-data": 5489,
       "gitea-postgres": 51970827
     },
     "peak_named_volume_bytes": {
-      "gitea-data": 107463,
+      "gitea-data": 106088,
       "gitea-postgres": 60009789
     },
     "image_virtual_bytes": {
@@ -127,7 +127,7 @@
     "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
     "source_observed_on": "2026-09-12",
     "images_observed_on": "2026-09-12",
-    "plan_sha256": "75593fbe43f20c165d9c88bf9b0d32431c8416385e93bd7da3bf6835fae16f70",
+    "plan_sha256": "3836ab17e2d204ba61132b34115f9f971321a9584ac0da810fa121a8f88f5dbc",
     "requested_images": [
       "gitea/gitea:1.27.3",
       "postgres:14"

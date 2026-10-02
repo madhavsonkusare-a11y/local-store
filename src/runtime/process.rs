@@ -158,6 +158,25 @@ pub trait ProcessRunner: Send + Sync {
 
 pub struct SystemProcessRunner;
 
+impl SystemProcessRunner {
+    /// Private provider input is sent over a short-lived pipe, never argv or a
+    /// temporary file. Reuse the same deadlines, process group and capture
+    /// limits. Diagnostic errors must not include private provider output.
+    pub fn run_with_private_input(
+        &self,
+        spec: &CommandSpec,
+        input: &[u8],
+    ) -> Result<ProcessOutput, ProcessError> {
+        if input.len() > 16 * 1024 * 1024 {
+            return Err(ProcessError::new(
+                ProcessErrorCode::ProcessFailed,
+                "private provider input exceeds its limit",
+            ));
+        }
+        run_system(spec, &CancelToken::new(), Some(input))
+    }
+}
+
 impl ProcessRunner for SystemProcessRunner {
     fn engine_binding(&self) -> crate::error::AppResult<Option<super::engine::EngineBinding>> {
         super::engine::EngineBinding::discover(self).map(Some)
@@ -167,111 +186,139 @@ impl ProcessRunner for SystemProcessRunner {
         spec: &CommandSpec,
         cancel: &CancelToken,
     ) -> Result<ProcessOutput, ProcessError> {
-        let mut command = Command::new(&spec.program);
-        for key in &spec.remove_env {
-            command.env_remove(key);
+        run_system(spec, cancel, None)
+    }
+}
+
+fn run_system(
+    spec: &CommandSpec,
+    cancel: &CancelToken,
+    private_input: Option<&[u8]>,
+) -> Result<ProcessOutput, ProcessError> {
+    let mut command = Command::new(&spec.program);
+    for key in &spec.remove_env {
+        command.env_remove(key);
+    }
+    command
+        .args(&spec.args)
+        .stdin(if private_input.is_some() {
+            Stdio::piped()
+        } else {
+            Stdio::null()
+        })
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+    if let Some(cwd) = &spec.cwd {
+        command.current_dir(cwd);
+    }
+    group::prepare(&mut command);
+
+    let mut child = command.spawn().map_err(|error| {
+        ProcessError::new(
+            if error.kind() == std::io::ErrorKind::NotFound {
+                ProcessErrorCode::ProcessUnavailable
+            } else {
+                ProcessErrorCode::ProcessFailed
+            },
+            format!("failed to run {}: {error}", spec.program),
+        )
+    })?;
+    let group = group::Group::attach(&child);
+
+    if let Some(input) = private_input {
+        let bytes = input.to_vec();
+        let pipe = child.stdin.take();
+        std::thread::spawn(move || {
+            if let Some(mut pipe) = pipe {
+                use std::io::Write;
+                let _ = pipe.write_all(&bytes);
+            }
+        });
+    }
+
+    let stdout = Capture::start(child.stdout.take());
+    let stderr = Capture::start(child.stderr.take());
+
+    let deadline = Instant::now() + spec.timeout;
+    let outcome = loop {
+        match child.try_wait() {
+            Ok(Some(status)) => break Outcome::Exited(status.success()),
+            Ok(None) => {}
+            Err(error) => {
+                break Outcome::Failed(format!("failed to wait for {}: {error}", spec.program))
+            }
         }
-        command
-            .args(&spec.args)
-            .stdin(Stdio::null())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped());
-        if let Some(cwd) = &spec.cwd {
-            command.current_dir(cwd);
+        if cancel.is_cancelled() {
+            break Outcome::Cancelled;
         }
-        group::prepare(&mut command);
+        if Instant::now() >= deadline {
+            break Outcome::TimedOut;
+        }
+        std::thread::sleep(POLL_INTERVAL);
+    };
 
-        let mut child = command.spawn().map_err(|error| {
-            ProcessError::new(
-                if error.kind() == std::io::ErrorKind::NotFound {
-                    ProcessErrorCode::ProcessUnavailable
-                } else {
-                    ProcessErrorCode::ProcessFailed
-                },
-                format!("failed to run {}: {error}", spec.program),
-            )
-        })?;
-        let group = group::Group::attach(&child);
-
-        let stdout = Capture::start(child.stdout.take());
-        let stderr = Capture::start(child.stderr.take());
-
-        let deadline = Instant::now() + spec.timeout;
-        let outcome = loop {
-            match child.try_wait() {
-                Ok(Some(status)) => break Outcome::Exited(status.success()),
-                Ok(None) => {}
-                Err(error) => {
-                    break Outcome::Failed(format!("failed to wait for {}: {error}", spec.program))
+    // Readers are never joined without a bound: a process can exit while a
+    // grandchild still holds the write end of the pipe, so end of file may
+    // never arrive. Whatever has been captured by then is used instead.
+    let grace = match outcome {
+        Outcome::Exited(_) => READER_GRACE,
+        // A command that timed out, was cancelled, or whose status could
+        // not be read is abandoned: its result is unusable either way, so
+        // the tree is stopped rather than left running unattended.
+        Outcome::TimedOut | Outcome::Cancelled | Outcome::Failed(_) => {
+            match &group {
+                Some(group) => group.terminate(),
+                // Without a job object or process group only the direct
+                // child can be stopped; anything it started may survive.
+                None => {
+                    let _ = child.kill();
                 }
             }
-            if cancel.is_cancelled() {
-                break Outcome::Cancelled;
-            }
-            if Instant::now() >= deadline {
-                break Outcome::TimedOut;
-            }
-            std::thread::sleep(POLL_INTERVAL);
-        };
-
-        // Readers are never joined without a bound: a process can exit while a
-        // grandchild still holds the write end of the pipe, so end of file may
-        // never arrive. Whatever has been captured by then is used instead.
-        let grace = match outcome {
-            Outcome::Exited(_) => READER_GRACE,
-            // A command that timed out, was cancelled, or whose status could
-            // not be read is abandoned: its result is unusable either way, so
-            // the tree is stopped rather than left running unattended.
-            Outcome::TimedOut | Outcome::Cancelled | Outcome::Failed(_) => {
-                match &group {
-                    Some(group) => group.terminate(),
-                    // Without a job object or process group only the direct
-                    // child can be stopped; anything it started may survive.
-                    None => {
-                        let _ = child.kill();
-                    }
-                }
-                reap(&mut child);
-                ABANDONED_READER_GRACE
-            }
-        };
-        // One deadline covers both readers, so a stalled pair cannot spend the
-        // grace twice over.
-        let readers_by = Instant::now() + grace;
-        let (out_text, out_cut) = stdout.finish(readers_by);
-        let (err_text, err_cut) = stderr.finish(readers_by);
-
-        match outcome {
-            Outcome::Exited(success) => Ok(ProcessOutput {
-                success,
-                stdout: out_text,
-                stderr: err_text,
-                truncated: out_cut || err_cut,
-            }),
-            Outcome::TimedOut => Err(ProcessError::new(
-                ProcessErrorCode::TimedOut,
-                abandoned(
-                    &format!(
-                        "{} timed out after {} seconds",
-                        spec.program,
-                        spec.timeout.as_secs()
-                    ),
-                    &out_text,
-                    &err_text,
-                ),
-            )),
-            Outcome::Cancelled => Err(ProcessError::new(
-                ProcessErrorCode::Cancelled,
-                abandoned(
-                    &format!("{} was cancelled", spec.program),
-                    &out_text,
-                    &err_text,
-                ),
-            )),
-            Outcome::Failed(error) => {
-                Err(ProcessError::new(ProcessErrorCode::ProcessFailed, error))
-            }
+            reap(&mut child);
+            ABANDONED_READER_GRACE
         }
+    };
+    // One deadline covers both readers, so a stalled pair cannot spend the
+    // grace twice over.
+    let readers_by = Instant::now() + grace;
+    let (out_text, out_cut) = stdout.finish(readers_by);
+    let (err_text, err_cut) = stderr.finish(readers_by);
+
+    let result = match outcome {
+        Outcome::Exited(success) => Ok(ProcessOutput {
+            success,
+            stdout: out_text,
+            stderr: err_text,
+            truncated: out_cut || err_cut,
+        }),
+        Outcome::TimedOut => Err(ProcessError::new(
+            ProcessErrorCode::TimedOut,
+            abandoned(
+                &format!(
+                    "{} timed out after {} seconds",
+                    spec.program,
+                    spec.timeout.as_secs()
+                ),
+                &out_text,
+                &err_text,
+            ),
+        )),
+        Outcome::Cancelled => Err(ProcessError::new(
+            ProcessErrorCode::Cancelled,
+            abandoned(
+                &format!("{} was cancelled", spec.program),
+                &out_text,
+                &err_text,
+            ),
+        )),
+        Outcome::Failed(error) => Err(ProcessError::new(ProcessErrorCode::ProcessFailed, error)),
+    };
+    if private_input.is_some() {
+        result.map_err(|error| {
+            ProcessError::new(error.code, "private app provider process could not finish")
+        })
+    } else {
+        result
     }
 }
 
@@ -714,6 +761,53 @@ mod group {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn private_provider_input_is_bounded_before_spawning() {
+        let spec = CommandSpec::new("must-not-run", vec![], None, Duration::from_secs(1));
+        let error = SystemProcessRunner
+            .run_with_private_input(&spec, &vec![b'x'; 16 * 1024 * 1024 + 1])
+            .unwrap_err();
+        assert_eq!(error.code, ProcessErrorCode::ProcessFailed);
+    }
+    #[cfg(windows)]
+    #[test]
+    fn private_pipe_round_trip_and_timeout_do_not_echo_secrets_in_errors() {
+        let secret = b"synthetic-private-provider-input";
+        let script = "$v=[Console]::In.ReadToEnd(); [Console]::Out.Write($v)";
+        let spec = CommandSpec::new(
+            "powershell.exe",
+            vec![
+                "-NoProfile".into(),
+                "-NonInteractive".into(),
+                "-Command".into(),
+                script.into(),
+            ],
+            None,
+            Duration::from_secs(10),
+        );
+        let output = SystemProcessRunner
+            .run_with_private_input(&spec, secret)
+            .unwrap();
+        assert!(output.success && !output.truncated);
+        assert_eq!(output.stdout.as_bytes(), secret);
+        let spec = CommandSpec::new(
+            "powershell.exe",
+            vec![
+                "-NoProfile".into(),
+                "-NonInteractive".into(),
+                "-Command".into(),
+                format!("{script}; Start-Sleep -Seconds 5"),
+            ],
+            None,
+            Duration::from_millis(500),
+        );
+        let error = SystemProcessRunner
+            .run_with_private_input(&spec, secret)
+            .unwrap_err();
+        assert_eq!(error.code, ProcessErrorCode::TimedOut);
+        assert!(!error.message.contains("synthetic-private"));
+    }
 
     #[test]
     fn truncation_drops_a_half_written_character_instead_of_corrupting_it() {

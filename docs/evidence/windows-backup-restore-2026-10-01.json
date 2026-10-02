@@ -1,0 +1,76 @@
+{
+  "apps": [
+    {
+      "app": "memos",
+      "bystanders_preserved": true,
+      "capture": {
+        "app_resumed": true,
+        "data_bytes": 114773,
+        "file_count": 2,
+        "named_volume_count": 0,
+        "offering_id": "memos",
+        "protection": "windows_current_user_dpapi"
+      },
+      "encrypted_snapshot_sha256": "049b739c0421eabef4dce799f0788d893886a923ebb28f712b965db30c6b7fd4",
+      "fresh_project": true,
+      "generated_credentials_preserved": true,
+      "named_volumes": 0,
+      "passed": true,
+      "populated_restore_refused": true,
+      "private_content_verified_in_different_project": true,
+      "restore": {
+        "app_resumed": false,
+        "data_bytes": 114773,
+        "file_count": 2,
+        "named_volume_count": 0,
+        "offering_id": "memos",
+        "protection": "windows_current_user_dpapi"
+      },
+      "source_resumed_and_content_preserved": true
+    },
+    {
+      "app": "gitea",
+      "bystanders_preserved": true,
+      "capture": {
+        "app_resumed": true,
+        "data_bytes": 61440085,
+        "file_count": 1,
+        "named_volume_count": 2,
+        "offering_id": "gitea",
+        "protection": "windows_current_user_dpapi"
+      },
+      "encrypted_snapshot_sha256": "7e50544fb151a290eb5e158db2932d34a0a4efb2241a39dea7a7cf946259c2e9",
+      "fresh_project": true,
+      "generated_credentials_preserved": true,
+      "named_volumes": 2,
+      "passed": true,
+      "populated_restore_refused": true,
+      "private_content_verified_in_different_project": true,
+      "restore": {
+        "app_resumed": false,
+        "data_bytes": 61440085,
+        "file_count": 1,
+        "named_volume_count": 2,
+        "offering_id": "gitea",
+        "protection": "windows_current_user_dpapi"
+      },
+      "source_resumed_and_content_preserved": true
+    }
+  ],
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "host_os": "windows",
+  "limits": {
+    "app_version_upgrades_unproven": true,
+    "current_windows_account_only": true,
+    "external_actions_not_reversible": true,
+    "max_snapshot_data_bytes": 268435456,
+    "shared_host_folders_excluded": true
+  },
+  "passed": true,
+  "recorded_at_unix": 1790873518,
+  "schema_version": 1
+}

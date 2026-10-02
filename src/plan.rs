@@ -1000,6 +1000,15 @@ pub fn plan_for_recipe(recipe: &Recipe) -> Result<DeploymentPlan, String> {
         })
         .unwrap_or_default();
 
+    let overrides = match recipe.resource_limits.first() {
+        Some(limit) => PlanOverrides {
+            memory_limit_bytes: Some(limit.memory_bytes),
+            cpu_limit_millicores: Some(limit.cpu_millicores),
+            pids_limit: Some(limit.pids),
+            ..PlanOverrides::default()
+        },
+        None => PlanOverrides::default(),
+    };
     let plan = DeploymentPlan {
         id: recipe.id.clone(),
         services: vec![PlanService {
@@ -1015,7 +1024,7 @@ pub fn plan_for_recipe(recipe: &Recipe) -> Result<DeploymentPlan, String> {
             }),
             mounts,
             depends_on: Vec::new(),
-            overrides: PlanOverrides::default(),
+            overrides,
         }],
         named_volumes,
         internal_networks: Vec::new(),

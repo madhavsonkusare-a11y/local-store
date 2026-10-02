@@ -1,0 +1,26 @@
+{
+  "app": "uptime-kuma",
+  "bystanders_unchanged": true,
+  "cleanup_passed": true,
+  "content_boundary_sha256": "c1b6494bd87de1d52dd428a6db03e89a62fc0e8df12fcbcd72d87891f379465b",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "failure": null,
+  "fixture_sha256": "577773f48561b20686586d9d42d8a341f628cb411c496c1d5ec6c9e44cb6d7c1",
+  "passed": true,
+  "provider": "uptime-kuma-monitors-read-v1@2.5.3",
+  "provider_sha256": "645055ab54a8ea8ee17224565fd3c4ebd9456d3e68900dbb2236d0e5ac8c17d2",
+  "recorded_at_unix": 1790962423,
+  "schema_version": 1,
+  "scope": "real reviewed read-only API summary path; no app writes, generic APIs, native WebView or full app functionality claim",
+  "steps": [
+    "reviewed pinned app installed under a unique private project and app ID on the selected owned engine",
+    "explicit protected credential consent; no implicit grants; exact private summary read; cross-client, arbitrary URL/method and write-grant requests denied",
+    "live grant revocation, credential replacement requiring a new grant, owner disconnect/reconnect without grant revival and secret-free audit verified",
+    "exact fixture cleaned including generated credentials; existing containers unchanged"
+  ],
+  "test_sha256": "c6603bd757a2d176229c964e926d475d5265df9dad3ab39be605d4c0858cb456"
+}

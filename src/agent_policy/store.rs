@@ -174,6 +174,41 @@ impl AgentPolicyStore {
     pub fn audit(&self) -> &[AuditEvent] {
         self.policy.audit()
     }
+
+    /// Trusted launcher inspection only. Includes expired scopes so the owner
+    /// can see why a previously connected client no longer has access.
+    pub fn grants_for_owner(&self) -> Vec<Grant> {
+        self.policy.grants.values().cloned().collect()
+    }
+
+    /// Metadata recorded by the separately validated, one-use mutation queue.
+    /// This does not create a policy permit or persist any raw tool arguments.
+    pub(crate) fn record_request_audit(
+        &mut self,
+        client_id: &str,
+        app_id: &str,
+        action: AgentAction,
+        allowed: bool,
+        now: u64,
+    ) -> AppResult<()> {
+        if !valid_id(client_id) || !valid_id(app_id) {
+            return Err(AppError::invalid("Invalid agent audit scope."));
+        }
+        let mut next = self.policy.clone();
+        next.audit.push(AuditEvent {
+            client_id: client_id.into(),
+            app_id: app_id.into(),
+            action,
+            allowed,
+            at_unix: now,
+        });
+        if next.audit.len() > MAX_AUDIT {
+            next.audit.remove(0);
+        }
+        self.save(&next)?;
+        self.policy = next;
+        Ok(())
+    }
 }
 
 fn corrupt() -> AppError {

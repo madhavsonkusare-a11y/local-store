@@ -1,0 +1,93 @@
+{
+  "app": "memos",
+  "bystander_count": 0,
+  "cancellation_observed_stage": null,
+  "checked_at_unix": 1790939378,
+  "engine": "owned-wsl",
+  "failure": null,
+  "implementation_sha256": {
+    "agent_gateway": "849eaf2337edefd75dde365a12e1ffb0775a59d6fb85222a04fe4f19b7310e97",
+    "agent_mcp": "51daf838aadc5b0d39f8f67a692587a6f0e31565c7c2f2279b8a1fbc0050e597",
+    "agent_requests": "2f45519ba44997c1912e0c87e4e819984c7be0138257d10a3f1847e1982cde85"
+  },
+  "limits": [
+    "Windows backend and real stdio proof; does not prove native WebView UI",
+    "Running cancellation can occur before container creation; observed stage is recorded",
+    "External effects and permanent data deletion are not exercised"
+  ],
+  "passed": true,
+  "proof": "approved-mcp-mutations",
+  "run_id": "agent-mutation-qualify-22964-1790939348618333500",
+  "schema_version": 1,
+  "steps": [
+    {
+      "passed": true,
+      "step": "authenticated MCP creates pending exact Memos install"
+    },
+    {
+      "passed": true,
+      "step": "agent execution denied before owner approval"
+    },
+    {
+      "passed": true,
+      "step": "owner explicitly approves exact request"
+    },
+    {
+      "passed": true,
+      "step": "approved MCP install finishes and commits app"
+    },
+    {
+      "passed": true,
+      "step": "consumed install approval cannot be replayed"
+    },
+    {
+      "passed": true,
+      "step": "owner-granted MCP status observes actual running app"
+    },
+    {
+      "passed": true,
+      "step": "create exact private memo in real Memos"
+    },
+    {
+      "passed": true,
+      "step": "approved keep-data uninstall removes app and retains exact quiesced files"
+    },
+    {
+      "passed": true,
+      "step": "authenticated cancellation stops actual running install and preserves prior data"
+    },
+    {
+      "passed": true,
+      "step": "cancelled consumed approval cannot be replayed"
+    },
+    {
+      "passed": true,
+      "step": "fresh approved reinstall reads the same private memo"
+    },
+    {
+      "passed": true,
+      "step": "revoked app grant denies live MCP status and uninstall request"
+    },
+    {
+      "passed": true,
+      "step": "revoked credential denies operation lookup in existing MCP session"
+    },
+    {
+      "passed": true,
+      "step": "durable audit records allowed mutation dispatch and contains no bearer"
+    },
+    {
+      "passed": true,
+      "step": "cleanup only verified private Memos fixture"
+    },
+    {
+      "passed": true,
+      "step": "all pre-existing engine containers and states remain unchanged"
+    },
+    {
+      "passed": true,
+      "step": "native engine ownership and selection files unchanged"
+    }
+  ],
+  "test_sha256": "808e635185257fc2fc4414267829acb3b14c2367bcc5cde6d27494ad292e0aa6"
+}

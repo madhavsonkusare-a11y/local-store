@@ -268,13 +268,17 @@ pub fn doctor_with(runner: &dyn ProcessRunner) -> DoctorReport {
     let checks = specs
         .into_iter()
         .map(|(id, label, spec)| match runner.run(&spec) {
-            Ok(output) if output.success => DoctorCheck {
-                id,
-                label,
-                ok: true,
-                detail: output.stdout.trim().to_owned(),
-                error: None,
-            },
+            Ok(output)
+                if output.success && !output.truncated && !output.stdout.trim().is_empty() =>
+            {
+                DoctorCheck {
+                    id,
+                    label,
+                    ok: true,
+                    detail: output.stdout.trim().to_owned(),
+                    error: None,
+                }
+            }
             Ok(output) => DoctorCheck {
                 id,
                 label,
@@ -523,17 +527,33 @@ pub fn logs_with(runner: &dyn ProcessRunner, app: &InstalledApp) -> AppResult<St
 /// `*_with` variants stay lock-free so tests can drive them directly.
 pub fn start(app: &InstalledApp) -> AppResult<()> {
     let _lock = lock_operation(&app.id)?;
+    keep_owned_app_engine(app)?;
     start_with(&SystemProcessRunner, app)
 }
 pub fn stop(app: &InstalledApp) -> AppResult<()> {
     let _lock = lock_operation(&app.id)?;
+    keep_owned_app_engine(app)?;
     stop_with(&SystemProcessRunner, app)
 }
 pub fn status(app: &InstalledApp) -> AppResult<AppStatus> {
+    keep_owned_app_engine(app)?;
     status_with(&SystemProcessRunner, app)
 }
 pub fn logs(app: &InstalledApp) -> AppResult<String> {
+    keep_owned_app_engine(app)?;
     logs_with(&SystemProcessRunner, app)
+}
+
+fn keep_owned_app_engine(app: &InstalledApp) -> AppResult<()> {
+    if let RuntimeSpec::Compose { project_dir, .. } = &app.runtime {
+        if engine::retained(project_dir)?.is_some_and(|binding| binding.is_wsl()) {
+            engine::wsl::lease::ensure_owned(
+                &SystemProcessRunner,
+                &storage::managed_engine_state_root(),
+            )?;
+        }
+    }
+    Ok(())
 }
 
 pub fn wait_for_health_with(
@@ -1311,6 +1331,31 @@ pub fn begin_install(
     })
 }
 
+/// Agent approvals bind an exact engine instead of discovering a mutable
+/// selection after approval. Recheck owned WSL readiness under the app lock.
+pub fn begin_install_on_engine(
+    recipe: &Recipe,
+    lock: OperationLock,
+    binding: &engine::EngineBinding,
+    progress: &(dyn Fn(InstallStage) + Send + Sync),
+) -> AppResult<PendingInstall> {
+    binding.validate()?;
+    if !binding.is_wsl()
+        || crate::engine_setup::selected(&SystemProcessRunner)?.as_ref() != Some(binding)
+    {
+        return Err(AppError::invalid(
+            "The approved owned engine is no longer selected and ready.",
+        ));
+    }
+    begin_pending_install_on_engine(
+        &recipe.id,
+        lock,
+        progress,
+        Some(binding),
+        |context, root, now| install_recipe_with(context, recipe, root, now),
+    )
+}
+
 /// Resolve a plan under the same lock that remains held through registry commit
 /// and rollback. Callers must acquire the matching app lock before spawning work.
 pub fn begin_template_install(
@@ -1505,6 +1550,7 @@ pub fn uninstall_and_remove(app: &InstalledApp, delete_data: bool) -> AppResult<
 }
 
 fn uninstall_locked(app: &InstalledApp, delete_data: bool) -> AppResult<()> {
+    keep_owned_app_engine(app)?;
     if delete_data {
         let RuntimeSpec::Compose { project_dir, .. } = &app.runtime else {
             return Err(AppError::new(
@@ -1960,6 +2006,27 @@ mod tests {
         let report = doctor_with(&runner);
         assert!(report.ready);
         assert_eq!(report.checks.len(), 2);
+    }
+    #[test]
+    fn doctor_refuses_truncated_success_output() {
+        let runner = FakeRunner {
+            outputs: Mutex::new(VecDeque::from([
+                Ok(ProcessOutput {
+                    success: true,
+                    stdout: "29.8.0".into(),
+                    stderr: String::new(),
+                    truncated: true,
+                }),
+                Ok(ProcessOutput {
+                    success: true,
+                    stdout: "5.5.1".into(),
+                    stderr: String::new(),
+                    truncated: false,
+                }),
+            ])),
+            calls: Mutex::new(Vec::new()),
+        };
+        assert!(!doctor_with(&runner).ready);
     }
     #[test]
     fn doctor_details_never_repeat_a_credential_docker_printed() {

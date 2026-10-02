@@ -158,6 +158,13 @@ impl ClientCredentialStore {
         self.clients.iter().map(|row| row.id.clone()).collect()
     }
 
+    pub(crate) fn generation(&self, id: &str) -> Option<String> {
+        self.clients
+            .iter()
+            .find(|row| row.id == id)
+            .map(|row| row.sha256_hex.clone())
+    }
+
     /// Metadata can narrow a verified identity, never choose it.
     pub(super) fn verify(&self, secret: &str, claim: Option<&str>) -> AppResult<VerifiedClient> {
         if !valid_hash(secret) {

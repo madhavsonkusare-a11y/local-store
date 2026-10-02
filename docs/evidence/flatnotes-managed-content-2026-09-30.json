@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790768659,
+  "recorded_at_unix": 1790839732,
   "app": "flatnotes",
   "passed": true,
   "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
@@ -14,17 +14,17 @@
   },
   "first_use": "the chosen password signs in, a wrong password fails, and an exact unique note survives restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 5186,
+    "first_start_millis": 5024,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-flatnotes-qualify-32896-1790768464512864400-flatnotes": 59317944
+      "local-store-flatnotes-qualify-4776-1790839538956819600-flatnotes": 59989032
     },
     "peak_memory_bytes": {
-      "local-store-flatnotes-qualify-32896-1790768464512864400-flatnotes": 59317944
+      "local-store-flatnotes-qualify-4776-1790839538956819600-flatnotes": 59989032
     },
-    "peak_total_memory_bytes": 59317944,
-    "idle_managed_storage_bytes": 7982,
-    "peak_managed_storage_bytes": 14970,
+    "peak_total_memory_bytes": 59989032,
+    "idle_managed_storage_bytes": 7978,
+    "peak_managed_storage_bytes": 14967,
     "idle_named_volume_bytes": {},
     "peak_named_volume_bytes": {},
     "image_virtual_bytes": {
@@ -112,7 +112,7 @@
     "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
     "source_observed_on": "2026-09-10",
     "images_observed_on": "2026-09-10",
-    "plan_sha256": "3f0c095b1549f543fd99389827c2ba052c2e4a81e15bf5c994f6369fa0d9bd12",
+    "plan_sha256": "07ff81f5bcb15bf941ee9bb6c9f34278340e3d5b5a482dd65fd7cedefb6597ce",
     "requested_images": [
       "dullage/flatnotes:v5.5.5"
     ],

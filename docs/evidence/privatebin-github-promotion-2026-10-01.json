@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_at_unix": 1790872602,
+  "app": "privatebin",
+  "scope": "existing reviewed promotion audit; no automatic approval or new offering",
+  "source": {
+    "candidate": "runtipi:privatebin",
+    "repository": "runtipi/runtipi-appstore",
+    "revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
+    "definition_path": "apps/privatebin/docker-compose.json",
+    "archive_sha256": "8417791fe20bca057f659d52bc29e2a2b8f3e7eb8c99930e065c11b92e2992ec",
+    "definition_sha256": "ac4ba113dfa67af582c1a04796decf080f6662066583fd00128bdfe97f42e30c"
+  },
+  "review": {
+    "manifest": "src/templates/privatebin.json",
+    "manifest_sha256": "c5e7de0ea2b55a7c82942f4ec021d2c281a4b619435d89b863f18609b5465350",
+    "decision": {
+      "state": "approved",
+      "reason": "Qualification is complete and the owner approved it on 2026-09-10. The 2.0.6 image was rebuilt 2026-08-08, publishes linux/amd64 and arm64 among seven architectures, and a real install proved encrypted paste creation in the browser, reopening after restart and after a keep-data reinstall, managed-folder writes as the documented non-root UID 65534/GID 82, and complete removal on delete-data. It asks for no setup answers, so there is no credential for a person to get wrong. Proven on Windows with Docker's Linux engine only; the other six architectures are registry metadata rather than runs."
+    },
+    "license": "GPL-3.0"
+  },
+  "qualification": {
+    "id": "privatebin",
+    "manifest": "src/templates/privatebin.json",
+    "manifest_sha256": "c5e7de0ea2b55a7c82942f4ec021d2c281a4b619435d89b863f18609b5465350",
+    "evidence": "docs/evidence/privatebin-managed-paste-2026-09-30.json",
+    "evidence_sha256": "d58bf122733f0f5bf445b6a922dc62e697e92791b354d033036873d44bd95237",
+    "probe": "scripts/privatebin-browser-probe.mjs",
+    "task": "an encrypted paste is created in the browser, and its exact plaintext is read after restart and keep-data reinstall"
+  },
+  "normalized_plan_sha256": "6ab3e5db7757fe5a549fc10b424d06af70af7919af742943c36026232c7fcc41",
+  "approved_repository_match": {
+    "display_name": "PrivateBin",
+    "kind": "approved_match",
+    "offering_id": "privatebin",
+    "repository": "https://github.com/privatebin/privatebin"
+  },
+  "live_github_inspection": {
+    "archived": false,
+    "canonical_repository": "https://github.com/privatebin/privatebin",
+    "commit_sha": "10c6ba07e936a0758f242190c01f5744f18ac029",
+    "commit_url": "https://github.com/privatebin/privatebin/commit/10c6ba07e936a0758f242190c01f5744f18ac029",
+    "default_branch": "master",
+    "repository_id": 62937181,
+    "requested_repository": "https://github.com/privatebin/privatebin",
+    "resolution": {
+      "display_name": "PrivateBin",
+      "kind": "approved_match",
+      "offering_id": "privatebin",
+      "repository": "https://github.com/privatebin/privatebin"
+    }
+  },
+  "gates": [
+    "checksum-pinned archive bytes",
+    "reviewed exact definition and configuration",
+    "explicit source identity and promotion decision",
+    "current managed Windows task and lifecycle proof",
+    "same normalized launcher install plan",
+    "exact approved repository lookup"
+  ]
+}

@@ -61,7 +61,7 @@ test('install displays honest progress and retains review after failure', async 
   await page.locator('[data-featured="memos"]').click();
   await page.getByRole('button', {name:'Install Memos', exact:true}).click();
   await expect(page.locator('#install-progress')).toBeVisible();
-  await expect(page.locator('#install-progress')).toContainText('Docker may download images');
+  await expect(page.locator('#install-progress')).toContainText('The local engine may download images');
   await expect(page.getByRole('button', {name:'Installing…', exact:true})).toBeDisabled();
   await page.evaluate(() => {
     const event = {app_id:'memos', kind:'install', operation_id:'install-1'};
@@ -289,7 +289,7 @@ test('a failed cleanup blocks a blind retry until the user has looked', async ({
   await expect(confirm).toHaveText('Review needed before retrying');
 
   // Reopening the review is the deliberate way back, and it clears the block.
-  await page.getByRole('button', {name:'Close install dialog'}).click();
+  await page.getByRole('button', {name:'Back to Discover'}).click();
   await page.locator('[data-featured="memos"]').click();
   await expect(page.getByRole('button', {name:'Install Memos', exact:true})).toBeEnabled();
 });

@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790737259,
+  "recorded_at_unix": 1790841374,
   "app": "uptime-kuma",
   "passed": true,
   "scope": "reviewed recipe, transaction, managed storage and first use, on one host and one architecture",
@@ -14,17 +14,17 @@
   },
   "first_use": "a local admin creates a unique HTTP monitor of the app's own page, it records Up, and that exact monitor remains Up after restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 10320,
+    "first_start_millis": 7352,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-uptime-kuma-qualify-32264-1790737184461408400-uptime-kuma": 165884723
+      "local-store-uptime-kuma-qualify-22204-1790841326086173100-uptime-kuma": 134742016
     },
     "peak_memory_bytes": {
-      "local-store-uptime-kuma-qualify-32264-1790737184461408400-uptime-kuma": 165884723
+      "local-store-uptime-kuma-qualify-22204-1790841326086173100-uptime-kuma": 134742016
     },
-    "peak_total_memory_bytes": 165884723,
-    "idle_managed_storage_bytes": 1076,
-    "peak_managed_storage_bytes": 374312,
+    "peak_total_memory_bytes": 134742016,
+    "idle_managed_storage_bytes": 1202,
+    "peak_managed_storage_bytes": 378558,
     "idle_named_volume_bytes": {},
     "peak_named_volume_bytes": {},
     "image_virtual_bytes": {
@@ -112,7 +112,7 @@
     "source_revision": "",
     "source_observed_on": "2026-09-05",
     "images_observed_on": "2026-09-07",
-    "plan_sha256": "8906f2e6ad49cd2ad5a22477dbe917c773b55a5a88d6a8e7144c41e097ea232a",
+    "plan_sha256": "6c22a717e4c2d558fc319b831cd6cb0670954f5668aed36245cf1d96e7817610",
     "requested_images": [
       "louislam/uptime-kuma:2.5.3"
     ],

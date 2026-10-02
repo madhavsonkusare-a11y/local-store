@@ -20,22 +20,22 @@
     "src/templates/dify.json": "fba755e8abd9f15db677c74b84e76e252fd221513662ecadfb05eae7831e2a6f",
     "src/templates/docmost.json": "fe57ddad9d1a6558a32d2e2cbfa2df1b45005b2a8f7d81b7d9e675157da1db42",
     "src/templates/filestash.json": "c4fe26d4a2575cf67d126e28a584fc92a2e6d03ebbe6dac1653262e779cbba05",
-    "src/templates/flatnotes.json": "30bc6a58ca97341c17b92e579026ef194d1fc93352d8473de5729b128eda6bd2",
+    "src/templates/flatnotes.json": "66ce24eb18af14d1361902ec3a2e6ecd725a0ed14a765a4bb74ce8fbcfe641fa",
     "src/templates/flowise.json": "c55081561c5d5f9547021594ad2262bfbd8946d60509dc23f73c16c997c8f29c",
     "src/templates/ghost-dev.json": "30e787cd382a2aa3419d435dfa1bb53f89b26875e161b1f53d8e2e2448278f08",
     "src/templates/ghostfolio.json": "87e7fa505d03e2b2a1c33352f4ac6d179dafb4cc16a819fc5202c3f6fb7438c7",
-    "src/templates/gitea.json": "50f9ecb3c41c818943b900882239625076be07b0ffa9ebe022cfba75a8a1502e",
+    "src/templates/gitea.json": "187dbda6ffb2afaa57d35cb11685b16e8e5a229db80d3cfc7b9a0d503fd28db9",
     "src/templates/glance.json": "1097a592fd510891cafe1132fe5a9c742c27acd7b6018fba537a33287ca0fab0",
     "src/templates/gotify.json": "061de684ed91efab9d6cc1a8d1dcc36f646906bdeb21cce9fd3cda8dc9310ad6",
     "src/templates/grafana.json": "30b19b6cf4e4856ccfe374702525527cead2f70d597748d5821d6c2f1528053f",
     "src/templates/grocy.json": "9390537b32c7edcde34c7d70f6731e30c0ddfd80b54d8c2a1397bf35467e3426",
     "src/templates/homer.json": "df517e01c1a143db671e2e014287aebc1ce8b34905530e062dffbf0fecae64cf",
     "src/templates/huginn.json": "af2af81f4ff7a7e697cb4311953e4ccfc86cd8d6cb67381c021962a48879e35e",
-    "src/templates/immich.json": "9795c6ba0039667202e717fa92af4c339f05ec7f80321968f2e53f6353363f11",
-    "src/templates/jellyfin.json": "062a670062fb167bdfe4c96686f9a27e579dcd51b2a11ff393ba7cefa707e501",
+    "src/templates/immich.json": "30362983651fbddd5074ac4bdd3cfcc43d868b63d887584897c013aae9169a9c",
+    "src/templates/jellyfin.json": "3ce423d935530eded9bee6772f038a821284588b05fddcd62492af5ef51da839",
     "src/templates/jellyseerr.json": "1c8f2bb824c2adc23de11344cd052f855a26b239309b69dc29423b39180d7d05",
     "src/templates/joplin.json": "a94bda009b2c73e6057ce33b695a5907b9f146c48c5074afae72640f4747227b",
-    "src/templates/kanboard.json": "8743f6bb094224fb630b68c2d70ad599d07dd48ccc157e049a94b91380d17520",
+    "src/templates/kanboard.json": "cdc68b184326fefda6b90f60ea18655108f11e30a91b03e40f4642fd06b03e57",
     "src/templates/khoj.json": "6f4e549a7801daaa96e4059b0513b83287aa860744bc9f1f710b029e320883a5",
     "src/templates/kotaemon.json": "c3e8016e8f105c7015a42da180a6ebcd9b765aec73303ff2cb422092185a9c33",
     "src/templates/langflow.json": "74a78b1dd4670d450e0119a6a5e5e930bbdfcf3d09e899c9ff6f96f182a647de",
@@ -52,7 +52,7 @@
     "src/templates/pairdrop.json": "2dff61e9b2064e049f0b8d7edfe42ab96e4059fe865139a647a6b5b1f8199457",
     "src/templates/paperclip.json": "a6baa89cf45464f386a99ffbd391bd57bd6c7d3e3c989cfecee5cb12eab99dae",
     "src/templates/penpot.json": "f26cf047bf20024477177abd3ced7244780a38f85d5aedfb1df6517aba130ff9",
-    "src/templates/privatebin.json": "09af373f5840c0cb33057e5844ef5712c28db92c8c1c34238d9331142e6beedc",
+    "src/templates/privatebin.json": "c5e7de0ea2b55a7c82942f4ec021d2c281a4b619435d89b863f18609b5465350",
     "src/templates/sillytavern.json": "7410ca9e6339978ac80561d08429a24725ff27b34cbc0485fd5e4aa75d3ba75e",
     "src/templates/sim.json": "086c1da6a7f84a1098b72ce3a9d7c3388716c1fb1addb3b52d8c9b06c8d73bf5",
     "src/templates/tandoor.json": "22c0a3b16f23f6152e97ea9539a1c06c5e0b57b1d514889c41b4e73b0d39b8ed",
@@ -65,10 +65,10 @@
     "src/templates/wallos.json": "e51ee60428a6d02f4f30dc37931a368eee4f219b313b150b193b6dfb92cc520d",
     "src/templates/wekan.json": "0368605877fed0efabede6e10dc043b0d264d691cbcf3f92e151e279a587505a",
     "src/templates/whoogle.json": "fd4f6850fc0b135bde0816ce38232049db80a6d36f7af363aeda7c2a7c38a65e",
-    "src/templates/wordpress.json": "7881591170bc3a4b77980c3b969ca511c1c0c633822bf3c4f726bf673f3040b6",
-    "src/recipes/memos.json": "6ecab572f38fabe0337121cca07b60418c29b36af511d249a9958ba974246916",
-    "src/recipes/n8n.json": "a75aeefc33f2fc8342b5c8f7d31c6a180ff5e48d861b3c7b6fd2ab43a5cd9762",
-    "src/recipes/uptime-kuma.json": "cc0548bc2db4103b279254a38d8577843b63153ce25a355a454327bb2edb4e5a"
+    "src/templates/wordpress.json": "b0ec9c0922d851159a0ca0ad7917119a8c6f41291035f263421d491ed2b78627",
+    "src/recipes/memos.json": "b87724010c02bc319d406c08a06f6700511aaab639b5fd3cd52dd5468bc43931",
+    "src/recipes/n8n.json": "b77733b1ca146528f8d2330b2c7ea4cee399e15c1ac1ae067776fee4418ab6e1",
+    "src/recipes/uptime-kuma.json": "43d7e652a7ae95f6111524a1770a925449ca2f165801f9ca08678a829920862f"
   },
   "summary": {
     "total": 100,
@@ -1448,7 +1448,7 @@
       },
       "proof": {
         "baseline_evidence": [
-          "docs/evidence/flatnotes-qualification.json"
+          "docs/evidence/flatnotes-managed-content-2026-09-30.json"
         ],
         "level": "recorded_baseline_lifecycle; not_v1_certification",
         "v1_task_result": "not_run"
@@ -1970,7 +1970,7 @@
         "baseline_risk_notes": [
           "Creates 2 Docker containers and publishes 2 ports on this computer's loopback interface only.",
           "Its gitea service answers on a second loopback address, which the app's own pages call directly. Local Store opens only the main one.",
-          "Keeps its data in this app's managed folder. A keep-data uninstall leaves it; deleting data removes it permanently.",
+          "Keeps Git files and PostgreSQL in Docker named volumes. A keep-data uninstall retains both; deleting data removes both.",
           "Proven on Windows with Docker's Linux engine. macOS and Linux hosts are unverified.",
           "Opens an installer page: check the settings it shows, then create the administrator account.",
           "Serves git over HTTP on its own address, and over SSH on a second loopback address — both reachable from this computer only.",
@@ -1982,7 +1982,7 @@
         "measured_disk_mb": null,
         "startup_seconds": null,
         "status": "not_measured_by_roster; Q02 required",
-        "baseline_storage": "Local Store managed folder / gitea"
+        "baseline_storage": "Docker named volumes for Gitea data and PostgreSQL"
       },
       "maintenance": {
         "repository_check": null,
@@ -2052,7 +2052,7 @@
       },
       "proof": {
         "baseline_evidence": [
-          "docs/evidence/gitea-qualification.json"
+          "docs/evidence/gitea-managed-repository-2026-09-30.json"
         ],
         "level": "recorded_baseline_lifecycle; not_v1_certification",
         "v1_task_result": "not_run"
@@ -2831,10 +2831,10 @@
           "Creates 4 Docker containers and publishes one port on this computer's loopback interface only.",
           "Reads and writes a folder on this computer that you choose during setup. Nothing outside that folder is shared with it.",
           "Generates 2 credentials of its own, keeps them beside the app's data, and reuses them if you reinstall.",
-          "Keeps its data in this app's managed folder. A keep-data uninstall leaves it; deleting data removes it permanently.",
+          "Keeps database and model cache in managed Docker named volumes. A keep-data uninstall retains them; deleting data removes them.",
           "Proven on Windows with Docker's Linux engine. macOS and Linux hosts are unverified.",
           "Asks you to create the first account, which becomes the administrator.",
-          "Photos and videos go in the folder you choose; its database, thumbnails and search index live in the app's own folder.",
+          "Photos, videos and thumbnails go in the folder you choose; the database stays in a managed named volume.",
           "Its machine-learning service downloads a model the first time it runs, so searching by face or content works only after that finishes.",
           "Immich changes quickly: read its release notes before moving to a newer version, because some releases migrate the database."
         ]
@@ -2844,7 +2844,7 @@
         "measured_disk_mb": null,
         "startup_seconds": null,
         "status": "not_measured_by_roster; Q02 required",
-        "baseline_storage": "Local Store managed folder / immich, plus a folder you choose"
+        "baseline_storage": "Docker named volumes for database and model cache; a chosen host folder for photos and videos"
       },
       "maintenance": {
         "repository_check": null,
@@ -2933,7 +2933,7 @@
       },
       "proof": {
         "baseline_evidence": [
-          "docs/evidence/immich-qualification.json"
+          "docs/evidence/immich-managed-photo-2026-09-30.json"
         ],
         "level": "recorded_baseline_lifecycle; not_v1_certification",
         "v1_task_result": "not_run"
@@ -3015,29 +3015,15 @@
       "preferred_candidate_for_review": "runtipi:jellyfin",
       "deployment_status": "offered_baseline",
       "setup": {
-        "fields_snapshot": [
-          {
-            "has_default": false,
-            "key": "FOLDER_MEDIA",
-            "required": true,
-            "sensitive": false
-          },
-          {
-            "has_default": true,
-            "key": "TZ",
-            "required": false,
-            "sensitive": false
-          }
-        ],
+        "fields_snapshot": [],
         "first_run_and_external_requirements": "must_prove_with_app_task",
         "baseline_risk_notes": [
-          "Creates 1 Docker container and publishes one port on this computer's loopback interface only.",
-          "Keeps its data in a Docker volume that Local Store manages for it. A keep-data uninstall leaves the volume; deleting data removes it permanently.",
+          "Creates one Docker container and publishes one loopback port on this computer.",
+          "Keeps settings in a Docker named volume; keep-data uninstall retains it and deleting data removes it.",
+          "Mounts the media folder you choose at setup. Jellyfin can read and write that folder.",
+          "Opens a setup wizard to create the first administrator and add a media library.",
           "Proven on Windows with Docker's Linux engine. macOS and Linux hosts are unverified.",
-          "Opens a setup wizard: pick a language and create the first account, which is the administrator.",
-          "Plays what it finds in the folder you choose. Nothing is copied, and it writes only its own database and artwork.",
-          "The user and group numbers you set at setup decide what it may read in that folder; 1000 is right on most machines.",
-          "LinuxServer packages this image; Jellyfin itself is GPL-2.0."
+          "LinuxServer packages the image; Jellyfin itself is GPL-2.0."
         ]
       },
       "resources": {
@@ -3045,16 +3031,16 @@
         "measured_disk_mb": null,
         "startup_seconds": null,
         "status": "not_measured_by_roster; Q02 required",
-        "baseline_storage": "A Docker volume Local Store manages for jellyfin"
+        "baseline_storage": "Docker named volume for settings; a chosen host folder for media"
       },
       "maintenance": {
         "repository_check": null,
         "repository_checked_at": null,
         "reviewed_image_audits": [
           {
-            "image": "ghcr.io/linuxserver/jellyfin:12.0ubu2604-ls48",
-            "source_url": "https://ghcr.io/v2/linuxserver/jellyfin/manifests/12.0ubu2604-ls48",
-            "checked_at": "2026-09-12",
+            "image": "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48",
+            "source_url": "https://lscr.io/v2/linuxserver/jellyfin/manifests/12.0ubu2604-ls48",
+            "checked_at": "2026-09-30",
             "last_updated": "2026-09-08",
             "container_platforms": [
               "linux/amd64",
@@ -3079,7 +3065,7 @@
       },
       "proof": {
         "baseline_evidence": [
-          "docs/evidence/jellyfin-qualification.json"
+          "docs/evidence/jellyfin-managed-media-2026-09-30.json"
         ],
         "level": "recorded_baseline_lifecycle; not_v1_certification",
         "v1_task_result": "not_run"
@@ -8031,7 +8017,7 @@
         "baseline_risk_notes": [
           "Creates 2 Docker containers and publishes one port on this computer's loopback interface only.",
           "Generates 2 credentials of its own, keeps them beside the app's data, and reuses them if you reinstall.",
-          "Keeps its data in this app's managed folder. A keep-data uninstall leaves it; deleting data removes it permanently.",
+          "Keeps WordPress files and MariaDB in Docker named volumes and generated database credentials in the managed app folder. A keep-data uninstall retains them; deleting data removes them.",
           "Proven on Windows with Docker's Linux engine. macOS and Linux hosts are unverified.",
           "Opens to WordPress's own installer, which asks you to name the site and create the administrator account. Themes and plugins you add later are code that runs on your computer, so install them from sources you trust."
         ]
@@ -8041,7 +8027,7 @@
         "measured_disk_mb": null,
         "startup_seconds": null,
         "status": "not_measured_by_roster; Q02 required",
-        "baseline_storage": "Local Store managed folder / wordpress"
+        "baseline_storage": "Docker named volumes for WordPress files and MariaDB; generated database credentials remain in the managed app folder"
       },
       "maintenance": {
         "repository_check": null,
@@ -8112,7 +8098,7 @@
       },
       "proof": {
         "baseline_evidence": [
-          "docs/evidence/wordpress-qualification.json"
+          "docs/evidence/wordpress-managed-post-2026-09-30.json"
         ],
         "level": "recorded_baseline_lifecycle; not_v1_certification",
         "v1_task_result": "not_run"

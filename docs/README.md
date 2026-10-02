@@ -1,7 +1,7 @@
 # Documentation
 
 Start with [V1 release tasks](V1_TASKS.md), then the [agent handoff](agent-handoff.md).
-Only the master ledger owns task status and release scope. Updated October 1, 2026.
+Only the master ledger owns task status and release scope. Updated October 2, 2026.
 
 | Area | Read | Purpose |
 | --- | --- | --- |
@@ -15,6 +15,7 @@ Only the master ledger owns task status and release scope. Updated October 1, 20
 | V1 roster | [100-app planning roster](v1-app-roster.md), [acceptance matrix](../catalog/v1-roster.json) | Future sourcing and replacement pool; planning is not qualification |
 | Catalog | [Contribution guide](catalog.md), [recipe requirements](recipe-requirements.md) | Reproduction, sources, image and manifest requirements |
 | Generated reports | [Queue baseline](candidate-queue-baseline.md), [ranking](candidate-ranking.md), [CapRover imports](caprover-import-report.md), [Runtipi imports](runtipi-import-report.md), [CapRover setup](caprover-setup-report.md), [source audit](caprover-source-audit.md) | Measurements at pinned revisions; regenerate through their scripts, never edit counts by hand |
+| Agent coverage | [Ten launch providers](evidence/launch-agent-coverage-2026-10-02.md), [content/recovery boundaries](evidence/agent-content-boundaries-2026-10-02.md) | Current demonstrated actions, explicit setup, source-proof checker and residual limits |
 | Evidence | [Recipe lifecycle](recipe-lifecycle-proof.md), `evidence/*.json`, [lessons](lessons.md) | Dated evidence and hard-won implementation constraints; not proof of an untested future release |
 | Research | [Import sources](research/import-sources-study.md), [Umbrel architecture](research/umbrel-implementation-reference.md), [qualification scaling](research/qualification-at-1000-scale.md), [agent/product survey](research/agent-platform-and-differentiation.md), [monetization](research/monetization.md) | Dated research; verify external claims before adopting them |
 | Historical shortlist | [September 9 screening](candidate-screening.md) | Provenance for the original candidate decisions; current status is in manifests |

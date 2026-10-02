@@ -359,7 +359,9 @@ pub fn verify_rootfs(path: &Path, expected_bytes: u64, expected_sha256: &str) ->
     }
     let mut file = fs::File::open(path)?;
     let mut digest = Sha256::new();
-    let mut buffer = [0_u8; 1024 * 1024];
+    // Windows CLI and worker threads can have a 1 MiB stack. Keep the streaming
+    // buffer on the heap so verifying an otherwise valid payload cannot crash.
+    let mut buffer = vec![0_u8; 64 * 1024];
     let mut read = 0_u64;
     loop {
         let count = file.read(&mut buffer)?;
@@ -689,7 +691,7 @@ pub fn inspect(runner: &dyn ProcessRunner, state_dir: &Path) -> AppResult<Bootst
 /// Read the user-available space on the volume that would hold the WSL virtual
 /// disk. This is informational until a measured release minimum is established.
 #[cfg(windows)]
-fn available_disk_bytes(path: &Path) -> Option<u64> {
+pub(crate) fn available_disk_bytes(path: &Path) -> Option<u64> {
     use std::os::windows::ffi::OsStrExt;
     use windows_sys::Win32::Storage::FileSystem::GetDiskFreeSpaceExW;
 
@@ -710,7 +712,7 @@ fn available_disk_bytes(path: &Path) -> Option<u64> {
 }
 
 #[cfg(not(windows))]
-fn available_disk_bytes(_path: &Path) -> Option<u64> {
+pub(crate) fn available_disk_bytes(_path: &Path) -> Option<u64> {
     None
 }
 
@@ -1000,6 +1002,25 @@ mod tests {
             assert!(parse_distro_names(invalid).is_err());
         }
         assert!(parse_distro_names(&"x".repeat(MAX_DISTRO_LIST_CHARS + 1)).is_err());
+    }
+
+    #[test]
+    fn payload_hashing_streams_on_a_small_windows_worker_stack() {
+        let parent = temp();
+        fs::create_dir_all(&parent).unwrap();
+        let path = parent.join("payload.tar");
+        let bytes = vec![42_u8; 256 * 1024 + 17];
+        let digest = format!("{:x}", Sha256::digest(&bytes));
+        let length = bytes.len() as u64;
+        fs::write(&path, bytes).unwrap();
+        std::thread::Builder::new()
+            .stack_size(128 * 1024)
+            .spawn(move || verify_rootfs(&path, length, &digest))
+            .unwrap()
+            .join()
+            .unwrap()
+            .unwrap();
+        fs::remove_dir_all(parent).unwrap();
     }
 
     #[test]

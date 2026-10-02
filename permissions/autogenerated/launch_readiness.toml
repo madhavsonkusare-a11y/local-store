@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-launch-readiness"
+description = "Enables the launch_readiness command without any pre-configured scope."
+commands.allow = ["launch_readiness"]
+
+[[permission]]
+identifier = "deny-launch-readiness"
+description = "Denies the launch_readiness command without any pre-configured scope."
+commands.deny = ["launch_readiness"]

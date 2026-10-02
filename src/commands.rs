@@ -14,6 +14,61 @@ use std::{
 static REGISTRY_WRITE: Mutex<()> = Mutex::new(());
 
 #[tauri::command]
+pub fn launch_readiness(
+    window: tauri::WebviewWindow,
+    id: String,
+) -> AppResult<crate::launch_readiness::LaunchReadiness> {
+    require_launcher(&window)?;
+    Ok(crate::launch_readiness::for_offering(&id))
+}
+
+#[tauri::command]
+pub fn launch_readiness_batch(
+    window: tauri::WebviewWindow,
+    ids: Vec<String>,
+) -> AppResult<Vec<crate::launch_readiness::LaunchReadiness>> {
+    require_launcher(&window)?;
+    Ok(crate::launch_readiness::for_offerings(&ids))
+}
+
+fn packaged_engine_path(app: &tauri::AppHandle) -> AppResult<std::path::PathBuf> {
+    use tauri::Manager;
+    app.path()
+        .resolve("engine/rootfs.tar", tauri::path::BaseDirectory::Resource)
+        .map_err(AppError::internal)
+}
+
+#[tauri::command]
+pub async fn engine_setup_preview(
+    window: tauri::WebviewWindow,
+    app_handle: tauri::AppHandle,
+) -> AppResult<crate::engine_setup::EngineSetupPreview> {
+    require_launcher(&window)?;
+    let payload = packaged_engine_path(&app_handle)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::engine_setup::preview(&runtime::SystemProcessRunner, &payload)
+    })
+    .await
+    .map_err(AppError::internal)?
+}
+
+#[tauri::command]
+pub async fn engine_setup_action(
+    window: tauri::WebviewWindow,
+    app_handle: tauri::AppHandle,
+    action: crate::engine_setup::EngineSetupAction,
+    consent: crate::engine_setup::EngineSetupConsent,
+) -> AppResult<runtime::engine::wsl::bootstrap::ManagedEngineStatus> {
+    require_launcher(&window)?;
+    let payload = packaged_engine_path(&app_handle)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::engine_setup::execute(&runtime::SystemProcessRunner, &payload, action, consent)
+    })
+    .await
+    .map_err(AppError::internal)?
+}
+
+#[tauri::command]
 pub async fn inspect_recovery(
     window: tauri::WebviewWindow,
 ) -> AppResult<Vec<crate::recovery::RecoveryCandidate>> {

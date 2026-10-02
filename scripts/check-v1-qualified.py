@@ -136,13 +136,18 @@ def validate_entry(root, entry, roster, now):
 def validate(root, now):
     roster_data = read_json(root, "catalog/v1-roster.json")
     roster = {app["id"]: app for app in roster_data["apps"] if app.get("cohort") == "existing_offering"}
-    if len(roster) != 52:
-        raise ValueError("the 52-offering V1 baseline has changed")
+    selection = read_json(root, "catalog/v1-roster-selection.json")
+    cohorts = selection.get("reviewed_cohorts", {"existing_offering": 52, "expansion_candidate": 48})
+    if (set(cohorts) != {"existing_offering", "expansion_candidate"}
+            or any(type(count) is not int or count < 0 for count in cohorts.values())
+            or sum(cohorts.values()) != 100 or len(roster) != cohorts["existing_offering"]
+            or set(roster) != {app["id"] for app in selection["apps"] if app.get("cohort") == "existing_offering"}):
+        raise ValueError("the explicitly reviewed V1 offering cohort has changed")
     curated = read_json(root, "catalog/v1-qualified-apps.json")
     if curated.get("schema_version") != 1 or curated.get("target") != 10 or not isinstance(curated.get("apps"), list):
         raise ValueError("invalid V1 qualification ledger")
     ids = [entry.get("id") for entry in curated["apps"]]
-    if len(ids) != len(set(ids)) or len(ids) > 52:
+    if len(ids) != len(set(ids)) or len(ids) > len(roster):
         raise ValueError("duplicate or excessive V1 qualification entries")
     for entry in curated["apps"]:
         validate_entry(root, entry, roster, now)

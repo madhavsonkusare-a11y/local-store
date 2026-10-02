@@ -1,7 +1,62 @@
 # Agent handoff
 
-Updated October 1, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
+Updated October 2, 2026. Start with [V1_TASKS.md](V1_TASKS.md); it is the
 only release ledger. [Documentation index](README.md) explains the rest.
+
+## October 2 implementation checkpoint — 71.0% Windows progress
+
+Windows roadmap: **22/31 DONE (71.0%)**, source milestone **4/4 (100%)**.
+The requested 70% target is met without partial credit or changing the denominator.
+The [checkpoint receipt](evidence/windows-development-checkpoint-2026-10-02.json)
+records the exact completed/remaining IDs and verification counts.
+A06 and A08 are the final two accepted rows. All ten launch apps have useful
+actual content paths: three support exact approved writes and seven read-only
+summaries/files. See [coverage](evidence/launch-agent-coverage-2026-10-02.md) and
+[untrusted content/recovery boundaries](evidence/agent-content-boundaries-2026-10-02.md).
+
+`python scripts/check-agent-provider-evidence.py` passes 10/10. Runtime directory
+and capability displays check exact provider/test/fixture bytes and 30-day expiry;
+failed, stale or changed proof withholds verification. Credentials/client grants
+remain separate. Kanboard's pinned API now returns separate project/task lists;
+the corrected adapter passed, and all five shared-source API proofs were refreshed.
+The first failure is retained. Memos/n8n/PrivateBin/File proofs are current.
+
+Focused verification: eleven Rust directory/provider/readiness/scope checks; targeted
+library Clippy and formatting; 23 browser checks for first-run/result, My Apps,
+provider labels and content controls; three source-proof refusal checks; 10/10
+managed task/resource ledger; frozen 100-app roster and approved V2 token checks.
+No optional whole-suite/platform build was used to reach this checkpoint.
+
+UI refinements include explicit first-run heading focus, real selected-app Manage
+controls using existing handlers/busy guards, requested-only Copy logs with honest
+clipboard failure, and visible local-recovery/same-user limitations. Complete
+native WebView acceptance remains F04; remaining full V2 component/state review is F03.
+
+**Next bounded task:** C04. Linkding is still withheld after two retained failed
+actual proofs. Its corrected CSRF login probe is prepared; run only
+`managed_linkding_candidate` on the owned engine, inspect the concrete passed
+receipt and hash-bound review request, then provide a separate exact reviewer
+record before registration. Keep the ten launch apps unchanged and preserve the
+100-ID roster. PicoShare remains withheld for its unsupported Alpine base.
+Do not infer candidate approval from a parser test or image pull.
+
+Nine active rows remain: E01–E04 (engine distribution/bootstrap/resilience),
+C04 (candidate promotion), F03–F04 (complete V2/native flows), R04–R05
+(clean-Windows release candidate and Windows artifact/notices review). Docker Desktop is not
+required: the selected owned WSL engine serves new installs. Its 138-package
+development rootfs includes the repaired systemd-session dependencies, but fresh
+bootstrap, independent provenance/notices review and clean-host proof remain.
+The rootfs/browser payloads stay ignored; the source tag stays immutable.
+
+Run engine proofs serially. The prepared long-idle supervisor check can follow
+candidate acceptance; it does not replace native close/sleep/wake/removal gates.
+Stop only the exact owned worker through `engine stop-supervisor` before relinking
+its running executable. Never stop global WSL or kill processes by broad name.
+
+Preserve owner's `CHANGELOG.md` and untracked `pnpm-lock.yaml`; they are excluded
+from this implementation batch. Actual checkout: `D:\06 Projects\dockwrap`.
+The sandbox names the old vault path; use an explicit workdir/escalated approval.
+Canonical incremental Cargo flags: `--locked --release --features tauri/custom-protocol,mcp-sidecar`.
 
 ## October 1 source release complete — 100%
 

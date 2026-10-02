@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-agent-mutation-requests"
+description = "Enables the agent_mutation_requests command without any pre-configured scope."
+commands.allow = ["agent_mutation_requests"]
+
+[[permission]]
+identifier = "deny-agent-mutation-requests"
+description = "Denies the agent_mutation_requests command without any pre-configured scope."
+commands.deny = ["agent_mutation_requests"]

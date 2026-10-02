@@ -27,6 +27,8 @@ test('reviewed Memos recipe shows prerequisites and installs into My Apps', asyn
  await expect(page.getByText('neosmemo/memos:0.30.0')).toBeVisible(); await expect(page.getByText('Docker engine')).toBeVisible();
  await page.getByRole('button',{name:'Install Memos'}).click();
  await expect(page.locator('#install-dialog')).not.toBeVisible();
+ await expect(page.getByRole('dialog',{name:'Memos installed'})).toBeVisible();
+ await page.getByRole('button',{name:'Enter workspace',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Memos',exact:true})).toBeVisible();
  expect(await page.evaluate(() => window.__calls.find(c=>c.command==='install_app'))).toEqual({command:'install_app',args:{recipeId:'memos'}});
 });

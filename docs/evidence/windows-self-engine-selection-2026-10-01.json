@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "observed_on": "2026-10-01",
+  "selected_engine": {
+    "schema_version": 2,
+    "program": "wsl.exe",
+    "endpoint": "wsl://local-store-engine-v1"
+  },
+  "doctor": {
+    "ready": true,
+    "checks": [
+      {
+        "id": "docker",
+        "label": "Docker engine",
+        "ok": true,
+        "detail": "29.8.0"
+      },
+      {
+        "id": "compose",
+        "label": "Docker Compose",
+        "ok": true,
+        "detail": "5.5.1"
+      }
+    ]
+  },
+  "docker_desktop_started": false,
+  "scope": "Existing owned development engine; fresh Windows is not proven"
+}

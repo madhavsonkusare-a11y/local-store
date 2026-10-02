@@ -1,0 +1,54 @@
+{
+  "app": "memos",
+  "bystander_count": 0,
+  "cancellation_observed_stage": null,
+  "checked_at_unix": 1790874237,
+  "engine": "owned-wsl",
+  "failure": "MCP mutation call was denied or failed",
+  "implementation_sha256": {
+    "agent_gateway": "a6f3b6edba7f85148fee5f8c7ccc2fafad5f5d89dced5f89263d2011296937f9",
+    "agent_mcp": "baedef790b63c5e68e056d7891f797ee1336d8736596995e44d52421a174abd0",
+    "agent_requests": "d7c3d7bf050c44ffcb943885e709fb1c73e2fce1339233ef26b4ebfdab6cd3de"
+  },
+  "limits": [
+    "Windows backend and real stdio proof; does not prove native WebView UI",
+    "Running cancellation can occur before container creation; observed stage is recorded",
+    "External effects and permanent data deletion are not exercised"
+  ],
+  "passed": false,
+  "proof": "approved-mcp-mutations",
+  "run_id": "agent-mutation-qualify-22928-1790874228464917800",
+  "schema_version": 1,
+  "steps": [
+    {
+      "passed": true,
+      "step": "authenticated MCP creates pending exact Memos install"
+    },
+    {
+      "passed": true,
+      "step": "agent execution denied before owner approval"
+    },
+    {
+      "passed": true,
+      "step": "owner explicitly approves exact request"
+    },
+    {
+      "detail": "MCP mutation call was denied or failed",
+      "passed": false,
+      "step": "approved MCP install finishes and commits app"
+    },
+    {
+      "passed": true,
+      "step": "cleanup only verified private Memos fixture"
+    },
+    {
+      "passed": true,
+      "step": "all pre-existing engine containers and states remain unchanged"
+    },
+    {
+      "passed": true,
+      "step": "native engine ownership and selection files unchanged"
+    }
+  ],
+  "test_sha256": "95df2e9d39a86358987b8472733622181685e7d010c5ca0a2f51765d8339ea21"
+}

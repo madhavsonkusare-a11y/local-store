@@ -1,0 +1,25 @@
+{
+  "app": "n8n",
+  "content_boundary_sha256": "d7def7bd7914d3318ed01b08e5617e72b7d250fe34511a377ae476df3e810187",
+  "engine": {
+    "endpoint": "wsl://local-store-engine-v1",
+    "program": "wsl.exe",
+    "schema_version": 2
+  },
+  "failure": "The n8n MCP server did not answer. Check its enabled state and token.",
+  "passed": false,
+  "provider": "n8n-official-mcp-v1@2.37.10",
+  "provider_sha256": "05edd83b63b5c271f203699c8907f2749e1bfd4a5edba8c6772ef6e75fd293c2",
+  "recorded_at_unix": 1790937788,
+  "schema_version": 1,
+  "scope": "real official MCP metadata and exact fixed note-table creation; no workflow execution, arbitrary MCP proxy, all-app coverage or native WebView proof",
+  "steps": [
+    "isolated reviewed n8n installed on the selected self engine",
+    "official MCP workflow list contains the exact synthetic workflow",
+    "official MCP workflow detail strips parameters and credentials",
+    "official MCP metadata read; workflow parameters, credentials and server hints are withheld",
+    "read-only scope cannot request writes; exact owner-approved fixed-column table created and read; cross-client and replay denied",
+    "ownership-safe fixture cleanup; existing containers unchanged"
+  ],
+  "test_sha256": "d8c9989e33977969538808e9c04c61dfabb6c4f441455782c62855d9c4742c42"
+}

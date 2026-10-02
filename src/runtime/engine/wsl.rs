@@ -9,7 +9,9 @@ use crate::{
 
 pub const DISTRO: &str = "local-store-engine-v1";
 pub mod bootstrap;
+pub mod lease;
 mod projection;
+pub mod supervisor;
 pub use projection::{project_plan, PathPair, ProjectedPlan, ProjectedSeed, COMPOSE_FILE};
 
 /// Lexical mapping for the owned distro's required /mnt drive automount layout.
@@ -57,7 +59,9 @@ pub fn diagnostic_command(spec: &CommandSpec) -> AppResult<CommandSpec> {
     let args: Vec<_> = spec.args.iter().map(String::as_str).collect();
     let supported = matches!(
         args.as_slice(),
-        ["version", "--format", "{{.Server.Version}}"] | ["compose", "version", "--short"]
+        ["version", "--format", "{{.Server.Version}}"]
+            | ["compose", "version", "--short"]
+            | ["info", "--format", "{{.ID}}"]
     );
     if spec.program != "docker" || spec.cwd.is_some() || !supported {
         return Err(AppError::invalid("WSL transport currently supports engine diagnostics only; app operations require Compose and bind-path projection."));
@@ -184,6 +188,24 @@ impl ProcessRunner for DiagnosticRunner<'_> {
 mod tests {
     use super::*;
     use crate::runtime::DIAGNOSTIC_TIMEOUT;
+
+    #[test]
+    fn engine_identity_diagnostic_has_only_the_exact_read_only_form() {
+        let make = |args: Vec<&str>| {
+            CommandSpec::docker(
+                args.into_iter().map(str::to_owned).collect(),
+                None,
+                DIAGNOSTIC_TIMEOUT,
+            )
+        };
+        let command = diagnostic_command(&make(vec!["info", "--format", "{{.ID}}"])).unwrap();
+        assert_eq!(command.program, "wsl.exe");
+        assert!(command
+            .args
+            .ends_with(&["info".into(), "--format".into(), "{{.ID}}".into()]));
+        assert!(diagnostic_command(&make(vec!["info"])).is_err());
+        assert!(diagnostic_command(&make(vec!["info", "--format", "{{json .}}"])).is_err());
+    }
 
     #[test]
     fn paths_preserve_spaces_unicode_and_literal_shell_characters() {

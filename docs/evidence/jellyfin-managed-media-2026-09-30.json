@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790764036,
+  "recorded_at_unix": 1790841068,
   "app": "jellyfin",
   "passed": true,
   "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
@@ -14,22 +14,22 @@
   },
   "first_use": "an administrator imports an owned sample audio file, streams its exact bytes, and repeats playback after restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 10004,
+    "first_start_millis": 31927,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-jellyfin-qualify-28640-1790763973950153700-jellyfin": 175951052
+      "local-store-jellyfin-qualify-20088-1790840981627366500-jellyfin": 235615027
     },
     "peak_memory_bytes": {
-      "local-store-jellyfin-qualify-28640-1790763973950153700-jellyfin": 186227097
+      "local-store-jellyfin-qualify-20088-1790840981627366500-jellyfin": 235615027
     },
-    "peak_total_memory_bytes": 186227097,
-    "idle_managed_storage_bytes": 1574,
-    "peak_managed_storage_bytes": 1574,
+    "peak_total_memory_bytes": 235615027,
+    "idle_managed_storage_bytes": 1704,
+    "peak_managed_storage_bytes": 1704,
     "idle_named_volume_bytes": {
-      "jellyfin-config": 891956
+      "jellyfin-config": 896907
     },
     "peak_named_volume_bytes": {
-      "jellyfin-config": 891956
+      "jellyfin-config": 896907
     },
     "image_virtual_bytes": {
       "sha256:0f42497a69fa0441bfd5f9d6bba8694f2a656ec984e571d0ac04c6dd91250039": 1296509288
@@ -116,7 +116,7 @@
     "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
     "source_observed_on": "2026-09-12",
     "images_observed_on": "2026-09-30",
-    "plan_sha256": "74badb6c60c71521f5b91adee8d21740073e58273e46214b289a45f7c2fc0e56",
+    "plan_sha256": "89d967eec559bdfed5ccd9dd89b9eadc3f9a08c31efb8a7737457c8a1951a0b8",
     "requested_images": [
       "lscr.io/linuxserver/jellyfin:12.0ubu2604-ls48"
     ],

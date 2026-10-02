@@ -14,7 +14,7 @@ export function diagnosticText(error) {
   if (!error) return '';
   const hint = {
     port_in_use: 'Choose an unused port or stop the app using it before trying again.',
-    prerequisite_unavailable: 'Open Settings and run the system check after starting Docker.',
+    prerequisite_unavailable: 'Set up or select the Local Store engine in Settings, then run the system check.',
     process_unavailable: 'Open Settings and run the system check.',
     timed_out: 'Check the app status and logs before trying again.',
     operation_busy: 'Wait for the current operation to finish.',

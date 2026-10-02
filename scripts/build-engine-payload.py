@@ -21,6 +21,44 @@ ENGINE = ROOT / "engine"
 EXPECTED = {"docker-ce", "docker-ce-cli", "containerd.io",
             "docker-compose-plugin", "docker-buildx-plugin"}
 PACKAGE_LOCK = ENGINE / "packages.lock.tsv"
+MANAGED_ENGINE = False
+
+
+def docker_command(*args):
+    if not MANAGED_ENGINE:
+        return ["docker", *args]
+    # Explicit development build mode. Never changes Docker's global context.
+    def project(value):
+        value = str(value)
+        if re.match(r"^[A-Za-z]:[\\/]", value):
+            return "/mnt/" + value[0].lower() + "/" + value[3:].replace("\\", "/")
+        return value
+    return ["wsl.exe", "--distribution", "local-store-engine-v1", "--user", "root",
+            "--exec", "/usr/bin/docker", "--host", "unix:///var/run/docker.sock",
+            *(project(arg) for arg in args)]
+
+
+def verify_managed_builder():
+    state = ROOT / ".cache/engine/real-wsl-proof/state"
+    journal_bytes = (state / "bootstrap.json").read_bytes()
+    if len(journal_bytes) > 16 * 1024:
+        raise ValueError("Managed-engine journal exceeds its bound")
+    journal = json.loads(journal_bytes)
+    token = (state / "ownership-token").read_bytes()
+    if (journal.get("schema_version") != 1 or journal.get("state") != "verified"
+            or journal.get("distro") != "local-store-engine-v1"
+            or token != journal.get("ownership_token", "").encode()
+            or not 32 <= len(token) <= 128
+            or Path(journal.get("install_dir", "")).resolve() != (ROOT / ".cache/engine/real-wsl-proof/data").resolve()):
+        raise ValueError("Development engine ownership could not be verified")
+    path = str((state / "ownership-token").resolve()).replace("\\", "/")
+    if not re.match(r"^[A-Za-z]:/", path):
+        raise ValueError("The managed builder requires Windows")
+    source = "/mnt/" + path[0].lower() + "/" + path[3:]
+    subprocess.run(["wsl.exe", "--distribution", "local-store-engine-v1", "--user", "root",
+                    "--exec", "/usr/bin/cmp", "--silent", source,
+                    "/usr/share/local-store/ownership-token"], check=True, timeout=60,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def digest(path):
@@ -110,7 +148,7 @@ def fetch_package(package, target):
 
 
 def docker(*args, timeout=120):
-    return subprocess.check_output(["docker", *args], text=True, encoding="utf-8", timeout=timeout).strip()
+    return subprocess.check_output(docker_command(*args), text=True, encoding="utf-8", timeout=timeout).strip()
 
 
 def inventory_drift(locked, observed):
@@ -164,7 +202,7 @@ def capture_apt_provenance(image, output, lock):
         for source, filename in (("/var/cache/apt/archives", "ubuntu-archives.tar"),
                                  ("/var/lib/apt/lists", "ubuntu-indexes.tar")):
             with (output / filename).open("wb") as destination:
-                subprocess.run(["docker", "cp", container + ":" + source, "-"],
+                subprocess.run(docker_command("cp", container + ":" + source, "-"),
                                stdout=destination, check=True, timeout=120)
     finally:
         docker("rm", container)
@@ -192,7 +230,7 @@ def capture_apt_provenance(image, output, lock):
 
 
 def build_stage(lock, context, image_file, stage):
-    subprocess.run(["docker", "build", "--platform", lock["platform"],
+    subprocess.run(docker_command("build", "--platform", lock["platform"],
                     "--target", stage,
                     "--build-arg", "BASE_IMAGE=" + lock["base_image"],
                     "--build-arg", "UBUNTU_SNAPSHOT=" + lock["ubuntu_snapshot"],
@@ -200,7 +238,7 @@ def build_stage(lock, context, image_file, stage):
                     + parse_inventory(PACKAGE_LOCK.read_bytes())["ca-certificates"][0],
                     "--build-arg", "UBUNTU_OPENSSL_VERSION="
                     + parse_inventory(PACKAGE_LOCK.read_bytes())["openssl"][0],
-                    "--iidfile", str(image_file), str(context)], check=True, timeout=1200)
+                    "--iidfile", str(image_file), str(context)), check=True, timeout=1200)
     image = image_file.read_text().strip()
     details = json.loads(docker("image", "inspect", image))[0]
     if details["Os"] + "/" + details["Architecture"] != lock["platform"]:
@@ -253,7 +291,7 @@ def build(lock, inspect_inventory=False):
         # Keep Linux symlinks inside a tar; extracting them on Windows requires
         # privileges that a payload build should never need.
         with (output / "notices.tar").open("wb") as notices:
-            subprocess.run(["docker", "cp", container + ":/usr/share/doc", "-"],
+            subprocess.run(docker_command("cp", container + ":/usr/share/doc", "-"),
                            stdout=notices, check=True, timeout=120)
         inventory = parse_inventory(observed)
         for p in lock["packages"]:
@@ -291,16 +329,22 @@ def build(lock, inspect_inventory=False):
 
 
 def main():
+    global MANAGED_ENGINE
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build", action="store_true", help="download, build and export; default only validates")
     parser.add_argument("--inspect-inventory", action="store_true",
                         help="build the unverified package stage and report drift; never export")
+    parser.add_argument("--managed-engine", action="store_true",
+                        help="use the verified local development WSL engine; Docker Desktop is not needed")
     args = parser.parse_args()
     lock = json.loads((ENGINE / "components.lock.json").read_text(encoding="utf-8"))
     validate(lock)
     if args.build and args.inspect_inventory:
         parser.error("--build and --inspect-inventory are mutually exclusive")
     if args.build or args.inspect_inventory:
+        if args.managed_engine:
+            verify_managed_builder()
+            MANAGED_ENGINE = True
         build(lock, inspect_inventory=args.inspect_inventory)
     else:
         print("Engine pins valid; no build or release qualification implied.")

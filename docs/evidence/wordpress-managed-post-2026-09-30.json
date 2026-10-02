@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790761559,
+  "recorded_at_unix": 1790841423,
   "app": "wordpress",
   "passed": true,
   "scope": "reviewed mapping, transaction, managed storage and first use, on one host and one architecture",
@@ -16,19 +16,19 @@
   },
   "first_use": "an administrator installs WordPress, publishes an exact unique post, and reads the same published content after restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 12810,
+    "first_start_millis": 12559,
     "samples": 3,
     "idle_memory_bytes": {
-      "local-store-wordpress-qualify-27224-1790761506739314900-wordpress": 67559751,
-      "local-store-wordpress-qualify-27224-1790761506739314900-wordpress-db": 128135987
+      "local-store-wordpress-qualify-20768-1790841375357508100-wordpress": 66574090,
+      "local-store-wordpress-qualify-20768-1790841375357508100-wordpress-db": 128240844
     },
     "peak_memory_bytes": {
-      "local-store-wordpress-qualify-27224-1790761506739314900-wordpress": 67559751,
-      "local-store-wordpress-qualify-27224-1790761506739314900-wordpress-db": 128135987
+      "local-store-wordpress-qualify-20768-1790841375357508100-wordpress": 66574090,
+      "local-store-wordpress-qualify-20768-1790841375357508100-wordpress-db": 128240844
     },
-    "peak_total_memory_bytes": 195695738,
-    "idle_managed_storage_bytes": 2519,
-    "peak_managed_storage_bytes": 2519,
+    "peak_total_memory_bytes": 194814934,
+    "idle_managed_storage_bytes": 2771,
+    "peak_managed_storage_bytes": 2771,
     "idle_named_volume_bytes": {
       "wordpress-data": 110051746,
       "wordpress-mariadb": 168597538
@@ -127,7 +127,7 @@
     "source_revision": "3c878baaf22361a515abc9fc648d0e4821c6d593",
     "source_observed_on": "2026-09-11",
     "images_observed_on": "2026-09-10",
-    "plan_sha256": "031b6d5d145fbbf47695b8581eac076c11f11fcff2712db07275015506de3edd",
+    "plan_sha256": "21e818a812f1dcacd3caa889512c6863cc3ba865c4e5440e8b2f071cacffd66d",
     "requested_images": [
       "wordpress:7.1.0",
       "mariadb:11.4.13"

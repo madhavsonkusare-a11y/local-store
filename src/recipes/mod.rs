@@ -29,6 +29,9 @@ pub struct Recipe {
     pub data_storage: String,
     pub risk_notes: Vec<String>,
     pub compose: String,
+    /// Reviewed ceilings must agree with the literal Compose file we install.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub resource_limits: Vec<crate::templates::ResourceLimit>,
 }
 
 /// Container image compatibility, not proof of a host-platform installation.
@@ -123,6 +126,40 @@ impl Recipe {
     pub fn validate(&self) -> Result<(), String> {
         if self.schema_version != 3 {
             return Err("unsupported recipe schema".into());
+        }
+        if self.resource_limits.len() > 1 {
+            return Err(
+                "single-service recipes require exactly one reviewed resource ceiling".into(),
+            );
+        }
+        if let Some(limit) = self.resource_limits.first() {
+            if limit.service != self.id
+                || !(16 * 1024 * 1024..=64 * 1024 * 1024 * 1024).contains(&limit.memory_bytes)
+                || !(1..=64_000).contains(&limit.cpu_millicores)
+                || !(1..=65_536).contains(&limit.pids)
+                || limit.reason.trim().len() <= 20
+            {
+                return Err("invalid reviewed recipe resource ceiling".into());
+            }
+            let block = format!(
+                "    mem_limit: {}\n    cpus: \"{}.{:03}\"\n    pids_limit: {}\n",
+                limit.memory_bytes,
+                limit.cpu_millicores / 1000,
+                limit.cpu_millicores % 1000,
+                limit.pids,
+            );
+            if self.compose.matches(&block).count() != 1
+                || ["mem_limit:", "cpus:", "pids_limit:"]
+                    .iter()
+                    .any(|key| self.compose.matches(key).count() != 1)
+            {
+                return Err("recipe Compose differs from its reviewed resource ceiling".into());
+            }
+        } else if ["mem_limit:", "cpus:", "pids_limit:"]
+            .iter()
+            .any(|key| self.compose.contains(key))
+        {
+            return Err("recipe Compose has an unreviewed resource ceiling".into());
         }
         let requirements = &self.requirements;
         let audit = &requirements.image_audit;
@@ -315,6 +352,29 @@ mod tests {
         candidate = recipe("memos").unwrap();
         candidate.compose = candidate.compose.replace("127.0.0.1:", "");
         assert!(candidate.validate().is_err());
+    }
+
+    #[test]
+    fn reviewed_resource_ceilings_refuse_compose_and_service_drift() {
+        let reviewed = recipe("memos").unwrap();
+        assert_eq!(reviewed.resource_limits.len(), 1);
+        let mut changed = reviewed.clone();
+        changed.resource_limits[0].service = "other".into();
+        assert!(changed.validate().is_err());
+        changed = reviewed.clone();
+        changed
+            .resource_limits
+            .push(changed.resource_limits[0].clone());
+        assert!(changed.validate().is_err());
+        changed = reviewed.clone();
+        changed.resource_limits[0].memory_bytes += 1;
+        assert!(changed.validate().is_err());
+        changed = reviewed.clone();
+        changed.compose.push_str("    mem_limit: 1\n");
+        assert!(changed.validate().is_err());
+        changed = reviewed;
+        changed.resource_limits.clear();
+        assert!(changed.validate().is_err());
     }
 
     #[test]

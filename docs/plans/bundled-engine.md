@@ -15,7 +15,9 @@ retained notices. That page records exact versions, provenance and build limits.
 WSL2 still requires virtualization and Windows prerequisites, potentially with
 administrator consent and a restart. The managed-engine promise removes a
 separate Docker Desktop installation; it does not remove platform prerequisites.
-Keep the existing Docker Desktop path available without silently migrating apps.
+New installs use the explicitly selected Local Store engine. Existing apps
+retain their recorded engine bindings; do not silently migrate them. Docker
+Desktop is not a product prerequisite.
 
 Rancher Desktop's rootfs construction and checksum verification are useful
 references. Its complete Alpine/OpenRC/Kubernetes service stack is not our
