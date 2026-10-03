@@ -42,7 +42,10 @@ try {
   if (phase === 'first-use') {
     const nonce = randomBytes(12).toString('hex');
     state = {...state,url:`https://example.com/?local-store-proof=${nonce}`,title:`Local Store proof ${nonce}`,description:'An exact synthetic private bookmark',notes:`Private saved notes ${nonce}`,tags:['local-store-proof',`proof-${nonce}`]};
-    const csrf = await page.locator('form input[name=csrfmiddlewaretoken]').inputValue();
+    // Django accepts its session's CSRF cookie as the request token. Login
+    // rotates this cookie; use the current value rather than a cached form.
+    const csrf = (await context.cookies(base.href)).find(cookie => cookie.name === 'ld_csrftoken')?.value;
+    if (!csrf) throw new Error('authenticated bookmark session has no CSRF token');
     const saved = await context.request.post(new URL('/bookmarks/new',base).href,{form:{csrfmiddlewaretoken:csrf,url:state.url,title:state.title,description:state.description,notes:state.notes,tag_string:state.tags.join(' '),auto_close:''},headers:{Referer:page.url()},maxRedirects:3,timeout:30000});
     if (!saved.ok()) throw new Error('exact private bookmark form was not saved');
   }
@@ -62,7 +65,23 @@ try {
   await expect(page.locator('#id_notes')).toHaveValue(state.notes);
   const tags = (await page.locator('#id_tag_string').inputValue()).trim().split(/\s+/).sort();
   if (JSON.stringify(tags) !== JSON.stringify([...state.tags].sort())) throw new Error('private bookmark tags changed');
-  await expect(page.locator('#id_shared')).not.toBeChecked();
+  // Upstream hides this optional control when the account disables sharing.
+  // Check it whenever offered, and prove actual visibility boundaries below.
+  if (await page.locator('#id_shared').count()) await expect(page.locator('#id_shared')).not.toBeChecked();
+  const shared = await page.goto(new URL('/bookmarks/shared',base).href);
+  if (!shared?.ok()) throw new Error('authenticated sharing boundary was not readable');
+  await expect(page.getByRole('link',{name:state.title,exact:true})).toHaveCount(0);
+  const anonymous = await browser.newContext();
+  try {
+    const anonymousPage = await anonymous.newPage();
+    const publicShared = await anonymousPage.goto(new URL('/bookmarks/shared',base).href);
+    if (!publicShared?.ok()) throw new Error('anonymous public sharing boundary was not readable');
+    await expect(anonymousPage.getByRole('link',{name:state.title,exact:true})).toHaveCount(0);
+    const privateEdit = await anonymous.request.get(target.href,{maxRedirects:0});
+    const location = privateEdit.headers().location;
+    const redirect = location ? new URL(location,base) : null;
+    if (privateEdit.status() !== 302 || !redirect || redirect.origin !== base.origin || !['/login','/login/'].includes(redirect.pathname) || redirect.searchParams.get('next') !== target.pathname) throw new Error('anonymous access to the exact private bookmark was not denied');
+  } finally { await anonymous.close(); }
   if (phase === 'first-use') await writeFile(statePath,JSON.stringify(state),{mode:0o600});
   console.log('Linkding exact private bookmark, notes, tags and login passed');
 } finally { await browser.close(); }

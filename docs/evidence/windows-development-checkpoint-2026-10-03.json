@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "recorded_at_unix": 1791046386,
+  "scope": "Windows development checkpoint; source-only tag unchanged; no installer or clean-host acceptance",
+  "windows_progress": {
+    "done": 23,
+    "active": 31,
+    "percent": 74.2,
+    "done_ids": [
+      "R01",
+      "R02",
+      "R03",
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q04",
+      "Q05",
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "F01",
+      "F02"
+    ],
+    "remaining_ids": [
+      "E01",
+      "E02",
+      "E03",
+      "E04",
+      "F03",
+      "F04",
+      "R04",
+      "R05"
+    ]
+  },
+  "provider_gate": {
+    "target": 10,
+    "verified": [
+      "flatnotes",
+      "gitea",
+      "immich",
+      "jellyfin",
+      "kanboard",
+      "memos",
+      "n8n",
+      "privatebin",
+      "uptime-kuma",
+      "wordpress"
+    ],
+    "pending": []
+  },
+  "batch_checks": {
+    "candidate_focused_rust": 39,
+    "candidate_focused_python": 13,
+    "candidate_github_browser": 6,
+    "retained_signature_boundaries": 3,
+    "settled_v2_behaviors": 10,
+    "fresh_payload_boot_seconds": 28.84,
+    "actual_cli_exit_idle_seconds": 95,
+    "descendant_pipe_timeout_seconds": 1.02,
+    "canonical_launcher_build": "passed",
+    "provider_guard": "10/10 passed",
+    "managed_task_guard": "10/10 passed",
+    "v2_targeted_browser": 12,
+    "v2_recovery_connection_composition": 7,
+    "v2_broad_initial": {
+      "passed": 94,
+      "total": 106,
+      "failed": 12,
+      "failure_scope": "obsolete app/catalog screenshot and selector assertions"
+    },
+    "v2_affected_after_repairs": {
+      "passed": 23,
+      "total": 23,
+      "unaffected_initial_passes": 83,
+      "whole_suite_rerun": false
+    },
+    "staged_source_secret_scan": "passed; pinned gitleaks8.30.1",
+    "staged_source_provider_guard": "10/10 passed",
+    "staged_source_managed_task_guard": "10/10 passed",
+    "staged_source_approved_candidate_guard": "1/1 Linkding passed"
+  },
+  "proofs": [
+    "docs/evidence/linkding-github-approved-2026-10-02.json",
+    "docs/evidence/linkding-managed-candidate-2026-10-02.json",
+    "docs/evidence/windows-fresh-payload-2026-10-02.json",
+    "docs/evidence/windows-engine-supervision-2026-10-02.json",
+    "docs/evidence/engine-independent-provenance-2026-10-02.json"
+  ],
+  "limits": [
+    "Full approved V2 port remains in progress; bounded browser fixtures do not establish native acceptance",
+    "Existing-host fresh rootfs import does not establish fixed-name product setup on clean Windows",
+    "Sleep/wake, crash/restart and complete product-owned engine removal remain unverified",
+    "Complete applicable rootfs notices and corresponding-source fulfillment remain open",
+    "53 catalog offerings; 10 selected launch apps; 43 other app content paths unverified",
+    "Windows Home host cannot provide the supported Hyper-V nested clean Windows test without a supported host change",
+    "Owner CHANGELOG.md and pnpm-lock.yaml excluded; no new source tag"
+  ],
+  "source_inputs": [
+    {
+      "path": "src/agent_provider_evidence.rs",
+      "sha256": "43be570ea5305eab25c4f90a157e07e3b4b57115c2e6d9cba57698f23a3da3ef"
+    },
+    {
+      "path": "src/agent_content/app_api.rs",
+      "sha256": "645055ab54a8ea8ee17224565fd3c4ebd9456d3e68900dbb2236d0e5ac8c17d2"
+    },
+    {
+      "path": "scripts/app-api-read-fixture.mjs",
+      "sha256": "577773f48561b20686586d9d42d8a341f628cb411c496c1d5ec6c9e44cb6d7c1"
+    },
+    {
+      "path": "catalog/agent-access.json",
+      "sha256": "89097fbfda7d9c6b7ecf8d5fdbd32c58e09af0a976158678db9fe4b5f1b1d2ba"
+    },
+    {
+      "path": "src/runtime/engine/wsl/supervisor.rs",
+      "sha256": "499b6db55e56dad7195490f649ec6b7d3d59b8319a023a49cfcd2661561ca7f1"
+    },
+    {
+      "path": "src/runtime/engine/wsl/supervisor/windows_process.rs",
+      "sha256": "44340d7b64525d6681bde85b06c77e9382689c2799c55a2f974739491a7c03a0"
+    },
+    {
+      "path": "src/cli.rs",
+      "sha256": "6b4b88f096c9fff328143ca238db81e333fc0727c40d3c05fb3e7e2333f2be4d"
+    },
+    {
+      "path": "scripts/check-fresh-engine.py",
+      "sha256": "9600f73e9649ab803ed9ceeeb868c7bf68a46db65dd15659bfb3999999088c29"
+    },
+    {
+      "path": "scripts/check-managed-supervisor.py",
+      "sha256": "014a5edbbc9892f85229aa7b68862000ef937b56fec75acd1ceca86121466d49"
+    },
+    {
+      "path": "scripts/verify-engine-provenance.py",
+      "sha256": "6c5605fb103ecd7d7f1d829b160bd3715103ed2df025110ca1f98e18e8d2ee5d"
+    },
+    {
+      "path": "src/templates/linkding.json",
+      "sha256": "57ca0c4bfd4e45614770b36881097f7bdcb06d79a97bfe76bc149297317861ac"
+    },
+    {
+      "path": "catalog/qualified-candidate-apps.json",
+      "sha256": "cff0832f028d274aecd6ee2fec61d7e0884f355a77cc112726ba5eb9e1efcef2"
+    }
+  ]
+}

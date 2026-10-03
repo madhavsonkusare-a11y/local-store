@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "proof": "fresh_payload_import_on_existing_windows_wsl_host",
+  "recorded_at": "2026-10-02T18:20:24Z",
+  "rootfs_sha256": "ea9358fb64636e1d60da85df2ae5fd87090db2246c591996196dbb29089e5b32",
+  "rootfs_bytes": 572798976,
+  "script_sha256": "9600f73e9649ab803ed9ceeeb868c7bf68a46db65dd15659bfb3999999088c29",
+  "package_inventory_sha256": "9c164b7ab033ebbbec13c9e3daf64b073ed2a9ea8ccbf561bb6284d49c270f5b",
+  "package_count": 138,
+  "import_seconds": 22.93,
+  "ready_seconds": 28.84,
+  "fresh_vhd_file_bytes": 683671552,
+  "engine_version": "29.8.0",
+  "compose_version": "5.5.1",
+  "systemd_docker_active": true,
+  "existing_engine_state_unchanged": true,
+  "fixture_unregistered": true,
+  "limits": [
+    "Existing Windows host with WSL prerequisites already installed",
+    "Direct WSL fixture import, not the product's fixed-name setup transaction",
+    "No native WebView or failed-prerequisite proof",
+    "No image pulls or app task",
+    "VHD file length is an observation, not a supported minimum or physical allocated-size measurement"
+  ]
+}

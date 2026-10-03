@@ -52,6 +52,12 @@ const PROOFS: &[ProofInput] = &[
         include_bytes!("../scripts/kanboard-task-probe.mjs"),
     ),
     (
+        "linkding",
+        include_bytes!("../src/templates/linkding.json"),
+        include_bytes!("../docs/evidence/linkding-managed-candidate-2026-10-02.json"),
+        include_bytes!("../scripts/linkding-bookmark-probe.mjs"),
+    ),
+    (
         "memos",
         include_bytes!("../src/recipes/memos.json"),
         include_bytes!("../docs/evidence/memos-managed-resource-2026-09-23.json"),
@@ -83,6 +89,9 @@ const PROOFS: &[ProofInput] = &[
     ),
 ];
 const LEDGER: &str = include_str!("../catalog/v1-qualified-apps.json");
+// Real expansion task evidence is separately reviewed. It does not increase
+// the selected ten's launch count or imply an implemented content provider.
+const CANDIDATE_LEDGER: &str = include_str!("../catalog/qualified-candidate-apps.json");
 const REQUIRED_STEPS: &[&str] = &[
     "installs with one action",
     "survives a restart",
@@ -216,10 +225,25 @@ fn current_proof(
     now: u64,
 ) -> Option<crate::qualification::Evidence> {
     let ledger: Value = serde_json::from_str(LEDGER).ok()?;
-    let entry = ledger["apps"]
+    let candidates: Value = serde_json::from_str(CANDIDATE_LEDGER).ok()?;
+    if candidates["schema_version"].as_u64()? != 1
+        || candidates["scope"].as_str()? != "approved_expansion_task_evidence; not_launch_selection"
+    {
+        return None;
+    }
+    let selected = ledger["apps"]
         .as_array()?
         .iter()
-        .find(|entry| entry["id"].as_str() == Some(id))?;
+        .find(|entry| entry["id"].as_str() == Some(id));
+    let expansion = candidates["apps"]
+        .as_array()?
+        .iter()
+        .find(|entry| entry["id"].as_str() == Some(id));
+    let (entry, candidate) = match (selected, expansion) {
+        (Some(entry), None) => (entry, false),
+        (None, Some(entry)) => (entry, true),
+        _ => return None,
+    };
     if entry["manifest_sha256"].as_str()? != digest(manifest_bytes)
         || entry["evidence_sha256"].as_str()? != digest(evidence_bytes)
     {
@@ -240,7 +264,11 @@ fn current_proof(
             vec![recipe.image.clone()],
         ),
         crate::offerings::Offering::Template(template) => (
-            "reviewed mapping",
+            if candidate {
+                "withheld candidate mapping"
+            } else {
+                "reviewed mapping"
+            },
             template.origin.importer.clone(),
             format!("{}#{}", template.origin.repository, template.origin.path),
             template.origin.revision.clone(),
@@ -337,5 +365,22 @@ mod tests {
                     .is_none()
             );
         }
+    }
+    #[test]
+    fn approved_candidate_proof_does_not_change_launch_selection_or_content_claims() {
+        let launch: Value = serde_json::from_str(LEDGER).unwrap();
+        assert_eq!(launch["target"], 10);
+        assert_eq!(launch["apps"].as_array().unwrap().len(), 10);
+        assert!(!launch["apps"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|row| row["id"] == "linkding"));
+        let (_, _, evidence, _) = PROOFS.iter().find(|row| row.0 == "linkding").unwrap();
+        let proof: crate::qualification::Evidence = serde_json::from_slice(evidence).unwrap();
+        let view = for_offering_at("linkding", proof.recorded_at_unix);
+        assert!(view.current_evidence && view.task_verified && view.lifecycle_proven);
+        assert_eq!(view.install_mode, "setup_assisted");
+        assert_eq!(view.agent_content_access, "unverified");
     }
 }

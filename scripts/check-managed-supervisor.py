@@ -23,7 +23,20 @@ STATE_FILES = ("bootstrap.json", "ownership-token", "selected-engine.json", "eng
 
 
 def run(args: list[str], env: dict[str, str], timeout: int = 120) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(args, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout, check=False)
+    process = subprocess.Popen(args, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        text=True, encoding="utf-8", errors="replace")
+    try:
+        stdout, stderr = process.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        # subprocess.run retries communicate without a timeout on Windows.
+        # If a descendant retained an output handle, that retry never returns,
+        # preventing our exact fixture-selection revocation in finally. Wait
+        # only for this owned command handle; let fixture cleanup stop its worker.
+        if process.poll() is None:
+            process.kill()
+            process.wait(timeout=5)
+        raise
+    return subprocess.CompletedProcess(args, process.returncode, stdout, stderr)
 
 
 def product_json(binary: Path, args: list[str], env: dict[str, str]):

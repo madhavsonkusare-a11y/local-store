@@ -1,3 +1,4 @@
+import './v2-primitives.js';
 import { invoke, listenOperations, listenBrowserFailures, listenActivationFailures } from './api.js';
 import { createOperations, operationLabel, diagnosticText, installStageLabel, canCancel, retryIsUnsafe } from './operations.js';
 import { catalogControls, defaultFilters } from './catalog-controls.js';
@@ -14,20 +15,28 @@ import './agent-content-controls.js';
 import './agent-data-controls.js';
 import {initializeGithubReview} from './github-review.js';
 import {readinessView} from './launch-readiness.js';
-import {showFirstRun, initializeFirstRun, returnToStarterChoice, finishStarterIntroduction} from './first-run.js';
-import {showInstallResult} from './install-result.js';
+import {showFirstRun, initializeFirstRun, returnToStarterChoice, finishStarterIntroduction, markStarterStep} from './first-run.js';
+import {showInstallResult, showConnectionResult} from './install-result.js';
 import {resetInstallTask,renderInstallStage,renderInstallFailure} from './install-task-view.js';
 import {refreshLaunchCollection} from './launch-collection.js';
 import {beginActivity, finishActivity, receiveActivity, renderActivity} from './activity.js';
 
 const $ = id => document.getElementById(id);
-const state = { view: 'discover', filters: defaultFilters(), query: '', category: '', offset: 0, limit: 12, entries: [], apps: [], visibleApps: [], total: 0 };
+const state = { view: 'discover', filters: defaultFilters(), query: '', category: '', offset: 0, limit: 24, entries: [], apps: [], visibleApps: [], total: 0 };
 let request = 0, recipeRequest = 0, searchTimer, toastTimer, pendingApp, activeRecipe, refreshError, activeCatalogId;
 let selectedAppId = null, detailTab = 'overview', detailLog = {state:'idle'};
 // Set when a failed install could not clean up after itself; blocks a retry
 // that would run over containers or files still on disk.
 let installNeedsReview = false;
-let starterReview = false;
+let starterReview = false, starterConnection = false;
+let beforeSettings = 'discover';
+const settingsScreen = $('settings-dialog');
+// Keep the existing Settings controllers' visibility/close contract while
+// presenting an ordinary semantic workspace section, with no modal behavior.
+Object.defineProperty(settingsScreen,'open',{get:() => !settingsScreen.hidden});
+settingsScreen.show = () => {settingsScreen.hidden = false;};
+settingsScreen.close = () => {if (settingsScreen.hidden) return; settingsScreen.hidden = true; settingsScreen.dispatchEvent(new Event('close'));};
+document.querySelector('.workspace').append(settingsScreen);
 const controls = catalogControls(state, render);
 const message = error => error?.message || String(error);
 const operations = createOperations(paintOperations);
@@ -118,10 +127,10 @@ async function refreshApps() {
     $('app-count').textContent = state.apps.length;
   } catch (error) { refreshError = error; $('app-count').textContent = '–'; }
 }
-async function render() {
+async function render(append = false) {
   const token = ++request;
   if (state.view === 'overview' || state.view === 'activity') return;
-  $('pagination').hidden = true;
+  if (!append) $('pagination').hidden = true;
   if (state.view === 'apps') {
     loadState(false);
     if (refreshError && !state.apps.length) { readiness.update([], false); showError(refreshError); return; }
@@ -158,27 +167,36 @@ async function render() {
     try { facts = await invoke('launch_readiness_batch', {ids: page.entries.filter(app => app.recipe_id).map(app => app.recipe_id)}) || []; } catch { /* A proof failure never promotes a listing. */ }
     if (token !== request) return;
     page.entries = page.entries.map(app => ({...app, snapshot_date:page.snapshot_date, launch_readiness: facts.find(item => item.offering_id === app.recipe_id)}));
-    state.entries = page.entries;
+    state.entries = append ? [...state.entries, ...page.entries] : page.entries;
     state.total = page.total;
     controls.update(page);
     $('results-count').textContent = `${page.total.toLocaleString()} ${page.total === 1 ? 'project' : 'projects'}`;
     $('catalog-note').textContent = `${page.catalog_total.toLocaleString()} projects to discover · Works offline · Install previews are marked`;
-    $('content').innerHTML = page.entries.length
-      ? `<div class="app-grid">${page.entries.map(discoveryCard).join('')}</div>`
+    $('content').innerHTML = state.entries.length
+      ? `<div class="app-grid">${state.entries.map(discoveryCard).join('')}</div>`
       : emptyState('Nothing here just yet.', 'Try a different search or category. You can also connect an app that isn’t in this collection.', 'clear', 'Clear filters', 'search');
-    $('pagination').hidden = page.total <= state.limit;
-    $('page-label').textContent = `${state.offset + 1}–${Math.min(state.offset + state.limit, page.total)} of ${page.total.toLocaleString()} projects`;
-    $('previous').disabled = state.offset === 0;
-    $('next').disabled = state.offset + state.limit >= page.total;
-  } catch (error) { if (token === request) showError(error); }
-  finally { if (token === request) loadState(false); }
+    $('pagination').hidden = page.total === 0;
+    const narrowed = state.query || state.category || Object.values(state.filters).some(Boolean);
+    $('page-label').textContent = `Showing ${state.entries.length.toLocaleString()}${narrowed ? ' matching' : ''} projects${state.entries.length < page.total ? ` of ${page.total.toLocaleString()}` : ''}`;
+    $('next').hidden = state.entries.length >= page.total;
+    $('next').disabled = false;
+    $('next').textContent = 'Load next 24';
+  } catch (error) { if (token === request) { if (append) toast('Could not load more apps. Your current results are still here. Try again.'); else showError(error); } }
+  finally { if (token === request) { loadState(false); $('next').disabled = false; $('next').textContent = 'Load next 24'; } }
 }
 function showError(error) { $('content').innerHTML = emptyState('We couldn’t load your workspace.', message(error), 'retry', 'Try again', 'circle-alert'); }
-function navigate(view) {
+function navigate(view, updateHistory = true) {
+  if (settingsScreen.dataset.busy === 'true' && state.view === 'settings' && view !== 'settings') return;
+  if (view === 'settings' && state.view !== 'settings') beforeSettings = state.view;
+  if (settingsScreen.open && view !== 'settings') settingsScreen.close();
+  if (updateHistory && location.hash !== `#${view === 'apps' ? 'my-apps' : view}`) history.pushState(null,'',`#${view === 'apps' ? 'my-apps' : view}`);
   clearTimeout(searchTimer);
   state.view = view; state.query = ''; state.category = ''; state.offset = 0;
   readiness.update([], false);
   $('search').value = ''; controls.reset();
+  const settings = view === 'settings';
+  document.querySelector('.workspace').classList.toggle('settings-active',settings);
+  if (settings && !settingsScreen.open) settingsScreen.show();
   const overview = view === 'overview';
   const activity = view === 'activity';
   $('activity-screen').hidden = !activity;
@@ -186,11 +204,12 @@ function navigate(view) {
   $('overview-screen').hidden = !overview;
   document.querySelector('.workspace').classList.toggle('overview-active', overview);
   const discover = view === 'discover';
-  for (const [id, active] of [['nav-overview', overview], ['nav-discover', discover], ['nav-apps', view === 'apps'], ['nav-activity', activity]]) {
+  for (const [id, active] of [['nav-overview', overview], ['nav-discover', discover], ['nav-apps', view === 'apps'], ['nav-activity', activity], ['settings', settings]]) {
     $(id).classList.toggle('selected', active);
     if (active) $(id).setAttribute('aria-current', 'page'); else $(id).removeAttribute('aria-current');
   }
-  $('breadcrumb').textContent = overview ? 'Overview' : activity ? 'Activity' : discover ? 'Discover' : 'My Apps';
+  $('breadcrumb').textContent = settings ? 'Settings' : overview ? 'Overview' : activity ? 'Activity' : discover ? 'Discover' : 'My Apps';
+  if (settings) { $('settings-title').focus({preventScroll:true}); window.scrollTo({top:0,behavior:'instant'}); void refreshEngineStatus(); void refreshLaunchCollection(); return; }
   if (activity) { renderActivity(); $('activity-title').focus({preventScroll: true}); window.scrollTo({top: 0, behavior: 'instant'}); return; }
   if (overview) {
     renderOverview(state.apps, null, refreshError, null);
@@ -209,6 +228,7 @@ function navigate(view) {
   $('content').replaceChildren();
   window.scrollTo({ top: 0, behavior: 'instant' });
   render();
+  $('page-title').focus({preventScroll:true});
 }
 let overviewRequest = 0;
 async function refreshOverview() {
@@ -231,7 +251,8 @@ async function refreshOverview() {
   button.disabled = false;
   button.textContent = 'Refresh status';
 }
-function openConnect(name = '', catalogId = null) {
+function openConnect(name = '', catalogId = null, starter = false) {
+  starterConnection = starter;
   activeCatalogId = catalogId;
   $('connect-name').removeAttribute('aria-invalid'); $('connect-url').removeAttribute('aria-invalid');
   $('connect-check').textContent = '';
@@ -269,6 +290,7 @@ function chosenPort() {
 async function reviewInstall(recipeId, starterPort = null) {
   const token = ++recipeRequest;
   starterReview = starterPort !== null;
+  markStarterStep(starterReview ? 'install' : null, $('install-dialog'));
   $('install-dialog').querySelector('.modal-top button').setAttribute('aria-label', starterReview ? 'Back to starter choices' : 'Back to Discover');
   activeRecipe = null;
   installNeedsReview = false;
@@ -310,7 +332,8 @@ async function reviewInstall(recipeId, starterPort = null) {
   }
 }
 initializeGithubReview({reviewInstall});
-initializeFirstRun({reviewInstall});
+initializeFirstRun({reviewInstall, connectExisting:() => openConnect('',null,true)});
+$('connect-dialog').addEventListener('close', () => { if (starterConnection) {starterConnection = false; void showFirstRun(true);} });
 $('install-dialog').addEventListener('close', () => {if (starterReview) {starterReview = false; void returnToStarterChoice();}});
 function showDetail(app) {
   $('detail-content').innerHTML = detail(app);
@@ -365,7 +388,10 @@ $('overview-refresh').onclick = refreshOverview;
 document.querySelector('.brand').onclick = event => { event.preventDefault(); navigate('discover'); };
 $('connect-top').onclick = $('connect-note').onclick = () => openConnect();
 $('about').onclick = () => showDialog($('about-dialog'));
-$('settings').onclick = () => { showDialog($('settings-dialog')); void refreshEngineStatus(); void refreshLaunchCollection(); };
+$('settings').onclick = () => navigate('settings');
+window.addEventListener('local-store:settings-route',event => { navigate(event.detail.opening ? 'settings' : beforeSettings); });
+const routeFromHash = () => { const route = location.hash.slice(1); const view = route === 'my-apps' ? 'apps' : route; if (['overview','discover','apps','activity','settings'].includes(view)) navigate(view,false); };
+window.addEventListener('popstate',() => {routeFromHash(); const restoredView=state.view; setTimeout(() => {if(state.view!==restoredView || document.querySelector('dialog:modal')) return; $(restoredView==='settings'?'settings-title':restoredView==='overview'?'overview-title':restoredView==='activity'?'activity-title':'page-title')?.focus({preventScroll:true});},0);});
 $('run-doctor').onclick = async () => {
   const button = $('run-doctor'); button.disabled = true; button.textContent = 'Checking…';
   $('doctor-error').textContent = ''; $('doctor-output').innerHTML = '';
@@ -377,10 +403,10 @@ $('search').addEventListener('input', () => {
   clearTimeout(searchTimer); ++request; state.query = $('search').value; state.offset = 0;
   searchTimer = setTimeout(render, 180);
 });
-$('previous').onclick = () => { state.offset = Math.max(0, state.offset - state.limit); render(); };
-$('next').onclick = () => { state.offset += state.limit; render(); };
+$('next').onclick = () => { if ($('content').getAttribute('aria-busy') === 'true') return; state.offset = state.entries.length; $('next').disabled = true; $('next').textContent = 'Loading…'; render(true); };
 document.addEventListener('keydown', event => {
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && !document.querySelector('dialog[open]')) { event.preventDefault(); $('search').focus(); }
+  if (event.key === 'Escape' && state.view === 'settings' && !document.querySelector('dialog:modal')) { event.preventDefault(); navigate(beforeSettings); return; }
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && ['discover','apps'].includes(state.view) && !document.querySelector('dialog[open]')) { event.preventDefault(); $('search').focus(); }
   if (state.view !== 'apps' || document.querySelector('dialog[open]')) return;
   const selector = event.target.closest?.('.installed-select');
   if (selector && ['ArrowUp','ArrowDown','Home','End'].includes(event.key)) {
@@ -447,6 +473,7 @@ document.addEventListener('click', async event => {
   if (button.dataset.overview) {
     if (button.dataset.overview === 'refresh') void refreshOverview();
     else if (button.dataset.overview === 'settings') $('settings').click();
+    else if (button.dataset.overview === 'activity') navigate('activity');
     else if (button.dataset.overview === 'apps') { await refreshApps(); navigate('apps'); }
     else navigate('discover');
     return;
@@ -454,6 +481,13 @@ document.addEventListener('click', async event => {
   if (button.dataset.projectUrl) { try { await invoke('open_project', { url: button.dataset.projectUrl }); } catch (error) { $('detail-error').textContent = message(error); } return; }
   if (button.dataset.close) { await closeDialog($(button.dataset.close)); return; }
   if (button.dataset.featured) { reviewInstall(button.dataset.featured); return; }
+  if (button.dataset.catalogAction !== undefined) {
+    const app = state.entries[Number(button.dataset.catalogAction)]; if (!app) return;
+    if (app.capability === 'preview_install') reviewInstall(app.recipe_id);
+    else if (app.capability === 'discover') {try {await invoke('open_project',{url:app.website_url || app.source_url});} catch(error) {toast(message(error));}}
+    else openConnect(app.name,app.id);
+    return;
+  }
   if (button.dataset.detail !== undefined) { showDetail(state.entries[Number(button.dataset.detail)]); return; }
   if (button.dataset.action === 'connect') openConnect();
   if (button.dataset.action === 'discover') navigate('discover');
@@ -471,7 +505,7 @@ document.addEventListener('click', async event => {
     $('remove-error').textContent = ''; showDialog($('remove-dialog')); return;
   }
   if (keyed === 'uninstall') {
-    pendingApp = app; $('delete-data').checked = false; $('uninstall-confirm').textContent = 'Uninstall, keep data';
+    pendingApp = app; $('delete-data').checked = false; $('uninstall-confirm').textContent = 'Uninstall, keep data'; $('delete-name').value = ''; $('delete-name-field').hidden = true; $('delete-name-help').hidden = true; $('uninstall-confirm').disabled = false;
     $('uninstall-description').textContent = `${app.display_name} and its container will be removed. Its data is preserved by default.`;
     $('uninstall-error').textContent = ''; showDialog($('uninstall-dialog')); return;
   }
@@ -521,11 +555,13 @@ $('connect-form').onsubmit = async event => {
     $('connect-submit').disabled = true; $('connect-submit').textContent = 'Saving…'; $('connect-error').textContent = '';
     setDialogBusy($('connect-dialog'), true);
     await invoke('add_app', { name, url: rawUrl, ...(activeCatalogId ? { catalogId: activeCatalogId } : {}) });
+    const completedStarterConnection = starterConnection; starterConnection = false;
     setDialogBusy($('connect-dialog'), false);
     await closeDialog($('connect-dialog'));
     await refreshApps();
     if (!refreshError) selectedAppId = state.apps.find(app => app.display_name === name)?.id || selectedAppId;
     navigate('apps'); toast(`${name} added to My Apps.`);
+    if (completedStarterConnection) { void finishStarterIntroduction(); await showConnectionResult(name, refreshError ? null : state.apps.find(app => app.display_name === name && app.launch_url === rawUrl && app.runtime?.kind === 'external')); }
   } catch (error) {
     const text = message(error);
     $('connect-error').textContent = text;
@@ -581,11 +617,12 @@ $('install-confirm').onclick = async () => {
       ...(chosen === null ? {} : { hostPort: chosen }),
       ...(Object.keys(answers).length ? { answers } : {}),
     });
+    const completedStarter = starterReview;
     if (starterReview) {starterReview = false; void finishStarterIntroduction();}
     setDialogBusy($('install-dialog'), false);
     await closeDialog($('install-dialog'));
     await refreshApps(); selectedAppId = recipe.id; navigate('apps');
-    await showInstallResult(recipe, refreshError ? null : state.apps.find(app => app.id === recipe.id));
+    await showInstallResult(recipe, refreshError ? null : state.apps.find(app => app.id === recipe.id), completedStarter);
   } catch (error) {
     const text = diagnosticText(error);
     $('install-error').textContent = text;
@@ -618,18 +655,27 @@ $('remove-confirm').onclick = async () => {
   } catch (error) { $('remove-error').textContent = message(error); }
   finally { $('remove-confirm').disabled = false; setDialogBusy($('remove-dialog'), false); }
 };
-$('delete-data').onchange = () => { $('uninstall-confirm').textContent = $('delete-data').checked ? 'Uninstall and delete data' : 'Uninstall, keep data'; };
+function updateDeleteConfirmation() {
+  const deleting = $('delete-data').checked;
+  $('delete-name-field').hidden = !deleting; $('delete-name-help').hidden = !deleting;
+  $('delete-name-help').textContent = pendingApp ? `Enter exactly: ${pendingApp.display_name}` : '';
+  $('uninstall-confirm').textContent = deleting ? 'Uninstall and delete data' : 'Uninstall, keep data';
+  $('uninstall-confirm').disabled = deleting && $('delete-name').value !== pendingApp?.display_name;
+}
+$('delete-data').onchange = () => { $('delete-name').value = ''; updateDeleteConfirmation(); if ($('delete-data').checked) $('delete-name').focus(); };
+$('delete-name').oninput = updateDeleteConfirmation;
+$('uninstall-dialog').addEventListener('close', () => { $('delete-name').value = ''; });
 $('uninstall-confirm').onclick = async () => {
   const app = pendingApp, deleteData = $('delete-data').checked;
-  if (deleteData && !window.confirm('Permanently delete this app’s managed data? This cannot be undone.')) return;
-  $('delete-data').disabled = true;
+  if (!app || $('uninstall-dialog').dataset.busy === 'true' || (deleteData && $('delete-name').value !== app.display_name)) return;
+  $('delete-data').disabled = true; $('delete-name').disabled = true;
   $('uninstall-confirm').disabled = true; setDialogBusy($('uninstall-dialog'), true);
   try {
     await invokeOperation('uninstall', app.id, 'uninstall_app', { id: app.id, deleteData });
     setDialogBusy($('uninstall-dialog'), false); await closeDialog($('uninstall-dialog'));
     await refreshApps(); render(); toast(deleteData ? 'App and managed data deleted.' : 'App uninstalled. Managed data was preserved.');
   } catch (error) { $('uninstall-error').textContent = diagnosticText(error); }
-  finally { $('delete-data').disabled = false; $('uninstall-confirm').disabled = false; setDialogBusy($('uninstall-dialog'), false); }
+  finally { $('delete-data').disabled = false; $('delete-name').disabled = false; setDialogBusy($('uninstall-dialog'), false); updateDeleteConfirmation(); }
 };
 // Subscribe before actions are enabled. Missing event support must not block IPC.
 let unlisten = () => {};
@@ -644,3 +690,5 @@ await refreshApps();
 render();
 
 void showFirstRun();
+
+if (location.hash) routeFromHash();

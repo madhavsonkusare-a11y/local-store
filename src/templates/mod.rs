@@ -504,6 +504,7 @@ const KHOJ: &str = include_str!("khoj.json");
 const KOTAEMON: &str = include_str!("kotaemon.json");
 const LANGFLOW: &str = include_str!("langflow.json");
 const LIBRECHAT: &str = include_str!("librechat.json");
+const LINKDING: &str = include_str!("linkding.json");
 const LOBEHUB: &str = include_str!("lobehub.json");
 const MAXUN: &str = include_str!("maxun.json");
 const METABASE: &str = include_str!("metabase.json");
@@ -573,6 +574,7 @@ pub fn reviewed_templates() -> Vec<ReviewedTemplate> {
         KOTAEMON,
         LANGFLOW,
         LIBRECHAT,
+        LINKDING,
         LOBEHUB,
         MAXUN,
         METABASE,
@@ -798,6 +800,7 @@ mod tests {
         "kotaemon",
         "langflow",
         "librechat",
+        "linkding",
         "lobehub",
         "maxun",
         "metabase",
@@ -824,6 +827,33 @@ mod tests {
         "whoogle",
         "wordpress",
     ];
+
+    #[test]
+    fn explicitly_promoted_linkding_resolves_with_required_private_setup() {
+        let offering = crate::offerings::offering("linkding").unwrap();
+        let template = offering.plan_template(None).unwrap();
+        for (key, sensitive) in [
+            ("CAP_LD_SUPERUSER_NAME", false),
+            ("CAP_LD_SUPERUSER_PASSWORD", true),
+        ] {
+            let field = template
+                .fields
+                .iter()
+                .find(|field| field.key == key)
+                .unwrap();
+            assert!(field.required);
+            assert_eq!(field.sensitive, sensitive);
+        }
+        assert!(matches!(
+            crate::github_source::resolve("https://github.com/sissbruecker/linkding/tree/v1.47.0").unwrap(),
+            crate::github_source::GithubResolution::ApprovedMatch { offering_id, .. } if offering_id == "linkding"
+        ));
+        assert!(matches!(
+            crate::github_source::resolve("https://github.com/no-source-review/unverified-app")
+                .unwrap(),
+            crate::github_source::GithubResolution::NeedsReview { .. }
+        ));
+    }
 
     #[test]
     fn no_reviewed_template_is_offerable_without_an_explicit_approval() {

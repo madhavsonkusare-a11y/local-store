@@ -9,14 +9,14 @@ test.beforeEach(async ({page}) => { await installAdapter(page, {catalog:producti
 
 test('production catalog pages, combines filters and keeps provenance', async ({page}) => {
   await expect(page.locator('#catalog-note')).toContainText(`${productionCatalog.length.toLocaleString('en-US')} projects`);
-  await expect(page.locator('.app-card')).toHaveCount(12);
+  await expect(page.locator('.app-card')).toHaveCount(24);
   const first = await page.locator('.app-card h3').allTextContents();
-  await page.getByRole('button',{name:'Next',exact:true}).click();
-  await expect(page.locator('#page-label')).toContainText('13–24');
-  expect(await page.locator('.app-card h3').allTextContents()).not.toEqual(first);
+  await page.getByRole('button',{name:'Load next 24',exact:true}).click();
+  await expect(page.locator('#page-label')).toContainText('Showing 48');
+  expect((await page.locator('.app-card h3').allTextContents()).slice(0,24)).toEqual(first);
   await page.getByRole('button',{name:'Install previews',exact:true}).click();
   await expect(page.locator('.app-card')).toHaveCount(3);
-  await expect(page.locator('#pagination')).toBeHidden();
+  await expect(page.locator('#next')).toBeHidden();
   await page.getByRole('searchbox',{name:'Search apps',exact:true}).fill('memos');
   await expect(page.locator('.app-card')).toHaveCount(1);
   await page.getByRole('button',{name:'View Memos details'}).click();
@@ -137,10 +137,10 @@ test('all bundled catalog artwork decodes without remote requests', async ({page
 });
 
 test('full catalog visual surfaces', async ({page}) => {
-  await expect(page.locator('.app-card')).toHaveCount(12);
+  await expect(page.locator('.app-card')).toHaveCount(24);
   await expect(page).toHaveScreenshot('catalog-desktop.png', {animations:'disabled'});
-  await page.setViewportSize({width:800,height:600});
+  await page.setViewportSize({width:1180,height:640});
   await expect(page).toHaveScreenshot('catalog-compact.png', {animations:'disabled'});
-  await page.setViewportSize({width:400,height:860});
+  // Below 1180px is outside the approved V2 window contract.
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

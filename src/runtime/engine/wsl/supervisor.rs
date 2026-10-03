@@ -6,6 +6,8 @@
 use super::bootstrap;
 #[cfg(windows)]
 use super::lease;
+#[cfg(windows)]
+mod windows_process;
 use crate::{
     error::{AppError, AppResult},
     runtime::ProcessRunner,
@@ -163,11 +165,7 @@ fn launcher_executable() -> AppResult<Option<PathBuf>> {
 pub(crate) fn ensure_background(runner: &dyn ProcessRunner, state: &Path) -> AppResult<()> {
     #[cfg(windows)]
     {
-        use std::{
-            os::windows::process::CommandExt,
-            process::{Command, Stdio},
-            time::{Duration, Instant},
-        };
+        use std::time::{Duration, Instant};
         if state != storage::managed_engine_state_root() {
             return Ok(());
         }
@@ -207,17 +205,10 @@ pub(crate) fn ensure_background(runner: &dyn ProcessRunner, state: &Path) -> App
                 Err(error) => return Err(error.into()),
             }
         }
-        let mut child = Command::new(executable)
-            .args(["engine", "supervise"])
-            .stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::null())
-            // CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB. A bounded command
-            // runner must not own this background worker's lifetime. If the
-            // enclosing job forbids breakaway, report failure; no unsafe fallback.
-            .creation_flags(0x0800_0000 | 0x0100_0000)
-            .spawn().map_err(|_| AppError::invalid("Windows could not start the background engine supervisor independently. Open Local Store normally and retry."))?;
+        let child = windows_process::Worker::spawn(&executable).map_err(|_| AppError::invalid("Windows could not start the background engine supervisor independently. Open Local Store normally and retry."))?;
         let deadline = Instant::now() + Duration::from_secs(35);
         loop {
-            if child.try_wait()?.is_some() {
+            if child.has_exited()? {
                 return Err(AppError::invalid(
                     "The background engine supervisor exited before confirming ownership.",
                 ));
@@ -228,8 +219,7 @@ pub(crate) fn ensure_background(runner: &dyn ProcessRunner, state: &Path) -> App
                 return Ok(());
             }
             if Instant::now() >= deadline {
-                let _ = child.kill();
-                let _ = child.wait();
+                let _ = child.stop_unacknowledged();
                 return Err(AppError::invalid(
                     "The background engine supervisor did not confirm ownership in time.",
                 ));

@@ -313,16 +313,16 @@ test('deleting app data needs the checkbox and the confirmation, and dismissing 
   const destructive = page.getByRole('button', {name:'Uninstall and delete data', exact:true});
   await expect(destructive).toBeVisible();
 
-  // Backing out of the final confirmation must delete nothing at all.
-  page.once('dialog', dialog => dialog.dismiss());
-  await destructive.click();
-  await expect(page.locator('#uninstall-dialog')).toBeVisible();
+  // A wrong name and backing out must delete nothing at all.
+  await expect(destructive).toBeDisabled();
+  await page.locator('#delete-name').fill('memos');
+  await expect(destructive).toBeDisabled();
+  await page.getByRole('button', {name:'Keep app', exact:true}).click();
   expect(await page.evaluate(() => window.__calls.filter(c => c.command === 'uninstall_app'))).toEqual([]);
 
-  page.once('dialog', dialog => {
-    expect(dialog.message()).toContain('cannot be undone');
-    dialog.accept();
-  });
+  await page.getByRole('button', {name:'Uninstall Memos'}).click();
+  await page.getByLabel(/Delete app data too/).check();
+  await page.locator('#delete-name').fill('Memos');
   await destructive.click();
   await expect(page.getByRole('heading', {name:'Your apps belong here.'})).toBeVisible();
   expect(await page.evaluate(() => window.__calls.find(c => c.command === 'uninstall_app')))

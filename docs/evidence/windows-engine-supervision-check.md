@@ -31,7 +31,7 @@ status parsing, stale/future status refusal, missing-state refusal, fresh
 ownership before lease replacement and rejection of immediately exited helpers.
 The fixed CLI grammar refuses caller-supplied supervisor paths or extra options.
 
-The real launcher-exit and long-idle proof is pending. Windows sleep/wake,
+The [real launcher-exit and long-idle proof](windows-engine-supervision-2026-10-02.json) passes: the same worker survives a 95-second interval without launcher/WSL requests, fixture revocation stops it and native state is unchanged. The first failed attempt exposed an inherited output pipe; the fixed Windows worker uses `CreateProcessW` with zero inherited handles and never attaches to the launcher console. The proof harness also returns from a descendant-pipe timeout in 1.02 seconds so exact fixture recovery can execute. No native close or app task is inferred from this proof. Windows sleep/wake,
 unplanned machine restart, full owned-engine removal and fresh-host support
 remain E04 acceptance work. Process-local lease tests and passing app lifecycle
 proofs do not establish these guarantees.

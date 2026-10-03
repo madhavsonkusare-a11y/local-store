@@ -120,8 +120,11 @@ fn query_result(result: Result<queries::Output, String>) -> i32 {
 }
 
 pub fn run_cli() -> i32 {
-    ensure_console();
     let args: Vec<String> = std::env::args().skip(1).collect();
+    // Closing the caller's console must not end this hidden worker's lifetime.
+    if args != ["engine", "supervise"] {
+        ensure_console();
+    }
     let args = match normalize_action_args(args) {
         Ok(args) => args,
         Err(error) => {

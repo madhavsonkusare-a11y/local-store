@@ -1,6 +1,15 @@
+import {recentActivity} from './activity.js';
 import {escapeHtml, avatar} from './render.js';
 
 const $ = id => document.getElementById(id);
+function recentRows() {
+  const rows = recentActivity();
+  return rows.length ? `<ol class="overview-recent-list">${rows.map(row => `<li><div><strong>${escapeHtml(row.kind)} · ${escapeHtml(row.name)}</strong><small>${escapeHtml(row.status)}</small></div><time datetime="${new Date(row.startedAt).toISOString()}">${escapeHtml(new Date(row.startedAt).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'}))}</time></li>`).join('')}</ol>` : '<p class="overview-muted">No operations yet in this session. History clears when Local Store closes.</p>';
+}
+window.addEventListener('local-store:activity-changed', () => {
+  const region = $('overview-recent-rows'); if (region) region.innerHTML = recentRows();
+});
+
 
 function engineMessage(status) {
   if (!status) return ['Not checked', 'Use Settings to inspect or repair the managed engine.', 'neutral'];
@@ -25,7 +34,7 @@ export function renderOverview(apps, engine, appError, engineError) {
   const [engineTitle, engineDetail, engineTone] = engineMessage(engine);
   mount.innerHTML = `<section class="overview-hero overview-panel ${engineTone}" aria-labelledby="overview-health-title">
       <div><p class="overview-kicker">LOCAL ENVIRONMENT</p><h2 id="overview-health-title">${escapeHtml(engineTitle)}</h2><p>${escapeHtml(engineError ? `Engine status check failed: ${engineError.message || String(engineError)}` : engineDetail)}</p></div>
-      <button class="secondary" data-overview="settings">View settings</button>
+      <div class="overview-engine-summary"><small>MANAGED ENGINE</small><strong>${escapeHtml(engineTitle)}</strong><small>${escapeHtml(engine?.daemon ? `Daemon · ${engine.daemon}` : 'No current daemon report')}</small><button class="secondary" data-overview="settings">View settings</button></div>
     </section>
     <section class="overview-metrics" aria-label="Saved app summary">
       <article class="overview-panel"><strong>${apps.length}</strong><span>Saved apps</span><small>Records on this computer</small></article>
@@ -36,5 +45,5 @@ export function renderOverview(apps, engine, appError, engineError) {
     <section class="overview-panel overview-attention" aria-labelledby="overview-attention-title"><div class="overview-section-head"><h2 id="overview-attention-title">${attention.length ? 'Needs a look' : 'Your apps'}</h2><span>${attention.length ? `${attention.length} ${attention.length === 1 ? 'app' : 'apps'}` : 'No reported app errors'}</span></div>
       ${attention.length ? attention.map(app => `<div class="overview-app-row">${avatar(app.display_name, app.icon_path)}<div><strong>${escapeHtml(app.display_name)}</strong><p>${escapeHtml(app.status_error || `Managed app · ${app.status || 'status unknown'}`)}</p></div></div>`).join('') : `<p class="overview-muted">${apps.length ? 'No saved app currently reports a stopped runtime or error. Linked addresses have not been checked here.' : 'No apps saved yet. Find an app to install, or connect one you already run.'}</p>`}
       <div class="overview-actions"><button class="secondary" data-overview="discover">Discover apps</button><button class="primary" data-overview="apps">${attention.length ? 'Review My Apps' : 'Open My Apps'}</button></div>
-    </section>`;
+    </section><section class="overview-panel overview-recent" aria-labelledby="overview-recent-title"><div class="overview-section-head"><h2 id="overview-recent-title">Recent activity</h2><button class="text-button" data-overview="activity">View this session</button></div><div id="overview-recent-rows">${recentRows()}</div></section>`;
 }

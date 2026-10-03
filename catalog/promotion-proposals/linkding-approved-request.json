@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "app": "linkding",
+  "installable": false,
+  "decision": "approved_artifact_only",
+  "bindings": {
+    "proposal_sha256": "244c1f5d3e900499a06ecc4aa756e1f00bf502735350ff56ec23f5d673d91b1b",
+    "evidence_sha256": "c02645a7818b42477e3ae85b65a51f90abd3cd113134b2a7875932254c6eef7a",
+    "plan_sha256": "45c2a406049bfbbd614e65dc6e7b73f040436515f749cb3c76f1d9125187c7e5",
+    "probe_sha256": "116a9fc4e8974ba453c15fa4b4221b51f9a49d0003ffa00cd20a27b7914e0bdb",
+    "source_archive_sha256": "7535b8ce39660ad6bf074461612f81b8bf7d3d8fd9e8c8c50c15477041ff3084",
+    "github_inspection_sha256": "7ad9e5052e45f223e6ba56b0a89251d4d5dab5252d35f81f6b40bcee0e336aea"
+  },
+  "proposal": "catalog/promotion-proposals/linkding-withheld.json",
+  "evidence": "docs/evidence/linkding-managed-candidate-2026-10-02.json",
+  "probe": "scripts/linkding-bookmark-probe.mjs",
+  "task": "an isolated required administrator account signs in while wrong credentials and anonymous access fail; an exact private bookmark URL, title, description, notes and two tags survive restart and keep-data reinstall",
+  "source_archive_sha256": "7535b8ce39660ad6bf074461612f81b8bf7d3d8fd9e8c8c50c15477041ff3084",
+  "github_inspection": {
+    "archived": false,
+    "canonical_repository": "https://github.com/sissbruecker/linkding",
+    "commit_sha": "27b7303baf41bb28babc610ac8eaa486e1ddfab5",
+    "commit_url": "https://github.com/sissbruecker/linkding/commit/27b7303baf41bb28babc610ac8eaa486e1ddfab5",
+    "default_branch": "master",
+    "repository_id": 194212327,
+    "requested_repository": "https://github.com/sissbruecker/linkding",
+    "resolution": {
+      "candidates": [
+        {
+          "archive_sha256": "7535b8ce39660ad6bf074461612f81b8bf7d3d8fd9e8c8c50c15477041ff3084",
+          "definition_url": "https://github.com/caprover/one-click-apps/blob/7f1f329125dde0cb915f47c8b33293eca45f7d0e/public/v4/apps/linkding.yml",
+          "id": "linkding",
+          "image_references": [
+            "sissbruecker/linkding:1.23.0"
+          ],
+          "path": "public/v4/apps/linkding.yml",
+          "remaining_checks": [
+            "Review maintained image instead of 2023 pin",
+            "Explicit initial-user creation; optional empty fields do not prove usability",
+            "Login, create bookmark and persistence",
+            "Owner promotion"
+          ],
+          "required_inputs": 0,
+          "review_stage": "maintenance_blocker",
+          "revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
+          "service_count": 1,
+          "source": "caprover",
+          "structurally_importable": true
+        }
+      ],
+      "kind": "review_candidates",
+      "repository": "https://github.com/sissbruecker/linkding"
+    }
+  },
+  "review_needs": [
+    "source and license obligations",
+    "supported runtime base and image maintenance; task success does not prove patched packages",
+    "same-image version compatibility",
+    "required secret setup",
+    "loopback exposure and owned storage",
+    "meaningful task and measured resource ceilings"
+  ],
+  "launch_roster_change": false,
+  "review": {
+    "schema_version": 1,
+    "app": "linkding",
+    "decision": "approved",
+    "bindings": {
+      "proposal_sha256": "244c1f5d3e900499a06ecc4aa756e1f00bf502735350ff56ec23f5d673d91b1b",
+      "evidence_sha256": "c02645a7818b42477e3ae85b65a51f90abd3cd113134b2a7875932254c6eef7a",
+      "plan_sha256": "45c2a406049bfbbd614e65dc6e7b73f040436515f749cb3c76f1d9125187c7e5",
+      "probe_sha256": "116a9fc4e8974ba453c15fa4b4221b51f9a49d0003ffa00cd20a27b7914e0bdb",
+      "source_archive_sha256": "7535b8ce39660ad6bf074461612f81b8bf7d3d8fd9e8c8c50c15477041ff3084",
+      "github_inspection_sha256": "7ad9e5052e45f223e6ba56b0a89251d4d5dab5252d35f81f6b40bcee0e336aea"
+    },
+    "reviewer": "Codex /root",
+    "reviewed_at_unix": 1790965270,
+    "reason": "Codex /root independently reviewed these exact proposal, source, immutable image, setup, storage, risk and real task inputs. Required administrator username and sensitive password, loopback-only exposure, owned data, maintained same upstream image and actual private bookmark task, restart, keep-data reinstall, measured resource ceilings and exact cleanup satisfy the reviewed candidate contract. This is delegated implementation review, not a claim of direct owner review, a vulnerability scan or agent content access; the selected ten launch apps are unchanged."
+  },
+  "registration_required": [
+    "explicit reviewed template registration",
+    "agent coverage row with accurate unavailable capabilities",
+    "frozen roster cohort reconciliation",
+    "catalog regeneration"
+  ]
+}

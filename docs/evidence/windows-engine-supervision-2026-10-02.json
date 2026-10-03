@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "proof": "actual_launcher_cli_exit_owned_engine_supervision",
+  "recorded_at": "2026-10-02T18:44:37Z",
+  "launcher_sha256": "b77370febaf156eb90c469b36816a174dfe27ff9ef4cf72ce2f93cb651cd037a",
+  "distribution": "local-store-engine-v1",
+  "launcher_exited_before_idle": true,
+  "idle_seconds": 95.0,
+  "supervisor_start_seconds": 2.97,
+  "same_worker_survived": true,
+  "existing_container_count": 0,
+  "container_identities_start_times_unchanged": true,
+  "fixture_selection_revocation_stopped_worker": true,
+  "native_engine_state_unchanged": true,
+  "limits": [
+    "CLI executable exit, not native WebView close",
+    "No new app task",
+    "No Windows sleep/wake or reboot",
+    "No engine removal"
+  ]
+}

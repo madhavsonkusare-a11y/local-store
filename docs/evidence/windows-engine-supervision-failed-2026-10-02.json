@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "passed": false,
+  "proof": "actual_launcher_cli_exit_owned_engine_supervision",
+  "recorded_at_unix": 1790966221,
+  "launcher_sha256": "bcbfdf1274dbcf6b0cf744e2c6df5580f7d33031a61bbffb5c5d4dac57d1669b",
+  "failure": "Captured doctor output did not close within 120 seconds after launching the hidden worker. The doctor process was absent while its exact child worker remained live. Revoking only the isolated fixture selection released the worker and the captured-output wait.",
+  "fixture_selection_revoked_for_recovery": true,
+  "fixture_removed_after_worker_exit": true,
+  "native_selection_changed": false,
+  "limits": [
+    "No passing launcher-exit or idle claim from this attempt",
+    "No native window, sleep/wake or clean-host test"
+  ]
+}

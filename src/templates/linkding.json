@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "linkding",
+  "display_name": "Linkding",
+  "catalog_name": "linkding",
+  "description": "Minimal bookmark management with a fast and clean UI. Simple installation through Docker and can run on your Raspberry Pi.",
+  "category": "Bookmarks and Link Sharing",
+  "license": "MIT",
+  "source_url": "https://github.com/sissbruecker/linkding",
+  "documentation_url": "https://linkding.link/",
+  "verified_at": "2026-10-02",
+  "lifecycle_proof": "docs/evidence/linkding-managed-candidate-2026-10-02.json",
+  "origin": {
+    "importer": "caprover",
+    "repository": "caprover/one-click-apps",
+    "revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
+    "path": "public/v4/apps/linkding.yml",
+    "license": "Apache-2.0"
+  },
+  "requirements": {
+    "docker_engine_os": "linux",
+    "compose_major": 2,
+    "local_storage_required": true,
+    "images": [
+      {
+        "image": "sissbruecker/linkding:1.47.0",
+        "source_url": "https://hub.docker.com/v2/repositories/sissbruecker/linkding/tags/1.47.0",
+        "checked_at": "2026-10-02",
+        "last_updated": "2026-09-13",
+        "container_platforms": [
+          "linux/amd64",
+          "linux/arm/v7",
+          "linux/arm64"
+        ],
+        "digests": {
+          "linux/amd64": "sha256:b44256a4ff37e4cb1a39c40d3a5b560337f1477a55428b3320e813d6004d8001",
+          "linux/arm/v7": "sha256:e89b92389ccc0eec0dcd5b723c1da1bac8b4e50e8a56fd87f66df288eb5e51b9",
+          "linux/arm64": "sha256:36318731b9be48b516c0d27cbebd0d98588e4d4a849cbf5cc7cbdcb9a41ea02e"
+        },
+        "index_digest": "sha256:e35cb50e0581178f245125ffaa909c565416c94c9f22ace305a7d234a4345522"
+      }
+    ]
+  },
+  "promotion": {
+    "state": "approved",
+    "reason": "Codex /root independently reviewed these exact proposal, source, immutable image, setup, storage, risk and real task inputs. Required administrator username and sensitive password, loopback-only exposure, owned data, maintained same upstream image and actual private bookmark task, restart, keep-data reinstall, measured resource ceilings and exact cleanup satisfy the reviewed candidate contract. This is delegated implementation review, not a claim of direct owner review, a vulnerability scan or agent content access; the selected ten launch apps are unchanged."
+  },
+  "data_storage": "A Docker volume Local Store manages for linkding",
+  "risk_notes": [
+    "Creates 1 Docker container and publishes one port on this computer's loopback interface only.",
+    "Keeps its data in a Docker volume that Local Store manages for it. A keep-data uninstall leaves the volume; deleting data removes it permanently.",
+    "Choose an administrator username and password before installing. Both are required so this local instance cannot silently rely on missing proxy authentication. Local Store retains private setup answers for reinstall.",
+    "Bookmarks are private by default. Sharing a bookmark exposes it to other users of this app; keep private bookmarks unshared.",
+    "Linkding fetches bookmarked websites in background tasks to collect page metadata. The standard image does not include full browser snapshots; no AI service, cloud account or outbound webhook is configured.",
+    "The official standard 1.47.0 image uses Python 3.13 on Debian Trixie; this source review does not claim a vulnerability scan or guarantee that all image packages are patched.",
+    "A real managed Windows task, restart and keep-data reinstall passed for this exact reviewed plan. macOS and Linux host proof and agent content access remain unverified."
+  ],
+  "fields": {
+    "CAP_LD_SUPERUSER_NAME": {
+      "label": "Administrator username",
+      "sensitive": false,
+      "required": true
+    },
+    "CAP_LD_SUPERUSER_PASSWORD": {
+      "label": "Administrator password",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "definition": "{\"captainVersion\": 4, \"services\": {\"$$cap_appname\": {\"caproverExtra\": {\"containerHttpPort\": 9090}, \"image\": \"sissbruecker/linkding:$$cap_N8N_VERSION\", \"environment\": {\"LD_SUPERUSER_NAME\": \"$$cap_LD_SUPERUSER_NAME\", \"LD_SUPERUSER_PASSWORD\": \"$$cap_LD_SUPERUSER_PASSWORD\", \"LD_DISABLE_BACKGROUND_TASKS\": \"False\", \"LD_DISABLE_URL_VALIDATION\": \"False\"}, \"volumes\": [\"$$cap_appname:/etc/linkding/data\"]}}, \"caproverOneClickApp\": {\"displayName\": \"Linkding\", \"description\": \"Self-hosted bookmark manager that is designed be to be minimal, fast, and easy to set up\", \"isOfficial\": true, \"instructions\": {\"start\": \"Self-hosted bookmark manager that is designed be to be minimal, fast, and easy to set up.\", \"end\": \"linkding has been successfully deployed! It might take few moments before it's fully started.\\nYou can access it at `http://$$cap_appname.$$cap_root_domain` and set up your account.\"}, \"variables\": [{\"id\": \"$$cap_N8N_VERSION\", \"label\": \"Application | linkding\", \"description\": \"Check out their Docker page for the valid tags https://hub.docker.com/r/sissbruecker/linkding/tags\", \"defaultValue\": \"1.23.0\", \"validRegex\": \"/.+/\"}, {\"id\": \"$$cap_LD_SUPERUSER_NAME\", \"label\": \"Superuser name\", \"description\": \"Username of the initial superuser to create, leave empty to not create one\"}, {\"id\": \"$$cap_LD_SUPERUSER_PASSWORD\", \"label\": \"Superuser password\", \"description\": \"Password for the initial superuser, leave empty to disable authentication and rely on proxy authentication instead\"}]}}",
+  "image_pins": [
+    {
+      "definition": "sissbruecker/linkding:1.23.0",
+      "replacement": "sissbruecker/linkding:1.47.0",
+      "reason": "The frozen CapRover source uses the stale 1.23.0 tag. The official 1.47.0 release and immutable registry index were reviewed on October 2, 2026. Keep the same image repository and environment/storage mapping; qualification must prove this exact replacement."
+    }
+  ],
+  "resource_limits": [
+    {
+      "service": "linkding",
+      "memory_bytes": 536870912,
+      "cpu_millicores": 2000,
+      "pids": 512,
+      "reason": "Bound the isolated Django and background-task instance to 512 MiB, two CPUs and 512 PIDs; record actual memory, CPU and volume measurements during a real task, restart and reinstall before promotion."
+    }
+  ]
+}

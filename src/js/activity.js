@@ -36,7 +36,11 @@ export function receiveActivity(event) {
   }
   paint();
 }
+export function recentActivity(limit = 5) {
+  return entries.slice(0, limit).map(entry => ({name:entry.name,kind:kinds[entry.kind] || 'Operation',status:states[entry.state] || 'Checking',startedAt:entry.startedAt}));
+}
 function paint() {
+  window.dispatchEvent(new CustomEvent('local-store:activity-changed'));
   const mount=$('activity-content');
   if(!mount) return;
   const expanded=new Set([...mount.querySelectorAll('details[open]')].map(detail=>detail.dataset.activityId));

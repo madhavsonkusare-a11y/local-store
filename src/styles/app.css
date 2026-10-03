@@ -545,3 +545,14 @@ dialog.filter-popover { position: fixed; margin: 0; inset: auto; width: min(330p
 .filter-popover .category-options { grid-template-columns: minmax(0, 1fr); max-height: 160px; }
 .filter-popover .filter-fields { grid-template-columns: minmax(0, 1fr); }
 .filter-popover .modal-actions { position: sticky; bottom: calc(-1 * var(--v2-space-5)); padding-block: var(--v2-space-4); background: var(--v2-surface-raised); border-top: 1px solid var(--v2-border-soft); }
+
+/* Approved V2 session and first-app compositions reuse frozen tokens. */
+.overview-recent-list { list-style:none; padding:0; margin:0; }
+.overview-recent-list li { display:flex; justify-content:space-between; align-items:center; gap:var(--v2-space-4); padding-block:var(--v2-space-4); border-top:1px solid var(--v2-border-soft); }
+.overview-recent-list li > div { min-width:0; display:grid; gap:var(--v2-space-2); }
+.overview-recent-list strong { font-size:var(--v2-type-body-sm); overflow-wrap:anywhere; }
+.overview-recent-list small, .overview-recent-list time { color:var(--v2-text-tertiary); font-size:var(--v2-type-body-sm); }
+.first-run-task-rail { display:flex; gap:var(--v2-space-6); list-style:none; margin-block:0 var(--v2-space-6); padding:var(--v2-space-4); border:1px solid var(--v2-border-soft); border-radius:var(--v2-radius-md); background:var(--v2-surface-sunk); }
+.first-run-task-rail li { color:var(--v2-text-tertiary); font-size:var(--v2-type-body-sm); }
+.first-run-task-rail [aria-current] { color:var(--v2-text-primary); font-weight:600; }
+#welcome-engine-checks { margin-block:var(--v2-space-5); }

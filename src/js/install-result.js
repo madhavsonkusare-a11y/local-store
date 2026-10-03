@@ -1,3 +1,4 @@
+import {markStarterStep} from './first-run.js';
 import {invoke} from './api.js';
 import {showDialog, closeDialog, setDialogBusy} from './motion.js';
 
@@ -35,15 +36,19 @@ document.getElementById('install-result-open').onclick = async () => {
   }
 };
 
-export async function showInstallResult(recipe, app) {
+export async function showInstallResult(recipe, app, starter = false, linked = false) {
+  markStarterStep(starter ? 'ready' : null, dialog);
   currentApp = app || null;
-  document.getElementById('install-result-title').textContent = `${recipe.display_name} installed`;
+  dialog.querySelector('.eyebrow').textContent = linked ? 'CONNECTION SAVED' : 'INSTALL RESULT';
+  document.getElementById('install-result-title').textContent = `${recipe.display_name} ${linked ? 'connected' : 'installed'}`;
+  document.getElementById('install-result-done').className = `button ${linked ? 'primary' : 'secondary'}`;
+  document.getElementById('install-result-open').hidden = linked;
   document.getElementById('install-result-description').textContent = app
-    ? 'Saved to My Apps. Open it to finish any setup inside the app.'
-    : 'Installation finished, but the saved app could not be refreshed. Check My Apps before opening or retrying setup.';
+    ? linked ? 'The address is saved in My Apps. Local Store does not manage or verify the external server.' : 'Saved to My Apps. Open it to finish any setup inside the app.'
+    : linked ? 'The connection was saved, but My Apps could not be refreshed. Check the saved record before adding it again.' : 'Installation finished, but the saved app could not be refreshed. Check My Apps before opening or retrying setup.';
   const facts = document.getElementById('install-result-facts');
   facts.replaceChildren();
-  for (const [name, value] of [['Saved state', app?.status || 'Not refreshed'], ['Local address', app?.launch_url], ['Version', recipe.version], ['Data policy', 'Uninstall keeps data unless you explicitly choose to delete it.']]) {
+  for (const [name, value] of [['Saved state', app ? linked ? 'Linked address saved; availability not checked' : app.status : 'Not refreshed'], [linked ? 'Saved address' : 'Local address', app?.launch_url], ['Version', recipe.version], ['Data policy', linked ? 'Removing this connection keeps the external server and its data unchanged.' : 'Uninstall keeps data unless you explicitly choose to delete it.']]) {
     if (!value) continue;
     const term = document.createElement('dt'), detail = document.createElement('dd');
     term.textContent = name; detail.textContent = value;
@@ -54,3 +59,5 @@ export async function showInstallResult(recipe, app) {
   await showDialog(dialog);
   document.getElementById('install-result-title').focus();
 }
+
+export function showConnectionResult(name, app) { return showInstallResult({display_name:name},app,true,true); }

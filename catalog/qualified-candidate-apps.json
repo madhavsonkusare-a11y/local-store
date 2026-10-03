@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "scope": "approved_expansion_task_evidence; not_launch_selection",
+  "apps": [
+    {
+      "id": "linkding",
+      "manifest": "src/templates/linkding.json",
+      "manifest_sha256": "57ca0c4bfd4e45614770b36881097f7bdcb06d79a97bfe76bc149297317861ac",
+      "evidence": "docs/evidence/linkding-managed-candidate-2026-10-02.json",
+      "evidence_sha256": "c02645a7818b42477e3ae85b65a51f90abd3cd113134b2a7875932254c6eef7a",
+      "probe": "scripts/linkding-bookmark-probe.mjs",
+      "task": "an isolated required administrator account signs in while wrong credentials and anonymous access fail; an exact private bookmark URL, title, description, notes and two tags survive restart and keep-data reinstall",
+      "promotion_review": "catalog/promotion-proposals/linkding-review-decision.json"
+    }
+  ]
+}

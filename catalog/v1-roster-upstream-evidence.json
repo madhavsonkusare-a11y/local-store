@@ -2,7 +2,7 @@
   "schema_version": 1,
   "checked_at": "2026-09-12",
   "method": "GitHub GraphQL public repository fields; no image or application execution",
-  "scope": "48 expansion candidates; repository activity is not image maintenance or task verification",
+  "scope": "Original48 expansion repository snapshots retained:47 selected candidates and one explicitly reviewed promoted offering; repository activity is not image maintenance or task verification",
   "selected": {
     "outline": {
       "nameWithOwner": "outline/outline",
@@ -270,22 +270,6 @@
         "tagName": "v1.7.19",
         "publishedAt": "2026-09-06T03:29:20Z",
         "url": "https://github.com/gristlabs/grist-core/releases/tag/v1.7.19"
-      }
-    },
-    "linkding": {
-      "nameWithOwner": "sissbruecker/linkding",
-      "url": "https://github.com/sissbruecker/linkding",
-      "isArchived": false,
-      "isDisabled": false,
-      "pushedAt": "2026-09-12T14:55:55Z",
-      "stargazerCount": 11163,
-      "licenseInfo": {
-        "spdxId": "MIT"
-      },
-      "latestRelease": {
-        "tagName": "v1.46.2",
-        "publishedAt": "2026-08-18T21:07:05Z",
-        "url": "https://github.com/sissbruecker/linkding/releases/tag/v1.46.2"
       }
     },
     "budibase": {
@@ -796,6 +780,24 @@
         "tagName": "v1.13.0",
         "publishedAt": "2025-05-25T20:21:13Z",
         "url": "https://github.com/stonith404/pingvin-share/releases/tag/v1.13.0"
+      }
+    }
+  },
+  "promoted": {
+    "linkding": {
+      "nameWithOwner": "sissbruecker/linkding",
+      "url": "https://github.com/sissbruecker/linkding",
+      "isArchived": false,
+      "isDisabled": false,
+      "pushedAt": "2026-09-12T14:55:55Z",
+      "stargazerCount": 11163,
+      "licenseInfo": {
+        "spdxId": "MIT"
+      },
+      "latestRelease": {
+        "tagName": "v1.46.2",
+        "publishedAt": "2026-08-18T21:07:05Z",
+        "url": "https://github.com/sissbruecker/linkding/releases/tag/v1.46.2"
       }
     }
   }

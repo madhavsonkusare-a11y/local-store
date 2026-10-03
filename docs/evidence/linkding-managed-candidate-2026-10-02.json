@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "recorded_at_unix": 1790940421,
+  "recorded_at_unix": 1790965040,
   "app": "linkding",
-  "passed": false,
+  "passed": true,
   "scope": "withheld candidate mapping, transaction, managed storage and first use, on one host and one architecture",
   "promotion": "withheld",
   "source_revision": "7f1f329125dde0cb915f47c8b33293eca45f7d0e",
@@ -14,24 +14,26 @@
   },
   "first_use": "an isolated required administrator account signs in while wrong credentials and anonymous access fail; an exact private bookmark URL, title, description, notes and two tags survive restart and keep-data reinstall",
   "measurements": {
-    "first_start_millis": 22012,
-    "samples": 1,
+    "first_start_millis": 15346,
+    "samples": 3,
     "idle_memory_bytes": {
-      "local-store-linkding-qualify-15464-1790940374920672900-linkding": 233622732
+      "local-store-linkding-qualify-25648-1790964918981894100-linkding": 233098444
     },
     "peak_memory_bytes": {
-      "local-store-linkding-qualify-15464-1790940374920672900-linkding": 233622732
+      "local-store-linkding-qualify-25648-1790964918981894100-linkding": 233098444
     },
-    "peak_total_memory_bytes": 233622732,
+    "peak_total_memory_bytes": 233098444,
     "idle_managed_storage_bytes": 1518,
     "peak_managed_storage_bytes": 1518,
     "idle_named_volume_bytes": {
       "linkding": 372890
     },
     "peak_named_volume_bytes": {
-      "linkding": 372890
+      "linkding": 389370
     },
-    "image_virtual_bytes": {}
+    "image_virtual_bytes": {
+      "sha256:e35cb50e0581178f245125ffaa909c565416c94c9f22ace305a7d234a4345522": 585985353
+    }
   },
   "steps": [
     {
@@ -56,8 +58,55 @@
     },
     {
       "step": "is usable first install",
-      "passed": false,
-      "detail": "ExpectError: expect(locator).toBeVisible() failed"
+      "passed": true
+    },
+    {
+      "step": "survives a restart",
+      "passed": true
+    },
+    {
+      "step": "is usable after restart",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after restart",
+      "passed": true
+    },
+    {
+      "step": "measures resources after restart",
+      "passed": true
+    },
+    {
+      "step": "reinstalls over data it kept",
+      "passed": true
+    },
+    {
+      "step": "generates no credentials, so there are none to lose",
+      "passed": true
+    },
+    {
+      "step": "all services are ready after reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resources after reinstall",
+      "passed": true
+    },
+    {
+      "step": "is usable after a keep-data reinstall",
+      "passed": true
+    },
+    {
+      "step": "measures resolved image sizes",
+      "passed": true
+    },
+    {
+      "step": "removes everything it created",
+      "passed": true
+    },
+    {
+      "step": "leaves other containers alone",
+      "passed": true
     }
   ],
   "identity": {
@@ -82,7 +131,7 @@
       "endpoint": "wsl://local-store-engine-v1"
     },
     "compose_version": "5.5.1",
-    "probe_sha256": "752a91ace8bbae3cbf693eb196bada2d9b94e4c0088160601336c8a2406608b3",
+    "probe_sha256": "116a9fc4e8974ba453c15fa4b4221b51f9a49d0003ffa00cd20a27b7914e0bdb",
     "level": "lifecycle_and_first_use"
   }
 }

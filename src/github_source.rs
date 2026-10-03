@@ -905,7 +905,9 @@ mod tests {
 
     #[test]
     fn reviewed_but_unapproved_repository_returns_pinned_definition_only() {
-        let result = resolve("https://github.com/sissbruecker/linkding").unwrap();
+        // The frozen pre-promotion candidate stays inspectable even after
+        // Linkding joins the explicit approved offering list.
+        let result = resolve_from("https://github.com/sissbruecker/linkding", &[]).unwrap();
         let GithubResolution::ReviewCandidates { candidates, .. } = result else {
             panic!("expected reviewed candidate");
         };
@@ -945,7 +947,7 @@ mod tests {
     #[test]
     fn stale_candidate_is_blocked_even_when_structurally_importable() {
         let GithubResolution::ReviewCandidates { candidates, .. } =
-            resolve("https://github.com/sissbruecker/linkding").unwrap()
+            resolve_from("https://github.com/sissbruecker/linkding", &[]).unwrap()
         else {
             panic!("expected reviewed candidate");
         };

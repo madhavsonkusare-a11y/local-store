@@ -156,6 +156,12 @@
       "methods": []
     },
     {
+      "offering_id": "linkding",
+      "content_access": "unverified",
+      "required_setup": "provider_review",
+      "methods": []
+    },
+    {
       "offering_id": "lobehub",
       "content_access": "unverified",
       "required_setup": "provider_review",

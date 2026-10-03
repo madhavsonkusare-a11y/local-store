@@ -59,6 +59,14 @@ test('unsafe input is refused before network lookup and GitHub failure offers re
   await expect(page.locator('#github-check')).toBeEnabled();
   await expect(page.locator('#github-url')).toBeEnabled();
 });
+test('unsupported repository explains required review and exposes no installation action', async({page}) => {
+  await setup(page,inspection({kind:'needs_review',repository:repo}));
+  await check(page);
+  await expect(page.locator('#github-result')).toContainText('No reviewed installation matches');
+  await expect(page.locator('#github-result')).toContainText('source review and Windows app verification');
+  expect(await page.locator('#github-result button.primary').count()).toBe(0);
+  expect(await page.evaluate(() => window.__calls.some(c => ['recipe_details','install_app'].includes(c.command)))).toBe(false);
+});
 test('unknown review status fails closed and metadata is rendered as text', async({page}) => {
   await setup(page,inspection({kind:'<img src=x onerror=alert(1)>',offering_id:'memos'})); await check(page);
   await expect(page.locator('#github-error')).toContainText('unknown review status');

@@ -1,6 +1,6 @@
 # Development engine payload
 
-E01 implementation checkpoint, updated October 1, 2026. This is a buildable Linux
+E01 implementation checkpoint, updated October 2, 2026. This is a buildable Linux
 rootfs for the future managed WSL2 engine, not a shipping installer.
 
 ```text
@@ -9,6 +9,9 @@ python scripts/test_engine_payload.py
 python scripts/build-engine-payload.py --inspect-inventory
 python scripts/build-engine-payload.py --build
 python scripts/build-engine-payload.py --build --managed-engine
+python scripts/verify-engine-provenance.py --fetch-docker --fetch-base
+python scripts/verify-engine-provenance.py
+python scripts/test_engine_provenance.py
 ```
 
 The validation and test commands are offline. `--inspect-inventory` uses Docker
@@ -34,8 +37,14 @@ locks 138 packages and measures 572,798,976 bytes. Adding `libpam-systemd` and
 development engine. The original 128 package versions are unchanged. The
 [local repair](../docs/evidence/engine-session-local-repair-2026-10-01.json)
 used a newer `libexpat1` patch (.6); the rebuilt payload uses snapshot patch .4.
-These are distinct artifacts. The local repair does not prove a fresh boot of
-the new archive, and the export remains unapproved for distribution.
+These are distinct artifacts. A separate [fresh archive import proof](../docs/evidence/windows-fresh-payload-2026-10-02.json)
+booted the retained 138-package archive in an isolated WSL fixture on the existing
+Windows host: Docker 29.8.0 and Compose 5.5.1 were ready in 28.84 seconds. Its
+VHD file measured 683,671,552 bytes; that is file length, not allocated disk size
+or a supported minimum. The exact fixture was unregistered and the selected
+engine's native state stayed unchanged. This direct import does not prove the
+product setup transaction, prerequisite recovery or clean Windows acceptance.
+The export remains unapproved for distribution.
 
 ## Package choice
 
@@ -44,18 +53,26 @@ inventory and systemd units without implementing Compose or daemon supervision
 from scratch. The base image is pinned to the Linux/amd64 manifest digest.
 All five Docker package URLs, versions, lengths and SHA-256 values are locked in
 [components.lock.json](components.lock.json); downloads must match before use.
-Hashes were selected from Docker's HTTPS package index. They pin observed bytes;
-this first version does not independently verify Docker's signed index. Ubuntu
-dependencies are installed through apt's signed repository metadata.
+The [independent provenance review](../docs/evidence/engine-independent-provenance-2026-10-02.json)
+now verifies all five locked Docker archive hashes and lengths against Docker's
+official signed index using its reviewed primary key. This current signed index
+corroborates the retained packages; it is not an original build-time Docker
+signature receipt. Ubuntu dependencies use apt's signed repository metadata.
 The candidate Ubuntu archive snapshot is pinned to `20260913T120000Z` in the
 component lock and passed to APT during the build. This uses Ubuntu 24.04's
 official snapshot mechanism instead of whichever `noble-updates` happens to
 be current. A September 30 clean build reproduced all 128 locked package
 versions. A follow-up clean build retained 34 Ubuntu `.deb` archive hashes and
-39 APT index hashes in a [provenance manifest](../docs/evidence/engine-ubuntu-provenance-2026-09-30.json);
-the larger archive/index tars remain in the ignored local build cache. Signed
-indexes and archive bytes still need independent verification against the
-reviewed transitive package lock for release provenance.
+39 APT index hashes in a [provenance manifest](../docs/evidence/engine-ubuntu-provenance-2026-09-30.json).
+The current October 1 export retains 44 Ubuntu archives and 39 indexes. The
+independent verifier checks eight Ubuntu signed releases, 30 compressed package
+indexes and all 44 archives against the reviewed Ubuntu archive key. Of those
+archives, 42 match installed versions; two are newer bootstrap OpenSSL packages
+that the final install downgraded. Alongside five Docker components, 91 installed
+packages are inherited unchanged from the pinned official Ubuntu base. Its OCI
+manifest, config and layer hashes and package inventory are checked separately;
+this is content provenance, not an OCI signature or full file reproducibility
+claim. Large archive/index objects remain in the ignored local build cache.
 The minimal Ubuntu base has no CA bundle, so the build first installs the
 exact locked `ca-certificates` version from Ubuntu's signed current index,
 then switches APT to the snapshot. Both index updates fail on fetch errors;
@@ -92,13 +109,26 @@ records the versions, rootfs hash and measured size (464,494,592 bytes,
 uncompressed). The [128-package inventory](../docs/evidence/engine-packages-development-2026-09-13.tsv)
 records the exact installed versions. These are observed development artifacts.
 
-The complete installed-package inventory is now locked using the exact bytes
-measured in the original development build. A clean post-lock export succeeded
-on September 30 with the pinned Ubuntu snapshot. Cache or mirror every
-transitive package with signed index provenance before claiming a reproducible
-release build. The export preserves license files
-inside the rootfs and a separate notices tar, but distributing a rootfs also
-requires reviewing source obligations for the complete package set.
+The complete current installed-package inventory is locked and independently
+reconciled with the retained rootfs's dpkg database and exported inventory. The
+verifier anchors the artifact and build inputs to the committed October 1 receipt.
+It runs without Docker or WSL and never extracts payload files onto the host.
+Its first capture needs GnuPG, python-lz4 and zstandard plus access to the public
+Docker index and pinned Ubuntu registry objects; later verification is offline.
+Three [targeted boundary checks](../docs/evidence/engine-provenance-boundary-2026-10-02.json)
+accept genuine signed metadata, reject altered signed cleartext and reject a
+valid signature whose primary key is outside the reviewed Ubuntu trust anchors.
+
+The [notice and source review](../docs/evidence/engine-provenance-review-2026-10-02.md)
+finds copyright files for 134 of 138 installed packages after resolving Debian
+documentation symlinks. Four Docker components lack these packaged files; their
+upstream notices still need collection and review. Full common license texts
+are in the rootfs, but the separate notices tar only retains `/usr/share/doc`.
+The inventory identifies 93 provisional source/version pairs; it does not bundle
+corresponding source or establish source fulfillment. Complete notices, reviewed
+source delivery, retained provenance and reproducible-build limitations remain
+E01 distribution gates. These gaps do not prevent publishing the project's own
+source-only GitHub release.
 
 V1's proposed host floor is Windows 11 x64 with supported WSL2; the tested local
 host has Windows build 26200.9445, WSL 2.6.3.0 and kernel 6.6.87.2. Those numbers

@@ -586,11 +586,11 @@
     },
     {
       "id": "linkding",
-      "cohort": "expansion_candidate",
+      "cohort": "existing_offering",
       "catalog_id": "linkding",
       "candidate_id": "linkding",
       "acceptance_task": "Create, tag and search a bookmark after restart.",
-      "selection_reason": "Expand Bookmarks and Link Sharing coverage with a useful app-level workflow; selected from pinned catalog/reach evidence and live repository screening."
+      "selection_reason": "Expand Bookmarks and Link Sharing coverage with a useful app-level workflow; selected from pinned catalog/reach evidence and live repository screening. Reviewed promotion on 2026-10-02 preserves this frozen member and the separately selected ten launch apps; exact approval is catalog/promotion-proposals/linkding-review-decision.json."
     },
     {
       "id": "budibase",
@@ -824,5 +824,9 @@
       "acceptance_task": "Import an owned sample comic and preserve reading progress.",
       "selection_reason": "Expand Document Management - E-books coverage with a useful app-level workflow; selected from pinned catalog/reach evidence and live repository screening."
     }
-  ]
+  ],
+  "reviewed_cohorts": {
+    "existing_offering": 53,
+    "expansion_candidate": 47
+  }
 }

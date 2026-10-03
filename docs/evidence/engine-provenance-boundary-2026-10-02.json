@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-02T18:34:33.128085+00:00",
+  "passed": true,
+  "checks": 3,
+  "review_script_sha256": "6c5605fb103ecd7d7f1d829b160bd3715103ed2df025110ca1f98e18e8d2ee5d",
+  "test_script_sha256": "82fca2582a1871a7b4f3518509274a6b0be8c44142ccbfdcf1f0b6cf8d9a8f99",
+  "signed_metadata_sha256": "c94d60b488714528a9c72d7baca20e0878fb4e2b2bec6d9f96351e15579aa98d",
+  "proof": "actual retained Ubuntu InRelease accepts its reviewed primary key, rejects modified cleartext and rejects a foreign trust anchor",
+  "limits": [
+    "Filesystem and GnuPG checks only; no WSL or engine lifecycle claim"
+  ]
+}

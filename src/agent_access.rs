@@ -311,7 +311,7 @@ mod tests {
     #[test]
     fn directory_covers_exactly_the_approved_offer_ids() {
         let directory = AccessDirectory::load().unwrap();
-        assert_eq!(directory.apps.len(), 52);
+        assert_eq!(directory.apps.len(), 53);
     }
 
     #[test]

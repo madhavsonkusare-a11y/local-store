@@ -1,0 +1,45 @@
+{
+  "app": "linkding",
+  "github_inspection": {
+    "archived": false,
+    "canonical_repository": "https://github.com/sissbruecker/linkding",
+    "commit_sha": "27b7303baf41bb28babc610ac8eaa486e1ddfab5",
+    "commit_url": "https://github.com/sissbruecker/linkding/commit/27b7303baf41bb28babc610ac8eaa486e1ddfab5",
+    "default_branch": "master",
+    "repository_id": 194212327,
+    "requested_repository": "https://github.com/sissbruecker/linkding",
+    "resolution": {
+      "display_name": "Linkding",
+      "kind": "approved_match",
+      "offering_id": "linkding",
+      "repository": "https://github.com/sissbruecker/linkding"
+    }
+  },
+  "imported_definition_sha256": "2c99d688fcc461630418ae6906b5bfaf8e4cf47905e9d065ac6687baa7625fa9",
+  "launch_readiness": {
+    "agent_content_access": "unverified",
+    "caution": null,
+    "current_evidence": true,
+    "install_mode": "setup_assisted",
+    "lifecycle_proven": true,
+    "offering_id": "linkding",
+    "prerequisites": [
+      "Provide Administrator username before installing.",
+      "Provide Administrator password before installing (kept private).",
+      "Choose an administrator username and password before installing. Both are required so this local instance cannot silently rely on missing proxy authentication. Local Store retains private setup answers for reinstall.",
+      "Linkding fetches bookmarked websites in background tasks to collect page metadata. The standard image does not include full browser snapshots; no AI service, cloud account or outbound webhook is configured."
+    ],
+    "recorded_at_unix": 1790965040,
+    "task": "an isolated required administrator account signs in while wrong credentials and anonymous access fail; an exact private bookmark URL, title, description, notes and two tags survive restart and keep-data reinstall",
+    "task_verified": true
+  },
+  "observed_at_unix": 1790965876,
+  "plan_sha256": "45c2a406049bfbbd614e65dc6e7b73f040436515f749cb3c76f1d9125187c7e5",
+  "schema_version": 1,
+  "source_resolution": {
+    "display_name": "Linkding",
+    "kind": "approved_match",
+    "offering_id": "linkding",
+    "repository": "https://github.com/sissbruecker/linkding"
+  }
+}

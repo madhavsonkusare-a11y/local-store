@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "app": "linkding",
+  "decision": "approved",
+  "bindings": {
+    "proposal_sha256": "244c1f5d3e900499a06ecc4aa756e1f00bf502735350ff56ec23f5d673d91b1b",
+    "evidence_sha256": "c02645a7818b42477e3ae85b65a51f90abd3cd113134b2a7875932254c6eef7a",
+    "plan_sha256": "45c2a406049bfbbd614e65dc6e7b73f040436515f749cb3c76f1d9125187c7e5",
+    "probe_sha256": "116a9fc4e8974ba453c15fa4b4221b51f9a49d0003ffa00cd20a27b7914e0bdb",
+    "source_archive_sha256": "7535b8ce39660ad6bf074461612f81b8bf7d3d8fd9e8c8c50c15477041ff3084",
+    "github_inspection_sha256": "7ad9e5052e45f223e6ba56b0a89251d4d5dab5252d35f81f6b40bcee0e336aea"
+  },
+  "reviewer": "Codex /root",
+  "reviewed_at_unix": 1790965270,
+  "reason": "Codex /root independently reviewed these exact proposal, source, immutable image, setup, storage, risk and real task inputs. Required administrator username and sensitive password, loopback-only exposure, owned data, maintained same upstream image and actual private bookmark task, restart, keep-data reinstall, measured resource ceilings and exact cleanup satisfy the reviewed candidate contract. This is delegated implementation review, not a claim of direct owner review, a vulnerability scan or agent content access; the selected ten launch apps are unchanged."
+}

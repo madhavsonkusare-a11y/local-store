@@ -53,8 +53,10 @@ test('verified recovery rechecks backend ownership and confirms data deletion ex
   await page.goto('/'); await page.locator('#settings').click(); await page.locator('#scan-recovery').click();
   await page.getByRole('button',{name:'Review setup',exact:true}).click();
   await expect(page.locator('#recovery-task')).toBeVisible();
-  await page.locator('#recovery-delete-data').check(); await page.locator('#recovery-clear').click();
-  await expect(page.locator('#recovery-task-error')).toContainText('Type the app name');
+  await page.locator('#recovery-delete-data').check();
+  await expect(page.locator('#recovery-clear')).toBeDisabled();
+  await page.locator('#recovery-delete-confirm').fill('memos');
+  await expect(page.locator('#recovery-clear')).toBeDisabled();
   expect(await page.evaluate(()=>window.__calls.some(call=>call.command==='discard_retained_setup'))).toBe(false);
   await page.locator('#recovery-delete-confirm').fill('Memos'); await page.locator('#recovery-clear').click();
   await expect(page.locator('#recovery-task-status')).toHaveText('Retained setup and managed data deleted.');

@@ -23,7 +23,7 @@ test('discover search, category, detail and source actions are honest', async ({
 
 test('reviewed Memos recipe shows prerequisites and installs into My Apps', async ({page}) => {
  await page.getByRole('searchbox').fill('memo'); await page.getByRole('button',{name:'View Memos details'}).click();
- await expect(page.getByText('Preview local install')).toBeVisible(); await page.getByRole('button',{name:'Review install'}).click();
+ await expect(page.getByText('Preview local install')).toBeVisible(); await page.locator('#detail-dialog').getByRole('button',{name:'Review install'}).click();
  await expect(page.getByText('neosmemo/memos:0.30.0')).toBeVisible(); await expect(page.getByText('Docker engine')).toBeVisible();
  await page.getByRole('button',{name:'Install Memos'}).click();
  await expect(page.locator('#install-dialog')).not.toBeVisible();
@@ -39,7 +39,7 @@ test('all graduated recipes remain explicitly reviewed before install', async ({
    await expect(page.getByRole('heading',{name})).toBeVisible();
    await page.getByRole('button',{name:`View ${name} details`}).click();
    await expect(page.getByText('Preview local install')).toBeVisible();
-   await page.getByRole('button',{name:'Review install'}).click();
+   await page.locator('#detail-dialog').getByRole('button',{name:'Review install'}).click();
    await expect(page.getByText(image)).toBeVisible();
    await page.getByRole('button',{name:'Cancel'}).click();
    await expect(page.locator('#install-dialog')).not.toBeVisible();
@@ -48,9 +48,9 @@ test('all graduated recipes remain explicitly reviewed before install', async ({
 
 test('connect validates, preserves input after error, and appears in My Apps', async ({page}) => {
  await page.getByRole('button',{name:'Connect an app'}).first().click();
- await page.getByLabel('App name').fill('Home photos'); await page.getByLabel('Instance address').fill('file:///etc/passwd');
+ await page.getByLabel('App name',{exact:true}).fill('Home photos'); await page.getByLabel('Instance address').fill('file:///etc/passwd');
  await page.getByRole('button',{name:/Add to My Apps/}).click(); await expect(page.getByRole('alert')).toContainText('http:// or https://');
- await expect(page.getByLabel('App name')).toHaveValue('Home photos');
+ await expect(page.getByLabel('App name',{exact:true})).toHaveValue('Home photos');
  await page.getByLabel('Instance address').fill('http://192.168.1.5:2283'); await page.getByRole('button',{name:/Add to My Apps/}).click();
  await expect(page.getByRole('heading',{name:'Right where you left them.'})).toBeVisible(); await expect(page.getByRole('heading',{name:'Home photos'})).toBeVisible();
  expect(await page.evaluate(() => window.__calls.find(c=>c.command==='add_app'))).toEqual({command:'add_app',args:{name:'Home photos',url:'http://192.168.1.5:2283'}});
@@ -84,9 +84,7 @@ test('keyboard shortcut and accessibility', async ({page}) => {
 
 test('responsive visual surfaces', async ({page}) => {
  await expect(page).toHaveScreenshot('discover-1280x800.png', {animations:'disabled'});
- await page.setViewportSize({width:800,height:600}); await expect(page).toHaveScreenshot('discover-800x600.png', {animations:'disabled'});
- await page.setViewportSize({width:400,height:860});
- await expect(page).toHaveScreenshot('discover-400x860.png', {animations:'disabled'});
+ await page.setViewportSize({width:1180,height:640}); await expect(page).toHaveScreenshot('discover-1180x640.png', {animations:'disabled'});
  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
@@ -97,7 +95,7 @@ test('dark-only surfaces keep contrast in light and dark system settings', async
    expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe('rgb(12, 10, 9)');
  }
  await page.getByRole('button',{name:'Connect an app',exact:true}).first().click();
- await expect(page.getByLabel('App name')).toBeFocused();
+ await expect(page.getByLabel('App name',{exact:true})).toBeFocused();
  expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);
  await expect(page).toHaveScreenshot('connect-dialog.png', {animations:'disabled'});
  await page.keyboard.press('Escape');
@@ -108,7 +106,7 @@ test('dark-only surfaces keep contrast in light and dark system settings', async
 test('keyboard and reduced-motion interactions stay immediate and restore focus', async ({page}) => {
  await page.locator('#connect-top').focus();
  await page.keyboard.press('Enter');
- await expect(page.getByLabel('App name')).toBeFocused();
+ await expect(page.getByLabel('App name',{exact:true})).toBeFocused();
  expect(await page.locator('#connect-dialog').evaluate(dialog => dialog.getAnimations().length)).toBe(0);
  await page.keyboard.press('Escape');
  await expect(page.locator('#connect-top')).toBeFocused();
@@ -160,7 +158,7 @@ test('featured recipes require ready prerequisites and preserve errors for retry
 test('reviewed apps can also connect an existing instance', async ({page}) => {
  await page.getByRole('button',{name:'View Memos details',exact:true}).click();
  await page.getByRole('button',{name:'Already running it? Connect an instance',exact:true}).click();
- await expect(page.getByLabel('App name')).toHaveValue('Memos');
+ await expect(page.getByLabel('App name',{exact:true})).toHaveValue('Memos');
  await expect(page.getByLabel('Instance address')).toHaveValue('');
  await expect(page.getByLabel('Instance address')).toBeFocused();
 });
@@ -185,10 +183,10 @@ test('structured command failure stays readable and preserves connection input',
    };
  });
  await page.getByRole('button', {name:'Connect an app'}).first().click();
- await page.getByLabel('App name').fill('Home photos');
+ await page.getByLabel('App name',{exact:true}).fill('Home photos');
  await page.getByLabel('Instance address').fill('http://192.168.1.5:2283');
  await page.getByRole('button', {name:/Add to My Apps/}).click();
  await expect(page.getByRole('alert')).toContainText('Could not save your app. Check folder access.');
- await expect(page.getByLabel('App name')).toHaveValue('Home photos');
+ await expect(page.getByLabel('App name',{exact:true})).toHaveValue('Home photos');
  await expect(page.getByRole('button', {name:/Add to My Apps/})).toBeEnabled();
 });

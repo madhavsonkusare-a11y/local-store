@@ -7,6 +7,10 @@ document.addEventListener('pointerdown', () => { keyboardInput = false; document
 document.addEventListener('keydown', () => { keyboardInput = true; document.documentElement.dataset.input = 'keyboard'; }, true);
 
 function transition(dialog, opening) {
+  if (dialog.classList.contains('routed-screen')) {
+    window.dispatchEvent(new CustomEvent('local-store:settings-route',{detail:{opening}}));
+    return Promise.resolve();
+  }
   const previous = transitions.get(dialog);
   const current = previous ? { opacity: getComputedStyle(dialog).opacity, transform: getComputedStyle(dialog).transform } : null;
   previous?.cancel();

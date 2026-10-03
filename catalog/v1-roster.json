@@ -4,8 +4,8 @@
   "frozen_at": "2026-09-12",
   "scope": "Planning matrix only; no app promotion or universal access claim",
   "input_sha256": {
-    "catalog/v1-roster-selection.json": "45b3c50d2d320f810fb008e0176c7d5d22824c3a6de5907e9aba735b1d537167",
-    "catalog/v1-roster-upstream-evidence.json": "60b0859df9b82306871ca89eff99ae04f77ed631c4dc71fe74eee13013cfbe0d",
+    "catalog/v1-roster-selection.json": "50a1a618dcbd61a02db13853991cb7893a8b3448d46b9be1c5676b85168afb0b",
+    "catalog/v1-roster-upstream-evidence.json": "8cffd5dd3a090a5b98a1ca4c604d22346376253a50fa9f1a61f880c735405bb4",
     "catalog/candidate-queue.json": "886cb82d4daafe0f3676cc72a9273cdec3bf0aba95cbb7c95d4d4a5982e0d790",
     "catalog/candidate-ranking.json": "5e417b02f872c85f1438112f93b42aca721410c41f886fc58a0cb2f110fef3ce",
     "src/generated/catalog.json": "e3fce37a0771d7c1684343638bff5c9d2045d5bae6eb3159786deb35089c4ecc",
@@ -40,6 +40,7 @@
     "src/templates/kotaemon.json": "c3e8016e8f105c7015a42da180a6ebcd9b765aec73303ff2cb422092185a9c33",
     "src/templates/langflow.json": "74a78b1dd4670d450e0119a6a5e5e930bbdfcf3d09e899c9ff6f96f182a647de",
     "src/templates/librechat.json": "323032191255716ea97483ad5843ce37a3fc157e4d98b3439e8dbfadd031ee7c",
+    "src/templates/linkding.json": "57ca0c4bfd4e45614770b36881097f7bdcb06d79a97bfe76bc149297317861ac",
     "src/templates/lobehub.json": "7fdbb617e7f5b91d4eb66246da57112a047d5b86635def0ebf7e75192930ca3e",
     "src/templates/maxun.json": "74116a4c762d10afc746acd19e3fe6b639924abc40184568fb7fba0a4476ee0d",
     "src/templates/metabase.json": "6b30bb0a7ac6f551176c064870e39b94d7d0a030ec76c784f726a47fe5bec7ac",
@@ -72,8 +73,8 @@
   },
   "summary": {
     "total": 100,
-    "existing_offerings": 52,
-    "expansion_candidates": 48,
+    "existing_offerings": 53,
+    "expansion_candidates": 47,
     "v1_qualified": 0,
     "agent_access_implemented": 0
   },
@@ -10394,11 +10395,11 @@
     },
     {
       "id": "linkding",
-      "cohort": "expansion_candidate",
+      "cohort": "existing_offering",
       "catalog_id": "linkding",
       "candidate_id": "linkding",
       "acceptance_task": "Create, tag and search a bookmark after restart.",
-      "selection_reason": "Expand Bookmarks and Link Sharing coverage with a useful app-level workflow; selected from pinned catalog/reach evidence and live repository screening.",
+      "selection_reason": "Expand Bookmarks and Link Sharing coverage with a useful app-level workflow; selected from pinned catalog/reach evidence and live repository screening. Reviewed promotion on 2026-10-02 preserves this frozen member and the separately selected ten launch apps; exact approval is catalog/promotion-proposals/linkding-review-decision.json.",
       "name": "linkding",
       "category": "Bookmarks and Link Sharing",
       "canonical_project": "github.com/sissbruecker/linkding",
@@ -10407,8 +10408,8 @@
         "MIT"
       ],
       "ranking_position_snapshot": 88,
-      "manifest": null,
-      "current_manifest_promotion": null,
+      "manifest": "src/templates/linkding.json",
+      "current_manifest_promotion": "approved",
       "deployment_candidates": [
         {
           "source": "caprover",
@@ -10429,7 +10430,7 @@
         }
       ],
       "preferred_candidate_for_review": "caprover:linkding",
-      "deployment_status": "candidate_review_required",
+      "deployment_status": "offered_baseline",
       "setup": {
         "fields_snapshot": [
           {
@@ -10446,14 +10447,22 @@
           }
         ],
         "first_run_and_external_requirements": "must_prove_with_app_task",
-        "baseline_risk_notes": []
+        "baseline_risk_notes": [
+          "Creates 1 Docker container and publishes one port on this computer's loopback interface only.",
+          "Keeps its data in a Docker volume that Local Store manages for it. A keep-data uninstall leaves the volume; deleting data removes it permanently.",
+          "Choose an administrator username and password before installing. Both are required so this local instance cannot silently rely on missing proxy authentication. Local Store retains private setup answers for reinstall.",
+          "Bookmarks are private by default. Sharing a bookmark exposes it to other users of this app; keep private bookmarks unshared.",
+          "Linkding fetches bookmarked websites in background tasks to collect page metadata. The standard image does not include full browser snapshots; no AI service, cloud account or outbound webhook is configured.",
+          "The official standard 1.47.0 image uses Python 3.13 on Debian Trixie; this source review does not claim a vulnerability scan or guarantee that all image packages are patched.",
+          "A real managed Windows task, restart and keep-data reinstall passed for this exact reviewed plan. macOS and Linux host proof and agent content access remain unverified."
+        ]
       },
       "resources": {
         "measured_ram_mb": null,
         "measured_disk_mb": null,
         "startup_seconds": null,
         "status": "not_measured_by_roster; Q02 required",
-        "baseline_storage": null
+        "baseline_storage": "A Docker volume Local Store manages for linkding"
       },
       "maintenance": {
         "repository_check": {
@@ -10473,17 +10482,41 @@
           }
         },
         "repository_checked_at": "2026-09-12",
-        "reviewed_image_audits": [],
+        "reviewed_image_audits": [
+          {
+            "image": "sissbruecker/linkding:1.47.0",
+            "source_url": "https://hub.docker.com/v2/repositories/sissbruecker/linkding/tags/1.47.0",
+            "checked_at": "2026-10-02",
+            "last_updated": "2026-09-13",
+            "container_platforms": [
+              "linux/amd64",
+              "linux/arm/v7",
+              "linux/arm64"
+            ],
+            "digests": {
+              "linux/amd64": "sha256:b44256a4ff37e4cb1a39c40d3a5b560337f1477a55428b3320e813d6004d8001",
+              "linux/arm/v7": "sha256:e89b92389ccc0eec0dcd5b723c1da1bac8b4e50e8a56fd87f66df288eb5e51b9",
+              "linux/arm64": "sha256:36318731b9be48b516c0d27cbebd0d98588e4d4a849cbf5cc7cbdcb9a41ea02e"
+            },
+            "index_digest": "sha256:e35cb50e0581178f245125ffaa909c565416c94c9f22ace305a7d234a4345522"
+          }
+        ],
         "image_refresh_and_v1_review": "required; repository activity does not qualify image pins"
       },
       "engine_platform": {
         "target": "Windows x64 / managed WSL Linux amd64",
         "managed_engine_proof": "not_run",
-        "baseline_image_platforms": []
+        "baseline_image_platforms": [
+          "linux/amd64",
+          "linux/arm/v7",
+          "linux/arm64"
+        ]
       },
       "proof": {
-        "baseline_evidence": [],
-        "level": "candidate_only",
+        "baseline_evidence": [
+          "docs/evidence/linkding-managed-candidate-2026-10-02.json"
+        ],
+        "level": "recorded_baseline_lifecycle; not_v1_certification",
         "v1_task_result": "not_run"
       },
       "agent_access": {

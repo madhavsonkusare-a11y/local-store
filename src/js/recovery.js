@@ -29,7 +29,8 @@ async function review(candidate) {
   const confirm = document.createElement('label'); confirm.className = 'field'; confirm.id = 'recovery-delete-confirm-field'; confirm.hidden = true;
   const hint = document.createElement('span'); hint.textContent = `To delete data, type ${candidate.display_name}`;
   const input = document.createElement('input'); input.id = 'recovery-delete-confirm'; input.autocomplete = 'off'; confirm.append(hint,input);
-  checkbox.onchange = () => { confirm.hidden = !checkbox.checked; $('recovery-clear').textContent = checkbox.checked ? 'Delete setup and data' : 'Clear setup, keep data'; if (checkbox.checked) input.focus(); };
+  checkbox.onchange = () => { confirm.hidden = !checkbox.checked; input.value = ''; input.removeAttribute('aria-invalid'); updateDeletionConfirmation(); if (checkbox.checked) input.focus(); };
+  input.oninput = () => {input.removeAttribute('aria-invalid'); updateDeletionConfirmation();};
   $('recovery-review').replaceChildren(notes, location, consent, confirm);
   $('recovery-resume').hidden = false; $('recovery-clear').hidden = false;
   $('recovery-clear').textContent = 'Clear setup, keep data';
@@ -56,6 +57,11 @@ async function scan() {
   finally { if (token === request) reset(); }
 }
 button.addEventListener('click',scan);
+function updateDeletionConfirmation() {
+  const choice = $('recovery-delete-data'); if (!choice) return;
+  $('recovery-clear').textContent = choice.checked ? 'Delete setup and data' : 'Clear setup, keep data';
+  $('recovery-clear').disabled = busy || (choice.checked && $('recovery-delete-confirm').value !== active?.display_name);
+}
 async function recover(kind) {
   if (!active || busy) return;
   const deleting = kind === 'clear' && $('recovery-delete-data').checked;
@@ -79,7 +85,7 @@ async function recover(kind) {
     $('recovery-task-status').textContent = 'Recovery did not finish. No success is assumed.';
     $('recovery-task-error').textContent = failure.message || 'Recovery could not finish. Review the retained setup and try again.';
   } finally {
-    busy = false; setDialogBusy(task,false); task.querySelectorAll('button,input').forEach(control => {control.disabled = false;});
+    busy = false; setDialogBusy(task,false); task.querySelectorAll('button,input').forEach(control => {control.disabled = false;}); updateDeletionConfirmation();
   }
 }
 $('recovery-resume').onclick = () => recover('resume'); $('recovery-clear').onclick = () => recover('clear');

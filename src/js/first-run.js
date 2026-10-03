@@ -4,7 +4,7 @@ import {doctorView} from './render.js';
 const dialog = document.getElementById('first-run-dialog');
 const error = document.getElementById('first-run-error');
 const steps = ['welcome_viewed','engine_explanation_viewed','first_app_explanation_viewed','agent_access_explanation_viewed'];
-let reviewStarter, chosen = 'memos', selectedPort = null, loadGeneration = 0;
+let reviewStarter, connectStarter, chosen = 'memos', selectedPort = null, loadGeneration = 0;
 const choose = document.createElement('section');
 choose.id = 'starter-choice'; choose.hidden = true;
 choose.innerHTML = `<h3 id="starter-choice-title" tabindex="-1">Choose your first app</h3><p class="modal-intro">Review an installation next. Choosing an app does not install it or grant agent access.</p><div id="starter-engine-checks"></div><fieldset id="starter-cards"><legend>Reviewed starter apps</legend></fieldset><label class="field">Published port<input id="starter-port" type="number" min="1024" max="65535" inputmode="numeric"></label><p id="starter-preflight" role="status"></p><div class="modal-actions"><button class="secondary" id="starter-back">Back to welcome</button><button class="primary" id="starter-review" disabled>Review installation</button></div>`;
@@ -12,6 +12,9 @@ dialog.insertBefore(choose, error);
 const start = document.createElement('button'); start.className = 'primary'; start.id = 'first-run-start'; start.textContent = 'Get started';
 document.getElementById('first-run-done').closest('.modal-actions').append(start);
 document.getElementById('first-run-done').className = 'secondary';
+const connect = document.createElement('button'); connect.className = 'secondary'; connect.textContent = 'Connect an existing app'; connect.id = 'first-run-connect';
+start.before(connect);
+connect.onclick = async () => { await closeDialog(dialog); connectStarter?.(); };
 const welcomeNodes = [...dialog.children].filter(node => node !== choose && node !== error && !node.classList.contains('modal-top') && node.id !== 'first-run-title');
 const layout = document.createElement('div'); layout.className = 'first-run-layout';
 const rail = document.createElement('ol'); rail.className = 'first-run-rail'; rail.setAttribute('aria-label', 'First app setup');
@@ -19,8 +22,31 @@ for (const label of ['Welcome', 'Choose', 'Install', 'Ready']) { const step = do
 const pane = document.createElement('div'); pane.className = 'first-run-pane';
 for (const node of [...dialog.children]) if (!node.classList.contains('modal-top')) pane.append(node);
 layout.append(rail, pane); dialog.append(layout);
+const welcomeChecks = document.createElement('section'); welcomeChecks.id = 'welcome-engine-checks'; welcomeChecks.setAttribute('aria-label','Local engine preflight');
+pane.querySelector('.onboarding-steps').before(welcomeChecks);
+let welcomeCheck = 0;
+async function checkWelcomeEngine() {
+  const generation = ++welcomeCheck;
+  welcomeChecks.innerHTML = '<p role="status">Checking the local engine…</p>';
+  try {
+    const report = await invoke('doctor');
+    if (generation !== welcomeCheck || !dialog.open) return;
+    welcomeChecks.innerHTML = Array.isArray(report?.checks) ? doctorView(report) : '';
+    const status = document.createElement('p'); status.setAttribute('role','status');
+    status.textContent = report?.ready ? 'Local engine ready. You can review your first app.' : 'The local engine needs setup. Explore apps now, or open Settings to review the setup choices.';
+    welcomeChecks.append(status);
+  } catch { if (generation === welcomeCheck && dialog.open) welcomeChecks.innerHTML = '<p role="status">Engine status could not be checked. You can explore apps or check again in Settings.</p>'; }
+}
+export function markStarterStep(step, target) {
+  target.querySelector('.first-run-task-rail')?.remove();
+  if (!step) return;
+  const progress = rail.cloneNode(true); progress.className = 'first-run-task-rail';
+  const current = step === 'ready' ? 3 : 2;
+  [...progress.children].forEach((item,index) => { item.removeAttribute('aria-current'); if (index === current) item.setAttribute('aria-current','step'); });
+  const heading = target.querySelector('h2'); heading?.before(progress);
+}
 const switchChoice = show => {
-  welcomeNodes.forEach(node => {node.hidden = show;}); choose.hidden = !show;
+  welcomeNodes.forEach(node => {node.hidden = show;}); welcomeChecks.hidden = show; choose.hidden = !show;
   document.getElementById(show ? 'starter-choice-title' : 'first-run-title').focus();
   [...rail.children].forEach((step, index) => {if (index === (show ? 1 : 0)) step.setAttribute('aria-current', 'step'); else step.removeAttribute('aria-current');});
 };
@@ -64,7 +90,7 @@ document.getElementById('starter-review').onclick = async () => {
   await closeDialog(dialog);
   await reviewStarter(chosen, port);
 };
-export function initializeFirstRun({reviewInstall}) {reviewStarter = reviewInstall;}
+export function initializeFirstRun({reviewInstall, connectExisting}) {reviewStarter = reviewInstall; connectStarter = connectExisting;}
 export async function returnToStarterChoice() {
   switchChoice(true);
   await showDialog(dialog);
@@ -98,9 +124,11 @@ export async function showFirstRun(force = false) {
       switchChoice(false);
       await showDialog(dialog);
       document.getElementById('first-run-title').focus();
+      void checkWelcomeEngine();
     }
   } catch { /* Intro progress cannot block the person's existing apps. */ }
 }
+dialog.addEventListener('close', () => { welcomeCheck++; });
 const replay = document.createElement('button'); replay.className = 'secondary'; replay.id = 'replay-introduction'; replay.textContent = 'Run introduction';
 replay.onclick = async () => { await closeDialog(document.getElementById('settings-dialog')); await showFirstRun(true); };
 const introduction = document.createElement('section'); introduction.className = 'settings-row';
