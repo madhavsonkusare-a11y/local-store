@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-04",
+  "authorization": "Owner explicitly approved permanent Penpot removal",
+  "removed_containers": [
+    "penpot-penpot-frontend-1",
+    "penpot-penpot-backend-1",
+    "penpot-penpot-exporter-1",
+    "penpot-penpot-postgres-1",
+    "penpot-penpot-valkey-1",
+    "penpot-penpot-mcp-1",
+    "penpot-penpot-mailcatch-1"
+  ],
+  "removed_volumes": [
+    "penpot_penpot_assets",
+    "penpot_penpot_postgres_v15"
+  ],
+  "removed_networks": [
+    "penpot_penpot"
+  ],
+  "removed_image_tags": [
+    "penpotapp/frontend:2.16",
+    "sj26/mailcatcher:latest",
+    "valkey/valkey:8.1",
+    "penpotapp/backend:2.16",
+    "penpotapp/exporter:2.16",
+    "penpotapp/mcp:2.16",
+    "postgres:15"
+  ],
+  "preserved_shared_images": [],
+  "remaining_container_ids": [],
+  "removed_other_penpot_items": [
+    "Claude MCP connection",
+    "legacy WebView profile",
+    "Start Menu and startup shortcuts",
+    "local ignored Penpot integration notes"
+  ],
+  "note": "Local Store catalog source, icons, committed evidence and design assets remain intact. Old external compose directory was already absent.",
+  "compaction": {
+    "DiskBeforeBytes": 8506048512,
+    "DiskAfterBytes": 2480930816,
+    "DiskReductionBytes": 6025117696,
+    "CDriveFreeBefore": 86879768576,
+    "CDriveFreeAfter": 92195930112,
+    "CDriveFreeIncreaseBytes": 5316161536,
+    "DiskpartExit": 0,
+    "DockerLeftStopped": true,
+    "Note": "Only the existing data VHD was compacted. Docker Desktop and three unattributed generic cache records remain."
+  }
+}
