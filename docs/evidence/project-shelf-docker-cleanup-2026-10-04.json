@@ -76,7 +76,7 @@
       "size": "89.62MB"
     }
   ],
-  "note": "Penpot containers, volumes, network and in-use images retained. Generic local-source cache records without definite project attribution retained. Shared Docker disk was not deleted or compacted; logical reclamation is not measured host free space.",
+  "note": "Penpot containers, volumes, network and in-use images retained. Generic local-source cache records without definite project attribution retained. The shared Docker data disk was subsequently compacted offline; see compaction measurements. Host free-space changes can include unrelated system activity.",
   "removed_project_build_cache_ids": [
     "2h4t2quhjt8ogpbg74ih74pks",
     "6xeuu65ujf6kdmppwsgctyt39",
@@ -94,5 +94,19 @@
     "x88l6q8m29pzu4m9sdzdl7oe0",
     "yud5hbl5agv3u6po7ukjx9hzm",
     "zegu8m5dskxke2t54xf9z59zr"
-  ]
+  ],
+  "compaction": {
+    "Date": "2026-10-04",
+    "Disk": "DockerDesktopWSL/disk/docker_data.vhdx",
+    "Method": "Mounted-filesystem fstrim, clean Docker stop, offline Windows DiskPart compact vdisk",
+    "BeforeBytes": 14093910016,
+    "AfterBytes": 8438939648,
+    "DiskReductionBytes": 5654970368,
+    "CDriveFreeBefore": 81597050880,
+    "CDriveFreeAfter": 86615089152,
+    "TrimReportedBytes": 4688551936,
+    "DiskpartExit": 0,
+    "DockerLeftStopped": true,
+    "Preservation": "Compaction retained the data disk; containers and volumes were not deleted. Post-compaction application health has not been checked because Docker remains stopped."
+  }
 }
