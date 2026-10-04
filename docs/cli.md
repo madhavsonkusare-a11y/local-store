@@ -48,11 +48,31 @@ local-store engine setup-preview
 local-store engine status
 local-store engine repair
 local-store engine use-self-engine --consent
+local-store engine supervisor-status
+local-store engine stop-supervisor
 ```
 
 Use Settings for normal setup and its explicit consent choices. The preview
 checks the fixed sibling `engine/rootfs.tar` against the build's pinned length
 and SHA-256; it does not import it. Missing or different bytes cannot be used.
+
+### Removing an empty owned engine
+
+```sh
+local-store engine removal-preview
+local-store engine remove-empty --consent --confirm local-store-engine-v1
+```
+
+This owner-only action deletes the empty engine's virtual disk and cached images.
+It refuses saved managed apps, retained app folders, any container or volume,
+uncertain ownership, a running supervisor and adopted development disks outside
+the native product directory. A preview grants no permission; execution repeats
+the checks under locks and requires both explicit consent and the exact name.
+External connections and their servers are preserved. Stop only Local Store's
+background supervisor first; this does not stop app containers or global WSL.
+There is no force option or arbitrary distro/path argument. Read the
+[removal contract](evidence/windows-engine-removal-check.md) before using it;
+uncertain acknowledgments preserve ownership records for manual review.
 `use-self-engine --consent` is for this source-build development host: it reuses
 only the already verified engine at the compiled project's fixed proof path,
 copies its ownership metadata to native local state, and selects it for new

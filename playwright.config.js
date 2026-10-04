@@ -11,6 +11,10 @@ if (process.platform === 'win32') {
 }
 export default defineConfig({
   testDir: './tests/ui', snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}{ext}',
+  // The unreleased Windows exact-byte capture gate has a separate configuration.
+  // Keep its known renderer failure visible there, without treating it as a
+  // passing gate or breaking the source milestone's functional regression lane.
+  testIgnore: ['**/v2-local-acceptance.spec.js'],
   // The suite finishes in about 50 seconds on an idle machine, but these
   // tests share a runner with compilation and other checks. At 20 seconds the
   // keyboard/accessibility test timed out on every run launched alongside the

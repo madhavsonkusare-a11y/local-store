@@ -1,77 +1,69 @@
 # Agent handoff
 
-Updated October 3, 2026. Start with [V1_TASKS.md](V1_TASKS.md), the only release
-ledger. [Documentation index](README.md) links detailed plans and evidence.
+Updated October 4, 2026. Read [V1_TASKS.md](V1_TASKS.md), the sole task ledger.
 
 ## Current Windows checkpoint — 74.2%
 
-**23/31 active tasks DONE (74.2%)**; source-only milestone **4/4 (100%)**.
-C04 is newly complete; no partial credit or denominator change. The requested
-90% requires 28 accepted tasks. [Checkpoint](evidence/windows-development-checkpoint-2026-10-03.json)
-records accepted IDs, exact source hashes and bounded verification.
+**23/31 active rows DONE (74.2%)**; source-only milestone **4/4 (100%)**.
+The owner cannot provide another Windows machine; complete local work without
+altering existing engine/apps or counting unverified release gates as done.
+[Current checkpoint](evidence/windows-local-checkpoint-2026-10-04.json) records
+accepted IDs, scope and exact evidence inputs. Prior October 3 checkpoint is history.
 
-Linkding is now a registered approved offering following a real private bookmark
-task/restart/keep-data reinstall, measured limits/cleanup and a separate exact
-six-hash named review. Actual canonical GitHub lookup resolves ApprovedMatch with
-current candidate task evidence. The launch ten are unchanged. The frozen 100
-identities are preserved with 53 offerings + 47 future candidates; Linkding agent
-content access stays unverified. PicoShare remains withheld for its obsolete base.
-See [candidate review](evidence/linkding-candidate-review-2026-10-02.md).
+Local changes finish factual V2 rail status, loading compositions, compact rows,
+detail-header actions, operation focus and reading-size corrections. All 144
+behavior/state/reading checks passed; freeze passes 135/3/5/9/88. The
+[86-state review](evidence/windows-v2-local-acceptance-2026-10-04.md) explains
+production semantics. Five baselines were visually reviewed. Strict screenshot
+byte identity still fails on 102–114 anti-alias pixels in the final three-case
+check despite matching geometry/accessibility/assets. F03 remains PARTIAL;
+the final harness requires equality. Do not waive the freeze, mask screenshots,
+report all 159 passing, or repeat whole builds for this renderer exception.
 
-The retained 138-package rootfs actually boots in a unique temporary WSL fixture:
-28.84 seconds ready, exact inventory, Docker29.8.0/Compose5.5.1, measured VHD file
-length and token-verified cleanup. This is an existing-host direct import, not
-clean Windows/fixed-name product setup. [Independent provenance](evidence/engine-provenance-review-2026-10-02.md)
-verifies signed indexes/archives and the pinned base; four Docker copyright/notice
-gaps and applicable corresponding-source fulfillment remain before distribution.
+The [real supervisor check](evidence/windows-engine-restart-2026-10-03.json)
+passes graceful stop, crash of an exact proof-created child and three concurrent
+launcher restarts sharing one worker. Native ownership/container state is unchanged.
+Concurrent starts now wait boundedly for acknowledgment instead of transiently
+reporting an unavailable engine. CLI exit/95-second idle proof remains history.
 
-The actual launcher-exit/95-second idle worker proof passes. Its first failure
-exposed inherited Windows output handles. The fixed worker uses CreateProcessW
-with zero inherited handles, exact current executable/fixed arguments and no
-console attachment. Fixture selection revocation stops only its own worker.
-The harness's bounded timeout regression returns in1.02seconds, allowing cleanup.
-Native closure, sleep/wake, crash/restart and full product-engine removal remain E04.
-No current app workload or native WebView proof is inferred from this check.
+[Owner-only empty-engine removal](evidence/windows-engine-removal-check.md)
+refuses installed/retained apps, containers/volumes, foreign/adopted paths, links,
+running worker, uncertain ownership and lost acknowledgments. Seven focused tests
+and [real unique-fixture transaction](evidence/windows-engine-removal-2026-10-04.json)
+pass: 138 locked packages, 21 WSL calls, 14.915 seconds, unchanged real distro list/four
+identity files. The test-only namespace never targets the production engine;
+literal fixed-name clean-host removal and native close/sleep-wake remain open.
 
-V2 controls, Load next24, recent activity, exact-name deletion and first-run
-installed/connected results pass ten focused behaviors. Settings is now a routed workspace with focus/back/busy consent guards.
-Approved rail/hero/card geometry, source/capability footers and compact rows are
-implemented. The broad106 run had94 passes and12 obsolete snapshot/selector
-failures; all23 affected app/catalog checks then passed after bounded repairs.
-Nine affected baselines were visually reviewed; two retired below1180px baselines
-were removed. Targeted12 plus recovery/connection/composition7 checks pass.
-Remaining loading/result/rail-engine compositions and full-state acceptance are
-the next UI work; inspect the current
-[86-production-state map](evidence/windows-v2-production-state-map-2026-10-03.md).
-Do not mark F03 DONE before its remaining implementation/acceptance; F04 requires
-actual native flows. Frozen assets/tokens/inventory remain unchanged.
+[Source companion](evidence/engine-source-review-2026-10-03.md) now retains 411
+exact sources and 1,423 notices, independently reread, with eight boundary checks.
+Large archives stay ignored in `.cache`. Payload/package locks are unchanged.
+Distribution remains unapproved: exact linked Moby extensions license grant and
+static docker-init C-library/relink inputs are missing; actual equivalent public
+source/notices delivery is not performed. Do not publish those companion archives
+or an engine binary while the upstream grant is unresolved.
 
-Both current ten-app provider and managed task/resource guards pass10/10.
-This batch's C04 checks pass39Rust/13Python/6browser; three actual signature
-boundaries pass. Canonical Windows launcher build with the worker fix passes.
-No optional whole-platform/full Rust suite was used. Preserve failed receipts.
+[Local security/notices review](evidence/windows-security-notices-review-2026-10-03.md)
+and [support](support.md) are complete. Both missing font OFLs/root MIT are included;
+512-package notice inventory has zero Windows-target missing notice files and
+five exact MPL source archives. The 39-file packaging guard passes. Current private
+bundle inspection passes: current launcher/sidecar identity, all 39 staged notice
+files and generated NSIS mappings. The unsigned private installer is 18,307,828
+bytes; [receipt](evidence/windows-private-bundle-2026-10-04.json) records hashes.
+It was not installed, extracted or publicly released. Engine payload is excluded from this launcher bundle.
 
-Eight rows remain: E01–E04, F03–F04, R04–R05. Finish F03's remaining composition and full-state acceptance, then complete
-notices/source delivery and prepare
-native clean-Windows acceptance. The [VM plan](plans/windows-clean-machine-test.md)
-records actual15.8GiB RAM/229.1GiB free onD, a100–120GiB planning budget, and the
-Windows Home nesting limitation. No VM, edition upgrade, feature change or cost
-has been authorized/performed. Docker Desktop is unnecessary for the owned engine.
+Remaining rows: E01–E04, F03–F04, R04–R05. Next actions are the strict browser capture
+environment, upstream source/license clarification, supported native WebView and
+sleep/wake workload checks, then supported clean Windows acceptance. No available
+screen-control runtime was exposed; do not substitute generic desktop automation.
+The source tag source-v1.0.0 at a53e370 stays immutable and 100% complete.
 
-Actual checkout: `D:\06 Projects\dockwrap`; sandbox roots still name the old
-vault path, so use explicit workdir and reviewed escalation. Canonical incremental
-Cargo flags: `--locked --release --features tauri/custom-protocol,mcp-sidecar`.
-Run actual engine qualifications serially. Stop only the exact owned worker via
-`engine stop-supervisor` before relinking its running executable; never stop global
-WSL or kill broad process names. Build/payload/browser caches remain ignored.
-
-Preserve owner-modified `CHANGELOG.md` and untracked `pnpm-lock.yaml`; exclude
-both from this batch. The immutable source tag remains `source-v1.0.0` at `a53e370`.
-The exact staged source export passes pinned Gitleaks and both ten-app guards;
-its separate approved Linkding task proof also passes against exported Git bytes.
-This implementation is the commit containing this handoff; read its SHA from Git
-after fetching main. Previous published checkpoint was `ded4f92`. Publication
-does not alter the source-only tag or assert a Windows installer release.
+Checkout: `D:\06 Projects\dockwrap`; advertised sandbox roots remain stale.
+Use explicit workdir/reviewed escalation. Canonical Cargo:
+`--locked --release --features tauri/custom-protocol,mcp-sidecar`.
+Serialize actual WSL qualifications; never global shutdown/broad process killing/removal of the
+existing engine. Launch ten remain unchanged; strict task/provider guards pass 10/10.
+Preserve owner-modified CHANGELOG.md and untracked pnpm-lock.yaml outside commits.
+Normal push to main is authorized; no PR/force push, no installer publication.
 
 ## October 1 source release complete — 100%
 

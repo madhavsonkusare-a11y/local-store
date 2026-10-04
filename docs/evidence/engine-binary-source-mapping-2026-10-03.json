@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "rootfs_sha256": "ea9358fb64636e1d60da85df2ae5fd87090db2246c591996196dbb29089e5b32",
+  "parser": "pyelftools 0.32; embedded textual Go build metadata observed without execution",
+  "binaries": [
+    {
+      "path": "usr/bin/containerd",
+      "size_bytes": 43188808,
+      "sha256": "a3055f3e1b73975d9382c719266fe313c7cc3979a60f9b4831c0cb3d2b14e043",
+      "shared_libraries": [
+        "libc.so.6"
+      ],
+      "has_dynamic_section": true,
+      "go_versions": [
+        "go1.26.8"
+      ],
+      "embedded_revision_lines": [
+        "build\t-ldflags=\"-X github.com/containerd/containerd/v2/version.Version=v2.3.5 -X github.com/containerd/containerd/v2/version.Revision=1294c24a7da8e5a793ed378161673abe94118892 -X github.com/containerd/containerd/v2/version.Package=containerd -s -w \"",
+        "build\tvcs.modified=false",
+        "build\tvcs.revision=1294c24a7da8e5a793ed378161673abe94118892",
+        "build\tvcs.time=2026-09-04T20:32:23Z",
+        "build\tvcs=git"
+      ],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/bin/containerd-shim-runc-v2",
+      "size_bytes": 8457880,
+      "sha256": "e873923a2d5361f14494a8434543b5bb218aa15736b1ac5bb73dbce5ac9ea1cb",
+      "shared_libraries": [],
+      "has_dynamic_section": false,
+      "go_versions": [
+        "go1.26.8"
+      ],
+      "embedded_revision_lines": [
+        "build\t-ldflags=\"-X github.com/containerd/containerd/v2/version.Version=v2.3.5 -X github.com/containerd/containerd/v2/version.Revision=1294c24a7da8e5a793ed378161673abe94118892 -X github.com/containerd/containerd/v2/version.Package=containerd -extldflags \\\"-static\\\" -s -w\"",
+        "build\tvcs.modified=false",
+        "build\tvcs.revision=1294c24a7da8e5a793ed378161673abe94118892",
+        "build\tvcs.time=2026-09-04T20:32:23Z",
+        "build\tvcs=git"
+      ],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/bin/ctr",
+      "size_bytes": 25444000,
+      "sha256": "37941104634994f6e0307b9cc4aa5ecc405b14d68559bc0f3785da58b70451f2",
+      "shared_libraries": [
+        "libc.so.6"
+      ],
+      "has_dynamic_section": true,
+      "go_versions": [
+        "go1.26.8"
+      ],
+      "embedded_revision_lines": [
+        "build\t-ldflags=\"-X github.com/containerd/containerd/v2/version.Version=v2.3.5 -X github.com/containerd/containerd/v2/version.Revision=1294c24a7da8e5a793ed378161673abe94118892 -X github.com/containerd/containerd/v2/version.Package=containerd -s -w \"",
+        "build\tvcs.modified=false",
+        "build\tvcs.revision=1294c24a7da8e5a793ed378161673abe94118892",
+        "build\tvcs.time=2026-09-04T20:32:23Z",
+        "build\tvcs=git"
+      ],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/bin/docker",
+      "size_bytes": 47222005,
+      "sha256": "6d1ac33d27f9f73d1feb0184e7c0847c1b6051dd60b7a6ec7b3ad9a2f7ca01ea",
+      "shared_libraries": [
+        "libc.so.6"
+      ],
+      "has_dynamic_section": true,
+      "go_versions": [
+        "go1.26.8"
+      ],
+      "embedded_revision_lines": [
+        "build\t-ldflags=\" -X \\\"github.com/docker/cli/cli/version.GitCommit=88096ef\\\" -X \\\"github.com/docker/cli/cli/version.BuildTime=2026-09-03T21:50:08Z\\\" -X \\\"github.com/docker/cli/cli/version.Version=29.8.0\\\" -X \\\"github.com/docker/cli/cli/version.PlatformName=Docker Engine - Community\\\"\""
+      ],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/bin/docker-proxy",
+      "size_bytes": 2990733,
+      "sha256": "8ef2f91978280f7eaed0961820e45b1955e4ed7b9668547b3a6be52c3cfd4f53",
+      "shared_libraries": [
+        "libc.so.6"
+      ],
+      "has_dynamic_section": true,
+      "go_versions": [
+        "go1.26.8"
+      ],
+      "embedded_revision_lines": [
+        "build\t-ldflags=\"-w -X \\\"github.com/moby/moby/v2/dockerversion.Version=29.8.0\\\" -X \\\"github.com/moby/moby/v2/dockerversion.GitCommit=3ce5872\\\" -X \\\"github.com/moby/moby/v2/dockerversion.BuildTime=2026-09-03T21:50:08.000000000+00:00\\\" -X \\\"github.com/moby/moby/v2/dockerversion.PlatformName=Docker Engine - Community\\\" -X \\\"github.com/moby/moby/v2/dockerversion.ProductName=docker\\\" -X \\\"github.com/moby/moby/v2/dockerversion.DefaultProductLicense=\\\"   \""
+      ],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/bin/dockerd",
+      "size_bytes": 111656048,
+      "sha256": "17c0fd9403f1b5b79a3a8355a8da482f1b314e2dac87b586e11abb597e75853c",
+      "shared_libraries": [
+        "libsystemd.so.0",
+        "libc.so.6"
+      ],
+      "has_dynamic_section": true,
+      "go_versions": [
+        "go1.26.8"
+      ],
+      "embedded_revision_lines": [
+        "build\t-ldflags=\"-w -X \\\"github.com/moby/moby/v2/dockerversion.Version=29.8.0\\\" -X \\\"github.com/moby/moby/v2/dockerversion.GitCommit=3ce5872\\\" -X \\\"github.com/moby/moby/v2/dockerversion.BuildTime=2026-09-03T21:50:08.000000000+00:00\\\" -X \\\"github.com/moby/moby/v2/dockerversion.PlatformName=Docker Engine - Community\\\" -X \\\"github.com/moby/moby/v2/dockerversion.ProductName=docker\\\" -X \\\"github.com/moby/moby/v2/dockerversion.DefaultProductLicense=\\\"   \""
+      ],
+      "extension_module_metadata": [
+        "dep\tgithub.com/moby/extensions\tv0.0.0-20260828112943-dd7ba219688d\t"
+      ],
+      "c_compiler_strings": [
+        "GCC: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+      ],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/bin/runc",
+      "size_bytes": 10060176,
+      "sha256": "61773e24d3b6b5e1f1d89b9440959cfe1b016df2d95d8342f3cab591fbe6e941",
+      "shared_libraries": [
+        "libseccomp.so.2",
+        "libc.so.6"
+      ],
+      "has_dynamic_section": true,
+      "go_versions": [
+        "go1.26.8"
+      ],
+      "embedded_revision_lines": [
+        "build\tvcs.modified=false",
+        "build\tvcs.revision=8f2685a471d3347a686ad3909783d8aafc6bb208",
+        "build\tvcs.time=2026-07-14T00:24:41Z",
+        "build\tvcs=git"
+      ],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/libexec/docker/cli-plugins/docker-buildx",
+      "size_bytes": 73054565,
+      "sha256": "3e6dcf88055ca9e59013376bf989c221b76c557460f1d47175aeb14a0e98c93c",
+      "shared_libraries": [],
+      "has_dynamic_section": false,
+      "go_versions": [
+        "go1.26.8"
+      ],
+      "embedded_revision_lines": [
+        "build\tvcs.modified=false",
+        "build\tvcs.revision=0b265a9f62db554fa9aba6dd19e1bd5704bc7d8a",
+        "build\tvcs.time=2026-09-11T14:50:10Z",
+        "build\tvcs=git"
+      ],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/libexec/docker/cli-plugins/docker-compose",
+      "size_bytes": 32333754,
+      "sha256": "9c0f3f21b463fbdd42afed3be203c1a65f0cd440c9b59c68785f35e78d2ebf6a",
+      "shared_libraries": [],
+      "has_dynamic_section": false,
+      "go_versions": [
+        "go1.26.6"
+      ],
+      "embedded_revision_lines": [
+        "build\tvcs.modified=false",
+        "build\tvcs.revision=5f94fb0aa42a2cd1248c6e6c7fafb87546b9c8de",
+        "build\tvcs.time=2026-09-03T15:28:21Z",
+        "build\tvcs=git"
+      ],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [],
+      "tini_version_strings": []
+    },
+    {
+      "path": "usr/libexec/docker/docker-init",
+      "size_bytes": 765072,
+      "sha256": "104be88d3f78cb38d41bab2af1a86d984f426293f0e21d5c889f8961607bf659",
+      "shared_libraries": [],
+      "has_dynamic_section": false,
+      "go_versions": [],
+      "embedded_revision_lines": [],
+      "extension_module_metadata": [],
+      "c_compiler_strings": [
+        "GCC: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+      ],
+      "tini_version_strings": [
+        "tini version 0.19.0 - git.de40ad0"
+      ]
+    }
+  ],
+  "distribution_approved": false,
+  "limitations": [
+    "ELF linkage and build metadata are observations, not proof of every input used in upstream compilation.",
+    "Static docker-init has tini 0.19.0 git.de40ad0 and Ubuntu GCC 13.3.0 metadata; the exact embedded C library revision and relinking/build inputs have not been established."
+  ]
+}

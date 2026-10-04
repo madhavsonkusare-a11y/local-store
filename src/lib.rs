@@ -13,6 +13,7 @@ pub mod brand;
 pub mod catalog;
 mod catalog_schema;
 pub mod commands;
+pub mod engine_removal;
 pub mod engine_setup;
 pub mod error;
 pub mod folders;

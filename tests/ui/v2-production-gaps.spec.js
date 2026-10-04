@@ -25,7 +25,7 @@ test('deleting managed data requires the exact selected app name', async ({page}
 test('Overview recent activity reflects a real request and links to session history', async ({page}) => {
   await installAdapter(page); await page.goto('/');
   await page.getByRole('button',{name:/My Apps/}).click();
-  await page.locator('.installed-app').getByRole('button',{name:'Open',exact:true}).click();
+  await page.locator('#my-apps-detail').getByRole('button',{name:'Open',exact:true}).click();
   await page.getByRole('button',{name:'Overview',exact:true}).click();
   await expect(page.locator('#overview-recent-rows')).toContainText('Open');
   await expect(page.locator('#overview-recent-rows')).toContainText('Studio notes');

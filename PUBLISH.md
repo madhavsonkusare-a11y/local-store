@@ -107,18 +107,26 @@ New-Item -ItemType Directory -Force binaries | Out-Null
 Copy-Item -LiteralPath "target/x86_64-pc-windows-msvc/release/local-store-mcp.exe" -Destination "binaries/local-store-mcp-x86_64-pc-windows-msvc.exe"
 cargo tauri build --target x86_64-pc-windows-msvc --ci --config tauri.mcp-release.conf.json --bundles nsis
 python scripts/check-local-windows-build.py --build-dir target/x86_64-pc-windows-msvc/release
+python scripts/check-packaged-notices.py --resource-dir target/x86_64-pc-windows-msvc/release
 ```
 
 The installer is under `target/x86_64-pc-windows-msvc/release/bundle/nsis/`.
 The September 29 personal copy and its checksum are in the ignored
 `dist/local-preview/` folder; rebuilding or cleaning `target/` does not remove
 that copy.
-The local preview currently needs Docker Desktop or an already configured
-Local Store WSL engine; the reproducible bundled-engine payload, setup consent
-and clean-machine bootstrap are still open work. Do not present this preview as
+The retained September 29 preview predates the current managed-engine setup
+and agent work. Current source implements explicit consent, retry/repair and
+owned WSL selection for the development payload. The rootfs distribution,
+complete current native flows and clean-machine bootstrap acceptance remain open.
+New installs require the selected owned engine; Docker Desktop is not a
+prerequisite for current managed-engine proofs. Do not present this preview as
 one-click setup on a fresh PC. Windows may warn because it is unsigned. The
 post-build check runs the actual launcher with `--version` and refuses the
 wrong Cargo binary, a regression found on September 29.
+
+For the separate owner CLI empty-engine removal controls and safety/refusal
+contract, see [engine removal](docs/evidence/windows-engine-removal-check.md).
+This does not certify current installer removal or clean Windows acceptance.
 
 ## Code signing and updates (later distribution)
 

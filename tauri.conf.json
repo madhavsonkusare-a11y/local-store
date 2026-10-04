@@ -84,7 +84,10 @@
       "catalog/icons.json",
       "src/assets/apps/LICENSE",
       "src/assets/LUCIDE-LICENSE",
-      "src/fonts/OFL.txt"
+      "src/fonts/OFL.txt",
+      "LICENSE",
+      "src/fonts/InstrumentSans-OFL.txt",
+      "src/fonts/IBMPlex-OFL.txt"
     ],
     "active": true,
     "targets": "all",

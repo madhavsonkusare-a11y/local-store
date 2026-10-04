@@ -1,6 +1,6 @@
 # Development engine payload
 
-E01 implementation checkpoint, updated October 2, 2026. This is a buildable Linux
+E01 implementation checkpoint, updated October 3, 2026. This is a buildable Linux
 rootfs for the future managed WSL2 engine, not a shipping installer.
 
 ```text
@@ -12,6 +12,13 @@ python scripts/build-engine-payload.py --build --managed-engine
 python scripts/verify-engine-provenance.py --fetch-docker --fetch-base
 python scripts/verify-engine-provenance.py
 python scripts/test_engine_provenance.py
+python scripts/build-engine-source-companion.py --fetch-indexes --plan-only
+python scripts/build-engine-source-companion.py --fetch-sources
+python scripts/collect-engine-upstream-notices.py --fetch
+python scripts/collect-engine-module-notices.py --fetch
+python scripts/inspect-engine-source-mapping.py
+python scripts/package-engine-source-companion.py
+python scripts/test_engine_source_companion.py
 ```
 
 The validation and test commands are offline. `--inspect-inventory` uses Docker
@@ -119,16 +126,25 @@ Three [targeted boundary checks](../docs/evidence/engine-provenance-boundary-202
 accept genuine signed metadata, reject altered signed cleartext and reject a
 valid signature whose primary key is outside the reviewed Ubuntu trust anchors.
 
-The [notice and source review](../docs/evidence/engine-provenance-review-2026-10-02.md)
-finds copyright files for 134 of 138 installed packages after resolving Debian
-documentation symlinks. Four Docker components lack these packaged files; their
-upstream notices still need collection and review. Full common license texts
-are in the rootfs, but the separate notices tar only retains `/usr/share/doc`.
-The inventory identifies 93 provisional source/version pairs; it does not bundle
-corresponding source or establish source fulfillment. Complete notices, reviewed
-source delivery, retained provenance and reproducible-build limitations remain
-E01 distribution gates. These gaps do not prevent publishing the project's own
-source-only GitHub release.
+The [October 3 source companion](../docs/evidence/engine-companion-bundle-2026-10-03.json)
+retains all 89 exact Ubuntu source/version identities in 282 signed-index-verified
+artifacts, nine exact upstream source archives and 120 checksum-verified module
+archives. Its 1,423 preserved notice files include the 134 packaged copyright
+resolutions, all 14 common license texts and Docker upstream/dependency notices.
+Standalone source and notices companions plus readable notices are retained in
+the ignored cache; public receipts record their hashes, lengths and exact origins.
+[Source delivery instructions](SOURCE_DELIVERY.md) document repeatable offline
+verification, extraction/build directions, ownership and access retention.
+
+Two concrete upstream gates remain. Retained `dockerd` links the exact Moby
+extensions source which provides no license grant metadata. The static
+`docker-init` helper lacks an established exact embedded C-library source revision
+and relinking/build inputs. Their source archives and observed binary metadata
+are preserved without inferring permission or matching missing build material.
+Engine binary distribution also requires equivalent public access to the finished
+notices/applicable sources and authenticated release metadata; local retention does
+not publish that route. The current payload remains unapproved and unchanged.
+These engine gates do not prevent the project's own source-only GitHub milestone.
 
 V1's proposed host floor is Windows 11 x64 with supported WSL2; the tested local
 host has Windows build 26200.9445, WSL 2.6.3.0 and kernel 6.6.87.2. Those numbers

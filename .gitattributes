@@ -32,11 +32,22 @@ providers/privatebin/runner.mjs text eol=lf
 # Engine proof and checkpoint hashes cover the reviewed source bytes.
 scripts/check-fresh-engine.py text eol=lf
 scripts/check-managed-supervisor.py text eol=lf
+scripts/check-engine-restart.py text eol=lf
 scripts/verify-engine-provenance.py text eol=lf
 scripts/test_engine_provenance.py text eol=lf
 src/runtime/engine/wsl/supervisor.rs text eol=lf
 src/runtime/engine/wsl/supervisor/windows_process.rs text eol=lf
 src/cli.rs text eol=lf
+src/engine_removal.rs text eol=lf
+src/engine_removal/*.rs text eol=lf
+# Dependency attribution records checksum the original retained source bytes.
+catalog/notices/rust/** -text
+# Original upstream license whitespace is attribution data, not authored code.
+catalog/notices/rust/NOTICES.txt -whitespace
+catalog/notices/rust/upstream/** -whitespace
+# The capture exception fingerprints the exact tested harness bytes.
+tests/ui/v2-local-acceptance.spec.js -text
+tests/ui/raster-comparison.js -text
 docs/evidence/engine-packages-*.tsv text eol=lf
 *.svg text eol=lf
 # Upstream icon checksums cover the exact downloaded bytes, including newlines.

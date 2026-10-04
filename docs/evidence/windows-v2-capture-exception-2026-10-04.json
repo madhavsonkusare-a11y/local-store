@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-04",
+  "scope": "Local Chromium composition only; no native WebView or clean-machine claim",
+  "command": "npx playwright test tests/ui/v2-local-acceptance.spec.js --workers=1 --grep 'my-apps 1440x900|activity 1440x900|settings 1280x800' --reporter=line",
+  "tests": 3,
+  "passed": 0,
+  "failed": 3,
+  "settling": "document.fonts.ready, visible image decode, bounded 1000ms wait for finite document.getAnimations().finished, two animation frames; screenshot animations disabled and caret hidden",
+  "geometry_includes": "status-dot inner geometry, background, font and box shadow",
+  "results": [
+    {
+      "route": "my-apps",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "geometry_equal": true,
+      "external_requests": 0,
+      "asset_errors": 0,
+      "axe_violations": 0,
+      "overflow": false,
+      "keyboard_navigation_pass": true,
+      "png_byte_identical": false,
+      "changed_pixels": 107,
+      "max_channel_delta": 3,
+      "difference_bounds": [
+        29,
+        234,
+        45,
+        857
+      ],
+      "captures": [
+        {
+          "path": ".cache/v2-local-my-apps-1440-900-0.png",
+          "sha256": "1628e0c9b2b42a3cbc723bf06c625ec2359998fc06d41398637f25aede22d758"
+        },
+        {
+          "path": ".cache/v2-local-my-apps-1440-900-1.png",
+          "sha256": "95dfa8ffff2f46eb34353bb43002d16935d1dc90e4732813d87b56f618e0039e"
+        }
+      ]
+    },
+    {
+      "route": "activity",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scale": 1
+      },
+      "geometry_equal": true,
+      "external_requests": 0,
+      "asset_errors": 0,
+      "axe_violations": 0,
+      "overflow": false,
+      "keyboard_navigation_pass": true,
+      "png_byte_identical": false,
+      "changed_pixels": 102,
+      "max_channel_delta": 1,
+      "difference_bounds": [
+        30,
+        279,
+        45,
+        294
+      ],
+      "captures": [
+        {
+          "path": ".cache/v2-local-activity-1440-900-0.png",
+          "sha256": "1e97e8c7b0c2a6358ccebc1073f44e86fb8b24ca6272f847b51343c8163ee05c"
+        },
+        {
+          "path": ".cache/v2-local-activity-1440-900-1.png",
+          "sha256": "b3ae293d5c2f58b0bafecb196131ee294c11fa690b90d65cb036dabcf205aff2"
+        }
+      ]
+    },
+    {
+      "route": "settings",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "scale": 1
+      },
+      "geometry_equal": true,
+      "external_requests": 0,
+      "asset_errors": 0,
+      "axe_violations": 0,
+      "overflow": false,
+      "keyboard_navigation_pass": true,
+      "png_byte_identical": false,
+      "changed_pixels": 114,
+      "max_channel_delta": 6,
+      "difference_bounds": [
+        11,
+        612,
+        45,
+        631
+      ],
+      "captures": [
+        {
+          "path": ".cache/v2-local-settings-1280-800-0.png",
+          "sha256": "fe8b2f5d00dc660538e846de5d09f9cb7b83b8a3c188992da23de352023463a2"
+        },
+        {
+          "path": ".cache/v2-local-settings-1280-800-1.png",
+          "sha256": "8950d3c48ecf41b412af556a50f563d3e982c748955e10f3c3c3de2af9997ad5"
+        }
+      ]
+    }
+  ],
+  "conclusion": "Geometry, accessibility, local assets and keyboard checks pass. Byte-identical PNG acceptance remains unmet. Small differences are concentrated on sidebar icon edges and selected marker; no concrete application state or lifecycle cause was isolated in the bounded investigation. F03 remains PARTIAL. No tolerance waiver, masking, frozen handoff edit or broad suite rerun.",
+  "source_inputs": [
+    {
+      "path": "tests/ui/v2-local-acceptance.spec.js",
+      "sha256": "f745639a37836cf30d529649ae0a54a90518e406beb90e2b2bdb41fa435187fd"
+    },
+    {
+      "path": "tests/ui/raster-comparison.js",
+      "sha256": "b97cbf1a1f1e038a97430a58d245ccc5494ecbda9bed2012210594fc01b9d589"
+    }
+  ]
+}

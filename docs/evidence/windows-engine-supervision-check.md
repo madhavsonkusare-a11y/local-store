@@ -20,8 +20,31 @@ service nor login autostart is installed.
 - Launcher startup is serialized. It waits for its exact child to acknowledge
   ownership. Failed Windows job breakaway, early exit and a 35-second startup
   deadline are explicit failures; no lifetime guarantee is fabricated.
+- Concurrent callers now wait up to 35 seconds for the same owned worker,
+  checking selection again before accepting fresh status or acquiring the lock.
+  The October 3 actual restart check exposed the former transient refusal and
+  passes after this bounded wait was added.
 - Stop/revocation releases only the worker's exact WSL stdin helper. No daemon,
   container, other distribution or global Docker context is altered.
+
+## October 3 local restart and crash check
+
+`python scripts/check-engine-restart.py --run` uses a private profile containing
+only copied verified ownership/selection. The actual launcher explicitly stops
+its fixture worker. A worker created through the proof's own process handle is
+then acknowledged and crashed; three simultaneous launcher diagnostics recover
+one fresh singleton. Only the proof-created child handle is terminated; external
+PIDs from diagnostic files are never used as termination authority. Final
+fixture-selection revocation stops the new worker. Native ownership files and
+all existing container identities/start times remain unchanged.
+
+[Actual receipt](windows-engine-restart-2026-10-03.json) records the launcher,
+proof script, subprocess helper and supervisor-source SHA-256 values. The host
+had zero existing containers, so this does not add a running-app workload proof.
+It supplements the earlier 95-second idle/CLI-exit proof. Native WebView close,
+Windows sleep/wake and literal fixed-name clean-host bootstrap/removal remain
+separate acceptance. No host sleep, reboot, feature change or production-engine
+unregistration occurred.
 
 ## Verification status
 

@@ -112,3 +112,50 @@ h1 { letter-spacing:var(--v2-tracking-display); }
 
 .page-heading .intro { display:block; }
 .breadcrumb strong { color:var(--v2-text-secondary); }
+
+/* Rail status and loading geometry from the approved composition. */
+.environment-card { width:100%; min-height:61px; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:var(--v2-space-3); margin-top:var(--v2-space-3); padding:var(--v2-space-3); border:1px solid var(--v2-border-soft); border-radius:var(--v2-radius-md); background:rgb(255 247 239 / 2%); color:var(--v2-text-primary); text-align:left; }
+.environment-copy { min-width:0; display:grid; line-height:1.25; }
+.environment-card strong { font-size:var(--v2-type-caption); font-weight:600; }
+.environment-card small { margin-top:3px; color:var(--v2-text-tertiary); font:var(--v2-type-mono)/1.2 var(--v2-font-mono); overflow-wrap:anywhere; }
+.environment-card > img { width:14px; height:14px; opacity:.6; }
+.environment-card .status-dot { width:7px; height:7px; border-radius:50%; background:var(--v2-text-tertiary); }
+.environment-card[data-tone="success"] .status-dot { background:var(--v2-state-success); }
+.environment-card[data-tone="warning"] .status-dot { background:var(--v2-state-warning); }
+.environment-card:hover { border-color:var(--v2-border-default); background:var(--v2-surface-hover); }
+.topbar { border-bottom-color:var(--v2-border-soft); }
+.toolbar { gap:var(--v2-space-3); padding-top:var(--v2-space-5); margin-bottom:var(--v2-space-4); }
+.production-loading > p { color:var(--v2-text-tertiary); font-size:var(--v2-type-body-sm); margin-bottom:var(--v2-space-4); }
+.skeleton-row .skeleton { min-height:110px; }
+.loading-body { min-height:220px; }
+.app-row-skeleton { display:grid; grid-template-columns:44px minmax(0,1fr); align-items:center; gap:var(--v2-space-3); min-height:68px; padding:var(--v2-space-3); }
+.app-row-skeleton i, .app-row-skeleton span, .detail-head-skeleton, .detail-tabs-skeleton, .detail-body-skeleton { display:block; border-radius:var(--v2-radius-sm); background:var(--v2-surface-elevated); }
+.app-row-skeleton i { width:44px; height:44px; border-radius:var(--v2-radius-icon-md); }
+.app-row-skeleton span { width:74%; height:12px; }
+.detail-head-skeleton { width:46%; height:64px; margin-bottom:var(--v2-space-8); }
+.detail-tabs-skeleton { width:250px; height:44px; margin-bottom:var(--v2-space-6); }
+.detail-body-skeleton { width:100%; height:286px; }
+.install-loading-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(250px,.4fr); gap:var(--v2-space-4); }
+.install-review-skeleton { min-height:330px; }
+#engine-output .skeleton.hero { min-height:74px; }
+#engine-output .skeleton-row, #engine-output .loading-body { display:none; }
+
+.my-apps-layout .status { font-size:var(--v2-type-caption); }
+.my-apps-layout .installed-title { flex-wrap:nowrap; }
+.my-apps-layout .installed-title strong { min-width:0; white-space:nowrap; }
+.my-apps-layout .installed-title .status { flex-shrink:0; }
+.my-apps-detail-head { flex-wrap:wrap; }
+.my-apps-detail-head > div:not(.installed-actions) { flex:1; min-width:0; }
+.my-apps-detail-head .installed-actions { width:100%; margin:0; flex-wrap:wrap; justify-content:flex-end; }
+.my-apps-detail .installed-actions button { font-size:var(--v2-type-body-sm); }
+
+/* Reading sizes and route-heading focus match the approved screen contract. */
+#results-count, #page-label, .discovery-note strong, .discovery-note p, .workspace-footer, #engine-output p { font-size:var(--v2-type-caption); }
+#connect-note { font-size:var(--v2-type-body-sm); }
+.page-heading h1:focus, .overview-heading h1:focus, #settings-title:focus { outline:none; }
+
+.logs-loading { min-height:330px; display:grid; align-content:start; gap:var(--v2-space-3); padding:var(--v2-space-5); border:1px solid var(--v2-border-default); border-radius:var(--v2-radius-md); background:var(--v2-surface-log); }
+.log-skeleton { width:88%; height:11px; border-radius:var(--v2-radius-xs); background:rgb(255 255 255 / 7%); }
+.log-skeleton.short { width:52%; }
+.log-skeleton.medium { width:70%; }
+.my-apps-detail-head .installed-actions { width:auto; margin-left:auto; flex:0 0 auto; }

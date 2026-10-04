@@ -22,11 +22,11 @@ test('live readiness changes without replacing the row or disturbing focus', asy
   await page.getByRole('button', {name:'My Apps'}).click();
   const row = page.locator('.installed-app[data-app-id="notes"]');
   await expect(row.locator('.status')).toHaveText('ready');
-  await row.getByRole('button', {name:'Open', exact:true}).focus();
+  await page.locator('#my-apps-detail').getByRole('button', {name:'Open', exact:true}).focus();
   await page.evaluate(() => { window.__row = document.querySelector('.installed-app'); window.__answer = 'unreachable'; });
   await page.clock.fastForward(16000);
   await expect(row.locator('.status')).toHaveText('not responding');
-  await expect(row.getByRole('button', {name:'Open', exact:true})).toBeFocused();
+  await expect(page.locator('#my-apps-detail').getByRole('button', {name:'Open', exact:true})).toBeFocused();
   expect(await page.evaluate(() => window.__row === document.querySelector('.installed-app'))).toBe(true);
   await page.evaluate(() => { window.__answer = 'unknown'; });
   await page.clock.fastForward(16000);

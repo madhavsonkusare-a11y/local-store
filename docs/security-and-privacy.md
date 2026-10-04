@@ -22,7 +22,7 @@ These actions also involve the network:
 
 | Action | What happens |
 | --- | --- |
-| Installing a reviewed recipe | The selected Docker engine pulls pinned images from their registries. The development managed engine imports a reviewed local rootfs; a complete fresh-PC setup flow remains unfinished. |
+| Installing a reviewed recipe | The selected Docker engine pulls pinned images from their registries. The development managed engine imports an exact-hash local rootfs after explicit setup consent; prerequisite and clean-PC acceptance remain unfinished. |
 | Opt-in GitHub source inspection | The Rust backend contacts GitHub's public API to inspect the requested repository and pin metadata. This does not approve installation or run repository code. |
 | Opening a link that leaves an app | The URL is handed to your default browser, which then does whatever it normally does. |
 | Checking an address | A single TCP connection and one plain HTTP request to the address you typed. |
@@ -50,10 +50,27 @@ contains 1,678 entries, each with a local icon or generated monogram.
 - **Browser data** — the platform WebView may retain cookies, caches and web
   storage in its browser profile. Removing a connection deletes its registry
   entry; it does not clear that browser profile or the remote server's data.
-- **Agent policy** — `agent-policy-v1.json` under the Local Store configuration
-  directory contains owner-enrolled credential hashes, scoped grants and bounded
-  redacted audit. Raw bearer credentials are returned at enrollment and must be
-  kept by the owner/client; the policy store does not retain their plaintext.
+- **Agent identity and policy** — `agent-clients-v1.json` holds enrolled client
+  credential hashes; `agent-policy-v1.json` holds exact client/app/action grants
+  and bounded audit metadata. `agent-requests-v1.json` holds reviewed lifecycle
+  request identities and hashes. Raw bearer credentials are returned during
+  explicit enrollment/manual configuration export and must be kept privately by
+  the owner/client. Audit excludes credentials, tool arguments and app content.
+- **App content connections** — app tokens/login credentials and PrivateBin
+  connection-created fragment keys are protected with Windows current-user
+  DPAPI. This does not encrypt ordinary app data or the Compose secrets above.
+  Connecting an app grants no client permission; replacing or disconnecting its
+  credentials invalidates earlier content grants.
+- **Protected backups** — snapshots include consistent owned app storage and
+  generated credentials, encrypted with Windows current-user DPAPI. Plaintext
+  staging is removed. These snapshots are intended for recovery under the same
+  Windows account, not portable disaster recovery after losing that account.
+  DPAPI normally requires the same logon identity and computer; Windows roaming
+  profile exceptions do not establish a supported migration route. See
+  [Microsoft DPAPI documentation](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata).
+- **Owned engine state** — setup/selection journals, ownership identity and
+  the imported WSL filesystem are retained separately from individual apps.
+  Uninstalling an app does not remove that shared engine or unrelated workloads.
 - **OS integration** — protocol registrations and requested desktop shortcuts
   are stored by the operating system. Docker also maintains its own images,
   containers and volumes outside the registry directory.
@@ -97,8 +114,30 @@ Each of these is a deliberate boundary with a test behind it.
   most 256 KiB per stream. On timeout or cancellation the process tree Local
   Store created is terminated — never your Docker daemon or unrelated
   containers, which are not in that tree.
-- **Dependency licences are checked.** The build fails if any resolved Rust
-  dependencies cannot be redistributed under a permissive licence.
+- **Agent calls require exact live permission.** Owner enrollment, app connection
+  and client grants are separate actions. Stdio MCP authenticates every call;
+  reads/start/stop require the exact current grant. Supported writes and
+  install/uninstall requests require exact, expiring, one-use owner approval.
+  App content is returned as data and cannot issue owner permission commands.
+  See the [ten-app action/setup matrix](evidence/launch-agent-coverage-2026-10-02.md).
+- **Content requests stay bounded.** Credential-based providers require the
+  exact installed loopback address, fixed methods and bounded responses; they
+  refuse arbitrary URLs and redirects. Flatnotes allows explicit ordinary
+  Markdown reads only. PrivateBin uses a pinned non-root sandboxed browser
+  without network access; browser runtime distribution review remains separate.
+- **Engine changes require ownership and consent.** New installs need the
+  explicitly selected owned WSL engine and fresh journal/token/daemon checks.
+  Bootstrap, retry and repair refuse uncertain ownership; supervisor stop does
+  not invoke global WSL shutdown, change Docker contexts or terminate unrelated
+  containers. Prerequisite changes can still require elevation or restart.
+- **Protocol activation is bounded.** `localstore://open/<app-id>` (and the
+  legacy `dockwrap` scheme) resolves an existing registry entry and validates its
+  saved URL. Credentials, extra arguments, query/fragment and traversal are
+  refused. Desktop shortcuts contain a validated protocol URL, not shell code.
+- **Dependency licence expressions are checked.** The check accepts declared
+  permissive choices and unmodified MPL-2.0 dependencies. SPDX acceptance alone
+  does not establish complete copyright/NOTICE or source-delivery fulfillment;
+  those are reviewed separately in [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 ## What this does not protect you from
 
@@ -122,12 +161,28 @@ Each of these is a deliberate boundary with a test behind it.
   a security boundary against another process running as the same user.
 - **Native privilege review is incomplete.** The Windows release-image smoke
   test proves denial of four launcher commands from a remote page. It does not
-  certify complete agent access or every approved V2 flow; macOS and Linux native proof
+  certify every native agent/V2 flow; macOS and Linux native proof
   remains outside the Windows release target.
 - **Installer evidence is version-specific.** A clean Windows installer
-  run is recorded in `evidence/windows-installer-2026-09-08.json`. The future
-  Windows engine setup, complete V2 flows and agent access still need their own
-  product release proof; updates are later scope.
+  run is recorded in `evidence/windows-installer-2026-09-08.json`. Current engine consent/repair and ten-app agent access have separate existing-host
+  proofs, while complete native V2 flows, clean setup and current installer
+  acceptance remain open; updates are later scope.
+
+## Support and recovery limits
+
+Windows x64 is the active product target. The public V1 release contains source
+only; an unsigned personal preview does not establish fresh-PC support. The
+current catalog offers 53 reviewed definitions, but only the selected ten have
+current launch-task and agent-content proof. Linkding has separate candidate
+app-task proof and no verified content provider. Other offerings do not inherit
+these claims. App licenses, remote effects and upstream authentication remain
+app-specific; Kanboard requires changing its known initial administrator password.
+
+Keep-data reinstall preserves owned data; it is not an app-version rollback.
+Protected backup has real Memos/Gitea storage/credential restore proof, refuses
+shared host folders and occupied targets, and cannot undo email, external service
+changes or every app action. Review [support guidance](support.md) before sharing
+diagnostics or performing recovery.
 
 ## Reporting a vulnerability
 

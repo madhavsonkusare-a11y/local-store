@@ -38,7 +38,7 @@ pub(crate) fn ensure_console() {
 pub(crate) fn ensure_console() {}
 
 fn usage() -> String {
-    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair|setup-preview|supervisor-status|stop-supervisor\n  {CLI_NAME} engine use-self-engine --consent\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} agent-client list|enroll <id>|revoke <id>\n  {CLI_NAME} agent-grant status <client-id> <installed-app-id> --hours <1..720>\n  {CLI_NAME} agent-grant lifecycle <client-id> <installed-app-id> --hours <1..24>\n  {CLI_NAME} agent-grant revoke <client-id> <app-id>\n  {CLI_NAME} version")
+    format!("Usage:\n  {CLI_NAME} add <name> --url <url>\n  {CLI_NAME} list\n  {CLI_NAME} open <id-or-name> [--browser]\n  {CLI_NAME} shortcut <id-or-name>\n  {CLI_NAME} remove <id-or-name>\n  {CLI_NAME} doctor [--json]\n  {CLI_NAME} engine status|repair|setup-preview|supervisor-status|stop-supervisor\n  {CLI_NAME} engine use-self-engine --consent\n  {CLI_NAME} engine removal-preview\n  {CLI_NAME} engine remove --consent --confirm local-store-engine-v1\n  {CLI_NAME} recovery [--json] [--docker]\n  {CLI_NAME} recover <recipe-id> [--delete-data]\n  {CLI_NAME} adopt <recipe-id>\n  {CLI_NAME} bind-engine <id-or-name>\n  {CLI_NAME} install <recipe-id>\n  {CLI_NAME} recipes\n  {CLI_NAME} start|stop|status|logs <id-or-name>\n  {CLI_NAME} uninstall <id-or-name> [--delete-data]\n  {CLI_NAME} catalog [search words] [options] (see catalog --help)\n  {CLI_NAME} agent-client list|enroll <id>|revoke <id>\n  {CLI_NAME} agent-grant status <client-id> <installed-app-id> --hours <1..720>\n  {CLI_NAME} agent-grant lifecycle <client-id> <installed-app-id> --hours <1..24>\n  {CLI_NAME} agent-grant revoke <client-id> <app-id>\n  {CLI_NAME} version")
 }
 fn get_flag(args: &[String], flag: &str) -> Option<String> {
     args.iter()
@@ -355,6 +355,19 @@ pub fn run_cli() -> i32 {
                     1
                 }
             },
+            Some("removal-preview") => match local_store::engine_removal::preview(&runtime::SystemProcessRunner) {
+                Ok(preview) => match serde_json::to_string_pretty(&preview) {
+                    Ok(json) => emit(&format!("{json}\n")).err().unwrap_or(0),
+                    Err(error) => { eprintln!("{error}"); 1 }
+                },
+                Err(error) => { eprintln!("{error}"); 1 }
+            },
+            Some("remove") => report(
+                local_store::engine_removal::execute(&runtime::SystemProcessRunner,
+                    get_flag(&args, "--confirm").as_deref().unwrap_or_default(),
+                    args.iter().any(|arg| arg == "--consent")),
+                "The verified empty Local Store engine was removed. External app connections were preserved.",
+            ),
             Some("setup-preview") => {
                 let result = std::env::current_exe()
                     .map_err(AppError::from)
@@ -448,7 +461,7 @@ pub fn run_cli() -> i32 {
                 }
             }
             _ => {
-                eprintln!("Usage: {CLI_NAME} engine status|repair|setup-preview|supervisor-status|stop-supervisor, or engine use-self-engine --consent");
+                eprintln!("Usage: {CLI_NAME} engine status|repair|setup-preview|supervisor-status|stop-supervisor|removal-preview, engine use-self-engine --consent, or engine remove --consent --confirm local-store-engine-v1");
                 2
             }
         },
@@ -801,6 +814,13 @@ fn normalize_action_args(args: Vec<String>) -> Result<Vec<String>, String> {
         "engine" if parser.contains("--consent") => Some("--consent"),
         _ => None,
     };
+    let confirmation: Option<String> = if command == "engine" {
+        parser
+            .opt_value_from_str("--confirm")
+            .map_err(|e| format!("engine --confirm: {e}"))?
+    } else {
+        None
+    };
     let remaining = parser.finish();
     let required = !["list", "recipes", "version", "--version", "-V"].contains(&command.as_str());
     if remaining.len() != usize::from(required) {
@@ -826,12 +846,18 @@ fn normalize_action_args(args: Vec<String>) -> Result<Vec<String>, String> {
             "supervise",
             "supervisor-status",
             "stop-supervisor",
+            "removal-preview",
+            "remove",
         ]
         .contains(&action)
-            || (action == "use-self-engine") != (flag == Some("--consent"))
+            || matches!(action, "use-self-engine" | "remove") != (flag == Some("--consent"))
+            || (action == "remove") != confirmation.is_some()
+            || confirmation
+                .as_deref()
+                .is_some_and(|value| value != runtime::engine::wsl::DISTRO)
         {
             return Err(
-                "Use engine status|repair|setup-preview|supervisor-status|stop-supervisor, or engine use-self-engine --consent."
+                "Use engine status|repair|setup-preview|supervisor-status|stop-supervisor|removal-preview, engine use-self-engine --consent, or engine remove --consent --confirm local-store-engine-v1."
                     .into(),
             );
         }
@@ -839,6 +865,9 @@ fn normalize_action_args(args: Vec<String>) -> Result<Vec<String>, String> {
     if let Some(url) = url {
         // Validate before loading or migrating the registry.
         normalized.extend(["--url".into(), windowing::validated_external_url(&url)?]);
+    }
+    if let Some(confirmation) = confirmation {
+        normalized.extend(["--confirm".into(), confirmation]);
     }
     if let Some(flag) = flag {
         normalized.push(flag.into());
@@ -894,6 +923,59 @@ mod tests {
                 "https://example.com",
                 "--url",
                 "https://other.com",
+            ],
+        ] {
+            assert!(
+                normalize_action_args(args(&values)).is_err(),
+                "accepted {values:?}"
+            );
+        }
+    }
+    #[test]
+    fn engine_removal_parser_requires_exact_owner_confirmation() {
+        let args = |values: &[&str]| values.iter().map(|v| (*v).to_owned()).collect();
+        assert_eq!(
+            normalize_action_args(args(&[
+                "engine",
+                "remove",
+                "--consent",
+                "--confirm",
+                "local-store-engine-v1"
+            ]))
+            .unwrap(),
+            args(&[
+                "engine",
+                "remove",
+                "--confirm",
+                "local-store-engine-v1",
+                "--consent"
+            ])
+        );
+        assert!(normalize_action_args(args(&["engine", "removal-preview"])).is_ok());
+        for values in [
+            vec!["engine", "remove"],
+            vec!["engine", "remove", "--consent"],
+            vec!["engine", "remove", "--confirm", "local-store-engine-v1"],
+            vec![
+                "engine",
+                "remove",
+                "--consent",
+                "--confirm",
+                "docker-desktop",
+            ],
+            vec![
+                "engine",
+                "removal-preview",
+                "--confirm",
+                "local-store-engine-v1",
+            ],
+            vec![
+                "engine",
+                "remove",
+                "--consent",
+                "--confirm",
+                "local-store-engine-v1",
+                "--force",
             ],
         ] {
             assert!(

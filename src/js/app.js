@@ -1,3 +1,5 @@
+import {publishEngineStatus, refreshRailEngine} from './rail-engine.js';
+import {loadingComposition} from './loading-composition.js';
 import './v2-primitives.js';
 import { invoke, listenOperations, listenBrowserFailures, listenActivationFailures } from './api.js';
 import { createOperations, operationLabel, diagnosticText, installStageLabel, canCancel, retryIsUnsafe } from './operations.js';
@@ -81,7 +83,7 @@ function paintOperations() {
     status.classList.toggle('status-busy', busy);
     status.classList.toggle('status-unreachable', !busy && settled === 'unreachable');
     status.classList.toggle('status-ready', !busy && settled === 'ready');
-    row.querySelector('.installed-actions').setAttribute('aria-busy', String(busy));
+
     row.querySelectorAll('.installed-actions button:not([data-logs])').forEach(button => {
       if (busy) button.setAttribute('aria-disabled', 'true');
       else button.removeAttribute('aria-disabled');
@@ -91,7 +93,7 @@ function paintOperations() {
     const text = diagnosticText(entry?.error || (!busy && app?.status_error));
     if (diagnostic.textContent !== text) diagnostic.textContent = text;
   });
-  const detailActions = document.querySelector('.my-apps-manage .installed-actions');
+  const detailActions = document.querySelector('#my-apps-detail .installed-actions');
   if (detailActions) {
     const busy = Boolean(operations.get(selectedAppId)?.pending);
     detailActions.setAttribute('aria-busy', String(busy));
@@ -142,8 +144,9 @@ async function render(append = false) {
     }
     $('results-count').textContent = `${state.visibleApps.length} ${state.visibleApps.length === 1 ? 'app' : 'apps'}`;
     const focused = document.activeElement;
-    const focusedId = focused?.closest('.installed-app')?.dataset.appId;
+    const focusedId = focused?.closest('[data-app-id]')?.dataset.appId;
     const focusedAction = focusedId && Object.keys(focused.dataset)[0];
+    const focusedInDetail = Boolean(focused?.closest('#my-apps-detail'));
     const focusedIndex = [...document.querySelectorAll('.installed-app')].findIndex(row => row.dataset.appId === focusedId);
     $('content').innerHTML = state.visibleApps.length
       ? `${refreshError ? `<p class="my-apps-refresh-error" role="alert">App refresh failed. Showing the last loaded records. <button class="text-button" data-action="retry">Try again</button></p>` : ''}<div class="my-apps-layout"><div class="installed-list" role="group" aria-label="Saved apps">${state.visibleApps.map((app, index) => installedRow(app, index, app.id === selectedAppId)).join('')}</div><aside id="my-apps-detail" class="my-apps-detail" aria-label="Selected app details">${selectedDetail(state.visibleApps.find(app => app.id === selectedAppId), detailTab, detailLog)}</aside></div>`
@@ -152,14 +155,14 @@ async function render(append = false) {
     if (focusedId) {
       const rows = [...document.querySelectorAll('.installed-app')];
       const row = rows.find(row => row.dataset.appId === focusedId) || rows[Math.min(focusedIndex, rows.length - 1)];
-      (row?.querySelector(`[data-${focusedAction}]`) || row?.querySelector('.primary') ||
+      ((focusedInDetail ? $('my-apps-detail')?.querySelector(`[data-${focusedAction}]`) || $('my-apps-detail')?.querySelector('.primary') : null) || row?.querySelector(`[data-${focusedAction}]`) || row?.querySelector('.primary') ||
         $('content').querySelector('.empty-state button'))?.focus({preventScroll: true});
     }
     return;
   }
   loadState(true);
   // Keep the previous results in place during search; avoid a loading flash on every key.
-  if (!$('content').children.length) $('content').innerHTML = '<div class="loading" role="status">Finding your next app…</div>';
+  if (!$('content').children.length) $('content').innerHTML = loadingComposition('Finding your next app…');
   try {
     const page = await invoke('search_catalog', { query: state.query, category: state.category, offset: state.offset, limit: state.limit, filters: state.filters });
     if (token !== request) return;
@@ -212,7 +215,7 @@ function navigate(view, updateHistory = true) {
   if (settings) { $('settings-title').focus({preventScroll:true}); window.scrollTo({top:0,behavior:'instant'}); void refreshEngineStatus(); void refreshLaunchCollection(); return; }
   if (activity) { renderActivity(); $('activity-title').focus({preventScroll: true}); window.scrollTo({top: 0, behavior: 'instant'}); return; }
   if (overview) {
-    renderOverview(state.apps, null, refreshError, null);
+    $('overview-content').innerHTML = loadingComposition('Checking your apps and local engine…');
     $('overview-title').focus({preventScroll: true});
     void refreshOverview();
     window.scrollTo({top: 0, behavior: 'instant'});
@@ -236,8 +239,11 @@ async function refreshOverview() {
   const button = $('overview-refresh');
   button.disabled = true;
   button.textContent = 'Checking…';
+  $('overview-content').setAttribute('aria-busy', 'true');
   const [appsResult, engineResult] = await Promise.allSettled([invoke('list_apps'), invoke('managed_engine_status')]);
   if (token !== overviewRequest || state.view !== 'overview') return;
+  publishEngineStatus(engineResult.status === 'fulfilled' ? engineResult.value : null, engineResult.status === 'rejected');
+  $('overview-content').setAttribute('aria-busy', 'false');
   if (appsResult.status === 'fulfilled') {
     state.apps = appsResult.value;
     refreshError = null;
@@ -296,7 +302,7 @@ async function reviewInstall(recipeId, starterPort = null) {
   installNeedsReview = false;
   resetInstallTask();
   $('install-title').textContent = 'Review installation';
-  $('install-content').innerHTML = '<div class="loading" role="status">Checking local engine and recipe…</div>';
+  $('install-content').innerHTML = loadingComposition('Checking local engine and recipe…', 'install');
   $('install-error').textContent = '';
   $('install-confirm').textContent = 'Checking system…';
   $('install-confirm').disabled = true;
@@ -383,12 +389,12 @@ $('nav-discover').onclick = () => navigate('discover');
 $('nav-overview').onclick = () => navigate('overview');
 $('nav-activity').onclick = () => navigate('activity');
 $('nav-agents').onclick = async () => { await showDialog($('settings-dialog')); await refreshAgents(); $('agent-client-name')?.focus(); };
-$('nav-apps').onclick = async () => { await refreshApps(); navigate('apps'); };
+$('nav-apps').onclick = async () => { navigate('apps'); $('content').innerHTML = loadingComposition('Loading your saved apps…', 'apps'); loadState(true); await refreshApps(); if (state.view === 'apps') render(); };
 $('overview-refresh').onclick = refreshOverview;
 document.querySelector('.brand').onclick = event => { event.preventDefault(); navigate('discover'); };
 $('connect-top').onclick = $('connect-note').onclick = () => openConnect();
 $('about').onclick = () => showDialog($('about-dialog'));
-$('settings').onclick = () => navigate('settings');
+$('settings').onclick = $('rail-engine').onclick = () => navigate('settings');
 window.addEventListener('local-store:settings-route',event => { navigate(event.detail.opening ? 'settings' : beforeSettings); });
 const routeFromHash = () => { const route = location.hash.slice(1); const view = route === 'my-apps' ? 'apps' : route; if (['overview','discover','apps','activity','settings'].includes(view)) navigate(view,false); };
 window.addEventListener('popstate',() => {routeFromHash(); const restoredView=state.view; setTimeout(() => {if(state.view!==restoredView || document.querySelector('dialog:modal')) return; $(restoredView==='settings'?'settings-title':restoredView==='overview'?'overview-title':restoredView==='activity'?'activity-title':'page-title')?.focus({preventScroll:true});},0);});
@@ -686,6 +692,7 @@ try { unlistenActivation = await listenActivationFailures(error => toast(diagnos
 document.addEventListener('visibilitychange', paintOperations);
 window.addEventListener('local-store:apps-changed', async () => { await refreshApps(); if (state.view === 'apps') render(); });
 window.addEventListener('pagehide', () => { readiness.dispose(); unlisten(); unlistenActivation(); }, {once: true});
+void refreshRailEngine();
 await refreshApps();
 render();
 

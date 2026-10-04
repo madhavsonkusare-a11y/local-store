@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "scope": "notice configuration and optional staged resource bytes; no installer extraction, launch, signing or clean-host proof",
+  "configured_notice_count": 39,
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "dcca3ec98bef20be0e21940db087dd496c3a368659c472a646ab958216495409"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "c2421f6b2e8773571abaff1a1c0ed78e711d262a7a2a4efda2afc4d567b8e47e"
+    },
+    {
+      "path": "catalog/notices/awesome-selfhosted/AUTHORS",
+      "sha256": "e751d65ae736326eb17a8986b1d76d35261c240275eb8c833a8c5a9783ad44eb"
+    },
+    {
+      "path": "catalog/notices/awesome-selfhosted/LICENSE",
+      "sha256": "ea66edda4bc711665cc684573588801670d2c6c5b84028da4fdafbcaee213ad1"
+    },
+    {
+      "path": "catalog/notices/caprover/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "catalog/notices/casaos/LICENSE",
+      "sha256": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6"
+    },
+    {
+      "path": "catalog/notices/coolify/LICENSE",
+      "sha256": "046952d7a2609d7407aaf3ee893bf394b9d2429f47d2758d984a60c9380d2a21"
+    },
+    {
+      "path": "catalog/notices/paperclip/LICENSE",
+      "sha256": "526e937d673d264af663f53d3be7118c59840810097d492e1550b363a5c91000"
+    },
+    {
+      "path": "catalog/notices/runtipi/LICENSE",
+      "sha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809"
+    },
+    {
+      "path": "catalog/notices/rust/NOTICES.txt",
+      "sha256": "cf78d25cbeda288bffc1556cdc58d3b4bece3b88bf91b1b5fbd76af97921a5b8"
+    },
+    {
+      "path": "catalog/notices/rust/inventory.json",
+      "sha256": "a84570fad7935c34649b6416ba75148d498ad8f158af509e126b9a3d20640a58"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source.json",
+      "sha256": "907779a3d8cd06c055c4eefa3baa6d2e9db69f3fcf84e1a16153f31be4227901"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/cssparser-0.36.0.crate",
+      "sha256": "dae61cf9c0abb83bd659dab65b7e4e38d8236824c85f0f804f173567bda257d2"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/cssparser-macros-0.6.1.crate",
+      "sha256": "13b588ba4ac1a99f7f2964d24b3d896ddc6bf847ee3855dbd4366f058cfcd331"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/dtoa-short-0.3.5.crate",
+      "sha256": "cd1511a7b6a56299bd043a9c167a6d2bfb37bf84a6dfceaba651168adfb43c87"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/option-ext-0.2.0.crate",
+      "sha256": "04744f49eae99ab78e0d5c0b603ab218f515ea8cfe5a456d7629ad883a3b6e7d"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/selectors-0.36.1.crate",
+      "sha256": "c5d9c0c92a92d33f08817311cf3f2c29a3538a8240e94a6a3c622ce652d7e00c"
+    },
+    {
+      "path": "catalog/notices/rust/upstream-supplements.json",
+      "sha256": "b63c847052635625c5c6e15de124738089dec3c659b5e1d9fbee5f05706294a5"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/dropbox--rust-alloc-no-stdlib/ae42d22078b98549e987d2f03d12df7b984fde47/LICENSE",
+      "sha256": "c0c56f26d9c051cac4d200c34c84e7ae9aaa853e01a982a1df08b09931e518ae"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/knurling-rs--defmt/4a8cdb44891ed57b8ff5a023b6bec7137c48708f/LICENSE-APACHE",
+      "sha256": "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/knurling-rs--defmt/4a8cdb44891ed57b8ff5a023b6bec7137c48708f/LICENSE-MIT",
+      "sha256": "2710a622a896bba67356913d4d0492cab5465f61b2ecce6d880aeb483834fb50"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/COPYRIGHT.md",
+      "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-APACHE",
+      "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-MIT",
+      "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/COPYRIGHT.md",
+      "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/LICENSE-APACHE",
+      "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/LICENSE-MIT",
+      "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/selectors-MPL-2.0.txt",
+      "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE.spdx",
+      "sha256": "5e834fe9788c524210deda859c46a550ffa5aa0cba9ea0572f0d81120e97c008"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE_APACHE-2.0",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE_MIT",
+      "sha256": "9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055dff1d"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/wravery--webview2-rs/b74dc5e2b394044bea5191052868ce7a106c202c/LICENSE",
+      "sha256": "0dcf41516e608bbcb6cdc5229feb7b86fe4a643b85e7df251133c93408fdac73"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/wravery--webview2-rs/dffa41a8a46d3f5565eefbff2de57d38d399f158/LICENSE",
+      "sha256": "0dcf41516e608bbcb6cdc5229feb7b86fe4a643b85e7df251133c93408fdac73"
+    },
+    {
+      "path": "catalog/notices/umbrel-apps-gallery/NOTICE.md",
+      "sha256": "09f0842d646bbb299be4574d0a25d26bba47acc189a4a42d8f308561b11f8f42"
+    },
+    {
+      "path": "src/assets/LUCIDE-LICENSE",
+      "sha256": "6fc5b7332939dd5c61af3a5f97450f7bc05d4a396dd0bc21ac341716b3b05096"
+    },
+    {
+      "path": "src/assets/apps/LICENSE",
+      "sha256": "82901e105f3248def0daf0d5721e19e11915201d8af93720b43e7b6a177c194e"
+    },
+    {
+      "path": "src/fonts/IBMPlex-OFL.txt",
+      "sha256": "3ff4395aeb203050b3d4e775861cf0b93b598e0a6d2b16f0eb41df3350b15695"
+    },
+    {
+      "path": "src/fonts/InstrumentSans-OFL.txt",
+      "sha256": "d1d978741d28ee9ca0a882b714a8af535f1ed0341afa22a4891f5858e783e13b"
+    },
+    {
+      "path": "src/fonts/OFL.txt",
+      "sha256": "b3195af0fb14368d1b3b10fb9d3fe503b7163ea083859d2ee553bc74da07c320"
+    }
+  ],
+  "errors": [
+    "Staged notice missing: LICENSE",
+    "Staged notice differs: THIRD_PARTY_NOTICES.md",
+    "Staged notice missing: catalog/notices/caprover/LICENSE",
+    "Staged notice missing: catalog/notices/rust/NOTICES.txt",
+    "Staged notice missing: catalog/notices/rust/inventory.json",
+    "Staged notice missing: catalog/notices/rust/mpl-source.json",
+    "Staged notice missing: catalog/notices/rust/mpl-source/cssparser-0.36.0.crate",
+    "Staged notice missing: catalog/notices/rust/mpl-source/cssparser-macros-0.6.1.crate",
+    "Staged notice missing: catalog/notices/rust/mpl-source/dtoa-short-0.3.5.crate",
+    "Staged notice missing: catalog/notices/rust/mpl-source/option-ext-0.2.0.crate",
+    "Staged notice missing: catalog/notices/rust/mpl-source/selectors-0.36.1.crate",
+    "Staged notice missing: catalog/notices/rust/upstream-supplements.json",
+    "Staged notice missing: catalog/notices/rust/upstream/dropbox--rust-alloc-no-stdlib/ae42d22078b98549e987d2f03d12df7b984fde47/LICENSE",
+    "Staged notice missing: catalog/notices/rust/upstream/knurling-rs--defmt/4a8cdb44891ed57b8ff5a023b6bec7137c48708f/LICENSE-APACHE",
+    "Staged notice missing: catalog/notices/rust/upstream/knurling-rs--defmt/4a8cdb44891ed57b8ff5a023b6bec7137c48708f/LICENSE-MIT",
+    "Staged notice missing: catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/COPYRIGHT.md",
+    "Staged notice missing: catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-APACHE",
+    "Staged notice missing: catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-MIT",
+    "Staged notice missing: catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/COPYRIGHT.md",
+    "Staged notice missing: catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/LICENSE-APACHE",
+    "Staged notice missing: catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/LICENSE-MIT",
+    "Staged notice missing: catalog/notices/rust/upstream/selectors-MPL-2.0.txt",
+    "Staged notice missing: catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE.spdx",
+    "Staged notice missing: catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE_APACHE-2.0",
+    "Staged notice missing: catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE_MIT",
+    "Staged notice missing: catalog/notices/rust/upstream/wravery--webview2-rs/b74dc5e2b394044bea5191052868ce7a106c202c/LICENSE",
+    "Staged notice missing: catalog/notices/rust/upstream/wravery--webview2-rs/dffa41a8a46d3f5565eefbff2de57d38d399f158/LICENSE",
+    "Staged notice missing: src/fonts/IBMPlex-OFL.txt",
+    "Staged notice missing: src/fonts/InstrumentSans-OFL.txt"
+  ],
+  "passed": false
+}

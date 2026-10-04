@@ -1,0 +1,3570 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-03T17:42:45.981958+00:00",
+  "rootfs_sha256": "ea9358fb64636e1d60da85df2ae5fd87090db2246c591996196dbb29089e5b32",
+  "package_count": 138,
+  "distribution_approved": false,
+  "source_policy": "Conservatively retain exact Ubuntu source artifacts for every Ubuntu package, including permissively licensed material; automated license hints do not decide obligations.",
+  "ubuntu_sources": [
+    {
+      "source": "acl",
+      "version": "2.3.2-1build1.1",
+      "packages": [
+        "libacl1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "acl_2.3.2.orig.tar.xz",
+          "sha256": "97203a72cae99ab89a067fe2210c1cbf052bc492b479eca7d226d9830883b0bd",
+          "size_bytes": 371680,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/acl/acl_2.3.2.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/acl_2.3.2.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "acl_2.3.2.orig.tar.xz.asc",
+          "sha256": "184c6a903490885a096095db67b433a04542c6569f167cbe8115268c0f227273",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/acl/acl_2.3.2.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/acl_2.3.2.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "acl_2.3.2-1build1.1.debian.tar.xz",
+          "sha256": "0d324adb403a50aa2889a11e098d34ce5adecd1cb89f83799f66dbb1d8b71280",
+          "size_bytes": 23472,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/acl/acl_2.3.2-1build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/acl_2.3.2-1build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "acl_2.3.2-1build1.1.dsc",
+          "sha256": "da831b979338d324df2adcedd5a06f9a5f303e83be2b43d58ee39288dde8fc88",
+          "size_bytes": 2616,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/acl/acl_2.3.2-1build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/acl_2.3.2-1build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "adduser",
+      "version": "3.137ubuntu1",
+      "packages": [
+        "adduser"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "adduser_3.137ubuntu1.dsc",
+          "sha256": "3f9e61ffef61902c9eaf1c8738bb987ff882dbba2d22385fccefaa3fcd53a77b",
+          "size_bytes": 1862,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/adduser/adduser_3.137ubuntu1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/adduser_3.137ubuntu1.dsc",
+          "retained": true
+        },
+        {
+          "name": "adduser_3.137ubuntu1.tar.xz",
+          "sha256": "f4b0669a5731e1a63fc6eb56a8a4b9e54b19d76ed6c819bf48c1028790e395f3",
+          "size_bytes": 280408,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/adduser/adduser_3.137ubuntu1.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/adduser_3.137ubuntu1.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "apparmor",
+      "version": "4.0.1really4.0.1-0ubuntu0.24.04.7",
+      "packages": [
+        "libapparmor1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "apparmor_4.0.1really4.0.1.orig.tar.gz",
+          "sha256": "b0d72cedc48e533d189ea415bde721ad597101c77fa398fdd2858ec4f58f7e26",
+          "size_bytes": 6984984,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/apparmor/apparmor_4.0.1really4.0.1.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/apparmor_4.0.1really4.0.1.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "apparmor_4.0.1really4.0.1-0ubuntu0.24.04.7.debian.tar.xz",
+          "sha256": "5b5c5518af3227781a3104924dc42b7e18628205aa389e2594799a08ee2f1860",
+          "size_bytes": 140044,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/apparmor/apparmor_4.0.1really4.0.1-0ubuntu0.24.04.7.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/apparmor_4.0.1really4.0.1-0ubuntu0.24.04.7.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "apparmor_4.0.1really4.0.1-0ubuntu0.24.04.7.dsc",
+          "sha256": "4dacfccd0fc68a09c9a0012eef8254190202c5c888fe0c4e2bafe2de55907202",
+          "size_bytes": 3434,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/apparmor/apparmor_4.0.1really4.0.1-0ubuntu0.24.04.7.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/apparmor_4.0.1really4.0.1-0ubuntu0.24.04.7.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "apt",
+      "version": "2.8.3",
+      "packages": [
+        "apt",
+        "libapt-pkg6.0t64"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "apt_2.8.3.tar.xz",
+          "sha256": "088522b3613b28fdbcfa61f1f7e476bf6dc6b0120a8f74409e9527580c9f9d3b",
+          "size_bytes": 2354680,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/apt/apt_2.8.3.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/apt_2.8.3.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "apt_2.8.3.dsc",
+          "sha256": "1d41cd04115e1a79f0fa4d738e5c34603ae8a4f40122d8a18a622fd6d20a5523",
+          "size_bytes": 2973,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/apt/apt_2.8.3.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/apt_2.8.3.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "argon2",
+      "version": "0~20190702+dfsg-4build1",
+      "packages": [
+        "libargon2-1"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "argon2_0~20190702+dfsg-4build1.dsc",
+          "sha256": "2ce9d871da01cb55d60d479ec15264ea6fa6fd60b541be72287c079963602783",
+          "size_bytes": 2362,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/argon2/argon2_0~20190702+dfsg-4build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/argon2_0~20190702+dfsg-4build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "argon2_0~20190702+dfsg.orig.tar.xz",
+          "sha256": "815f1017b5b0033204778c2e32443257274bc5d9dd16d355c4f7db8189e23dcc",
+          "size_bytes": 725424,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/argon2/argon2_0~20190702+dfsg.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/argon2_0~20190702+dfsg.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "argon2_0~20190702+dfsg-4build1.debian.tar.xz",
+          "sha256": "3387a878778e1107495c129d8054b641789ccaa7189b0383a3a5995aefe18f9b",
+          "size_bytes": 9392,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/argon2/argon2_0~20190702+dfsg-4build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/argon2_0~20190702+dfsg-4build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "attr",
+      "version": "1:2.5.2-1ubuntu0.1",
+      "packages": [
+        "libattr1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "attr_2.5.2.orig.tar.xz",
+          "sha256": "f2e97b0ab7ce293681ab701915766190d607a1dba7fae8a718138150b700a70b",
+          "size_bytes": 334180,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/attr/attr_2.5.2.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/attr_2.5.2.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "attr_2.5.2.orig.tar.xz.asc",
+          "sha256": "eeac729088d3c6379e91b7596cb3582e46b047c47f0fa3c5c77f9c9e84dc3a4c",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/attr/attr_2.5.2.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/attr_2.5.2.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "attr_2.5.2-1ubuntu0.1.debian.tar.xz",
+          "sha256": "11d4663edfac0d6738201ff942b65706cb1eb29ae0e8dad50790c9bf6509fc1f",
+          "size_bytes": 39340,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/attr/attr_2.5.2-1ubuntu0.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/attr_2.5.2-1ubuntu0.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "attr_2.5.2-1ubuntu0.1.dsc",
+          "sha256": "3b0921ea6607447a2c61e5fa6136a72977712d1b1c7d24a205d107a17e7b3ad6",
+          "size_bytes": 2592,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/attr/attr_2.5.2-1ubuntu0.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/attr_2.5.2-1ubuntu0.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "audit",
+      "version": "1:3.1.2-2.1build1.1",
+      "packages": [
+        "libaudit-common",
+        "libaudit1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "audit_3.1.2.orig.tar.gz",
+          "sha256": "c0b1792d1f0a88c6f1828710509cbb987059fc68712c97669ca90eae103d287d",
+          "size_bytes": 1219860,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/audit/audit_3.1.2.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/audit_3.1.2.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "audit_3.1.2-2.1build1.1.debian.tar.xz",
+          "sha256": "ed9d8bb3ff1194b6c8943c7768596383f995b1d45dbc57b8f5ca5868a7b22558",
+          "size_bytes": 18860,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/audit/audit_3.1.2-2.1build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/audit_3.1.2-2.1build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "audit_3.1.2-2.1build1.1.dsc",
+          "sha256": "3df86dee4b6d645173901fad492776add35f82c4e7c58cd8a4f82931a2588324",
+          "size_bytes": 2848,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/a/audit/audit_3.1.2-2.1build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/audit_3.1.2-2.1build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "base-files",
+      "version": "13ubuntu10.4",
+      "packages": [
+        "base-files"
+      ],
+      "sources_index_sha256": "80db695b186d22b90a86ea6311ce2d068ad88660087cb39d15fd38903902578c",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "base-files_13ubuntu10.4.tar.xz",
+          "sha256": "3656f87d5a7ed92ac53cece416f918099e7e4f90281c3effcc346e2ce09c653d",
+          "size_bytes": 94240,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/pool/main/b/base-files/base-files_13ubuntu10.4.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/base-files_13ubuntu10.4.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "base-files_13ubuntu10.4.dsc",
+          "sha256": "db0386e7111a5e0b1f9d473b1fdae76f421f0df4e66edfdbc8060cf3dc92a561",
+          "size_bytes": 1642,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/pool/main/b/base-files/base-files_13ubuntu10.4.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/base-files_13ubuntu10.4.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "base-passwd",
+      "version": "3.6.3build1",
+      "packages": [
+        "base-passwd"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "base-passwd_3.6.3build1.dsc",
+          "sha256": "6c7289264d48fd871e1c516c8dd0814160558e339202cffa8768621785302185",
+          "size_bytes": 1779,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/b/base-passwd/base-passwd_3.6.3build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/base-passwd_3.6.3build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "base-passwd_3.6.3build1.tar.xz",
+          "sha256": "ea51df18f6f7d969ff93d25ce42780ded35ccb4292353780ba6ad9861857d787",
+          "size_bytes": 58252,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/b/base-passwd/base-passwd_3.6.3build1.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/base-passwd_3.6.3build1.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "bash",
+      "version": "5.2.21-2ubuntu4",
+      "packages": [
+        "bash"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "bash_5.2.21-2ubuntu4.dsc",
+          "sha256": "d5a89c09f42c828d5e31dc3a1680882aa0ddaad5072963e563dec7dfc4919d33",
+          "size_bytes": 2437,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/b/bash/bash_5.2.21-2ubuntu4.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/bash_5.2.21-2ubuntu4.dsc",
+          "retained": true
+        },
+        {
+          "name": "bash_5.2.21.orig.tar.xz",
+          "sha256": "ec21ab4efd6bd7a6e2802fbda622b81bfc43a8095d721234d4bf075797683014",
+          "size_bytes": 5598816,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/b/bash/bash_5.2.21.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/bash_5.2.21.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "bash_5.2.21-2ubuntu4.debian.tar.xz",
+          "sha256": "bdb10c18d167dda3b265cb3db75314d524edbf7794fed36f0fb0dcc32f5e6ac9",
+          "size_bytes": 94124,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/b/bash/bash_5.2.21-2ubuntu4.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/bash_5.2.21-2ubuntu4.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "bzip2",
+      "version": "1.0.8-5.1ubuntu0.1",
+      "packages": [
+        "libbz2-1.0"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "bzip2_1.0.8.orig.tar.gz",
+          "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+          "size_bytes": 810029,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/b/bzip2/bzip2_1.0.8.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/bzip2_1.0.8.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "bzip2_1.0.8-5.1ubuntu0.1.debian.tar.bz2",
+          "sha256": "77c61e0490ff7cf49aa8ffe62e117e85b3af08e14341c4b851f8d7ec757fe099",
+          "size_bytes": 27529,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/b/bzip2/bzip2_1.0.8-5.1ubuntu0.1.debian.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/bzip2_1.0.8-5.1ubuntu0.1.debian.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "bzip2_1.0.8-5.1ubuntu0.1.dsc",
+          "sha256": "87d782671790af480ab3c3b258885ad2c239e41772e0116ceda6446c493f9dd4",
+          "size_bytes": 1699,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/b/bzip2/bzip2_1.0.8-5.1ubuntu0.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/bzip2_1.0.8-5.1ubuntu0.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "ca-certificates",
+      "version": "20260601~24.04.1",
+      "packages": [
+        "ca-certificates"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "ca-certificates_20260601~24.04.1.tar.xz",
+          "sha256": "fd3a351ad98f5b714915d4a7c82ae258a174b48f7d5391713c7f3445067143eb",
+          "size_bytes": 266460,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/ca-certificates/ca-certificates_20260601~24.04.1.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/ca-certificates_20260601~24.04.1.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "ca-certificates_20260601~24.04.1.dsc",
+          "sha256": "42292e01982f1a0aaed5ab540bc771322864bf92798ca3099a1e582ced440116",
+          "size_bytes": 1769,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/ca-certificates/ca-certificates_20260601~24.04.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/ca-certificates_20260601~24.04.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "cdebconf",
+      "version": "0.271ubuntu3",
+      "packages": [
+        "libdebconfclient0"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "cdebconf_0.271ubuntu3.dsc",
+          "sha256": "87a9567bdbdc9401d5cde6e5dbc8fb48619d7a2ef38795156c24a7fef3200ef5",
+          "size_bytes": 2910,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/cdebconf/cdebconf_0.271ubuntu3.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/cdebconf_0.271ubuntu3.dsc",
+          "retained": true
+        },
+        {
+          "name": "cdebconf_0.271ubuntu3.tar.xz",
+          "sha256": "a4b242e7aef7923fd16d3aeb5a220ab6f4d27bc005b9d1e7d67449faaa68bcd1",
+          "size_bytes": 285500,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/cdebconf/cdebconf_0.271ubuntu3.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/cdebconf_0.271ubuntu3.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "coreutils",
+      "version": "9.4-3ubuntu6.3",
+      "packages": [
+        "coreutils"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "coreutils_9.4.orig.tar.xz",
+          "sha256": "ea613a4cf44612326e917201bbbcdfbd301de21ffc3b59b6e5c07e040b275e52",
+          "size_bytes": 5979200,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/coreutils/coreutils_9.4.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/coreutils_9.4.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "coreutils_9.4-3ubuntu6.3.debian.tar.xz",
+          "sha256": "23eb9e94564e2451ea02a879daa0ee9ba8db3777e84e020fcd08d49aaebc57d4",
+          "size_bytes": 43156,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/coreutils/coreutils_9.4-3ubuntu6.3.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/coreutils_9.4-3ubuntu6.3.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "coreutils_9.4-3ubuntu6.3.dsc",
+          "sha256": "419fea2f0fec8299d95cafb11425391fe45d60b30d052c7f1e3a162ea56a6653",
+          "size_bytes": 2030,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/coreutils/coreutils_9.4-3ubuntu6.3.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/coreutils_9.4-3ubuntu6.3.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "cryptsetup",
+      "version": "2:2.7.0-1ubuntu4.2",
+      "packages": [
+        "libcryptsetup12"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "cryptsetup_2.7.0.orig.tar.gz",
+          "sha256": "f0d490f2eb32d1648d586d56fab1329666d34e69e0db3bd6f0ac16fb3de816a2",
+          "size_bytes": 11754085,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/cryptsetup/cryptsetup_2.7.0.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/cryptsetup_2.7.0.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "cryptsetup_2.7.0-1ubuntu4.2.debian.tar.xz",
+          "sha256": "f219b25303b8f934780c6f348c71387ddc1597906d3b7fe5960f1678a5b8098a",
+          "size_bytes": 169908,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/cryptsetup/cryptsetup_2.7.0-1ubuntu4.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/cryptsetup_2.7.0-1ubuntu4.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "cryptsetup_2.7.0-1ubuntu4.2.dsc",
+          "sha256": "dd0d8fafae0aba2d9e331d24af5e919bdac9baf501a3ad52f909392ca2b5a1f6",
+          "size_bytes": 3690,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/c/cryptsetup/cryptsetup_2.7.0-1ubuntu4.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/cryptsetup_2.7.0-1ubuntu4.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "dash",
+      "version": "0.5.12-6ubuntu5",
+      "packages": [
+        "dash"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "dash_0.5.12-6ubuntu5.dsc",
+          "sha256": "be4a5ba81756b24d0d22f30cd9e609f5b84f8a8d685cb9825e9eae6201c52cf9",
+          "size_bytes": 2124,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dash/dash_0.5.12-6ubuntu5.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dash_0.5.12-6ubuntu5.dsc",
+          "retained": true
+        },
+        {
+          "name": "dash_0.5.12.orig.tar.gz",
+          "sha256": "6a474ac46e8b0b32916c4c60df694c82058d3297d8b385b74508030ca4a8f28a",
+          "size_bytes": 246054,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dash/dash_0.5.12.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dash_0.5.12.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "dash_0.5.12-6ubuntu5.debian.tar.xz",
+          "sha256": "84671be9725b738725575d44069f9e7a41344ae6a8027d8ba2d6a172b5e406d6",
+          "size_bytes": 39616,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dash/dash_0.5.12-6ubuntu5.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dash_0.5.12-6ubuntu5.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "db5.3",
+      "version": "5.3.28+dfsg2-7",
+      "packages": [
+        "libdb5.3t64"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "db5.3_5.3.28+dfsg2-7.dsc",
+          "sha256": "f7313fb306b5bf7ad6a428bffb581e649318859df139e35dd47c3d1f733803b2",
+          "size_bytes": 2374,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/db5.3/db5.3_5.3.28+dfsg2-7.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/db5.3_5.3.28+dfsg2-7.dsc",
+          "retained": true
+        },
+        {
+          "name": "db5.3_5.3.28+dfsg2.orig.tar.xz",
+          "sha256": "ad41b507415dec8316e828b2230242af2251d2c86eefa3c7aa9ef47c5239ef33",
+          "size_bytes": 21287688,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/db5.3/db5.3_5.3.28+dfsg2.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/db5.3_5.3.28+dfsg2.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "db5.3_5.3.28+dfsg2-7.debian.tar.xz",
+          "sha256": "9cee8969e1f440ec8aa2fbacd3a5819907829e0e7e7f1f746dccaa2c93fbf3f2",
+          "size_bytes": 35232,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/db5.3/db5.3_5.3.28+dfsg2-7.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/db5.3_5.3.28+dfsg2-7.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "dbus",
+      "version": "1.14.10-4ubuntu4.1",
+      "packages": [
+        "dbus",
+        "dbus-bin",
+        "dbus-daemon",
+        "dbus-session-bus-common",
+        "dbus-system-bus-common",
+        "dbus-user-session",
+        "libdbus-1-3"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "dbus_1.14.10.orig.tar.xz",
+          "sha256": "ba1f21d2bd9d339da2d4aa8780c09df32fea87998b73da24f49ab9df1e36a50f",
+          "size_bytes": 1372328,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dbus/dbus_1.14.10.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dbus_1.14.10.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "dbus_1.14.10.orig.tar.xz.asc",
+          "sha256": "5f292cd0603c3d736026ed3f4d1c1937847981669c1f0a389083518f013e1081",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dbus/dbus_1.14.10.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dbus_1.14.10.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "dbus_1.14.10-4ubuntu4.1.debian.tar.xz",
+          "sha256": "c28e0e4840bf3c3f3cbdacae9b7228bb4694dd234f325535942dde76af3c322e",
+          "size_bytes": 69668,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dbus/dbus_1.14.10-4ubuntu4.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dbus_1.14.10-4ubuntu4.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "dbus_1.14.10-4ubuntu4.1.dsc",
+          "sha256": "3d9037176550657a3584f7640027a6d970c85b0cd158a2be7e8051aab1349edb",
+          "size_bytes": 3746,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dbus/dbus_1.14.10-4ubuntu4.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dbus_1.14.10-4ubuntu4.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "debconf",
+      "version": "1.5.86ubuntu1",
+      "packages": [
+        "debconf"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "debconf_1.5.86ubuntu1.dsc",
+          "sha256": "fc3475b7134c7780b34d21dde63bea3be2a225215a3e9f9c90e27df40189f1bc",
+          "size_bytes": 2030,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/debconf/debconf_1.5.86ubuntu1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/debconf_1.5.86ubuntu1.dsc",
+          "retained": true
+        },
+        {
+          "name": "debconf_1.5.86ubuntu1.tar.xz",
+          "sha256": "1a50d1697b9c36b3600d1746b6a47864ed4adfd26c3d180f2d2b1286ad51c6f4",
+          "size_bytes": 574112,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/debconf/debconf_1.5.86ubuntu1.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/debconf_1.5.86ubuntu1.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "debianutils",
+      "version": "5.17build1",
+      "packages": [
+        "debianutils"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "debianutils_5.17build1.dsc",
+          "sha256": "f6479aa03505646f946cc42d7d093bc0d47dd2d374b7dcc84d84330f7e86095d",
+          "size_bytes": 1771,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/debianutils/debianutils_5.17build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/debianutils_5.17build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "debianutils_5.17build1.tar.xz",
+          "sha256": "f1f157a50769fcf8117909938dd8cbb75d39da26cff5a5aa15aa34b4d6c9acc2",
+          "size_bytes": 80468,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/debianutils/debianutils_5.17build1.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/debianutils_5.17build1.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "diffutils",
+      "version": "1:3.10-1ubuntu0.1",
+      "packages": [
+        "diffutils"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "diffutils_3.10.orig.tar.xz",
+          "sha256": "90e5e93cc724e4ebe12ede80df1634063c7a855692685919bfe60b556c9bd09e",
+          "size_bytes": 1624240,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/diffutils/diffutils_3.10.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/diffutils_3.10.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "diffutils_3.10.orig.tar.xz.asc",
+          "sha256": "a94faf8f1baa04ff220f7b2ccb137c16337284e023ebc4a1d5df475c08d810f7",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/diffutils/diffutils_3.10.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/diffutils_3.10.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "diffutils_3.10-1ubuntu0.1.debian.tar.xz",
+          "sha256": "5010764e1ebbb3e2a99b90e0c14b86d44d15508f8ba7fa2ec7a51ffcba706d49",
+          "size_bytes": 15332,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/diffutils/diffutils_3.10-1ubuntu0.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/diffutils_3.10-1ubuntu0.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "diffutils_3.10-1ubuntu0.1.dsc",
+          "sha256": "cd25a52b3cc70a46c98462e3893491d9a461cebbf8600461c879c0c900ae88b4",
+          "size_bytes": 2175,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/diffutils/diffutils_3.10-1ubuntu0.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/diffutils_3.10-1ubuntu0.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "dpkg",
+      "version": "1.22.6ubuntu6.6",
+      "packages": [
+        "dpkg"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "dpkg_1.22.6ubuntu6.6.tar.xz",
+          "sha256": "7048ee31e30066ae123cdcb891cfa1ad55b2f42a4e04fca2c5db41607ae25196",
+          "size_bytes": 5548716,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dpkg/dpkg_1.22.6ubuntu6.6.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dpkg_1.22.6ubuntu6.6.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "dpkg_1.22.6ubuntu6.6.dsc",
+          "sha256": "5828d5dd77635c8bd0197116446bc64ec76913500affbcb42aaae1644acb749d",
+          "size_bytes": 3156,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/d/dpkg/dpkg_1.22.6ubuntu6.6.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/dpkg_1.22.6ubuntu6.6.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "e2fsprogs",
+      "version": "1.47.0-2.4~exp1ubuntu4.1",
+      "packages": [
+        "e2fsprogs",
+        "libcom-err2",
+        "libext2fs2t64",
+        "libss2",
+        "logsave"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "e2fsprogs_1.47.0.orig.tar.gz",
+          "sha256": "6667afde56eef0c6af26684974400e4d2288ea49e9441bf5e6229195d51a3578",
+          "size_bytes": 9637717,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/e2fsprogs/e2fsprogs_1.47.0.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/e2fsprogs_1.47.0.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "e2fsprogs_1.47.0.orig.tar.gz.asc",
+          "sha256": "704928204a52ddaa0ac8ef549c1bfba3c38e66c361d3853c8a4c38e6082b90f1",
+          "size_bytes": 488,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/e2fsprogs/e2fsprogs_1.47.0.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/e2fsprogs_1.47.0.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.debian.tar.xz",
+          "sha256": "26b381ec175ff52d1cc2fd1b217f84b9e1d7d33a58dcbaf8942115dd27a03f84",
+          "size_bytes": 90580,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/e2fsprogs/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.dsc",
+          "sha256": "215fe7b95c246894654c59a01514dfdc16ec17a0dcb09dc7a7c1ec1246ed4964",
+          "size_bytes": 3294,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/e2fsprogs/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "elfutils",
+      "version": "0.190-1.1ubuntu0.1",
+      "packages": [
+        "libelf1t64"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "elfutils_0.190.orig.tar.bz2",
+          "sha256": "8e00a3a9b5f04bc1dc273ae86281d2d26ed412020b391ffcc23198f10231d692",
+          "size_bytes": 9162766,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/elfutils/elfutils_0.190.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/elfutils_0.190.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "elfutils_0.190-1.1ubuntu0.1.debian.tar.xz",
+          "sha256": "4c3130951f7b865d50ff57379a258926a66bcd2753e3c12301bbb110fbb417fa",
+          "size_bytes": 46976,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/elfutils/elfutils_0.190-1.1ubuntu0.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/elfutils_0.190-1.1ubuntu0.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "elfutils_0.190-1.1ubuntu0.1.dsc",
+          "sha256": "7852785ce5ce51a6dad0f6b67188d94ffedaffa6d0128fecabeb6a1ccc2aabea",
+          "size_bytes": 3410,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/elfutils/elfutils_0.190-1.1ubuntu0.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/elfutils_0.190-1.1ubuntu0.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "expat",
+      "version": "2.6.1-2ubuntu0.4",
+      "packages": [
+        "libexpat1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "expat_2.6.1.orig.tar.gz",
+          "sha256": "14113ed69357172a0bf5a268793c8b5b01afc77c7a2e5fb8dd0b06cb87c02c4a",
+          "size_bytes": 8414649,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/expat/expat_2.6.1.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/expat_2.6.1.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "expat_2.6.1-2ubuntu0.4.debian.tar.xz",
+          "sha256": "8a24bd6c87fe292a2f00a2df71f7d2bbe3713fa63b1952c8552cdac4288d10fd",
+          "size_bytes": 31092,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/expat/expat_2.6.1-2ubuntu0.4.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/expat_2.6.1-2ubuntu0.4.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "expat_2.6.1-2ubuntu0.4.dsc",
+          "sha256": "a25d3fde103454ad5d34d4770bd5adb60bb5872da775df74cad193b5c4de1dff",
+          "size_bytes": 1945,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/e/expat/expat_2.6.1-2ubuntu0.4.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/expat_2.6.1-2ubuntu0.4.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "findutils",
+      "version": "4.9.0-5build1",
+      "packages": [
+        "findutils"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "findutils_4.9.0-5build1.dsc",
+          "sha256": "c586baab1e53ace30420e86364df848fb8c6f754c1935ff556060b030052f603",
+          "size_bytes": 2404,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/f/findutils/findutils_4.9.0-5build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/findutils_4.9.0-5build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "findutils_4.9.0.orig.tar.xz",
+          "sha256": "a2bfb8c09d436770edc59f50fa483e785b161a3b7b9d547573cb08065fd462fe",
+          "size_bytes": 2046252,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/f/findutils/findutils_4.9.0.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/findutils_4.9.0.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "findutils_4.9.0.orig.tar.xz.asc",
+          "sha256": "924c3719d066eda1b3e47175f8b83e90e9a23f0a639ebe7445621917b283c385",
+          "size_bytes": 488,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/f/findutils/findutils_4.9.0.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/findutils_4.9.0.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "findutils_4.9.0-5build1.debian.tar.xz",
+          "sha256": "c266ae3fdf861d29b71436237f7a564058d68810029daa95e581b219c5c69d5c",
+          "size_bytes": 32864,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/f/findutils/findutils_4.9.0-5build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/findutils_4.9.0-5build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "gcc-14",
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "packages": [
+        "gcc-14-base",
+        "libgcc-s1",
+        "libstdc++6"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "gcc-14_14.2.0.orig.tar.gz",
+          "sha256": "768c314c11eeab56ccebb91eb42ec4a41122fa94f0d83400126401942622197b",
+          "size_bytes": 97158172,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gcc-14/gcc-14_14.2.0.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gcc-14_14.2.0.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "gcc-14_14.2.0-4ubuntu2~24.04.1.debian.tar.xz",
+          "sha256": "cfece214c2fb790ef5f3baffb9a53e40618e7ae12d053610b251e94d77d08ade",
+          "size_bytes": 1950432,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gcc-14/gcc-14_14.2.0-4ubuntu2~24.04.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gcc-14_14.2.0-4ubuntu2~24.04.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "gcc-14_14.2.0-4ubuntu2~24.04.1.dsc",
+          "sha256": "50950080874a6ec6780dd60c243e21d9cda9d736bb32bca98d16095d27cc01b5",
+          "size_bytes": 46930,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gcc-14/gcc-14_14.2.0-4ubuntu2~24.04.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gcc-14_14.2.0-4ubuntu2~24.04.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "glibc",
+      "version": "2.39-0ubuntu8.8",
+      "packages": [
+        "libc-bin",
+        "libc6"
+      ],
+      "sources_index_sha256": "80db695b186d22b90a86ea6311ce2d068ad88660087cb39d15fd38903902578c",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "glibc_2.39.orig.tar.xz",
+          "sha256": "f77bd47cf8170c57365ae7bf86696c118adb3b120d3259c64c502d3dc1e2d926",
+          "size_bytes": 18520988,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/pool/main/g/glibc/glibc_2.39.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/glibc_2.39.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "glibc_2.39.orig.tar.xz.asc",
+          "sha256": "2cce427ef7933c17379f5514e4f0ccf8dffae5bf8c72f0f7e0bf8b8401f34be5",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/pool/main/g/glibc/glibc_2.39.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/glibc_2.39.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "glibc_2.39-0ubuntu8.8.debian.tar.xz",
+          "sha256": "ff1aa3bb3eba4f302a99c9b957cacff6d79f26e9b0e663e379bf70a4f39d4283",
+          "size_bytes": 483068,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/pool/main/g/glibc/glibc_2.39-0ubuntu8.8.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/glibc_2.39-0ubuntu8.8.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "glibc_2.39-0ubuntu8.8.dsc",
+          "sha256": "69c09b540d03e56b3adea7c4af98b862bfc36789795c9e21d37e58e699f57b00",
+          "size_bytes": 9387,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/pool/main/g/glibc/glibc_2.39-0ubuntu8.8.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/glibc_2.39-0ubuntu8.8.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "gmp",
+      "version": "2:6.3.0+dfsg-2ubuntu6.1",
+      "packages": [
+        "libgmp10"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "gmp_6.3.0+dfsg.orig.tar.xz",
+          "sha256": "bd2966e6d277f79328e894a5a9f3ba3fbf2ed2be81def5f48623e30c23fb1572",
+          "size_bytes": 1870556,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gmp/gmp_6.3.0+dfsg.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gmp_6.3.0+dfsg.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "gmp_6.3.0+dfsg-2ubuntu6.1.debian.tar.xz",
+          "sha256": "0a7592ee94876fcc0dba60c9a9fba806a72752c104c04d553803e1b7a97026a3",
+          "size_bytes": 38908,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gmp/gmp_6.3.0+dfsg-2ubuntu6.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gmp_6.3.0+dfsg-2ubuntu6.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "gmp_6.3.0+dfsg-2ubuntu6.1.dsc",
+          "sha256": "7fdd2464ee453296e33598dad6f84dd489640c08f50552389469bcf90537582e",
+          "size_bytes": 2345,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gmp/gmp_6.3.0+dfsg-2ubuntu6.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gmp_6.3.0+dfsg-2ubuntu6.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "gnupg2",
+      "version": "2.4.4-2ubuntu17.6",
+      "packages": [
+        "gpgv"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "gnupg2_2.4.4.orig.tar.bz2",
+          "sha256": "67ebe016ca90fa7688ce67a387ebd82c6261e95897db7b23df24ff335be85bc6",
+          "size_bytes": 7886036,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gnupg2/gnupg2_2.4.4.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gnupg2_2.4.4.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "gnupg2_2.4.4.orig.tar.bz2.asc",
+          "sha256": "47986167998b2cb6be4e4cdeef0c468139e06580ed65ce2cf241c527d74e54db",
+          "size_bytes": 386,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gnupg2/gnupg2_2.4.4.orig.tar.bz2.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gnupg2_2.4.4.orig.tar.bz2.asc",
+          "retained": true
+        },
+        {
+          "name": "gnupg2_2.4.4-2ubuntu17.6.debian.tar.xz",
+          "sha256": "c66b2623b54792f70c6598367ad1f3c4dcf7c65e68c2a4e4e98f0ba6eaa8ba80",
+          "size_bytes": 97820,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gnupg2/gnupg2_2.4.4-2ubuntu17.6.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gnupg2_2.4.4-2ubuntu17.6.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "gnupg2_2.4.4-2ubuntu17.6.dsc",
+          "sha256": "67504c8f474dce8880c25a5a14993d419b3f39db2a77039f24e65903ce93f4b9",
+          "size_bytes": 3947,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gnupg2/gnupg2_2.4.4-2ubuntu17.6.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gnupg2_2.4.4-2ubuntu17.6.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "gnutls28",
+      "version": "3.8.3-1.1ubuntu3.6",
+      "packages": [
+        "libgnutls30t64"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "gnutls28_3.8.3.orig.tar.xz",
+          "sha256": "f74fc5954b27d4ec6dfbb11dea987888b5b124289a3703afcada0ee520f4173e",
+          "size_bytes": 6463720,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gnutls28/gnutls28_3.8.3.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gnutls28_3.8.3.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "gnutls28_3.8.3.orig.tar.xz.asc",
+          "sha256": "b2b90d225728890b0e2aa7c05e5f25f8ba1282821b46e72cd99f0c732b639cef",
+          "size_bytes": 854,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gnutls28/gnutls28_3.8.3.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gnutls28_3.8.3.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "gnutls28_3.8.3-1.1ubuntu3.6.debian.tar.xz",
+          "sha256": "b4cc6ebad4cb21ffe82d094f6d9c90de31e08a8b31ed36911a2adbe5aaa56d47",
+          "size_bytes": 124984,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gnutls28/gnutls28_3.8.3-1.1ubuntu3.6.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gnutls28_3.8.3-1.1ubuntu3.6.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "gnutls28_3.8.3-1.1ubuntu3.6.dsc",
+          "sha256": "34455be2f5fb343b5833ff40cc00623106326e6cc88aaf9862943f6b3aa5ab60",
+          "size_bytes": 3397,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gnutls28/gnutls28_3.8.3-1.1ubuntu3.6.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gnutls28_3.8.3-1.1ubuntu3.6.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "grep",
+      "version": "3.11-4build1",
+      "packages": [
+        "grep"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "grep_3.11-4build1.dsc",
+          "sha256": "2d0a5ced73347bbf22f35421c31360fc2fe4a0e6267dc31578e2630abe97afa4",
+          "size_bytes": 2379,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/grep/grep_3.11-4build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/grep_3.11-4build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "grep_3.11.orig.tar.xz",
+          "sha256": "1db2aedde89d0dea42b16d9528f894c8d15dae4e190b59aecc78f5a951276eab",
+          "size_bytes": 1703776,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/grep/grep_3.11.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/grep_3.11.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "grep_3.11.orig.tar.xz.asc",
+          "sha256": "89ec23ffd59b68822732dc8204fc89883c3af30a90ae390feb94346d9d09a589",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/grep/grep_3.11.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/grep_3.11.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "grep_3.11-4build1.debian.tar.xz",
+          "sha256": "f87cd3d0db16527f5c3a8eb6c737a72b0404eaafdbba19d707f8d89315d32e4a",
+          "size_bytes": 20584,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/grep/grep_3.11-4build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/grep_3.11-4build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "gzip",
+      "version": "1.12-1ubuntu3.2",
+      "packages": [
+        "gzip"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "gzip_1.12.orig.tar.xz",
+          "sha256": "ce5e03e519f637e1f814011ace35c4f87b33c0bbabeec35baf5fbd3479e91956",
+          "size_bytes": 825548,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gzip/gzip_1.12.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gzip_1.12.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "gzip_1.12-1ubuntu3.2.debian.tar.xz",
+          "sha256": "13008977038dcf4058301a96006e994a5c3c48877d2bc39ee4c29d234ba21832",
+          "size_bytes": 22820,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gzip/gzip_1.12-1ubuntu3.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gzip_1.12-1ubuntu3.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "gzip_1.12-1ubuntu3.2.dsc",
+          "sha256": "5919ccc72dbb8a02b7c461345f3c04bd3b33445ff2a23035b8d5837db3f09d44",
+          "size_bytes": 2042,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/g/gzip/gzip_1.12-1ubuntu3.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/gzip_1.12-1ubuntu3.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "hostname",
+      "version": "3.23+nmu2ubuntu2",
+      "packages": [
+        "hostname"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "hostname_3.23+nmu2ubuntu2.dsc",
+          "sha256": "547a860636d92c3696b47ca33807293b74a0c80a92e6f1210b75aa1f27650e79",
+          "size_bytes": 1567,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/h/hostname/hostname_3.23+nmu2ubuntu2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/hostname_3.23+nmu2ubuntu2.dsc",
+          "retained": true
+        },
+        {
+          "name": "hostname_3.23+nmu2ubuntu2.tar.xz",
+          "sha256": "38e2dcc815ccebd90a7623197a530da2538d8f14f64546147c95cffba5138e7f",
+          "size_bytes": 13276,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/h/hostname/hostname_3.23+nmu2ubuntu2.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/hostname_3.23+nmu2ubuntu2.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "init-system-helpers",
+      "version": "1.66ubuntu1",
+      "packages": [
+        "init-system-helpers"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "init-system-helpers_1.66ubuntu1.dsc",
+          "sha256": "99bad9c4c7b98a89f4cb6b2a7151f4ed0dee46d5671712782ae98cc879d1feb2",
+          "size_bytes": 2353,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/i/init-system-helpers/init-system-helpers_1.66ubuntu1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/init-system-helpers_1.66ubuntu1.dsc",
+          "retained": true
+        },
+        {
+          "name": "init-system-helpers_1.66ubuntu1.tar.xz",
+          "sha256": "ca60a744414997068de76bfeff98a6834ebd92c1c691bfc28d49df93e67b6a78",
+          "size_bytes": 45100,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/i/init-system-helpers/init-system-helpers_1.66ubuntu1.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/init-system-helpers_1.66ubuntu1.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "iproute2",
+      "version": "6.1.0-1ubuntu6.4",
+      "packages": [
+        "iproute2"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "iproute2_6.1.0.orig.tar.xz",
+          "sha256": "5ce12a0fec6b212725ef218735941b2dab76244db7e72646a76021b0537b43ab",
+          "size_bytes": 905512,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/i/iproute2/iproute2_6.1.0.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/iproute2_6.1.0.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "iproute2_6.1.0-1ubuntu6.4.debian.tar.xz",
+          "sha256": "d127ad985c91e0cc4192876721e533efc893deed08e256b3662205d8401552cd",
+          "size_bytes": 47000,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/i/iproute2/iproute2_6.1.0-1ubuntu6.4.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/iproute2_6.1.0-1ubuntu6.4.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "iproute2_6.1.0-1ubuntu6.4.dsc",
+          "sha256": "e1a68d3819d17295c958922bc5a4bd8a0df951d183e4414f9661a75a1e6e8ced",
+          "size_bytes": 2402,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/i/iproute2/iproute2_6.1.0-1ubuntu6.4.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/iproute2_6.1.0-1ubuntu6.4.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "iptables",
+      "version": "1.8.10-3ubuntu2",
+      "packages": [
+        "iptables",
+        "libip4tc2",
+        "libip6tc2",
+        "libxtables12"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "iptables_1.8.10-3ubuntu2.dsc",
+          "sha256": "7c07534b26de1db5efb044744f0404b466b2df39c8a45b2451720ad705de84eb",
+          "size_bytes": 2796,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/i/iptables/iptables_1.8.10-3ubuntu2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/iptables_1.8.10-3ubuntu2.dsc",
+          "retained": true
+        },
+        {
+          "name": "iptables_1.8.10.orig.tar.xz",
+          "sha256": "5cc255c189356e317d070755ce9371eb63a1b783c34498fb8c30264f3cc59c9c",
+          "size_bytes": 641168,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/i/iptables/iptables_1.8.10.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/iptables_1.8.10.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "iptables_1.8.10-3ubuntu2.debian.tar.xz",
+          "sha256": "9b2adc03e912f0d085cadbfe4d413ba8accad184b73a9c3b9d0aa0327ba6f069",
+          "size_bytes": 30692,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/i/iptables/iptables_1.8.10-3ubuntu2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/iptables_1.8.10-3ubuntu2.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "jansson",
+      "version": "2.14-2build2",
+      "packages": [
+        "libjansson4"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "jansson_2.14-2build2.dsc",
+          "sha256": "79f56ca657a0d680549bf9b0c4fdcf2fe824221bee7462c0ecad56baaeca0a21",
+          "size_bytes": 2120,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/j/jansson/jansson_2.14-2build2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/jansson_2.14-2build2.dsc",
+          "retained": true
+        },
+        {
+          "name": "jansson_2.14.orig.tar.gz",
+          "sha256": "c739578bf6b764aa0752db9a2fdadcfe921c78f1228c7ec0bb47fa804c55d17b",
+          "size_bytes": 141500,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/j/jansson/jansson_2.14.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/jansson_2.14.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "jansson_2.14-2build2.debian.tar.xz",
+          "sha256": "93fb8b5f8c4a8b098622d6865f36f0711a9ee42e104f34457c8503f218078e68",
+          "size_bytes": 5580,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/j/jansson/jansson_2.14-2build2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/jansson_2.14-2build2.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "json-c",
+      "version": "0.17-1build1",
+      "packages": [
+        "libjson-c5"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "json-c_0.17-1build1.dsc",
+          "sha256": "e574ebf2f5187b696c51ee6ab11f7d0f639c839720ab9a5775acbf884cafddd3",
+          "size_bytes": 2213,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/j/json-c/json-c_0.17-1build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/json-c_0.17-1build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "json-c_0.17.orig.tar.gz",
+          "sha256": "024d302a3aadcbf9f78735320a6d5aedf8b77876c8ac8bbb95081ca55054c7eb",
+          "size_bytes": 364529,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/j/json-c/json-c_0.17.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/json-c_0.17.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "json-c_0.17-1build1.debian.tar.xz",
+          "sha256": "31e72da83a72fc0d51559ecbd9d1cf3516574635d638886f273f5b6b26574467",
+          "size_bytes": 9116,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/j/json-c/json-c_0.17-1build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/json-c_0.17-1build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "kmod",
+      "version": "31+20240202-2ubuntu7.2",
+      "packages": [
+        "libkmod2"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "kmod_31+20240202.orig.tar.xz",
+          "sha256": "0b8521d929cc62b7594886c8ed24109a22b96e732fdcc6f0afa486bd62c487bc",
+          "size_bytes": 253852,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/k/kmod/kmod_31+20240202.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/kmod_31+20240202.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "kmod_31+20240202-2ubuntu7.2.debian.tar.xz",
+          "sha256": "4025026e9e1feb507c2e98a4ce8c149f835dc4764119a86523aae3b78cd829ac",
+          "size_bytes": 15332,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/k/kmod/kmod_31+20240202-2ubuntu7.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/kmod_31+20240202-2ubuntu7.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "kmod_31+20240202-2ubuntu7.2.dsc",
+          "sha256": "11126d5723acb9be1ac0f69280d33b249c0a2021d0ab2c87903124da36d0449d",
+          "size_bytes": 2288,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/k/kmod/kmod_31+20240202-2ubuntu7.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/kmod_31+20240202-2ubuntu7.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libassuan",
+      "version": "2.5.6-1build1",
+      "packages": [
+        "libassuan0"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libassuan_2.5.6-1build1.dsc",
+          "sha256": "f1f7508772b8f7c4620b115cf5d6adce5133d3f43d2d61cf5d9ea7152fa7cf9e",
+          "size_bytes": 2734,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/liba/libassuan/libassuan_2.5.6-1build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libassuan_2.5.6-1build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libassuan_2.5.6.orig.tar.bz2",
+          "sha256": "e9fd27218d5394904e4e39788f9b1742711c3e6b41689a31aa3380bd5aa4f426",
+          "size_bytes": 577012,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/liba/libassuan/libassuan_2.5.6.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libassuan_2.5.6.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "libassuan_2.5.6.orig.tar.bz2.asc",
+          "sha256": "a1be6f5611de2f563a904c539e0415dd5823d9e1c4c0c1071418e7412174eaea",
+          "size_bytes": 228,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/liba/libassuan/libassuan_2.5.6.orig.tar.bz2.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libassuan_2.5.6.orig.tar.bz2.asc",
+          "retained": true
+        },
+        {
+          "name": "libassuan_2.5.6-1build1.debian.tar.xz",
+          "sha256": "f6e12195adc071a935556ccea239a64cd305ce667dde4ce9a11691e41278a1c4",
+          "size_bytes": 14412,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/liba/libassuan/libassuan_2.5.6-1build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libassuan_2.5.6-1build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libbpf",
+      "version": "1.3.0-2build2",
+      "packages": [
+        "libbpf1"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libbpf_1.3.0-2build2.dsc",
+          "sha256": "87023eb0efe8f19c9066433593b4218f623931d2b5bfb92d31796eace8bd2dbe",
+          "size_bytes": 2024,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libb/libbpf/libbpf_1.3.0-2build2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libbpf_1.3.0-2build2.dsc",
+          "retained": true
+        },
+        {
+          "name": "libbpf_1.3.0.orig.tar.gz",
+          "sha256": "11db86acd627e468bc48b7258c1130aba41a12c4d364f78e184fd2f5a913d861",
+          "size_bytes": 999282,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libb/libbpf/libbpf_1.3.0.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libbpf_1.3.0.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libbpf_1.3.0-2build2.debian.tar.xz",
+          "sha256": "cf307f4a37e17847b5cf91b0ed5426c2213a4c0e30a9010a10d4854f23ebe156",
+          "size_bytes": 7224,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libb/libbpf/libbpf_1.3.0-2build2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libbpf_1.3.0-2build2.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libbsd",
+      "version": "0.12.1-1build1.1",
+      "packages": [
+        "libbsd0"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libbsd_0.12.1.orig.tar.xz",
+          "sha256": "d7747f8ec1baa6ff5c096a9dd587c061233dec90da0f1aedd66d830f6db6996a",
+          "size_bytes": 444048,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libb/libbsd/libbsd_0.12.1.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libbsd_0.12.1.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libbsd_0.12.1.orig.tar.xz.asc",
+          "sha256": "04a4b66da93ea3c761e15fcedd705a969b67597d0619c3ebc5fe3cf72d477f1f",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libb/libbsd/libbsd_0.12.1.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libbsd_0.12.1.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "libbsd_0.12.1-1build1.1.debian.tar.xz",
+          "sha256": "4086dc52ae53f0d7625a593c331460377868edc2a5606f4d8a341565aa94b2be",
+          "size_bytes": 18732,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libb/libbsd/libbsd_0.12.1-1build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libbsd_0.12.1-1build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libbsd_0.12.1-1build1.1.dsc",
+          "sha256": "a44c2a70dbb9703c342ae49525507d22795b37308302c6167d72c3cbd3e76236",
+          "size_bytes": 2458,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libb/libbsd/libbsd_0.12.1-1build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libbsd_0.12.1-1build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libcap-ng",
+      "version": "0.8.4-2build2",
+      "packages": [
+        "libcap-ng0"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libcap-ng_0.8.4-2build2.dsc",
+          "sha256": "fb7456a3439418628d6c62c5545da55a7ee1a65e539b44b48c39ee9c2d3d9ce4",
+          "size_bytes": 2351,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libc/libcap-ng/libcap-ng_0.8.4-2build2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libcap-ng_0.8.4-2build2.dsc",
+          "retained": true
+        },
+        {
+          "name": "libcap-ng_0.8.4.orig.tar.gz",
+          "sha256": "5615c76a61039e283a6bd107c4faf345ae5ad4dcd45907defe5e474d8fdb6fd2",
+          "size_bytes": 59317,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libc/libcap-ng/libcap-ng_0.8.4.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libcap-ng_0.8.4.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libcap-ng_0.8.4-2build2.debian.tar.xz",
+          "sha256": "dcbce4356e06358e39e94ea66c9fdf9ef4e635e560467918345c732df5237691",
+          "size_bytes": 7384,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libc/libcap-ng/libcap-ng_0.8.4-2build2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libcap-ng_0.8.4-2build2.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libcap2",
+      "version": "1:2.66-5ubuntu2.4",
+      "packages": [
+        "libcap2",
+        "libcap2-bin"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libcap2_2.66.orig.tar.xz",
+          "sha256": "15c40ededb3003d70a283fe587a36b7d19c8b3b554e33f86129c059a4bb466b2",
+          "size_bytes": 181592,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libc/libcap2/libcap2_2.66.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libcap2_2.66.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libcap2_2.66-5ubuntu2.4.debian.tar.xz",
+          "sha256": "7eb46752c6b59984494d2f641a049b9d4b394b7d1fe067729ccbc413c5943136",
+          "size_bytes": 24724,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libc/libcap2/libcap2_2.66-5ubuntu2.4.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libcap2_2.66-5ubuntu2.4.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libcap2_2.66-5ubuntu2.4.dsc",
+          "sha256": "8178019803f285b92e52e82cf84b0a6fc18840041270b2c588db826b8277e3e0",
+          "size_bytes": 2319,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libc/libcap2/libcap2_2.66-5ubuntu2.4.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libcap2_2.66-5ubuntu2.4.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libedit",
+      "version": "3.1-20230828-1build1",
+      "packages": [
+        "libedit2"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libedit_3.1-20230828-1build1.dsc",
+          "sha256": "8f0644bf36c5c07122dccfdf6025941b7d6625582562292544068f323505b4bd",
+          "size_bytes": 2399,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libe/libedit/libedit_3.1-20230828-1build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libedit_3.1-20230828-1build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libedit_3.1-20230828.orig.tar.gz",
+          "sha256": "4ee8182b6e569290e7d1f44f0f78dac8716b35f656b76528f699c69c98814dad",
+          "size_bytes": 534072,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libe/libedit/libedit_3.1-20230828.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libedit_3.1-20230828.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libedit_3.1-20230828-1build1.debian.tar.xz",
+          "sha256": "0df7e31ff4324654caa22386b7a7d404f769838e035555507eacd6e86bcf570d",
+          "size_bytes": 16748,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libe/libedit/libedit_3.1-20230828-1build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libedit_3.1-20230828-1build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libffi",
+      "version": "3.4.6-1build1",
+      "packages": [
+        "libffi8"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libffi_3.4.6-1build1.dsc",
+          "sha256": "a7a2c320c04149192a6dd78df8be28b2b27fd38e48d76f2ee6ba0c19ae0758f6",
+          "size_bytes": 2055,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libf/libffi/libffi_3.4.6-1build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libffi_3.4.6-1build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libffi_3.4.6.orig.tar.gz",
+          "sha256": "9ac790464c1eb2f5ab5809e978a1683e9393131aede72d1b0a0703771d3c6cda",
+          "size_bytes": 598175,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libf/libffi/libffi_3.4.6.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libffi_3.4.6.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libffi_3.4.6-1build1.debian.tar.xz",
+          "sha256": "9d8712818b833baf002a2413552194b8770800cb20b802ba1d3714156eba14fe",
+          "size_bytes": 10736,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libf/libffi/libffi_3.4.6-1build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libffi_3.4.6-1build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libgcrypt20",
+      "version": "1.10.3-2ubuntu0.2",
+      "packages": [
+        "libgcrypt20"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libgcrypt20_1.10.3.orig.tar.bz2",
+          "sha256": "8b0870897ac5ac67ded568dcfadf45969cfa8a6beb0fd60af2a9eadc2a3272aa",
+          "size_bytes": 3783827,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libg/libgcrypt20/libgcrypt20_1.10.3.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libgcrypt20_1.10.3.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "libgcrypt20_1.10.3.orig.tar.bz2.asc",
+          "sha256": "f02a5f961b89c034a78decbb355ea5a8d9356df5a9636dec53ae548d7d814b14",
+          "size_bytes": 390,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libg/libgcrypt20/libgcrypt20_1.10.3.orig.tar.bz2.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libgcrypt20_1.10.3.orig.tar.bz2.asc",
+          "retained": true
+        },
+        {
+          "name": "libgcrypt20_1.10.3-2ubuntu0.2.debian.tar.xz",
+          "sha256": "8298a57538f427d3c1112f2d86e374dd8223156e06b403f5c7945dd3d86f2050",
+          "size_bytes": 66364,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libg/libgcrypt20/libgcrypt20_1.10.3-2ubuntu0.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libgcrypt20_1.10.3-2ubuntu0.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libgcrypt20_1.10.3-2ubuntu0.2.dsc",
+          "sha256": "688df10bc9c90b241926470d1f12a4d5092157263a6c1555996c53bcf40ca7d1",
+          "size_bytes": 2914,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libg/libgcrypt20/libgcrypt20_1.10.3-2ubuntu0.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libgcrypt20_1.10.3-2ubuntu0.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libgpg-error",
+      "version": "1.47-3build2.1",
+      "packages": [
+        "libgpg-error0"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libgpg-error_1.47.orig.tar.bz2",
+          "sha256": "9e3c670966b96ecc746c28c2c419541e3bcb787d1a73930f5e5f5e1bcbbb9bdb",
+          "size_bytes": 1020862,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libg/libgpg-error/libgpg-error_1.47.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libgpg-error_1.47.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "libgpg-error_1.47.orig.tar.bz2.asc",
+          "sha256": "6ab547bf020761e1df80b08335773a91c345ff2c1344f15b1f7d195293ab21a5",
+          "size_bytes": 228,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libg/libgpg-error/libgpg-error_1.47.orig.tar.bz2.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libgpg-error_1.47.orig.tar.bz2.asc",
+          "retained": true
+        },
+        {
+          "name": "libgpg-error_1.47-3build2.1.debian.tar.xz",
+          "sha256": "f02a079a6ddf9930659c3402820b6bd190687e8f1c223f340c965a9da74abcd5",
+          "size_bytes": 18776,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libg/libgpg-error/libgpg-error_1.47-3build2.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libgpg-error_1.47-3build2.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libgpg-error_1.47-3build2.1.dsc",
+          "sha256": "3c8abf463c9ade945fe2e9d87c4aa2bff0026964207b07e99432d9ef6d9436d8",
+          "size_bytes": 3007,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libg/libgpg-error/libgpg-error_1.47-3build2.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libgpg-error_1.47-3build2.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libidn2",
+      "version": "2.3.7-2build1.1",
+      "packages": [
+        "libidn2-0"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libidn2_2.3.7.orig.tar.gz",
+          "sha256": "4c21a791b610b9519b9d0e12b8097bf2f359b12f8dd92647611a929e6bfd7d64",
+          "size_bytes": 2155214,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libi/libidn2/libidn2_2.3.7.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libidn2_2.3.7.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libidn2_2.3.7.orig.tar.gz.asc",
+          "sha256": "d4e78fc1c5a5c35980be3a04dd864574f450d55921360b0aa19326c75ada4a98",
+          "size_bytes": 228,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libi/libidn2/libidn2_2.3.7.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libidn2_2.3.7.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "libidn2_2.3.7-2build1.1.debian.tar.xz",
+          "sha256": "50d3154a3a5b3506aa340c1784f96bfe0f4c5608e2a1a9dd265aa204da4ef327",
+          "size_bytes": 16468,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libi/libidn2/libidn2_2.3.7-2build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libidn2_2.3.7-2build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libidn2_2.3.7-2build1.1.dsc",
+          "sha256": "fa2970145d391578511ef78bc74a9ba7a57cff510d9e5fba39520f63b023986c",
+          "size_bytes": 2651,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libi/libidn2/libidn2_2.3.7-2build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libidn2_2.3.7-2build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libmd",
+      "version": "1.1.0-2build1.1",
+      "packages": [
+        "libmd0"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libmd_1.1.0.orig.tar.xz",
+          "sha256": "1bd6aa42275313af3141c7cf2e5b964e8b1fd488025caf2f971f43b00776b332",
+          "size_bytes": 271228,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libm/libmd/libmd_1.1.0.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libmd_1.1.0.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libmd_1.1.0.orig.tar.xz.asc",
+          "sha256": "402fd3024e43ab975733d09e661804a58ca58697194e4b15216b1217cfe1dadb",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libm/libmd/libmd_1.1.0.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libmd_1.1.0.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "libmd_1.1.0-2build1.1.debian.tar.xz",
+          "sha256": "ed337af7e336b7dbb6b246c339baa34c9e832bf614a44d06158238259df12307",
+          "size_bytes": 8448,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libm/libmd/libmd_1.1.0-2build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libmd_1.1.0-2build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libmd_1.1.0-2build1.1.dsc",
+          "sha256": "11dfd22bba97a4c4ca6c09f34743ac6c72a34eb81344e3a1681c45e2d60ce239",
+          "size_bytes": 2391,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libm/libmd/libmd_1.1.0-2build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libmd_1.1.0-2build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libmnl",
+      "version": "1.0.5-2build1",
+      "packages": [
+        "libmnl0"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libmnl_1.0.5-2build1.dsc",
+          "sha256": "87ea0b2b02fc4b9d408bd942fefb6dd15bb162b9d9acade2a78928441d4bcdb2",
+          "size_bytes": 2611,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libm/libmnl/libmnl_1.0.5-2build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libmnl_1.0.5-2build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libmnl_1.0.5.orig.tar.bz2",
+          "sha256": "274b9b919ef3152bfb3da3a13c950dd60d6e2bcd54230ffeca298d03b40d0525",
+          "size_bytes": 314791,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libm/libmnl/libmnl_1.0.5.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libmnl_1.0.5.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "libmnl_1.0.5.orig.tar.bz2.asc",
+          "sha256": "7175ee1de6c831e6d7ffae3540af7fcd9c64f302351af55ff12966ecbe6a5b71",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libm/libmnl/libmnl_1.0.5.orig.tar.bz2.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libmnl_1.0.5.orig.tar.bz2.asc",
+          "retained": true
+        },
+        {
+          "name": "libmnl_1.0.5-2build1.debian.tar.xz",
+          "sha256": "ae1c404e109ed28b12c520780c16404732f19128f801108c26232982b751777f",
+          "size_bytes": 10092,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libm/libmnl/libmnl_1.0.5-2build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libmnl_1.0.5-2build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libnetfilter-conntrack",
+      "version": "1.0.9-6build1",
+      "packages": [
+        "libnetfilter-conntrack3"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libnetfilter-conntrack_1.0.9-6build1.dsc",
+          "sha256": "a9498379fd45e5e8083793cf9446cfb0a41f1f4a47133ee6b853730e5f371b55",
+          "size_bytes": 2656,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnetfilter-conntrack/libnetfilter-conntrack_1.0.9-6build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnetfilter-conntrack_1.0.9-6build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libnetfilter-conntrack_1.0.9.orig.tar.bz2",
+          "sha256": "01b94beb40bc3afa3a55ae87dd2b5971c90c811dfa7c4b6e1eaf9fe0725d16ec",
+          "size_bytes": 365750,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnetfilter-conntrack/libnetfilter-conntrack_1.0.9.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnetfilter-conntrack_1.0.9.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "libnetfilter-conntrack_1.0.9-6build1.debian.tar.xz",
+          "sha256": "fba00c7eb604af35788ca4ba830a440a02340ef88abea4a8bcd9beca2e135af1",
+          "size_bytes": 11584,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnetfilter-conntrack/libnetfilter-conntrack_1.0.9-6build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnetfilter-conntrack_1.0.9-6build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libnfnetlink",
+      "version": "1.0.2-2build1",
+      "packages": [
+        "libnfnetlink0"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libnfnetlink_1.0.2-2build1.dsc",
+          "sha256": "f853a14124303be1c4fed3c472d94696aab380ab7640aa75993cba7810afaf64",
+          "size_bytes": 2565,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnfnetlink/libnfnetlink_1.0.2-2build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnfnetlink_1.0.2-2build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libnfnetlink_1.0.2.orig.tar.bz2",
+          "sha256": "b064c7c3d426efb4786e60a8e6859b82ee2f2c5e49ffeea640cfe4fe33cbc376",
+          "size_bytes": 298844,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnfnetlink/libnfnetlink_1.0.2.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnfnetlink_1.0.2.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "libnfnetlink_1.0.2.orig.tar.bz2.asc",
+          "sha256": "2ed73b9069ab761168bb11694b8507dbb65e194697d5674dabc8af08a76ac552",
+          "size_bytes": 566,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnfnetlink/libnfnetlink_1.0.2.orig.tar.bz2.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnfnetlink_1.0.2.orig.tar.bz2.asc",
+          "retained": true
+        },
+        {
+          "name": "libnfnetlink_1.0.2-2build1.debian.tar.xz",
+          "sha256": "b85ff2b1a7eefb7d50b912a390a09a8f8601e2c04ef2219f76a1e0be152d3d18",
+          "size_bytes": 7440,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnfnetlink/libnfnetlink_1.0.2-2build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnfnetlink_1.0.2-2build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libnftnl",
+      "version": "1.2.6-2build1",
+      "packages": [
+        "libnftnl11"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libnftnl_1.2.6-2build1.dsc",
+          "sha256": "824459cc42ec67dc8baece9ac017afd0c9db8de219c1da0c946b6fe4c5de887f",
+          "size_bytes": 2620,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnftnl/libnftnl_1.2.6-2build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnftnl_1.2.6-2build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libnftnl_1.2.6.orig.tar.xz",
+          "sha256": "ceeaea2cd92147da19f13a35a7f1a4bc2767ff897e838e4b479cf54b59c777f4",
+          "size_bytes": 336684,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnftnl/libnftnl_1.2.6.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnftnl_1.2.6.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libnftnl_1.2.6.orig.tar.xz.asc",
+          "sha256": "3b7f8f72e36d8ad348e78b135cfd40d84fabfd9923a6d33e57153efcb839eed6",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnftnl/libnftnl_1.2.6.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnftnl_1.2.6.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "libnftnl_1.2.6-2build1.debian.tar.xz",
+          "sha256": "7af7d85f6fb71117d22a1187643d2bc193125ff161bc7feb1fdea5da66be69a5",
+          "size_bytes": 10508,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libn/libnftnl/libnftnl_1.2.6-2build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libnftnl_1.2.6-2build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libseccomp",
+      "version": "2.5.5-1ubuntu3.1",
+      "packages": [
+        "libseccomp2"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libseccomp_2.5.5.orig.tar.gz",
+          "sha256": "248a2c8a4d9b9858aa6baf52712c34afefcf9c9e94b76dce02c1c9aa25fb3375",
+          "size_bytes": 642445,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libseccomp/libseccomp_2.5.5.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libseccomp_2.5.5.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libseccomp_2.5.5.orig.tar.gz.asc",
+          "sha256": "f3bf8a946020d3047581f11fe6ac71971a842115ddb362562b193861ef57d97b",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libseccomp/libseccomp_2.5.5.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libseccomp_2.5.5.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "libseccomp_2.5.5-1ubuntu3.1.debian.tar.xz",
+          "sha256": "ee1e79bc46f18a992ac80f349fdd5cfa0b5f2f6b298473b587c7cf5af89a8df6",
+          "size_bytes": 24484,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libseccomp/libseccomp_2.5.5-1ubuntu3.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libseccomp_2.5.5-1ubuntu3.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libseccomp_2.5.5-1ubuntu3.1.dsc",
+          "sha256": "8039579c8cd02819d8246b40483d69e2113979b5acc5900d7206e0b4bebff392",
+          "size_bytes": 2838,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libseccomp/libseccomp_2.5.5-1ubuntu3.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libseccomp_2.5.5-1ubuntu3.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libselinux",
+      "version": "3.5-2ubuntu2.1",
+      "packages": [
+        "libselinux1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libselinux_3.5.orig.tar.gz",
+          "sha256": "9a3a3705ac13a2ccca2de6d652b6356fead10f36fb33115c185c5ccdf29eec19",
+          "size_bytes": 211453,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libselinux/libselinux_3.5.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libselinux_3.5.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libselinux_3.5.orig.tar.gz.asc",
+          "sha256": "fd37d441e0c08cabe9ac8f7815f52355bab2011549ec5792424fe18be9e1e015",
+          "size_bytes": 981,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libselinux/libselinux_3.5.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libselinux_3.5.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "libselinux_3.5-2ubuntu2.1.debian.tar.xz",
+          "sha256": "13e47e0983f59235e34f5abe07a2a0d1af3dd2d255962c6a50fac4698c3fe891",
+          "size_bytes": 38112,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libselinux/libselinux_3.5-2ubuntu2.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libselinux_3.5-2ubuntu2.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libselinux_3.5-2ubuntu2.1.dsc",
+          "sha256": "96134581a745ed85b3d5f1c24cdd88fa7d3e29548c0f80a683094ed886b7f150",
+          "size_bytes": 3098,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libselinux/libselinux_3.5-2ubuntu2.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libselinux_3.5-2ubuntu2.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libsemanage",
+      "version": "3.5-1build5",
+      "packages": [
+        "libsemanage-common",
+        "libsemanage2"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libsemanage_3.5-1build5.dsc",
+          "sha256": "352d869841ec5d98fd97791aa9b9896af905d5f3517ec99850f48b095c8c3193",
+          "size_bytes": 3105,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libsemanage/libsemanage_3.5-1build5.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libsemanage_3.5-1build5.dsc",
+          "retained": true
+        },
+        {
+          "name": "libsemanage_3.5.orig.tar.gz",
+          "sha256": "f53534e50247538280ed0d76c6ce81d8fb3939bd64cadb89da10dba42e40dd9c",
+          "size_bytes": 185060,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libsemanage/libsemanage_3.5.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libsemanage_3.5.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libsemanage_3.5.orig.tar.gz.asc",
+          "sha256": "f9126c861c666f3308b60cea4405c5e686a056113ca3cbd0a5b0e4af7600c8f5",
+          "size_bytes": 981,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libsemanage/libsemanage_3.5.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libsemanage_3.5.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "libsemanage_3.5-1build5.debian.tar.xz",
+          "sha256": "522654c2f5e0f508ce7c82f3c58cd394e1b9386226a2a6ac917e7fed9d8895b7",
+          "size_bytes": 30188,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libsemanage/libsemanage_3.5-1build5.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libsemanage_3.5-1build5.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libsepol",
+      "version": "3.5-2build1",
+      "packages": [
+        "libsepol2"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libsepol_3.5-2build1.dsc",
+          "sha256": "476b00c198591e38927f274a17dc91bc716e619537f13db58180b10c3daa16e0",
+          "size_bytes": 2458,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libsepol/libsepol_3.5-2build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libsepol_3.5-2build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libsepol_3.5.orig.tar.gz",
+          "sha256": "78fdaf69924db780bac78546e43d9c44074bad798c2c415d0b9bb96d065ee8a2",
+          "size_bytes": 497522,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libsepol/libsepol_3.5.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libsepol_3.5.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libsepol_3.5.orig.tar.gz.asc",
+          "sha256": "2309ab5e7cd38e2eb9196f92a60e00d4508cb293f1181d34a5a050128c9b7b24",
+          "size_bytes": 981,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libsepol/libsepol_3.5.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libsepol_3.5.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "libsepol_3.5-2build1.debian.tar.xz",
+          "sha256": "2e0b6c45b864f36e58c2e1fdeed262283e5ad1aed1599ebb43a859a8760b2307",
+          "size_bytes": 27716,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libs/libsepol/libsepol_3.5-2build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libsepol_3.5-2build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libtasn1-6",
+      "version": "4.19.0-3ubuntu0.24.04.2",
+      "packages": [
+        "libtasn1-6"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libtasn1-6_4.19.0.orig.tar.gz",
+          "sha256": "1613f0ac1cf484d6ec0ce3b8c06d56263cc7242f1c23b30d82d23de345a63f7a",
+          "size_bytes": 1786576,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libt/libtasn1-6/libtasn1-6_4.19.0.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libtasn1-6_4.19.0.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "libtasn1-6_4.19.0.orig.tar.gz.asc",
+          "sha256": "8410c0c004f3509c218a98b276b3308b9c46f48068e8b1a6d9ebfd61ea9f357a",
+          "size_bytes": 228,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libt/libtasn1-6/libtasn1-6_4.19.0.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libtasn1-6_4.19.0.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "libtasn1-6_4.19.0-3ubuntu0.24.04.2.debian.tar.xz",
+          "sha256": "23e6e79b1be16c247e0d3b152a5838d5d182a788ba053c640b2a120b8b00adad",
+          "size_bytes": 25112,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libt/libtasn1-6/libtasn1-6_4.19.0-3ubuntu0.24.04.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libtasn1-6_4.19.0-3ubuntu0.24.04.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libtasn1-6_4.19.0-3ubuntu0.24.04.2.dsc",
+          "sha256": "a322b48ad14f13ef24ccebcc1feab975817c67000382096146a281d0b4354e7e",
+          "size_bytes": 2801,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libt/libtasn1-6/libtasn1-6_4.19.0-3ubuntu0.24.04.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libtasn1-6_4.19.0-3ubuntu0.24.04.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libunistring",
+      "version": "1.1-2build1.1",
+      "packages": [
+        "libunistring5"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libunistring_1.1.orig.tar.xz",
+          "sha256": "827c1eb9cb6e7c738b171745dac0888aa58c5924df2e59239318383de0729b98",
+          "size_bytes": 2397676,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libu/libunistring/libunistring_1.1.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libunistring_1.1.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libunistring_1.1.orig.tar.xz.asc",
+          "sha256": "dadae6c38f85f9e8776231436c601c386924ceb44d511456c61c9be73608933d",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libu/libunistring/libunistring_1.1.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libunistring_1.1.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "libunistring_1.1-2build1.1.debian.tar.xz",
+          "sha256": "06254c8f2ad989bd8ff267fd921d6711fbc0390ff10b99bc3be09fe870baab5e",
+          "size_bytes": 14188,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libu/libunistring/libunistring_1.1-2build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libunistring_1.1-2build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libunistring_1.1-2build1.1.dsc",
+          "sha256": "496ec65625b57a9c5cd0577843814cbd4701ab123a6146a56053dcc9463ae09e",
+          "size_bytes": 2292,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libu/libunistring/libunistring_1.1-2build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libunistring_1.1-2build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libxcrypt",
+      "version": "1:4.4.36-4build1",
+      "packages": [
+        "libcrypt1"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libxcrypt_4.4.36-4build1.dsc",
+          "sha256": "68df46e1ca34983971acc5490a3eec493c6e88cdf4868acdcafba2831e910d78",
+          "size_bytes": 2300,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libx/libxcrypt/libxcrypt_4.4.36-4build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libxcrypt_4.4.36-4build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "libxcrypt_4.4.36.orig.tar.xz",
+          "sha256": "7b7abbc89f13f5194211aa6861ed954e4fa3a210a4cb64f7e13dc8cf413e7f2a",
+          "size_bytes": 392732,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libx/libxcrypt/libxcrypt_4.4.36.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libxcrypt_4.4.36.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libxcrypt_4.4.36-4build1.debian.tar.xz",
+          "sha256": "b75925e5d2c40abab99f8078c40f2a666125067b080466a38eb670730188ca4a",
+          "size_bytes": 8356,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libx/libxcrypt/libxcrypt_4.4.36-4build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libxcrypt_4.4.36-4build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "libzstd",
+      "version": "1.5.5+dfsg2-2build1.1",
+      "packages": [
+        "libzstd1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "libzstd_1.5.5+dfsg2.orig.tar.xz",
+          "sha256": "d7cf3c10d416fd999cb8fcf7685d9268ba7bec8eb78121fc2d0d916fa393d22b",
+          "size_bytes": 1784164,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libz/libzstd/libzstd_1.5.5+dfsg2.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libzstd_1.5.5+dfsg2.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libzstd_1.5.5+dfsg2-2build1.1.debian.tar.xz",
+          "sha256": "c1df6d2628b26d085259b8e7ac020eb060e4c1feca98d6103058eda5ded725bc",
+          "size_bytes": 21288,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libz/libzstd/libzstd_1.5.5+dfsg2-2build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libzstd_1.5.5+dfsg2-2build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "libzstd_1.5.5+dfsg2-2build1.1.dsc",
+          "sha256": "c190a5dff9e7c5b5b1399f0d701bb2c173bc7cbdf14d5e05970f5ac066c25570",
+          "size_bytes": 2485,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/libz/libzstd/libzstd_1.5.5+dfsg2-2build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/libzstd_1.5.5+dfsg2-2build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "lvm2",
+      "version": "2.03.16-3ubuntu3.2",
+      "packages": [
+        "libdevmapper1.02.1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "lvm2_2.03.16.orig.tar.xz",
+          "sha256": "9eee14d34f7962ade7d4624114ce7b6bd3d868d210afb72b3769f8c6a082646e",
+          "size_bytes": 1790340,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/l/lvm2/lvm2_2.03.16.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/lvm2_2.03.16.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "lvm2_2.03.16-3ubuntu3.2.debian.tar.xz",
+          "sha256": "0d2c6a297fb6bad3702806fabaf04ba30447674ec2cc2c19d8840c001b54f258",
+          "size_bytes": 46896,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/l/lvm2/lvm2_2.03.16-3ubuntu3.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/lvm2_2.03.16-3ubuntu3.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "lvm2_2.03.16-3ubuntu3.2.dsc",
+          "sha256": "1e2568d7611d74c71489e4df69a6a304a29dd78b88e55921a8060f2d84ee8c7b",
+          "size_bytes": 3243,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/l/lvm2/lvm2_2.03.16-3ubuntu3.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/lvm2_2.03.16-3ubuntu3.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "lz4",
+      "version": "1.9.4-1build1.1",
+      "packages": [
+        "liblz4-1"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "lz4_1.9.4.orig.tar.gz",
+          "sha256": "0b0e3aa07c8c063ddf40b082bdf7e37a1562bda40a0ff5272957f3e987e0e54b",
+          "size_bytes": 354063,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/l/lz4/lz4_1.9.4.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/lz4_1.9.4.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "lz4_1.9.4-1build1.1.debian.tar.xz",
+          "sha256": "9551b039576db7c87f38c3c847283877de65114cca06488accb9596a7c4f1ead",
+          "size_bytes": 8356,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/l/lz4/lz4_1.9.4-1build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/lz4_1.9.4-1build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "lz4_1.9.4-1build1.1.dsc",
+          "sha256": "ba7b585b15d8b4c955dd68c7af5aa89901cfbb3fdb4f2607ccad51628857d669",
+          "size_bytes": 2061,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/l/lz4/lz4_1.9.4-1build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/lz4_1.9.4-1build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "mawk",
+      "version": "1.3.4.20240123-1build1",
+      "packages": [
+        "mawk"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "mawk_1.3.4.20240123-1build1.dsc",
+          "sha256": "3b5a9d204c10db2e6793e4b0c10e2dda1c7584771567e6a9b8fc4e96e4124979",
+          "size_bytes": 2312,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/m/mawk/mawk_1.3.4.20240123-1build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/mawk_1.3.4.20240123-1build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "mawk_1.3.4.20240123.orig.tar.gz",
+          "sha256": "a8e319a83744b1f1fb6988dfa189d61887f866e9140cc9a49eb003b2b0655e88",
+          "size_bytes": 413943,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/m/mawk/mawk_1.3.4.20240123.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/mawk_1.3.4.20240123.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "mawk_1.3.4.20240123.orig.tar.gz.asc",
+          "sha256": "3b688572de36ecbb8a013cda92e294038324ed2745485e883508e9a6fdbd2472",
+          "size_bytes": 729,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/m/mawk/mawk_1.3.4.20240123.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/mawk_1.3.4.20240123.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "mawk_1.3.4.20240123-1build1.debian.tar.xz",
+          "sha256": "354344a65a3626c162b69430aabc5e4861d5c4ad0c862c3df5a44c6186f273ef",
+          "size_bytes": 15704,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/m/mawk/mawk_1.3.4.20240123-1build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/mawk_1.3.4.20240123-1build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "ncurses",
+      "version": "6.4+20240113-1ubuntu2.2",
+      "packages": [
+        "libncursesw6",
+        "libtinfo6",
+        "ncurses-base",
+        "ncurses-bin"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "ncurses_6.4+20240113.orig.tar.gz",
+          "sha256": "37a12a0f8ae2605012c9a164dd286b0cfa02b51b5055836d09eb3d597fc351b1",
+          "size_bytes": 3688489,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/ncurses/ncurses_6.4+20240113.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/ncurses_6.4+20240113.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "ncurses_6.4+20240113.orig.tar.gz.asc",
+          "sha256": "b70cfa4f155f61dfa7c085ad1e3f90c73132ad198764d7793a44cd7fdca51f1b",
+          "size_bytes": 729,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/ncurses/ncurses_6.4+20240113.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/ncurses_6.4+20240113.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "ncurses_6.4+20240113-1ubuntu2.2.debian.tar.xz",
+          "sha256": "c7bbb8483d7ec358fb925a370575d8ebef63d6e455edce140de2ca7b86cf98d1",
+          "size_bytes": 50532,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/ncurses/ncurses_6.4+20240113-1ubuntu2.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/ncurses_6.4+20240113-1ubuntu2.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "ncurses_6.4+20240113-1ubuntu2.2.dsc",
+          "sha256": "a7dea4604db5c8bc113eda2c4a7353f357618a74d96e404ae98655128e2f03ec",
+          "size_bytes": 3942,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/ncurses/ncurses_6.4+20240113-1ubuntu2.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/ncurses_6.4+20240113-1ubuntu2.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "netbase",
+      "version": "6.4",
+      "packages": [
+        "netbase"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "netbase_6.4.dsc",
+          "sha256": "dc26cfcaa49fd874cc27c65216b2f8b6d3ad62845b78da4bdf0aea55592af756",
+          "size_bytes": 898,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/netbase/netbase_6.4.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/netbase_6.4.dsc",
+          "retained": true
+        },
+        {
+          "name": "netbase_6.4.tar.xz",
+          "sha256": "fa6621826ff1150e581bd90bc3c8a4ecafe5df90404f207db6dcdf2c75f26ad7",
+          "size_bytes": 32712,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/netbase/netbase_6.4.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/netbase_6.4.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "nettle",
+      "version": "3.9.1-2.2build1.1",
+      "packages": [
+        "libhogweed6t64",
+        "libnettle8t64"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "nettle_3.9.1.orig.tar.gz",
+          "sha256": "ccfeff981b0ca71bbd6fbcb054f407c60ffb644389a5be80d6716d5b550c6ce3",
+          "size_bytes": 2396741,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/nettle/nettle_3.9.1.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/nettle_3.9.1.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "nettle_3.9.1.orig.tar.gz.asc",
+          "sha256": "9746017a1a7fe60aad4b929ea592bc6ac51e12ea7179f289944eb44828d958af",
+          "size_bytes": 573,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/nettle/nettle_3.9.1.orig.tar.gz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/nettle_3.9.1.orig.tar.gz.asc",
+          "retained": true
+        },
+        {
+          "name": "nettle_3.9.1-2.2build1.1.debian.tar.xz",
+          "sha256": "be4ad3b97b32c4c4bacc10aa4caef2f3fa0840c21c642407fc3d48c4535b7c5e",
+          "size_bytes": 24848,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/nettle/nettle_3.9.1-2.2build1.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/nettle_3.9.1-2.2build1.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "nettle_3.9.1-2.2build1.1.dsc",
+          "sha256": "db439554d51174b657660a2a47d3d4128838e063f3c9c7da67bb3fe91931d1d2",
+          "size_bytes": 2325,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/nettle/nettle_3.9.1-2.2build1.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/nettle_3.9.1-2.2build1.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "nftables",
+      "version": "1.0.9-1ubuntu0.1",
+      "packages": [
+        "libnftables1",
+        "nftables"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "nftables_1.0.9.orig.tar.xz",
+          "sha256": "a3c304cd9ba061239ee0474f9afb938a9bb99d89b960246f66f0c3a0a85e14cd",
+          "size_bytes": 971968,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/nftables/nftables_1.0.9.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/nftables_1.0.9.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "nftables_1.0.9.orig.tar.xz.asc",
+          "sha256": "2fda73112d367827a0c4bb81aa2dbf6bd3fade6485ed209ba1d261e2b94e19b4",
+          "size_bytes": 833,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/nftables/nftables_1.0.9.orig.tar.xz.asc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/nftables_1.0.9.orig.tar.xz.asc",
+          "retained": true
+        },
+        {
+          "name": "nftables_1.0.9-1ubuntu0.1.debian.tar.xz",
+          "sha256": "bafb52de7247ff92a91b55d923b47c6dc473e74b00fd4585113eeefccd8fc0ac",
+          "size_bytes": 22720,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/nftables/nftables_1.0.9-1ubuntu0.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/nftables_1.0.9-1ubuntu0.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "nftables_1.0.9-1ubuntu0.1.dsc",
+          "sha256": "8fa64c8a749b48f9dfcb7ab53e2de3f38ec22a6404b6ada36f1daae790a9a255",
+          "size_bytes": 2835,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/nftables/nftables_1.0.9-1ubuntu0.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/nftables_1.0.9-1ubuntu0.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "npth",
+      "version": "1.6-3.1build1",
+      "packages": [
+        "libnpth0t64"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "npth_1.6-3.1build1.dsc",
+          "sha256": "7e83a0dc387e8ab8cf152500526fefd46440b2b652470007b57b65b579539a32",
+          "size_bytes": 2107,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/npth/npth_1.6-3.1build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/npth_1.6-3.1build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "npth_1.6.orig.tar.bz2",
+          "sha256": "1393abd9adcf0762d34798dc34fdcf4d0d22a8410721e76f1e3afcd1daa4e2d1",
+          "size_bytes": 300486,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/npth/npth_1.6.orig.tar.bz2",
+          "cache_path": ".cache/engine-source-companion/ubuntu/npth_1.6.orig.tar.bz2",
+          "retained": true
+        },
+        {
+          "name": "npth_1.6-3.1build1.debian.tar.xz",
+          "sha256": "5ca6d77eef4b2d04db11ab1c1a4691769a419ba42391d41ae36cf8a0968ef94e",
+          "size_bytes": 11036,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/n/npth/npth_1.6-3.1build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/npth_1.6-3.1build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "openssl",
+      "version": "3.0.13-0ubuntu3.15",
+      "packages": [
+        "libssl3t64",
+        "openssl"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "openssl_3.0.13.orig.tar.gz",
+          "sha256": "88525753f79d3bec27d2fa7c66aa0b92b3aa9498dafd93d7cfa4b3780cdae313",
+          "size_bytes": 15294843,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/o/openssl/openssl_3.0.13.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/openssl_3.0.13.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "openssl_3.0.13-0ubuntu3.15.debian.tar.xz",
+          "sha256": "a48bc18f3afd7030cd73712f180af343c4642e2d0ac65ac06fe1ec0ca7506077",
+          "size_bytes": 209648,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/o/openssl/openssl_3.0.13-0ubuntu3.15.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/openssl_3.0.13-0ubuntu3.15.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "openssl_3.0.13-0ubuntu3.15.dsc",
+          "sha256": "ae1c9a23219f0617b866d765f750ebd3bac74d93b7a235e6e53289781a056f0a",
+          "size_bytes": 2516,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/o/openssl/openssl_3.0.13-0ubuntu3.15.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/openssl_3.0.13-0ubuntu3.15.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "p11-kit",
+      "version": "0.25.3-4ubuntu2.2",
+      "packages": [
+        "libp11-kit0"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "p11-kit_0.25.3.orig.tar.xz",
+          "sha256": "d8ddce1bb7e898986f9d250ccae7c09ce14d82f1009046d202a0eb1b428b2adc",
+          "size_bytes": 991528,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/p11-kit/p11-kit_0.25.3.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/p11-kit_0.25.3.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "p11-kit_0.25.3-4ubuntu2.2.debian.tar.xz",
+          "sha256": "297b8c03f6cf5bc9a00487ddcfee8ab674040afb7b256029a5eeaf8c5edb18a5",
+          "size_bytes": 28712,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/p11-kit/p11-kit_0.25.3-4ubuntu2.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/p11-kit_0.25.3-4ubuntu2.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "p11-kit_0.25.3-4ubuntu2.2.dsc",
+          "sha256": "c3975f825965d6ee899edcfb8bce29d56716b322859df37f200e3aa80d0da69e",
+          "size_bytes": 2406,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/p11-kit/p11-kit_0.25.3-4ubuntu2.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/p11-kit_0.25.3-4ubuntu2.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "pam",
+      "version": "1.5.3-5ubuntu5.7",
+      "packages": [
+        "libpam-modules",
+        "libpam-modules-bin",
+        "libpam-runtime",
+        "libpam0g"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "pam_1.5.3.orig.tar.xz",
+          "sha256": "7ac4b50feee004a9fa88f1dfd2d2fa738a82896763050cd773b3c54b0a818283",
+          "size_bytes": 1020076,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/pam/pam_1.5.3.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/pam_1.5.3.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "pam_1.5.3-5ubuntu5.7.debian.tar.xz",
+          "sha256": "20a011e675ba5c2fdb22b681c395b3282128dfff119b8bec9adc39f4e87cddf9",
+          "size_bytes": 207384,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/pam/pam_1.5.3-5ubuntu5.7.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/pam_1.5.3-5ubuntu5.7.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "pam_1.5.3-5ubuntu5.7.dsc",
+          "sha256": "df25ccfc35891011b8976281516ea239a6eb2cb17bec07c17d4ee2fc7a7be96e",
+          "size_bytes": 2772,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/pam/pam_1.5.3-5ubuntu5.7.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/pam_1.5.3-5ubuntu5.7.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "pcre2",
+      "version": "10.42-4ubuntu2.1",
+      "packages": [
+        "libpcre2-8-0"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "pcre2_10.42.orig.tar.gz",
+          "sha256": "c33b418e3b936ee3153de2c61cc638e7e4fe3156022a5c77d0711bcbb9d64f1f",
+          "size_bytes": 2397194,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/pcre2/pcre2_10.42.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/pcre2_10.42.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "pcre2_10.42-4ubuntu2.1.diff.gz",
+          "sha256": "29c5cb6ff392544bf48bd3ec2a98aa0da5297457fa4f4199a1c392ec3d41f19c",
+          "size_bytes": 8431,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/pcre2/pcre2_10.42-4ubuntu2.1.diff.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/pcre2_10.42-4ubuntu2.1.diff.gz",
+          "retained": true
+        },
+        {
+          "name": "pcre2_10.42-4ubuntu2.1.dsc",
+          "sha256": "6272177be186d6f8ad16b668bb508b2e07645e05b5b8402d446492cb6d18104e",
+          "size_bytes": 2277,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/pcre2/pcre2_10.42-4ubuntu2.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/pcre2_10.42-4ubuntu2.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "perl",
+      "version": "5.38.2-3.2ubuntu0.4",
+      "packages": [
+        "perl-base"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "perl_5.38.2.orig-regen-configure.tar.xz",
+          "sha256": "4d1b34cc058f9963cb89785ecc040d57f6d7725cd83329cfa4ef8b27566454d2",
+          "size_bytes": 418808,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/perl/perl_5.38.2.orig-regen-configure.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/perl_5.38.2.orig-regen-configure.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "perl_5.38.2.orig.tar.xz",
+          "sha256": "d91115e90b896520e83d4de6b52f8254ef2b70a8d545ffab33200ea9f1cf29e8",
+          "size_bytes": 13679524,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/perl/perl_5.38.2.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/perl_5.38.2.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "perl_5.38.2-3.2ubuntu0.4.debian.tar.xz",
+          "sha256": "4126b187cc0cdc7baf3a5c3532d24847b6c62228f15b2fcb4f77bb0afbf948af",
+          "size_bytes": 181972,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/perl/perl_5.38.2-3.2ubuntu0.4.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/perl_5.38.2-3.2ubuntu0.4.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "perl_5.38.2-3.2ubuntu0.4.dsc",
+          "sha256": "4e39e38aaa15fee077b4540ad33adfef676dc90c3d3dfba2bde3abefa1394259",
+          "size_bytes": 3036,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/perl/perl_5.38.2-3.2ubuntu0.4.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/perl_5.38.2-3.2ubuntu0.4.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "procps",
+      "version": "2:4.0.4-4ubuntu3.3",
+      "packages": [
+        "libproc2-0",
+        "procps"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "procps_4.0.4.orig.tar.xz",
+          "sha256": "22870d6feb2478adb617ce4f09a787addaf2d260c5a8aa7b17d889a962c5e42e",
+          "size_bytes": 1401540,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/procps/procps_4.0.4.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/procps_4.0.4.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "procps_4.0.4-4ubuntu3.3.debian.tar.xz",
+          "sha256": "895493786388b9ffa8a9ba894f473371cd4bbd2aa5089a8327cfdf00cf7cbc2d",
+          "size_bytes": 39588,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/procps/procps_4.0.4-4ubuntu3.3.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/procps_4.0.4-4ubuntu3.3.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "procps_4.0.4-4ubuntu3.3.dsc",
+          "sha256": "0a57e936bcadc6f226991a0d02f20a190763eba59a830784ef51669c04745d58",
+          "size_bytes": 2280,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/p/procps/procps_4.0.4-4ubuntu3.3.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/procps_4.0.4-4ubuntu3.3.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "sed",
+      "version": "4.9-2ubuntu0.24.04.1",
+      "packages": [
+        "sed"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "sed_4.9.orig.tar.xz",
+          "sha256": "6e226b732e1cd739464ad6862bd1a1aba42d7982922da7a53519631d24975181",
+          "size_bytes": 1397092,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/sed/sed_4.9.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/sed_4.9.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "sed_4.9-2ubuntu0.24.04.1.debian.tar.xz",
+          "sha256": "81ac2757638817c9628f51dbdf425e0bfc820dd8a97e2bdef10cdaeba1dec7c0",
+          "size_bytes": 63288,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/sed/sed_4.9-2ubuntu0.24.04.1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/sed_4.9-2ubuntu0.24.04.1.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "sed_4.9-2ubuntu0.24.04.1.dsc",
+          "sha256": "b62f26deec4d06d8d096d577e0a0eb004f4e79da2c75ed5338e1ed8c175f9fcf",
+          "size_bytes": 1999,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/sed/sed_4.9-2ubuntu0.24.04.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/sed_4.9-2ubuntu0.24.04.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "sensible-utils",
+      "version": "0.0.22",
+      "packages": [
+        "sensible-utils"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "sensible-utils_0.0.22.dsc",
+          "sha256": "2a49b3be4b85b3f455f9c15c26f9bfb6c508496025a414f32649b16fe6326773",
+          "size_bytes": 1737,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/sensible-utils/sensible-utils_0.0.22.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/sensible-utils_0.0.22.dsc",
+          "retained": true
+        },
+        {
+          "name": "sensible-utils_0.0.22.tar.xz",
+          "sha256": "c744d604ad6e1f3c8b4831cd84d653cf86bf9867a856724bf3f4fceb2de215b5",
+          "size_bytes": 74412,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/sensible-utils/sensible-utils_0.0.22.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/sensible-utils_0.0.22.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "shadow",
+      "version": "1:4.13+dfsg1-4ubuntu3.2",
+      "packages": [
+        "login",
+        "passwd"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "shadow_4.13+dfsg1.orig.tar.xz",
+          "sha256": "a8bb3a2aceff1cbe39d0f50687dcc1d7e7be0516a9d954d8e2eedb93f5906207",
+          "size_bytes": 1811752,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/shadow/shadow_4.13+dfsg1.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/shadow_4.13+dfsg1.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "shadow_4.13+dfsg1-4ubuntu3.2.debian.tar.xz",
+          "sha256": "ff01a3e94111ca8c4dca097ebe54edbee912cbdeba042c214bfa4c34e7839f61",
+          "size_bytes": 96392,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/shadow/shadow_4.13+dfsg1-4ubuntu3.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/shadow_4.13+dfsg1-4ubuntu3.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "shadow_4.13+dfsg1-4ubuntu3.2.dsc",
+          "sha256": "0be17fd044f3e23f714a5b286a04bd040f246af1ac32fcc406b63756baa9c368",
+          "size_bytes": 2400,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/shadow/shadow_4.13+dfsg1-4ubuntu3.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/shadow_4.13+dfsg1-4ubuntu3.2.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "systemd",
+      "version": "255.4-1ubuntu8.17",
+      "packages": [
+        "libpam-systemd",
+        "libsystemd-shared",
+        "libsystemd0",
+        "libudev1",
+        "systemd",
+        "systemd-dev",
+        "systemd-sysv"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "systemd_255.4.orig.tar.gz",
+          "sha256": "96e75bd08c57ad401677456fb88ef54a9f05bb1695693013bc6ecce839640fd5",
+          "size_bytes": 14952427,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/systemd/systemd_255.4.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/systemd_255.4.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "systemd_255.4-1ubuntu8.17.debian.tar.xz",
+          "sha256": "4695ff34f83b1f7e6e02bf3cfac2e2a44ac76b6cfc5a38c0081bac6919d547bb",
+          "size_bytes": 272596,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/systemd/systemd_255.4-1ubuntu8.17.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/systemd_255.4-1ubuntu8.17.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "systemd_255.4-1ubuntu8.17.dsc",
+          "sha256": "8e5f4e5a7b7ee457214be1efd1ea1d380186c38b146d8c98af5da0f625d3c396",
+          "size_bytes": 7324,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/systemd/systemd_255.4-1ubuntu8.17.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/systemd_255.4-1ubuntu8.17.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "sysvinit",
+      "version": "3.08-6ubuntu3",
+      "packages": [
+        "sysvinit-utils"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "sysvinit_3.08-6ubuntu3.dsc",
+          "sha256": "e440a6f97aaf42f8067f87e2589dd7636bd0e95bc6fcb8b902f50631f83157c0",
+          "size_bytes": 2495,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/sysvinit/sysvinit_3.08-6ubuntu3.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/sysvinit_3.08-6ubuntu3.dsc",
+          "retained": true
+        },
+        {
+          "name": "sysvinit_3.08.orig.tar.gz",
+          "sha256": "325e42ae4ae5ae3e4d989e0604aeb5e4eae5f3ee21e401db3c79000718f8c836",
+          "size_bytes": 513674,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/sysvinit/sysvinit_3.08.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/sysvinit_3.08.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "sysvinit_3.08-6ubuntu3.debian.tar.xz",
+          "sha256": "1a8a8365cdc393e349fc115094a8ef7c52082ed22e7f1337ab1b8dd6b5e0103b",
+          "size_bytes": 140128,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/s/sysvinit/sysvinit_3.08-6ubuntu3.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/sysvinit_3.08-6ubuntu3.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "tar",
+      "version": "1.35+dfsg-3ubuntu0.4",
+      "packages": [
+        "tar"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "tar_1.35+dfsg.orig.tar.xz",
+          "sha256": "9ae57e981c1e73c0eebc2b26c9b0c4497fe310ef1d516ea430efb5470b71f7a8",
+          "size_bytes": 2111608,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/t/tar/tar_1.35+dfsg.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/tar_1.35+dfsg.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "tar_1.35+dfsg-3ubuntu0.4.debian.tar.xz",
+          "sha256": "66111c3bd3ca8c4d619ae67c6f80eaeee46f239dbfecad78d1f08ce0a924a133",
+          "size_bytes": 52244,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/t/tar/tar_1.35+dfsg-3ubuntu0.4.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/tar_1.35+dfsg-3ubuntu0.4.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "tar_1.35+dfsg-3ubuntu0.4.dsc",
+          "sha256": "08ed7d5680f4d342723e0ef5c568c95be1c5053b4c2d0f2723b63ddd378a908d",
+          "size_bytes": 2124,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/t/tar/tar_1.35+dfsg-3ubuntu0.4.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/tar_1.35+dfsg-3ubuntu0.4.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "ubuntu-keyring",
+      "version": "2023.11.28.1",
+      "packages": [
+        "ubuntu-keyring"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "ubuntu-keyring_2023.11.28.1.dsc",
+          "sha256": "c71c8e5a1dd5e8ef682b7104645a88f0bc9eeb9380bf64288adcf78f40bcf68b",
+          "size_bytes": 1872,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/u/ubuntu-keyring/ubuntu-keyring_2023.11.28.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/ubuntu-keyring_2023.11.28.1.dsc",
+          "retained": true
+        },
+        {
+          "name": "ubuntu-keyring_2023.11.28.1.tar.xz",
+          "sha256": "aecd455ae15561371d6e454f121f079f0641d5e1b579a5563a2bc363fc74aa2e",
+          "size_bytes": 20236,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/u/ubuntu-keyring/ubuntu-keyring_2023.11.28.1.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/ubuntu-keyring_2023.11.28.1.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "unminimize",
+      "version": "0.2.1",
+      "packages": [
+        "unminimize"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "unminimize_0.2.1.tar.xz",
+          "sha256": "f15f4c1df275fa116024ea1142730f524cc552da1222effeec981aebc04f7461",
+          "size_bytes": 9400,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/u/unminimize/unminimize_0.2.1.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/unminimize_0.2.1.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "unminimize_0.2.1.dsc",
+          "sha256": "04cec314558830aba7f2c0a47fc156875c083db3f711d5525bea25a9a26fb638",
+          "size_bytes": 1554,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/u/unminimize/unminimize_0.2.1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/unminimize_0.2.1.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "util-linux",
+      "version": "2.39.3-9ubuntu6.6",
+      "packages": [
+        "bsdutils",
+        "libblkid1",
+        "libfdisk1",
+        "libmount1",
+        "libsmartcols1",
+        "libuuid1",
+        "mount",
+        "util-linux"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "util-linux_2.39.3.orig.tar.xz",
+          "sha256": "7b6605e48d1a49f43cc4b4cfc59f313d0dd5402fa40b96810bd572e167dfed0f",
+          "size_bytes": 8526168,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/u/util-linux/util-linux_2.39.3.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/util-linux_2.39.3.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "util-linux_2.39.3-9ubuntu6.6.debian.tar.xz",
+          "sha256": "d63476e26c149179ae8a19f4c701e27cf9235c3df2482714d369211683824e37",
+          "size_bytes": 155164,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/u/util-linux/util-linux_2.39.3-9ubuntu6.6.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/util-linux_2.39.3-9ubuntu6.6.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "util-linux_2.39.3-9ubuntu6.6.dsc",
+          "sha256": "b30cb22e05473810a48e14db8b5ea7786bb38aed7617dc89ad4f81cd7c6c3397",
+          "size_bytes": 4726,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/u/util-linux/util-linux_2.39.3-9ubuntu6.6.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/util-linux_2.39.3-9ubuntu6.6.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "xxhash",
+      "version": "0.8.2-2build1",
+      "packages": [
+        "libxxhash0"
+      ],
+      "sources_index_sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "xxhash_0.8.2-2build1.dsc",
+          "sha256": "a500864f82084ce3c431c0f4a233fb1c0c48a3a8486cc49989ea073e05814d31",
+          "size_bytes": 2076,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/x/xxhash/xxhash_0.8.2-2build1.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/xxhash_0.8.2-2build1.dsc",
+          "retained": true
+        },
+        {
+          "name": "xxhash_0.8.2.orig.tar.gz",
+          "sha256": "baee0c6afd4f03165de7a4e67988d16f0f2b257b51d0e3cb91909302a26a79c4",
+          "size_bytes": 1141188,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/x/xxhash/xxhash_0.8.2.orig.tar.gz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/xxhash_0.8.2.orig.tar.gz",
+          "retained": true
+        },
+        {
+          "name": "xxhash_0.8.2-2build1.debian.tar.xz",
+          "sha256": "2ec69c1d868b3634a91c6f9e4921b86101fd9384b186f2401fdbac532c78830c",
+          "size_bytes": 5048,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/x/xxhash/xxhash_0.8.2-2build1.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/xxhash_0.8.2-2build1.debian.tar.xz",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "xz-utils",
+      "version": "5.6.1+really5.4.5-1ubuntu0.3",
+      "packages": [
+        "liblzma5"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "xz-utils_5.6.1+really5.4.5.orig.tar.xz",
+          "sha256": "da9dec6c12cf2ecf269c31ab65b5de18e8e52b96f35d5bcd08c12b43e6878803",
+          "size_bytes": 1680520,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/x/xz-utils/xz-utils_5.6.1+really5.4.5.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/xz-utils_5.6.1+really5.4.5.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "xz-utils_5.6.1+really5.4.5-1ubuntu0.3.debian.tar.xz",
+          "sha256": "03f321901f6e1c56235cd7ae6a6784c104b1b1060ca3afa5a5806e345ee72e01",
+          "size_bytes": 31672,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/x/xz-utils/xz-utils_5.6.1+really5.4.5-1ubuntu0.3.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/xz-utils_5.6.1+really5.4.5-1ubuntu0.3.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "xz-utils_5.6.1+really5.4.5-1ubuntu0.3.dsc",
+          "sha256": "34c2be772533a5c31e881bc620cedaf9be3d315feb677f00e12c136c299d126a",
+          "size_bytes": 2505,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/x/xz-utils/xz-utils_5.6.1+really5.4.5-1ubuntu0.3.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/xz-utils_5.6.1+really5.4.5-1ubuntu0.3.dsc",
+          "retained": true
+        }
+      ]
+    },
+    {
+      "source": "zlib",
+      "version": "1:1.3.dfsg-3.1ubuntu2.2",
+      "packages": [
+        "zlib1g"
+      ],
+      "sources_index_sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "sources_index_cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "artifacts": [
+        {
+          "name": "zlib_1.3.dfsg.orig.tar.xz",
+          "sha256": "5eea0322c1c21c75cad3b607ac1c43ff5c71e014b8ac4a34300b5e2b80d02e70",
+          "size_bytes": 1128572,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/z/zlib/zlib_1.3.dfsg.orig.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/zlib_1.3.dfsg.orig.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "zlib_1.3.dfsg-3.1ubuntu2.2.debian.tar.xz",
+          "sha256": "de1c2d532ecb7caf99ccb905fb03c37fe0c8117fbdc79d05be4474b71e6398c2",
+          "size_bytes": 61316,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/z/zlib/zlib_1.3.dfsg-3.1ubuntu2.2.debian.tar.xz",
+          "cache_path": ".cache/engine-source-companion/ubuntu/zlib_1.3.dfsg-3.1ubuntu2.2.debian.tar.xz",
+          "retained": true
+        },
+        {
+          "name": "zlib_1.3.dfsg-3.1ubuntu2.2.dsc",
+          "sha256": "56a7cd029863cbddafce831e4e63cccfa84017f93617929cb7c02f80bb5a122a",
+          "size_bytes": 2987,
+          "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/pool/main/z/zlib/zlib_1.3.dfsg-3.1ubuntu2.2.dsc",
+          "cache_path": ".cache/engine-source-companion/ubuntu/zlib_1.3.dfsg-3.1ubuntu2.2.dsc",
+          "retained": true
+        }
+      ]
+    }
+  ],
+  "missing_ubuntu_source_identities": [],
+  "verified_signed_sources_indexes": [
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble/main/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-main.Sources.xz",
+      "sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "size_bytes": 1383940,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+        "date": "Thu, 25 Apr 2024 15:10:33 UTC",
+        "suite": "noble"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble.InRelease",
+        "sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+        "size_bytes": 255850
+      },
+      "signed_path": "main/source/Sources.xz",
+      "uncompressed_sha256": "5a8ea5a4167d9ac5395246ee2a3784601c24b0646131195c65b94af1295c8293",
+      "uncompressed_size_bytes": 5753247
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble/universe/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-universe.Sources.xz",
+      "sha256": "796c4253df46fe9d0b468c5b18259f8d5172bf6c8b3b17451ba98ffc1781f682",
+      "size_bytes": 19839948,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+        "date": "Thu, 25 Apr 2024 15:10:33 UTC",
+        "suite": "noble"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble.InRelease",
+        "sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+        "size_bytes": 255850
+      },
+      "signed_path": "universe/source/Sources.xz",
+      "uncompressed_sha256": "4e6976cc494add40533c15f6cb5246b1a41414e0f8c2a59d64bcb105b9455bb3",
+      "uncompressed_size_bytes": 79639214
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble-updates/main/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-main.Sources.xz",
+      "sha256": "43dad8d94b060eb10b77dc7f7c05e3aa8de79bf4801578abf15934ef6a47973a",
+      "size_bytes": 520272,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "be43f3a6ff175bc85598ee9508e36e372a7b66066b0f2c39d142b8561a35c893",
+        "date": "Sun, 13 Sep 2026  9:55:19 UTC",
+        "suite": "noble-updates"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble-updates/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates.InRelease",
+        "sha256": "be43f3a6ff175bc85598ee9508e36e372a7b66066b0f2c39d142b8561a35c893",
+        "size_bytes": 126125
+      },
+      "signed_path": "main/source/Sources.xz",
+      "uncompressed_sha256": "5f2e0ed37086d0972c1c3369f4e55aa3d63d274368c77bf2d3de1903f68a7a54",
+      "uncompressed_size_bytes": 2736933
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble-updates/universe/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates-universe.Sources.xz",
+      "sha256": "a346ed1472ee69eddb68f7dab4385ce7c2b32b969f17d9f03a0dd00be2c19ae7",
+      "size_bytes": 439924,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "be43f3a6ff175bc85598ee9508e36e372a7b66066b0f2c39d142b8561a35c893",
+        "date": "Sun, 13 Sep 2026  9:55:19 UTC",
+        "suite": "noble-updates"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble-updates/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-updates.InRelease",
+        "sha256": "be43f3a6ff175bc85598ee9508e36e372a7b66066b0f2c39d142b8561a35c893",
+        "size_bytes": 126125
+      },
+      "signed_path": "universe/source/Sources.xz",
+      "uncompressed_sha256": "19d138161597ea33f7b5a234d17c434e92d9165d3aa5c75d0040684473b38bb6",
+      "uncompressed_size_bytes": 3089083
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble-security/main/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-security-main.Sources.xz",
+      "sha256": "f7fd851a5a265aa1b3e1c07b17d61af115fdfed12b6e5c8245f7e3d5193a9486",
+      "size_bytes": 278344,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "6d9a25abc0c184c52f82045895303ea80c2860e5d868106784b42961135aae1a",
+        "date": "Sun, 13 Sep 2026  9:54:46 UTC",
+        "suite": "noble-security"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble-security/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-security.InRelease",
+        "sha256": "6d9a25abc0c184c52f82045895303ea80c2860e5d868106784b42961135aae1a",
+        "size_bytes": 126127
+      },
+      "signed_path": "main/source/Sources.xz",
+      "uncompressed_sha256": "ac5ba426ebd96702a6d86dafc1011b2fd3bbbc6648d1f87c28d937ec8a3f3571",
+      "uncompressed_size_bytes": 1608618
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble-security/universe/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-security-universe.Sources.xz",
+      "sha256": "ddd7f7b0f7e3a0914db88b012a85d80e70085abe4e582ba638e9ce13630d70cd",
+      "size_bytes": 294616,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "6d9a25abc0c184c52f82045895303ea80c2860e5d868106784b42961135aae1a",
+        "date": "Sun, 13 Sep 2026  9:54:46 UTC",
+        "suite": "noble-security"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260913T120000Z/dists/noble-security/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260913T120000Z-noble-security.InRelease",
+        "sha256": "6d9a25abc0c184c52f82045895303ea80c2860e5d868106784b42961135aae1a",
+        "size_bytes": 126127
+      },
+      "signed_path": "universe/source/Sources.xz",
+      "uncompressed_sha256": "dd770fa8b46e9885145a41fb530920dfede199aae025659cdc2a4f5e5e91a844",
+      "uncompressed_size_bytes": 2087356
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble/main/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-main.Sources.xz",
+      "sha256": "4f8e45d8f84dd2a6b7ce87695c70336114b9e96e6fd6db066c115f758e39308e",
+      "size_bytes": 1383940,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+        "date": "Thu, 25 Apr 2024 15:10:33 UTC",
+        "suite": "noble"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble.InRelease",
+        "sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+        "size_bytes": 255850
+      },
+      "signed_path": "main/source/Sources.xz",
+      "uncompressed_sha256": "5a8ea5a4167d9ac5395246ee2a3784601c24b0646131195c65b94af1295c8293",
+      "uncompressed_size_bytes": 5753247
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble/universe/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-universe.Sources.xz",
+      "sha256": "796c4253df46fe9d0b468c5b18259f8d5172bf6c8b3b17451ba98ffc1781f682",
+      "size_bytes": 19839948,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+        "date": "Thu, 25 Apr 2024 15:10:33 UTC",
+        "suite": "noble"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble.InRelease",
+        "sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+        "size_bytes": 255850
+      },
+      "signed_path": "universe/source/Sources.xz",
+      "uncompressed_sha256": "4e6976cc494add40533c15f6cb5246b1a41414e0f8c2a59d64bcb105b9455bb3",
+      "uncompressed_size_bytes": 79639214
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble-updates/main/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-updates-main.Sources.xz",
+      "sha256": "80db695b186d22b90a86ea6311ce2d068ad88660087cb39d15fd38903902578c",
+      "size_bytes": 477380,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "fb54b4daf95a4df1c7cbbb599c55ba276b787c115e8a22d2ff51e5d196a92e69",
+        "date": "Sun, 06 Sep 2026 21:09:11 UTC",
+        "suite": "noble-updates"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble-updates/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-updates.InRelease",
+        "sha256": "fb54b4daf95a4df1c7cbbb599c55ba276b787c115e8a22d2ff51e5d196a92e69",
+        "size_bytes": 126125
+      },
+      "signed_path": "main/source/Sources.xz",
+      "uncompressed_sha256": "3607fe1b20125e88a256e1d99f3e3f2f7cfec867e1b337450520d29333066780",
+      "uncompressed_size_bytes": 2622194
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble-updates/universe/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-updates-universe.Sources.xz",
+      "sha256": "33fcacdc07e127d830e22d0c30f28a25fcea7d838d21c8b4630e499d527ae96d",
+      "size_bytes": 436040,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "fb54b4daf95a4df1c7cbbb599c55ba276b787c115e8a22d2ff51e5d196a92e69",
+        "date": "Sun, 06 Sep 2026 21:09:11 UTC",
+        "suite": "noble-updates"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble-updates/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-updates.InRelease",
+        "sha256": "fb54b4daf95a4df1c7cbbb599c55ba276b787c115e8a22d2ff51e5d196a92e69",
+        "size_bytes": 126125
+      },
+      "signed_path": "universe/source/Sources.xz",
+      "uncompressed_sha256": "1361218b86330e14e3879d359a082f32c742f3e768cc68772bd0055b07152bd1",
+      "uncompressed_size_bytes": 3079075
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble-security/main/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-security-main.Sources.xz",
+      "sha256": "38ff46caba193ff3f1e86b8513c3bc8623aa2da4a6f09a9e7b2359a92df9ef3e",
+      "size_bytes": 278068,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "0519e512541571afbd502b729416e60fa7c46b76a2ef9bb603660709a8d3db6b",
+        "date": "Sun, 06 Sep 2026 21:08:25 UTC",
+        "suite": "noble-security"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble-security/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-security.InRelease",
+        "sha256": "0519e512541571afbd502b729416e60fa7c46b76a2ef9bb603660709a8d3db6b",
+        "size_bytes": 126127
+      },
+      "signed_path": "main/source/Sources.xz",
+      "uncompressed_sha256": "b47ccda3b5144c424e75f6db226bff130d36813020e6ce1646a3dfd0fbb35f2f",
+      "uncompressed_size_bytes": 1608297
+    },
+    {
+      "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble-security/universe/source/Sources.xz",
+      "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-security-universe.Sources.xz",
+      "sha256": "212f273d292765cd8c6eeb059068e4b52e3b727ba84c7153003973036d9ba4fc",
+      "size_bytes": 293736,
+      "signature": {
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "primary_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "inrelease_sha256": "0519e512541571afbd502b729416e60fa7c46b76a2ef9bb603660709a8d3db6b",
+        "date": "Sun, 06 Sep 2026 21:08:25 UTC",
+        "suite": "noble-security"
+      },
+      "inrelease": {
+        "url": "https://snapshot.ubuntu.com/ubuntu/20260907T120000Z/dists/noble-security/InRelease",
+        "cache_path": ".cache/engine-source-companion/indexes/20260907T120000Z-noble-security.InRelease",
+        "sha256": "0519e512541571afbd502b729416e60fa7c46b76a2ef9bb603660709a8d3db6b",
+        "size_bytes": 126127
+      },
+      "signed_path": "universe/source/Sources.xz",
+      "uncompressed_sha256": "fda6eb680c20ab21dd3e3a72d571407586a65e1d10759b2e4f25cf7f35afb233",
+      "uncompressed_size_bytes": 2085088
+    }
+  ],
+  "planned_ubuntu_source_bytes": 338509497,
+  "all_ubuntu_sources_retained": true,
+  "notice_bundle": {
+    "cache_path": ".cache/engine-source-companion/notices.tar",
+    "sha256": "991d8af27244f1f5e8937e2a067a917a15d85091b27e6657ff52b0ee9dfe936d",
+    "size_bytes": 1843200,
+    "copyright_package_count": 134,
+    "common_license_count": 14
+  },
+  "limitations": [
+    "Docker exact upstream/dependency notice mappings are a separate companion collection.",
+    "Source publication and continued equivalent access beside the binary must be completed before binary distribution.",
+    "This evidence is not a legal certification, binary reproducibility claim or clean Windows acceptance."
+  ]
+}

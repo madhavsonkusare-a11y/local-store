@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-04",
+  "scope": "Current unsigned private Windows bundle build, binary identity, staged-resource bytes, and generated NSIS mappings. Installer not installed, launched, extracted, or published; no clean-host/native UI/engine distribution approval.",
+  "source_identity": {
+    "base_commit": "2f2c102c20b2870f6d5b46431efe3ba48f4eca21",
+    "worktree_build_inputs_count": 2119,
+    "canonical_input_inventory_sha256": "813fc50a9292f5bc28a40957104225ca8f010bab11cc3a324dfcb45a6148e176",
+    "inputs_changed_during_build": [],
+    "owner_changelog_and_pnpm_lock_excluded": true,
+    "initial_compilation_input_inventory_sha256": "b255884798f1b810796098d12d3013784b1ab576294aee54e15d7e981e96c623",
+    "input_inventory_format": "sorted path+sha256 records; JSON sort_keys=true,separators=comma/colon; utf8",
+    "changes_since_initial_compilation": [
+      "catalog/notices/rust/inventory.json: explicit utf8_lf Cargo.lock text identity; package versions/source checksums unchanged"
+    ],
+    "compiled_source_changes_since_initial_build": [],
+    "inputs_changed_during_bundle_refresh": []
+  },
+  "build_commands": [
+    "cargo build --locked --release --features tauri/custom-protocol,mcp-sidecar --bins",
+    "copy current sidecar to ignored binaries/local-store-mcp-x86_64-pc-windows-msvc.exe",
+    "cargo tauri bundle --ci --no-sign --bundles nsis --config tauri.mcp-release.conf.json"
+  ],
+  "artifacts": [
+    {
+      "path": "target/release/local-store.exe",
+      "size_bytes": 33906176,
+      "sha256": "9c86749e7e0b243011d9f2b4c640fee2465ce6768c2a0b832ebc734a027eeb0c"
+    },
+    {
+      "path": "target/release/local-store-mcp.exe",
+      "size_bytes": 9242112,
+      "sha256": "880a12ac999dc8d8f9aa444998be3be38cb499b86c0f0cef6dd59c5e4114c3b6"
+    },
+    {
+      "path": "target/release/bundle/nsis/Local Store_0.5.0-1_x64-setup.exe",
+      "size_bytes": 18307828,
+      "sha256": "5aa36857e5480d53a55826b8a98165341a2a1048da2e318a187de8318d227972"
+    },
+    {
+      "path": "target/release/nsis/x64/installer.nsi",
+      "size_bytes": 46058,
+      "sha256": "9cdca6fef0d6fce9e7456b5ee8eeeb8a62df8a8fefb87463a6afc13368dcab67"
+    }
+  ],
+  "checks": {
+    "launcher_version_and_sidecar_identity": "passed",
+    "staged_notice_files": 39,
+    "staged_notices_exact_bytes": true,
+    "nsis_notice_file_mapping_count": 39,
+    "nsis_main_and_sidecar_mapping_exact": true,
+    "unsigned_status": "NotSigned",
+    "engine_payload_and_source_companions_in_bundle": false,
+    "installer_executed": false,
+    "public_binary_published": false
+  },
+  "errors": [],
+  "passed": true,
+  "bundle_refresh": {
+    "reason": "Cross-platform notice inventory Cargo.lock digest now explicitly UTF-8 LF text",
+    "rust_rebuilt": false,
+    "bundle_only_command": "cargo tauri bundle --ci --no-sign --bundles nsis --config tauri.mcp-release.conf.json",
+    "staged_tree_refresh": "Copied only normalized inventory from exact current NSIS source to target/release; bundle-only leaves previous Cargo-staged resources untouched",
+    "initial_private_installer_sha256": "20018bad3a686fea02468ace723d03e10d22fc67f2102eebae1a116bbf47fa68",
+    "initial_private_receipts_and_artifact_retained_in_ignored_cache": ".cache/private-bundle-2026-10-04/initial-before-lock-text-normalization"
+  }
+}

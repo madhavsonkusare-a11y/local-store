@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-04",
+  "recorded_at_unix": 1791088783,
+  "scope": "Local implementation/proofs/private packaging; source tag unchanged, no installed/native/clean-host release claim",
+  "windows_progress": {
+    "done": 23,
+    "active": 31,
+    "percent": 74.2,
+    "done_ids": [
+      "R01",
+      "R02",
+      "R03",
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q04",
+      "Q05",
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "F01",
+      "F02"
+    ],
+    "remaining_ids": [
+      "E01",
+      "E02",
+      "E03",
+      "E04",
+      "F03",
+      "F04",
+      "R04",
+      "R05"
+    ]
+  },
+  "completed_local_work": [
+    "Factual V2 engine rail/loading/compact detail actions/reading floor",
+    "Owner worker graceful stop/exact-owned-child crash/three concurrent restart singleton",
+    "Safe empty-owned-engine removal implementation, seven refusal tests and actual unique fixture transaction",
+    "411 exact engine source artifacts/1423 notices with eight boundary checks and immutable payload",
+    "Local privacy/security/support/Rust notice review and corrected font packaging",
+    "Current unsigned private NSIS launcher/sidecar build, 39 staged notice bytes and generated mappings"
+  ],
+  "checks": {
+    "ui_behavior_state_reading_passed": 144,
+    "design_freeze": {
+      "tokens": 135,
+      "contexts": 3,
+      "fonts": 5,
+      "screens": 9,
+      "states": 88
+    },
+    "strict_capture_final": {
+      "cases": 3,
+      "passed": 0,
+      "geometry_assets_accessibility_keyboard_passed": true,
+      "byte_identity_passed": false
+    },
+    "supervisor_unit_passed": 3,
+    "removal_unit_passed": 7,
+    "actual_unique_removal_passed": true,
+    "source_boundary_passed": 8,
+    "launch_provider_verified": 10,
+    "launch_task_verified": 10,
+    "private_packaging_passed": true,
+    "configured_and_staged_notice_files": 39
+  },
+  "remaining_boundaries": [
+    "Strict byte-identical capture gate F remains unmet; reproduce npm run test:ui:captures",
+    "Exact linked Moby extensions licensing and static docker-init C-library/relink material unresolved",
+    "Native WebView/sleep-wake/current-running-app workload proof unavailable or unperformed",
+    "Literal fixed-name fresh/restricted-prerequisite bootstrap and clean Windows machine unavailable",
+    "Any eventual installed/extracted/downloaded public Windows artifact acceptance and equivalent engine source delivery"
+  ],
+  "source_hash_scope": "Exact staged Git blob bytes, independently checked from exported source",
+  "source_inputs": [
+    {
+      "path": "src/engine_removal.rs",
+      "sha256": "f15a069bd673d5289ed86acce4a53c4d8d515fba47452e803ac2e0e4b3be0306"
+    },
+    {
+      "path": "src/engine_removal/real_test.rs",
+      "sha256": "e0599ed62a0ce1e968f750365af8d089f448f5522943f79a96dcf5d7ac35562d"
+    },
+    {
+      "path": "src/runtime/engine/wsl/supervisor.rs",
+      "sha256": "137c5ac0128895f9bd0c5eb4956b49b8783fecfbaa21930633fa95d1a9734869"
+    },
+    {
+      "path": "scripts/check-engine-restart.py",
+      "sha256": "00af6a91bea6e724a6e5c4b21095d5405b6c8c6bb9e46e51dde7af2fd442f960"
+    },
+    {
+      "path": "tests/ui/v2-local-acceptance.spec.js",
+      "sha256": "f745639a37836cf30d529649ae0a54a90518e406beb90e2b2bdb41fa435187fd"
+    },
+    {
+      "path": "tests/ui/raster-comparison.js",
+      "sha256": "b97cbf1a1f1e038a97430a58d245ccc5494ecbda9bed2012210594fc01b9d589"
+    },
+    {
+      "path": "docs/evidence/windows-engine-restart-2026-10-03.json",
+      "sha256": "7a95b1e34ebfafe9ca478c9f6af9cf6c4967db0f75b020940b5c7c86dfdf6816"
+    },
+    {
+      "path": "docs/evidence/windows-engine-removal-2026-10-04.json",
+      "sha256": "47a889c05d2e70d0a69dc85c7f78ebfc4e85cc2dba4c3af73a46cbfc9ee09643"
+    },
+    {
+      "path": "docs/evidence/engine-companion-bundle-2026-10-03.json",
+      "sha256": "bfc50b78f1b6dd061cdbb82c9106137a119d93a60b5d0a0fefdb4c9f3f8c9f31"
+    },
+    {
+      "path": "docs/evidence/windows-v2-capture-exception-2026-10-04.json",
+      "sha256": "7cd56473c85d19e95acbb6679eaba7fd232de8d4804aca9d8f3eea7fd80a57db"
+    },
+    {
+      "path": "docs/evidence/windows-private-bundle-2026-10-04.json",
+      "sha256": "8a6b8279c7af02a40c1ae734bd8a2e7d934a193c915deff116a1401cedcafbf4"
+    },
+    {
+      "path": "docs/evidence/windows-private-bundle-notices-2026-10-04.json",
+      "sha256": "6aa953a97e0c719f5479a5f9ac265cfdd214dcfac6ddb8215c88b8ae85fb2c6b"
+    }
+  ],
+  "owner_files_preserved": [
+    "CHANGELOG.md",
+    "pnpm-lock.yaml"
+  ],
+  "source_only_release_progress": {
+    "done": 4,
+    "active": 4,
+    "percent": 100
+  }
+}

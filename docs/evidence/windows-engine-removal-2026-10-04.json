@@ -1,0 +1,58 @@
+{
+  "command_count": 21,
+  "distro_inventory_after": [
+    "docker-desktop",
+    "local-store-engine-v1"
+  ],
+  "distro_inventory_before": [
+    "docker-desktop",
+    "local-store-engine-v1"
+  ],
+  "elapsed_seconds": 14.9154674,
+  "engine_removal_source_sha256": "f15a069bd673d5289ed86acce4a53c4d8d515fba47452e803ac2e0e4b3be0306",
+  "error": null,
+  "fixture": "local-store-removal-proof-15288-1791087648691",
+  "fixture_test_sha256": "e0599ed62a0ce1e968f750365af8d089f448f5522943f79a96dcf5d7ac35562d",
+  "fixture_unregistered": true,
+  "limitations": [
+    "Existing Windows/WSL host; not clean-PC/fixed-name bootstrap or native WebView acceptance",
+    "Only the test-private adapter scopes fixed-distro commands to a new unique fixture",
+    "Production engine and saved app data were never removal targets",
+    "No image pulls or app workloads; all-container/all-volume inventories are empty",
+    "Marker, bounded receipt and supervisor lock files retained in ignored fixture root; uncertainty is never broad-cleaned"
+  ],
+  "native_identity_files_unchanged": true,
+  "native_identity_hashes": [
+    {
+      "file": "bootstrap.json",
+      "sha256": "bf89b62c9cf8c28ecee14de996d1ed687f22a0afbdf9df3aed54f12b78b71b02"
+    },
+    {
+      "file": "ownership-token",
+      "sha256": "712340f503315001eb5124178748ad1c0eafd4053f5ae3064264d3d6bc9a2e0b"
+    },
+    {
+      "file": "selected-engine.json",
+      "sha256": "8e6d57fc7ac4706a6515f23eccc2127ddf7d6ff85b568f2e4a9bbc78fece262d"
+    },
+    {
+      "file": "engine-selection-configured",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    }
+  ],
+  "passed": true,
+  "proof": "actual_production_removal_transaction_in_unique_test_namespace_on_existing_windows_host",
+  "result": {
+    "fresh_vhd_file_bytes": 683671552,
+    "package_count": 138,
+    "package_inventory_sha256": "9c164b7ab033ebbbec13c9e3daf64b073ed2a9ea8ccbf561bb6284d49c270f5b",
+    "removed_receipt": {
+      "distro": "local-store-engine-v1",
+      "phase": "removed",
+      "schema_version": 1
+    }
+  },
+  "rootfs_bytes": 572798976,
+  "rootfs_sha256": "ea9358fb64636e1d60da85df2ae5fd87090db2246c591996196dbb29089e5b32",
+  "schema_version": 1
+}

@@ -1,7 +1,7 @@
 # Documentation
 
 Start with [V1 release tasks](V1_TASKS.md), then the [agent handoff](agent-handoff.md).
-Only the master ledger owns task status and release scope. Updated October 2, 2026.
+Only the master ledger owns task status and release scope. Updated October 4, 2026.
 
 | Area | Read | Purpose |
 | --- | --- | --- |
@@ -11,7 +11,7 @@ Only the master ledger owns task status and release scope. Updated October 2, 20
 | Architecture | [Backend coverage](backend-app-coverage-plan.md), [command contract](command-contract.md) | Reused installation pipeline and frontend/backend semantics |
 | Detailed plans | [Managed engine](plans/bundled-engine.md), [clean Windows VM test](plans/windows-clean-machine-test.md), [qualification](plans/qualification.md), [agent access](plans/agent-access.md), [parallel execution](plans/parallel-v1-execution.md) | Implementation detail, measured VM budget and work allocation subordinate to the master ledger |
 | Product design | [Design index](design/README.md), [V2 approved handoff](design/v2/HANDOFF.md) | V2 is the active approved interface; there is no V3 release requirement |
-| Operations | [CLI](cli.md), [recovery](interrupted-install-recovery.md), [security/privacy](security-and-privacy.md) | Current behavior and supported actions |
+| Operations | [CLI](cli.md), [recovery](interrupted-install-recovery.md), [security/privacy](security-and-privacy.md), [support](support.md) | Current behavior and supported actions |
 | V1 roster | [100-app planning roster](v1-app-roster.md), [acceptance matrix](../catalog/v1-roster.json) | Future sourcing and replacement pool; planning is not qualification |
 | Catalog | [Contribution guide](catalog.md), [recipe requirements](recipe-requirements.md) | Reproduction, sources, image and manifest requirements |
 | Generated reports | [Queue baseline](candidate-queue-baseline.md), [ranking](candidate-ranking.md), [CapRover imports](caprover-import-report.md), [Runtipi imports](runtipi-import-report.md), [CapRover setup](caprover-setup-report.md), [source audit](caprover-source-audit.md) | Measurements at pinned revisions; regenerate through their scripts, never edit counts by hand |

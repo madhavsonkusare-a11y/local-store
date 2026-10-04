@@ -185,11 +185,23 @@ pub(crate) fn ensure_background(runner: &dyn ProcessRunner, state: &Path) -> App
             return Ok(());
         }
         let spawn_lock = lock_file(state, SPAWN_LOCK)?;
-        if !try_claim(&spawn_lock)? {
-            return Err(AppError::invalid(
-                "The owned engine supervisor is starting. Retry after it finishes.",
-            ));
+        // Another explicit operation may be starting the same owned worker.
+        // Wait for its acknowledgment instead of making a ready engine appear
+        // unavailable. Never steal the lock or accept stale status/selection.
+        let waiting_until = Instant::now() + Duration::from_secs(35);
+        while !try_claim(&spawn_lock)? {
+            verify_selection(runner, state)?;
+            if status_at(state)?.is_some() {
+                return Ok(());
+            }
+            if Instant::now() >= waiting_until {
+                return Err(AppError::invalid(
+                    "The owned engine supervisor is still starting. Check its status before retrying.",
+                ));
+            }
+            std::thread::sleep(Duration::from_millis(100));
         }
+        verify_selection(runner, state)?;
         if status_at(state)?.is_some() {
             return Ok(());
         }

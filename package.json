@@ -5,6 +5,7 @@
   "scripts": {
     "test": "node --test tests/api.test.mjs tests/operations.test.mjs tests/readiness.test.mjs && playwright test",
     "test:ui": "playwright test",
+    "test:ui:captures": "playwright test --config playwright.capture.config.js",
     "preview": "node scripts/preview.mjs"
   },
   "devDependencies": {

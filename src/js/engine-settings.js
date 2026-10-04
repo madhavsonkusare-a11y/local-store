@@ -1,3 +1,5 @@
+import {publishEngineStatus} from './rail-engine.js';
+import {loadingComposition} from './loading-composition.js';
 import {invoke} from './api.js';
 import {setDialogBusy} from './motion.js';
 
@@ -49,17 +51,18 @@ export async function refreshEngineStatus() {
   check.disabled = true;
   check.textContent = 'Checking…';
   repair.hidden = true;
-  output.textContent = '';
+  output.innerHTML = loadingComposition('Checking the managed engine…');
   error.textContent = '';
   try {
     const [status, preview] = await Promise.all([invoke('managed_engine_status'), invoke('engine_setup_preview').catch(() => null)]);
     if (token === request && dialog.open) {
       if (!status || typeof status !== 'object') throw new Error('Engine status could not be checked.');
       paint(status);
+      publishEngineStatus(status);
       if (preview?.engine) paintSetup(preview);
     }
   } catch (failure) {
-    if (token === request && dialog.open) error.textContent = failure.message || 'Engine status could not be checked.';
+    if (token === request && dialog.open) { output.replaceChildren(); publishEngineStatus(null, true); error.textContent = failure.message || 'Engine status could not be checked.'; }
   } finally {
     if (token === request) { check.disabled = false; check.textContent = 'Check again'; }
   }
