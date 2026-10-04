@@ -1,8 +1,10 @@
 # Local Store V1 release tasks
 
-Updated October 4, 2026. **This is the only active release task ledger.**
+Updated October 4, 2026. **This is the sole release task ledger; work is currently shelved.**
 The handoff records the next action; detailed plans explain implementation;
 research documents are proposals, not additional commitments.
+
+Development is paused at the owner's request on October 4, 2026. Historical Windows progress remains **23/31 (74.2%)**. Generated installers, app data and the managed engine were removed; see [agent-handoff.md](agent-handoff.md) before resuming.
 
 ## Release contract and owner decisions
 
@@ -12,7 +14,7 @@ agents controlled access to the store and installed apps. The source is
 already public on [GitHub](https://github.com/madhavsonkusare-a11y/local-store).
 The **V1 GitHub milestone is published as a source-only release**: a tagged snapshot with
 accurate docs, license/notices, and a reviewed source archive. It has no Windows
-installer or automatic update channel. The Windows product remains active
+installer or automatic update channel. The Windows product remains unfinished, with paused
 development after that source milestone; its functional gates below are not
 prerequisites to publishing source.
 

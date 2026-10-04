@@ -2,6 +2,32 @@
 
 Updated October 4, 2026. Read [V1_TASKS.md](V1_TASKS.md), the sole task ledger.
 
+## Project shelved — October 4, 2026
+
+Development is paused at the owner's request. Keep this checkout and the GitHub
+repository; do not restart workers, reinstall dependencies or rebuild automatically.
+The source release remains complete. Windows progress is historically 23/31
+(74.2%); cleanup does not complete any remaining acceptance gate.
+
+The installed Local Store launcher, current and legacy app/WebView profiles,
+owned `local-store-engine-v1` WSL distribution and its disk, private installers,
+repo build/dependency/test caches, external Local Store build cache, temporary
+fixtures, previews and Hermes exploratory scripts were removed. About 80 GB of
+free space was recovered. The two extra clean worktrees were removed; their
+commits remain in local `refs/archive/shelved-2026-10-04/*` references. Only the
+main checkout at `D:\06 Projects\dockwrap` remains.
+
+Tracked source, Docker build definitions, approved assets, historical evidence,
+planning/design notes and the owner's CHANGELOG and pnpm lockfile edits remain.
+Shared Docker Desktop, other projects and global development tools were preserved.
+Docker Desktop was stopped, so its shared images/volumes were not inspected or
+pruned. The removed managed engine's images and data were on its owned disk.
+
+Earlier receipts below describe historical runs. Their ignored payloads and
+private installers are no longer available. On an explicit resume, restore
+dependencies and rebuild the managed-engine payload before runtime testing;
+requalify current binaries instead of treating old receipts as current proof.
+Clean-host, native lifecycle, capture and license gates remain open.
 ## October 4 follow-up — workload recovery and actual installer bytes
 
 **23/31 DONE (74.2%)**; source release remains **100%**. No release gate was
