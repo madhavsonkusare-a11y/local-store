@@ -1,5 +1,7 @@
 # Umbrel implementation reference
 
+> Historical research, indexed October 4, 2026. The project is paused. This study is not current release scope; use [V1_TASKS.md](../V1_TASKS.md). Recheck upstream facts before adopting its proposals.
+
 Expanded September 9: see [the backend coverage plan](../backend-app-coverage-plan.md)
 for the repository/dependency/gateway/credential/hook architecture comparison,
 newly pinned app-store sample review, and execution priorities.

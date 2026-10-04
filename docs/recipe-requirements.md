@@ -1,5 +1,7 @@
 # Reviewed recipe requirements
 
+> Source reference reviewed October 4, 2026. The project is paused and the installed development app/engine were removed. Scope and accepted proof remain in [V1_TASKS.md](V1_TASKS.md); resume context is in [agent-handoff.md](agent-handoff.md).
+
 The three original reviewed recipes use schema 3. Each manifest declares a Linux Docker
 engine, Compose v2, local persistent storage and the platforms published for its
 pinned container image. These describe **container compatibility**, not tested

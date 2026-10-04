@@ -1,155 +1,70 @@
 # Local Store
 
-Discover self-hosted software, install reviewed local recipes, connect the
-instances you already run, and open them in dedicated desktop windows.
+A Windows desktop workspace for discovering self-hosted apps, installing reviewed deployments, opening apps in native windows, and giving agents controlled access to them.
 
-Point Local Store at any local web app — Penpot, your homelab dashboard, a
-self-hosted tool — and it opens in a real native window with that app's name
-and icon. Links outside the connected app's origin open in your **default
-browser**. Local, LAN and hosted HTTPS instances are supported.
+**Project paused as of October 4, 2026.** Source remains available; development and support are on hold. The installed development app, managed engine, private setup files and local build/test caches were removed. There is no current installer to download from the source release.
 
-## Why
+The [V1 source release](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0) is published. The Windows product is unfinished: **23 of 31 product tasks were accepted (74.2%) at the pause**. This is a task count, not a readiness or delivery-time estimate. See the [release ledger](docs/V1_TASKS.md) for acceptance boundaries and [handoff](docs/agent-handoff.md) before resuming work.
 
-Local Store brings app discovery, reviewed Docker Compose recipes, and native
-desktop windows into one workspace. It builds on Tauri and the operating
-system's webview, with an open-source, MIT-licensed launcher.
+## What is in the source
 
-The interface is dark-only: a warm, visual app shelf, clear capability labels,
-and native dialogs with keyboard and reduced-motion support.
-See the [refined brand deck](branding/brand-deck.html) and
-[identity guidelines](branding/README.md).
+| Area | Implemented scope |
+| --- | --- |
+| Discovery | 1,678 embedded project entries with local icons or monogram fallbacks, search, filters, collections and source provenance |
+| Installations | 53 offerings: three recipes and 50 approved templates, using reviewed image digests, typed setup, persistent storage, health checks and rollback |
+| Windows engine | An owned WSL 2 engine using Docker Engine and Compose internally; Docker Desktop is not required for the product runtime |
+| App windows | Connect a reachable HTTP(S) app and open it in a dedicated native window; external links open in the default browser |
+| Lifecycle and recovery | Start, stop, inspect, uninstall with data preservation, recover/adopt retained setups and protected backup/restore within tested scopes |
+| Agent access | Authenticated local MCP bridge, per-client/app grants, exact-action write approval, redacted audit and bounded app-content providers |
+| Interface | Dark-only approved V2 design, bundled fonts/artwork, keyboard interactions and reduced-motion support; full native acceptance remains open |
 
-The [V1 GitHub Release](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0)
-is **source-only**.
-It has no Windows installer or automatic updater. The Windows product is still
-in development: ten selected apps have managed-engine lifecycle and
-meaningful-task proof, while the bundled-engine setup, complete V2 interface
-and agent access remain unfinished. See the [V1 task ledger](docs/V1_TASKS.md)
-for current evidence and release status.
+Catalog presence is not installation approval. An offering is not proof of every app feature. The ten-app launch cohort has historical managed-engine task and lifecycle receipts: **Memos, Flatnotes, Kanboard, PrivateBin, Uptime Kuma, n8n, Gitea, WordPress, Jellyfin and Immich**. Each also has a bounded agent access path; read and write coverage differ by app. Receipts must be checked for expiry and source/image changes before new verification claims.
 
-## How it works
+An arbitrary GitHub URL can be inspected and matched to a reviewed app or returned as a candidate. Local Store does not execute arbitrary repository commands or automatically approve every project for installation.
 
-- **Discover** searches the embedded project catalog in bounded pages. A project
-  website is presented as a source link and is never treated as your instance.
-  Browse **1,678 catalog entries**, four interest collections, combined filters and
-  source provenance. Every entry has a bundled icon, including monogram fallbacks.
-- **Install** supports **52 offerings** (three recipes and 49 reviewed templates) with digest-pinned images,
-  a Docker/Compose preflight check, persistent local data, health verification,
-  and rollback when setup fails.
-  Qualification evidence is recorded in `docs/evidence/`. Application-specific
-  end-to-end use is not proven for every offering; see the
-  [qualification plan](docs/plans/qualification.md).
-- **Connect an app** saves its name and reachable HTTP(S) address. Local Store
-  does not seed an example or imply that catalog projects are already installed.
-- **My Apps** opens connections and starts, stops, inspects, or uninstalls apps
-  managed by Local Store. Uninstall preserves app data unless deletion is
-  explicitly selected and confirmed.
-- Apps use a versioned registry at `%APPDATA%/local-store/registry-v2.json` on
-  Windows (or the platform config directory elsewhere). Existing v1 and legacy
-  registries are imported once with a backup.
-- The launcher lists them; clicking **Open** spawns a native window to that URL.
-- A tiny injected script intercepts `window.open` and external `<a>` clicks,
-  rewriting the navigation to a `localhost` marker URL. Rust catches that in
-  `on_navigation` and launches the OS default browser.
-- Apps with a `compose` file boot their Docker stack and wait for a health
-  check before opening.
+## What remains before a Windows product release
 
-## Build
+Managed-engine provenance, source/license delivery and packaging; complete native setup/lifecycle flows; the strict V2 capture gate; and a clean Windows installation run remain unfinished. Existing tests ran on a development laptop and do not certify a fresh PC. WSL 2 may require virtualization, administrator consent and a restart. Signing and automatic updates are deferred Windows distribution work, not requirements for the published source release.
 
-On Windows x64, install Rust, Visual Studio C++ Build Tools and the WebView2
-runtime. The repository selects its Rust version through `rust-toolchain.toml`.
-Run the source with its committed interface embedded:
+Windows x64 is the product target. macOS/Linux code is retained for later scope. No universal app-upgrade, arbitrary source-build or unrestricted agent-automation promise is made.
+
+## Build from source
+
+For Windows x64, install Rust (the version is pinned in `rust-toolchain.toml`), Visual Studio C++ Build Tools and WebView2. From the repository root:
 
 ```powershell
 cargo run --locked --release --features tauri/custom-protocol --bin local-store
 ```
 
-App installation uses Local Store's explicitly selected, owned WSL 2 engine;
-Docker Desktop is not required. Open Settings → Local Store engine to review
-setup, disk use and consent. Windows may need WSL 2 enabled and a restart.
-The engine uses Docker and Compose internally. Fresh-PC payload delivery remains
-in development; the source-only release does not contain an engine archive.
-For an optional local installer with the MCP sidecar, follow
-[the local preview build procedure](PUBLISH.md#unsigned-local-windows-preview).
-The V1 source release does not include that installer.
+This runs the launcher with its committed interface. Installing managed apps additionally needs a verified owned-engine payload and explicit setup consent; the source archive does not bundle a shipping rootfs. See the [engine reference](engine/README.md). Do not automatically restore that environment while the project is paused.
 
-Add your own connection through the launcher or CLI:
+For the optional browser-only UI preview:
 
-```bash
-local-store doctor
-local-store doctor --json
-local-store catalog --capability preview_install --json
-local-store catalog --collection media --limit 24
-local-store install memos
-local-store install n8n
-local-store install uptime-kuma
-local-store add penpot --url http://localhost:9001
-local-store list
-local-store status memos
-local-store logs memos
-local-store stop memos
-local-store start memos
-local-store open memos --browser
-local-store open memos             # dedicated native window
-local-store shortcut memos
-local-store remove penpot
-local-store uninstall memos
-local-store --version
+```powershell
+npm ci
+npm run preview
 ```
 
-See [CLI search, paging and diagnostics](docs/cli.md) for filters, JSON fields
-and exit codes.
+The preview does not provide native backend commands. The npm lockfile is used by CI; a matching pnpm lockfile is also retained. Choose one package manager for a working installation.
 
-Compatibility (one release): previous registry locations and launch links are imported/recognized.
+To connect an existing app from a built CLI:
 
-## Roadmap
+```powershell
+local-store add penpot --url http://localhost:9001
+local-store list
+local-store open penpot
+```
 
-### v0.2 (shipped ✅)
-- [x] `local-store add <name> --url <u> --icon <i>` Rust CLI (replaces `cli.js`)
-- [x] Docker Compose boot: `docker compose up -d` + health check before open
-- [x] Start Menu shortcut generation with the app's icon
-- [x] `localstore://open/<name>` protocol handler
-- [x] Per-app icon on the native window title bar
+See the [CLI reference](docs/cli.md), [contributing guide](CONTRIBUTING.md) and [local preview packaging procedure](PUBLISH.md#unsigned-local-windows-preview). A locally built unsigned installer remains a development preview, separate from the public source release.
 
-### v0.3 (shipped ✅)
-- [x] **Cross-platform registry path** — `apps.json` now uses `PathBuf` (was hardcoded `\`, broken on Linux/macOS)
-- [x] **Unit tests** for the registry (path, dedup, preset lookup)
-- [x] **`local-store --version`** / `local-store version` subcommand
-- [x] **GUI parity with CLI** — icon, compose, and health inputs; per-row Remove button; app icon + 🐳 compose badge in the launcher
-- [x] **macOS `localstore://`** registered via bundle `Info.plist` (`CFBundleURLTypes`)
+## Documentation and design
 
-### v0.4 (shipped ✅ — previous binary release)
-- [x] **Embedded app catalog** — 1,257 self-hosted app entries bundled into the binary
-- [x] **Catalog-backed setup wizard** — browse and configure catalog apps from the launcher
-- [x] **Reference recipe data** — 12 curated entries document Compose and health-check metadata for future integration
-- [x] **Broad icon coverage** — verified icon sources plus favicon fallback for entries without one
+Start with the [documentation index](docs/README.md). The [master ledger](docs/V1_TASKS.md) owns scope and task status; dated evidence is historical, and design approval alone does not certify implementation.
 
-### v0.5 (in progress)
-- [x] Versioned v2 registry with one-time legacy migration and recovery
-- [x] Three reviewed recipes with pinned images and persistent data
-- [x] Docker doctor, transactional install, health verification, and rollback
-- [x] Managed app status, start, stop, logs, and data-preserving uninstall
-- [x] Validate every reviewed recipe with Docker Compose in CI
-- [x] Dark-only visual workspace, refined identity, and accessible motion
-- [x] Approved top-aligned logo and mathematically verified corner spacing
-- [x] Four reproducible source imports, stable catalog IDs and offline artwork
-- [x] Combined discovery filters, collections, source details and Settings/Doctor
-- [x] Protocol shortcuts and native CLI opening with stable window IDs
-- [ ] Run clean-machine installer and live-container smoke tests
+The approved [V2 handoff](docs/design/v2/HANDOFF.md), [brand deck](branding/brand-deck.html) and [identity guidelines](branding/README.md) remain in the repository. No V3 handoff is required.
 
-See the [V1 release task list](docs/V1_TASKS.md), [documentation index](docs/README.md),
-and [catalog contribution guide](docs/catalog.md).
+## Security and license
 
-## Security and privacy
+Catalog browsing is offline. Local Store has no account, telemetry or analytics. Explicit installs, app pages and opt-in GitHub inspection use the network. Agent permissions are application boundaries; an unrestricted agent running under the same Windows user is not isolated by this gateway. Read [security/privacy](docs/security-and-privacy.md) and [support boundaries](docs/support.md).
 
-Browsing the bundled catalog is entirely offline. Local Store has no account,
-telemetry or analytics. Explicit installs pull images, app windows load their
-pages, and opt-in GitHub inspection contacts GitHub's public API.
-[Security and privacy](docs/security-and-privacy.md) covers
-what is stored, the boundaries the app enforces, what it does **not** protect
-you from, and how to report a vulnerability.
-
-## License
-
-Original launcher code: MIT — see [LICENSE](LICENSE). Imported catalog material,
-fonts and icons retain their licenses; see [third-party notices](THIRD_PARTY_NOTICES.md).
+Original launcher code is MIT: [LICENSE](LICENSE). Imported app definitions, icons, fonts and dependencies retain their licenses: [third-party notices](THIRD_PARTY_NOTICES.md).

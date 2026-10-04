@@ -14,8 +14,7 @@ agents controlled access to the store and installed apps. The source is
 already public on [GitHub](https://github.com/madhavsonkusare-a11y/local-store).
 The **V1 GitHub milestone is published as a source-only release**: a tagged snapshot with
 accurate docs, license/notices, and a reviewed source archive. It has no Windows
-installer or automatic update channel. The Windows product remains unfinished, with paused
-development after that source milestone; its functional gates below are not
+installer or automatic update channel. Windows product development is paused after that source milestone; its functional gates below are not
 prerequisites to publishing source.
 
 | Decision | Source / consequence |
@@ -23,7 +22,7 @@ prerequisites to publishing source.
 | 10 managed-engine-verified apps for the Windows product | Owner reduced the product launch target from 50 to 10 on September 30. The 10-app proof gate now passes; the frozen 100-app roster remains future research and replacement capacity. |
 | Bundled engine required for the Windows product | Owner confirmed September 12. WSL prerequisites may still require consent, administrator access or restart; do not promise zero prerequisites. It does not block the source-only tag. |
 | Approved V2 frontend for the Windows product | Owner selected the already approved V2 handoff on September 28; there is no V3. Extend V2 for bundled-engine and agent flows. It does not block the source-only tag. |
-| Source-only V1 GitHub release; no signing keys | Owner confirmed September 30. The repository is already public. The next V1 release tag contains source only, with no installer artifact, automatic updater, or signing requirement. Windows distribution and signed automatic updates are later milestones. |
+| Source-only V1 GitHub release; no signing keys | Owner confirmed September 30. The repository is already public. The published V1 release tag contains source only, with no installer artifact, automatic updater, or signing requirement. Windows distribution and signed automatic updates are later milestones. |
 | Agents can manage the store and access every offered app in the Windows product | Owner confirmed September 12. Use a shared access layer with multiple backends; prove a useful access path per app rather than promise universal API coverage. |
 | Windows x64 is the only active binary target | Owner reconfirmed September 19. Existing macOS/Linux code and staging support remain intact for later scope. The source-only release contains no platform binary. |
 | Source-available apps allowed, with accurate license information | Existing owner decision retained. This does not establish redistribution rights for every image or asset. |
@@ -43,9 +42,10 @@ later evidence and task completions are recorded below:
   and adoption, readiness, native windows and packaged Windows evidence exist.
 - The default Rust suite, Clippy, UI/axe checks, metadata checks and all three
   platform builds passed [CI run 34695407242](https://github.com/madhavsonkusare-a11y/local-store/actions/runs/34695407242).
-- **Remaining Windows product work:** bundled-engine packaging/setup, complete approved V2
-  flows, useful agent access across the release roster, backup/recovery and a
-  clean Windows release-candidate run. The selected 10-app managed task gate
+- **Remaining Windows product work:** engine provenance/source delivery and
+  packaging/setup, native lifecycle acceptance, the strict approved V2 capture
+  gate, complete native flows and a clean Windows release-candidate run.
+  Scoped agent access and protected backup/recovery have accepted evidence. The selected 10-app managed task gate
   now passes; signing and automatic updates are later work.
 
 The generic app proof demonstrates startup, an actionable page, persistence and
@@ -59,7 +59,7 @@ controls, evidence-derived capability display and real launcher recovery.
 A06 now proves useful content access for all ten launch apps; A08 proves the
 untrusted-content and bounded recovery contract. The earlier 70% target was met with 22 accepted rows. C04 now completes
 reviewed GitHub candidate promotion with real Linkding evidence; eight active
-rows remain. The requested 90% target requires 28 accepted rows and is not yet met.
+rows remain. The project is now paused; earlier percentage targets do not authorize further development.
 Five signing/update rows are deferred, not completed,
 and are excluded from that product-work denominator. Partial work earns no
 fraction of a DONE row. Task count is not a calendar-time or risk estimate.
@@ -121,7 +121,7 @@ complete; engine setup, complete V2 flows and agent access remain in development
 | --- | --- | --- | --- |
 | R01 | DONE | PRs #3–#6 merged; main `7d9e0d3` matches tested head `720ce23` exactly. Remaining feature/design branches removed after ancestry verification. Archive tag and saved drafts preserved; no open PRs. | — |
 | R02 | DONE | Published this sole ledger, [documentation index](README.md) and short [handoff](agent-handoff.md). Retired seven superseded documents, organized plans/research, retained evidence and frozen V2 assets, and checked local links. | — |
-| R03 | DONE | Froze a [100-app planning roster](v1-app-roster.md) with [full acceptance matrix](../catalog/v1-roster.json), explicit membership and upstream snapshots. Offline generator validates 52 baseline + 48 candidates and input drift. It is a future sourcing and replacement pool; V1 release requires 10 verified selections from the current 52 offerings. Resources, managed-engine proof and agent access remain pending, not implied by selection. | R02 |
+| R03 | DONE | Froze a [100-app planning roster](v1-app-roster.md) with [full acceptance matrix](../catalog/v1-roster.json), explicit membership and upstream snapshots. The refreshed generator validates 53 existing offerings + 47 candidates without changing the original 100-member identity set. It is a future sourcing/replacement pool; V1 targets ten selected apps. Planning placeholders do not supersede the qualified app/provider ledgers or imply proof for the other members. | R02 |
 
 ## 1 — Runtime foundation and proof contract
 
@@ -215,7 +215,7 @@ or HTTPS update channel is needed to publish the source milestone.
 | R04 | BLOCKED | A supported clean Windows machine is unavailable, confirmed by the owner October 3. The [VM plan](plans/windows-clean-machine-test.md) explains current Windows Home nesting limits and a 100–120 GiB planning budget. No VM/edition/feature change occurred. On an eventual supported clean host, verify install/first launch, fixed-name engine bootstrap, restricted/failed prerequisites, native app windows, protocol/shortcut, agent access and uninstall with data preservation. Source-only publication is already complete. | F04, C03, A06, A08 |
 | R05 | PARTIAL | [Local security/privacy/support and notices review](evidence/windows-security-notices-review-2026-10-03.md) is complete: both missing font OFLs/root MIT are configured; exact Rust notice inventory covers 512 locked packages, zero Windows-target notice-file gaps and five Cargo.lock-verified MPL source archives. Offline notice checks and the 39-file packaging configuration guard pass. [Support guidance](support.md) states tested boundaries. Historical staged resources correctly fail current notice requirements; the [current unsigned private bundle](evidence/windows-private-bundle-2026-10-04.json) now passes launcher/sidecar identity, all 39 exact staged notice files and generated installer mappings. [Actual archive inspection](evidence/windows-private-installer-extraction-2026-10-04-051651.json) now verifies 41 resources / 39 notices and the exact Tauri NSIS marker transformation in the launcher, with an unchanged connector. One NSIS helper listing/extraction size discrepancy is recorded; installed helper behavior is not certified. The installer was not executed, installed or published. R04 clean-host and any eventual published/downloaded Windows artifact acceptance remain outstanding; no installer is public. | R04, Q05 |
 
-## Recommended execution order
+## Execution order after an explicit resume
 
 1. G01–G04 are complete. Keep `source-v1.0.0` immutable; its source-publication
    evidence does not certify a Windows installer or complete product flows.
@@ -240,9 +240,22 @@ in a research paper or prototype.
 
 ## Relationship to the original 33 tasks
 
-[The reconciled Hermes ledger](upgrade-status.md) records the original work.
-It is a historical traceability table, not a second queue. The September 30
-source-only decision defers signed Windows delivery and automatic updates;
-the old tasks 29–31/33 apply to a later Windows distribution. The managed engine, agent
-gateway and V2 work are additional requirements; the 100-app roster is retained
-for future expansion rather than required for V1 release.
+The former `upgrade-status.md` was retired during October 4 consolidation.
+The original Hermes plan and full traceability table remain recoverable from
+Git history (`a63cf2b:docs/upgrade-status.md`) and the retained local planning
+notes. Their earlier V3/signing/50–100-app requirements are superseded by the
+owner decisions above; they are not a second backlog.
+
+| Original task group | Current authority |
+| --- | --- |
+| 1–6: docs, metadata, tests, modules and identity | R01–R03, F01–F03; source baseline retained |
+| 7–15: installed apps, storage, catalog, recipes, transaction and lifecycle | E01–E04, Q01–Q05, C01–C05 |
+| 16–20: navigation, activation, shortcuts, commands and CLI | F02/F04, A01–A03, R04; native acceptance remains distinct |
+| 21–28: frontend, UX, accessibility, CSP and icons | Approved V2, F01–F04, A02/A08; design approval is not runtime proof |
+| 29: CI and release pipeline | R01/R05, published source gates G01–G04 |
+| 30: signed updates | S01–S05 deferred to later Windows distribution |
+| 31–33: packaged smoke, user docs and release-candidate gate | R04/R05 for the Windows product; source publication is complete |
+
+The managed engine and agent gateway add requirements beyond the original
+plan. The frozen 100-member roster is future expansion capacity; V1 requires
+ten selected apps. Shelving and cleanup do not waive an unfinished gate.

@@ -1,32 +1,15 @@
 # Product design
 
-## Current direction: V3
+Updated October 4, 2026. Development is paused. **Approved V2 is the production design target** under the owner's September 28 decision; there is no V3 requirement. Production acceptance lives in [V1_TASKS.md](../V1_TASKS.md), F01–F04.
 
-The owner chose a V3 frontend for V1 on September 12, 2026 and is developing
-its design. No approved V3 handoff has been supplied to this checkout yet.
-[V1_TASKS.md](../V1_TASKS.md), F01–F04, owns production implementation status.
+## Approved design package
 
-V3 must cover the bundled-engine first run, app installation and meaningful
-readiness, agent connections/grants/approvals, audit, signed updates and safe
-recovery. Backend contracts can advance before the visual specification lands.
-Do not invent production layouts or silently carry V2's window constraints
-forward as V3 decisions.
+The [V2 handoff](v2/HANDOFF.md), [completed design ledger](V2-TASKS.md), [interactive prototype](v2/index.html), tokens, fonts, components, brand assets, evaluation and freeze record remain intact. Approval describes the design package; it does not certify complete production/native implementation.
 
-## Approved V2 reference
+F01 and F02 are accepted within their ledger scopes. F03 remains partial because the frozen exact capture gate still differs on sidebar anti-alias pixels. F04's full Windows WebView flows remain unproven. See [local acceptance](../evidence/windows-v2-local-acceptance-2026-10-04.md) and the master ledger for the precise boundaries.
 
-The [V2 handoff](v2/HANDOFF.md), [completed design ledger](V2-TASKS.md),
-[interactive prototype](v2/index.html), tokens, components, fonts, screenshots
-and freeze record are retained. They are a valuable approved reference, not a
-claim that the production frontend has been migrated.
+Extend engine setup, agent consent and recovery within approved V2 when work resumes. Keep capability labels tied to backend facts. Do not change frozen assets, baselines or tolerances to manufacture acceptance.
 
-The September 12 V3 decision supersedes V2 as the production target. Historical
-branch names, counts and 'implement V2 next' text inside that frozen package
-reflect its original handoff. Use the current master ledger for scope.
-No frozen asset or specification was edited in this documentation cleanup.
+## Reference explorations
 
-## Earlier explorations
-
-[Ember screens](ember-screens.html), [setup flow](setup-flow.html), and the
-[UX evaluation toolkit](ux-evaluation-toolkit.html) remain reference artifacts.
-They are not release requirements. Canonical current product exports remain in
-[branding](../../branding/README.md); V3 must explicitly decide any changes.
+[Ember screens](ember-screens.html), [setup flow](setup-flow.html) and [UX evaluation toolkit](ux-evaluation-toolkit.html) are earlier explorations, not additional release gates. Canonical product exports remain in [branding](../../branding/README.md). Historical implementation instructions inside the approved package retain their original date; use the master ledger for current completion status.

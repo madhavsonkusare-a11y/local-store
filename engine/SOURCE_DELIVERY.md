@@ -1,5 +1,7 @@
 # Engine notices and source delivery
 
+> Shelved October 4, 2026. The development engine, rootfs/source-companion archives and build cache were removed. Historical receipts below remain; no distributable payload is approved. Rebuild only after an explicit resume.
+
 The October 3, 2026 companion is tied to rootfs SHA-256
 `ea9358fb64636e1d60da85df2ae5fd87090db2246c591996196dbb29089e5b32`.
 It is prepared locally; engine binary distribution remains unapproved.

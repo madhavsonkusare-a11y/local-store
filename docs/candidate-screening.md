@@ -1,4 +1,6 @@
 > Historical screening snapshot from September 9. These are not current offering statuses.
+
+> Historical record, indexed October 4, 2026. This preserves its original test/selection scope. Current ten-app launch acceptance belongs to [V1_TASKS.md](V1_TASKS.md); local runtime artifacts were removed during shelving.
 > See [V1_TASKS.md](V1_TASKS.md) and the current manifests for release work.
 
 # First candidate screening

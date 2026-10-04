@@ -1,5 +1,7 @@
 # Managed container engine for V1
 
+> Reviewed for shelving October 4, 2026. Development is paused. This is an architecture/method reference with dated checkpoints; current scope and acceptance are in [V1_TASKS.md](../V1_TASKS.md). Local build artifacts and the development engine were removed.
+
 Updated September 13, 2026. Required by the owner; task status belongs to
 E01–E04 in [V1_TASKS.md](../V1_TASKS.md).
 

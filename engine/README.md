@@ -1,5 +1,7 @@
 # Development engine payload
 
+> Shelved October 4, 2026. The development engine, rootfs/source-companion archives and build cache were removed. Historical receipts below remain; no distributable payload is approved. Rebuild only after an explicit resume.
+
 E01 implementation checkpoint, updated October 3, 2026. This is a buildable Linux
 rootfs for the future managed WSL2 engine, not a shipping installer.
 

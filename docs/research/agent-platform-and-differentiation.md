@@ -1,4 +1,6 @@
 > Research snapshot, not an approved implementation or pricing policy.
+
+> Historical research, indexed October 4, 2026. The project is paused. This study is not current release scope; use [V1_TASKS.md](../V1_TASKS.md). Recheck upstream facts before adopting its proposals.
 > External product, protocol, licensing, eligibility and pricing claims require
 > fresh primary-source verification before implementation or commercial decisions.
 > Current V1 scope and task status live in [V1_TASKS.md](../V1_TASKS.md).

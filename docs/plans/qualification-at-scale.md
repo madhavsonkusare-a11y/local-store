@@ -1,5 +1,7 @@
 # Qualify apps by reusable proof paths
 
+> Reviewed for shelving October 4, 2026. Development is paused. This is an architecture/method reference with dated checkpoints; current scope and acceptance are in [V1_TASKS.md](../V1_TASKS.md). Local build artifacts and the development engine were removed.
+
 Decision checkpoint, September 30, 2026. V1 requires 10 selected apps
 proven on the owned Windows/WSL engine with a meaningful task; this document
 changes the work method, not the release bar. Today ten apps (Memos, Flatnotes,

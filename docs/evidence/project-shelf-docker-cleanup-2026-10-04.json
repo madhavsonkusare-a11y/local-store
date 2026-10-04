@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-04",
+  "purpose": "Owner-requested shelving cleanup, not product acceptance",
+  "docker_context": "desktop-linux",
+  "removed_engine_build_images": [
+    "sha256:687d4ca0d93e8cb518ab6fedc1643326b42dc2a16f0ee726bc146d85c7efc214",
+    "sha256:723f65821ca597a5d7aa896f70d41cb9e7c8bd1b976b35e672f217199cf2b8d9",
+    "sha256:321c5b06fd4dc1570c04a61b5ee3eb8798c9dff079f1c5a80e63b6e18ed56cf1",
+    "sha256:65cbdd0562f54d80f53dba875c9ba33577054f18b12ea43480325e442b77fcbc",
+    "sha256:8c7f2251d1d2ac6fd88ca5a34d047b6aeb5026adde674cbfbcf4f84f10ca44b7",
+    "sha256:0baa4d8c3c61279c144f93887f1391a79ed0a985f996c091c8606573a224ef00",
+    "sha256:6729d477b2c9e66ea3e86b0f2c947ba828b95a094d3662aeeb2e2ac9b65190f8"
+  ],
+  "selected_project_build_cache_ids": [
+    "2h4t2quhjt8ogpbg74ih74pks",
+    "6xeuu65ujf6kdmppwsgctyt39",
+    "bi5av2q7edhd5lv426ajfkugf",
+    "f4bzdsy15v2dwjc0y9mk49r6e",
+    "hjev9zxo7hq00ynq8qgqtntkb",
+    "hjzak9hcdlxqqqc8niolhtpnd",
+    "iij06rrexj232eqs8vw8477e0",
+    "lfsbkpfqk1dch4q8kg827ovdi",
+    "m5c0nxu8fxftyrw2z2yb6t5r6",
+    "pbcqpcnsl33gvnx36qqh4ldwg",
+    "pe0t0od8bn1knijinp7v0or2o",
+    "t8pi0zptjixg2arm3ef5oc9z3",
+    "uvlnn6q5psp93geqe5sknkwvn",
+    "x88l6q8m29pzu4m9sdzdl7oe0",
+    "yud5hbl5agv3u6po7ukjx9hzm",
+    "zegu8m5dskxke2t54xf9z59zr"
+  ],
+  "preserved_containers": [
+    {
+      "id": "9a47338b011f",
+      "name": "penpot-penpot-frontend-1"
+    },
+    {
+      "id": "bc27d7b751a2",
+      "name": "penpot-penpot-backend-1"
+    },
+    {
+      "id": "b0654c0bc18c",
+      "name": "penpot-penpot-exporter-1"
+    },
+    {
+      "id": "f4746cdb42fe",
+      "name": "penpot-penpot-postgres-1"
+    },
+    {
+      "id": "9f85cbf5f9d5",
+      "name": "penpot-penpot-valkey-1"
+    },
+    {
+      "id": "5b38ffe8564a",
+      "name": "penpot-penpot-mcp-1"
+    },
+    {
+      "id": "e173173aac0f",
+      "name": "penpot-penpot-mailcatch-1"
+    }
+  ],
+  "remaining_build_cache": [
+    {
+      "id": "o4x4kw7m3gkicwfyjvmko7czx",
+      "description": "local source for context",
+      "size": "4.096kB"
+    },
+    {
+      "id": "2tmk94d8swwcil5wsi1zqqcmi",
+      "description": "local source for dockerfile",
+      "size": "8.192kB"
+    },
+    {
+      "id": "wsmnyjbkb3c8jbhwg65w9um8f",
+      "description": "local source for context",
+      "size": "89.62MB"
+    }
+  ],
+  "note": "Penpot containers, volumes, network and in-use images retained. Generic local-source cache records without definite project attribution retained. Shared Docker disk was not deleted or compacted; logical reclamation is not measured host free space.",
+  "removed_project_build_cache_ids": [
+    "2h4t2quhjt8ogpbg74ih74pks",
+    "6xeuu65ujf6kdmppwsgctyt39",
+    "bi5av2q7edhd5lv426ajfkugf",
+    "f4bzdsy15v2dwjc0y9mk49r6e",
+    "hjev9zxo7hq00ynq8qgqtntkb",
+    "hjzak9hcdlxqqqc8niolhtpnd",
+    "iij06rrexj232eqs8vw8477e0",
+    "lfsbkpfqk1dch4q8kg827ovdi",
+    "m5c0nxu8fxftyrw2z2yb6t5r6",
+    "pbcqpcnsl33gvnx36qqh4ldwg",
+    "pe0t0od8bn1knijinp7v0or2o",
+    "t8pi0zptjixg2arm3ef5oc9z3",
+    "uvlnn6q5psp93geqe5sknkwvn",
+    "x88l6q8m29pzu4m9sdzdl7oe0",
+    "yud5hbl5agv3u6po7ukjx9hzm",
+    "zegu8m5dskxke2t54xf9z59zr"
+  ]
+}

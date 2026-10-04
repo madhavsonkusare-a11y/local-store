@@ -1,5 +1,7 @@
 # Recover an interrupted installation
 
+> Source reference reviewed October 4, 2026. The project is paused and the installed development app/engine were removed. Scope and accepted proof remain in [V1_TASKS.md](V1_TASKS.md); resume context is in [agent-handoff.md](agent-handoff.md).
+
 An interrupted install may leave an owned Docker project and retained files
 without a saved app. An occupied port alone does not establish ownership.
 

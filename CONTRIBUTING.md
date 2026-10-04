@@ -1,13 +1,14 @@
 # Contributing
 
-Local Store is small by design. Contributions welcome.
+Development is paused as of October 4, 2026. This guide preserves the source workflow for an explicit future resume; there is no active development or support commitment.
 
 ## Dev setup
 
 Windows x64 development needs Rust (the repository pins the toolchain in
 `rust-toolchain.toml`), Visual Studio C++ Build Tools and the WebView2 runtime.
-Docker Desktop or an explicitly configured Local Store managed engine is
-needed to install apps; it is not needed just to compile the launcher.
+Managed app installation uses an explicitly verified Local Store-owned engine;
+Docker Desktop is not a product prerequisite. Building its development rootfs
+needs a Linux container builder. Neither is needed just to compile the launcher.
 
 ```powershell
 # Compile and launch with the committed interface embedded.
@@ -33,7 +34,12 @@ The V1 GitHub Release contains source archives only.
 - GUI-subsystem binary on Windows: keep `#![cfg_attr(not(debug_assertions),
   windows_subsystem = "windows")]` — no console window on launch.
 
-## Before publishing changes
+## Verification when work resumes
+
+Use a focused check for the changed boundary during development. Reserve full
+builds and runtime/native proofs for integration or their required acceptance
+gate; documentation-only maintenance does not require reinstalling the removed
+app or engine. Before a later release, retain the required checks:
 
 - `cargo fmt --all -- --check`, clippy with warnings denied, and `cargo test --locked`
 - `npm ci` and `npm test` (Windows visual baselines; Linux CI checks interactions/axe)
@@ -46,13 +52,13 @@ validation commands and current limitations without requiring chat history.
 
 ## Current focus
 
-The baseline has 52 offerings and 1,678 discovery entries. The source-only V1
+The source has 53 offerings and 1,678 discovery entries. The source-only V1
 GitHub milestone requires audited source, accurate docs and a verified tag;
 signing and updates belong to later Windows distribution. The Windows product
 targets ten task-verified apps, a managed container engine, the approved V2
 interface and controlled agent access. The ten-app proof count passes, while
-complete engine setup, interface flows and agent content access remain active
-work. Use the master ledger rather than historical phase notes to choose a
+complete engine setup and native interface acceptance remain unfinished.
+The selected ten have bounded agent-content proofs; broader access is unproven. Use the master ledger rather than historical phase notes to choose a
 task. Reuse the existing runtime and adapters; do not promote imported
 definitions automatically.
 

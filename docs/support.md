@@ -1,6 +1,8 @@
 # Support and recovery
 
-Local Store is maintained as a preview project by one person. There is no
+Updated October 4, 2026. The project is shelved; the local development app, engine and data were removed. No current private installer remains.
+
+Local Store is a preview project by one person. There is no
 support service-level agreement, guaranteed response time or bounty. The public
 [source V1 release](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0)
 contains no Windows installer. Unsigned personal builds are development previews.
@@ -77,3 +79,18 @@ If private reporting is unavailable, do not publish exploit details or credentia
 in a public issue; request a private reporting route without sensitive details.
 See [security and privacy](security-and-privacy.md) for enforced boundaries and
 [PUBLISH.md](../PUBLISH.md) for release verification limits.
+
+## Manual testing after a future rebuild
+
+An owner-run test on this laptop can provide useful local acceptance, but does
+not replace the separate clean-host gate. Build a new private installer using
+[PUBLISH.md](../PUBLISH.md#unsigned-local-windows-preview), record its exact hash
+and source revision, and state whether an existing engine or user profile is
+being reused. Earlier deleted installer hashes are not current downloads.
+
+Check installation/first launch, engine consent and failure/retry, install and
+meaningful task for the selected apps, native app windows and external links,
+agent connection/grant/denial/revocation, restart/recovery, shortcuts and
+uninstall with explicit keep/delete-data choices. Record each result and any
+error before changing acceptance status. Never remove shared Docker/Penpot
+resources as part of a Local Store test.

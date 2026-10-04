@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Shelve development on October 4, 2026; remove local app/engine/build artifacts,
+  rename the checkout to `local-store`, and consolidate docs around approved V2,
+  ten launch apps and the published source-only milestone. Preserve dated evidence
+  and unfinished Windows acceptance gates.
+
 - Rename the GitHub repository to `local-store`, update repository/source links
   and historical notes, and remove the old internal browser marker. Retain only
   the compatibility identifiers required for existing registries and launch links.
@@ -46,9 +51,6 @@
 - Allow a preserved managed data directory to be reused on reinstall while
   restoring its previous Compose file if setup fails.
 
-All notable changes to this project are documented in this file.
-
-## [Unreleased]
 
 ## [0.4.0] - 2026-08-29
 

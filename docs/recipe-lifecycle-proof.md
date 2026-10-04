@@ -1,5 +1,7 @@
 # Real recipe lifecycle verification
 
+> Historical record, indexed October 4, 2026. This preserves its original test/selection scope. Current ten-app launch acceptance belongs to [V1_TASKS.md](V1_TASKS.md); local runtime artifacts were removed during shelving.
+
 ## September 7, 2026 result
 
 All three recipes passed all 13 recorded checkpoints on Windows with Docker

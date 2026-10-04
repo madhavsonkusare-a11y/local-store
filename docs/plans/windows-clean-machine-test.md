@@ -1,5 +1,7 @@
 # Clean Windows test on Madhav's laptop
 
+> Reviewed for shelving October 4, 2026. Development is paused. This is an architecture/method reference with dated checkpoints; current scope and acceptance are in [V1_TASKS.md](../V1_TASKS.md). Local build artifacts and the development engine were removed.
+
 October 2, 2026. This is an R04 test plan, not a completed installation test.
 The owner asked whether a Windows VM could be used on the laptop and how much
 storage it needs. No VM, Windows edition upgrade or host feature change has

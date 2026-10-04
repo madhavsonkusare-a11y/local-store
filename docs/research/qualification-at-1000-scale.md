@@ -1,5 +1,7 @@
 # Research: qualifying a thousand local apps
 
+> Historical research, indexed October 4, 2026. The project is paused. This study is not current release scope; use [V1_TASKS.md](../V1_TASKS.md). Recheck upstream facts before adopting its proposals.
+
 September 23, 2026. This is a method study, not new app qualification. The current release count remains **1/50 managed-engine, meaningful-task verified** (Memos); n8n has a managed lifecycle pass without task proof. The 49/52 clean preflights are metadata checks only.
 
 ## What existing catalogs automate
@@ -27,7 +29,7 @@ No inspected upstream system certifies 1,000 heterogeneous apps end-to-end, incl
 3. **Task verified:** a unique synthetic item is created and independently read back after restart and keep-data reinstall; task traces and exact assertions are tied to manifest, engine, images and probe hashes.
 4. **Curated release proof:** task-verified plus update/recovery, agent access and human UX review as required by V1 gates.
 
-Display these statuses separately. Reaching 1,000 catalog-checked or install-tested entries can be a real scale milestone, but must not be marketed as 1,000 fully usable apps. The current 50-app V1 target retains task proof.
+Display these statuses separately. Reaching 1,000 catalog-checked or install-tested entries can be a real scale milestone, but must not be marketed as 1,000 fully usable apps. The earlier 50-app target is superseded by the ten-app launch target; meaningful-task proof remains required.
 
 ## Implementation path that reuses this repo
 

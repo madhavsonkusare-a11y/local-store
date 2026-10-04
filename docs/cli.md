@@ -1,5 +1,7 @@
 # Read-only CLI commands
 
+> Source reference reviewed October 4, 2026. The project is paused and the installed development app/engine were removed. Scope and accepted proof remain in [V1_TASKS.md](V1_TASKS.md); resume context is in [agent-handoff.md](agent-handoff.md).
+
 The catalog and Doctor commands can be used by people, scripts and coding
 agents without reading the app registry. Catalog search is entirely offline.
 Doctor queries Docker and Compose inside the selected Local Store engine. It

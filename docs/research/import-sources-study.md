@@ -1,5 +1,7 @@
 # Where the next few hundred apps come from
 
+> Historical research, indexed October 4, 2026. The project is paused. This study is not current release scope; use [V1_TASKS.md](../V1_TASKS.md). Recheck upstream facts before adopting its proposals.
+
 ## Implementation follow-up (September 8, 2026)
 
 The original survey below is useful prioritization, not importer verification.

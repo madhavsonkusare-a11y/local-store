@@ -1,5 +1,7 @@
 # What this project learned the hard way
 
+> Source reference reviewed October 4, 2026. The project is paused and the installed development app/engine were removed. Scope and accepted proof remain in [V1_TASKS.md](V1_TASKS.md); resume context is in [agent-handoff.md](agent-handoff.md).
+
 Things that cost real time, found by running the code rather than reading it.
 Each one bit at least once and several bit repeatedly. If you are about to
 touch the plan model, the importers or anything that talks to Docker, this is

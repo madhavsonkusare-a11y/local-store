@@ -1,5 +1,7 @@
 # Reusing app providers for the launch roster
 
+> Historical research, indexed October 4, 2026. The project is paused. This study is not current release scope; use [V1_TASKS.md](../V1_TASKS.md). Recheck upstream facts before adopting its proposals.
+
 Checked October 1, 2026. This document records implementation choices and
 remaining provider work. It does not complete A04–A06.
 

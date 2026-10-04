@@ -1,5 +1,7 @@
 # Command errors and operation events
 
+> Source reference reviewed October 4, 2026. The project is paused and the installed development app/engine were removed. Scope and accepted proof remain in [V1_TASKS.md](V1_TASKS.md); resume context is in [agent-handoff.md](agent-handoff.md).
+
 All launcher commands return their existing success payload or reject with
 `{ "code": "...", "message": "..." }`. The frontend IPC adapter exposes this
 as `CommandError`. Messages are readable, redacted diagnostics; use codes for

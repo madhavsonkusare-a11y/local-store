@@ -1,5 +1,7 @@
 # Security and privacy
 
+> Source reference reviewed October 4, 2026. The project is paused and the installed development app/engine were removed. Scope and accepted proof remain in [V1_TASKS.md](V1_TASKS.md); resume context is in [agent-handoff.md](agent-handoff.md).
+
 What Local Store sends, what it stores, what it enforces, and — just as
 importantly — what it does not protect you from. Statements here describe the
 code in this repository; the limits section is not boilerplate.

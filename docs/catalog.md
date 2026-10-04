@@ -1,5 +1,7 @@
 # Catalog contribution and refresh guide
 
+> Source reference reviewed October 4, 2026. The project is paused and the installed development app/engine were removed. Scope and accepted proof remain in [V1_TASKS.md](V1_TASKS.md); resume context is in [agent-handoff.md](agent-handoff.md).
+
 The integration baseline contains 1,678 discovery entries and local icons or
 monograms for every entry. 52 apps are offered through reviewed recipes and
 templates. Catalog presence is not installation or meaningful-task proof.

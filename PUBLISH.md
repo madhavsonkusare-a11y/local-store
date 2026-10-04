@@ -1,4 +1,8 @@
-# Release checklist
+# Source release and later Windows packaging
+
+Updated October 4, 2026. The project is paused. Local installers, build output
+and the owned development engine were removed; the commands below are for
+an explicit future rebuild, not instructions to restart work.
 
 The [GitHub repository](https://github.com/madhavsonkusare-a11y/local-store)
 is public. [V1 is published as a source-only GitHub Release](https://github.com/madhavsonkusare-a11y/local-store/releases/tag/source-v1.0.0);
@@ -111,11 +115,10 @@ python scripts/check-packaged-notices.py --resource-dir target/x86_64-pc-windows
 ```
 
 The installer is under `target/x86_64-pc-windows-msvc/release/bundle/nsis/`.
-The September 29 personal copy and its checksum are in the ignored
-`dist/local-preview/` folder; rebuilding or cleaning `target/` does not remove
-that copy.
-The retained September 29 preview predates the current managed-engine setup
-and agent work. Current source implements explicit consent, retry/repair and
+All earlier personal copies, including `dist/local-preview/`, were deleted
+during shelving. Historical receipts retain their hashes; no retained setup
+file is available. Rebuild before conducting any manual installation test.
+The September 29 preview predated the current managed-engine setup and agent work. Current source implements explicit consent, retry/repair and
 owned WSL selection for the development payload. The rootfs distribution,
 complete current native flows and clean-machine bootstrap acceptance remain open.
 New installs require the selected owned engine; Docker Desktop is not a
