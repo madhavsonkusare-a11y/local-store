@@ -33,6 +33,7 @@ providers/privatebin/runner.mjs text eol=lf
 scripts/check-fresh-engine.py text eol=lf
 scripts/check-managed-supervisor.py text eol=lf
 scripts/check-engine-restart.py text eol=lf
+scripts/check-private-installer.py text eol=lf
 scripts/verify-engine-provenance.py text eol=lf
 scripts/test_engine_provenance.py text eol=lf
 src/runtime/engine/wsl/supervisor.rs text eol=lf

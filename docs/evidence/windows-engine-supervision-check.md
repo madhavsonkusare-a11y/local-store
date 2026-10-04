@@ -46,6 +46,24 @@ Windows sleep/wake and literal fixed-name clean-host bootstrap/removal remain
 separate acceptance. No host sleep, reboot, feature change or production-engine
 unregistration occurred.
 
+## October 4 running-app workload
+
+`python scripts/check-engine-restart.py --run --with-memos` adds one isolated
+product-CLI installation of the existing pinned Memos recipe. It refuses an
+occupied Compose project or exact container name, then creates and rereads a
+private memo using the unchanged first-use probe. After worker stop/crash and
+three concurrent launcher restarts, the exact memo, running container ID and
+start time are unchanged. Normal ownership-safe product uninstall deletes the
+fixture's data; the original container inventory and native identity files
+match. Selection revocation stops the fixture worker, including when app cleanup
+refuses; uncertain cleanup retains its files. No credentials/content are published.
+
+The [final actual receipt](windows-engine-workload-restart-2026-10-04-045856.json)
+fingerprints the current proof, launcher, recipe, task probe and supervisor.
+The earlier October 4 receipt is history from before stronger name/failure-cleanup
+guards. This adds a running-app workload proof, but does not prove native close,
+Windows sleep/wake, a daemon crash, host reboot or literal fresh-host removal.
+
 ## Verification status
 
 The focused owned-WSL run passed 30 tests, including the five supervisor/lease

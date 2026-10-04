@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04T05:11:58Z",
+  "passed": true,
+  "scope": "Actual retained private installer extraction and exact resources; no installer execution, installation, clean-host or public delivery claim",
+  "installer": {
+    "path": "target/release/bundle/nsis/Local Store_0.5.0-1_x64-setup.exe",
+    "size_bytes": 18307828,
+    "sha256": "5aa36857e5480d53a55826b8a98165341a2a1048da2e318a187de8318d227972"
+  },
+  "reader": {
+    "version": "26.03",
+    "url": "https://github.com/ip7z/7zip/releases/download/26.03/7z2603-linux-x64.tar.xz",
+    "package_sha256": "dc99eff5008f1ab79bd7084c68513701547a808a89502bf4133683535ab3c695",
+    "tool_sha256": "eab4c8d7f193e3d6d3237370bbcaa879a160a3f1dc82202207e27baeab79b6ac",
+    "digest_origin": "Official GitHub release asset digest; not a signature"
+  },
+  "script_sha256": "1bb32f2f7756b493f798422f8b8caefd4dff7815a336385df331a5b5eeafed36",
+  "extracted_file_count": 50,
+  "configured_resource_count": 41,
+  "exact_notice_file_count": 39,
+  "entrypoints_match_exact_framework_transformation": true,
+  "entrypoints": [
+    {
+      "path": "local-store.exe",
+      "retained_binary_sha256": "9c86749e7e0b243011d9f2b4c640fee2465ce6768c2a0b832ebc734a027eeb0c",
+      "extracted_sha256": "ff791afd0f93030930efec2a52897dc56479e572e1a6626e9229763cb382bb18",
+      "exact_framework_patch": {
+        "offset": 29484230,
+        "from": "__TAURI_BUNDLE_TYPE_VAR_UNK",
+        "to": "__TAURI_BUNDLE_TYPE_VAR_NSS",
+        "source_url": "https://github.com/tauri-apps/tauri/blob/tauri-cli-v2.11.5/crates/tauri-bundler/src/bundle.rs",
+        "source_sha256": "a4622ce32d88b99e8a785d57cfd96ebc2aa99d066a3c7bb17c0634a8a943aa3d"
+      }
+    },
+    {
+      "path": "local-store-mcp.exe",
+      "retained_binary_sha256": "880a12ac999dc8d8f9aa444998be3be38cb499b86c0f0cef6dd59c5e4114c3b6",
+      "extracted_sha256": "880a12ac999dc8d8f9aa444998be3be38cb499b86c0f0cef6dd59c5e4114c3b6",
+      "exact_framework_patch": null
+    }
+  ],
+  "native_engine_identity_unchanged": true,
+  "installer_executed": false,
+  "published": false,
+  "extraction_path": ".cache/installer-extraction-2026-10-04/extracted-du_9pks5",
+  "entries": [
+    {
+      "path": "$PLUGINSDIR/System.dll",
+      "size_bytes": 12288,
+      "generated_nsis_stub": false,
+      "sha256": "8b4c47c4cf5e76ec57dd5a050d5acd832a0d532ee875d7b44f6cdaf68f90d37c"
+    },
+    {
+      "path": "$PLUGINSDIR/modern-wizard.bmp",
+      "size_bytes": 26494,
+      "generated_nsis_stub": false,
+      "sha256": "3ad2dc318056d0a2024af1804ea741146cfc18cc404649a44610cbf8b2056cf2"
+    },
+    {
+      "path": "$PLUGINSDIR/nsDialogs.dll",
+      "size_bytes": 9728,
+      "generated_nsis_stub": false,
+      "sha256": "b1350f487692057c8ffde75dcc55287a52a3272240d4d4912f24464b27551fc0"
+    },
+    {
+      "path": "$PLUGINSDIR/nsis_tauri_utils.dll",
+      "size_bytes": 34304,
+      "generated_nsis_stub": false,
+      "sha256": "5ba143b5db4a87d32d6e7802e033330aae56cbceabe0d1e3ba41948385ad4709"
+    },
+    {
+      "path": "$PLUGINSDIR/StartMenu.dll",
+      "size_bytes": 7680,
+      "generated_nsis_stub": false,
+      "sha256": "fe330320459637d8dd2b5d84d07925c38ec264152ffd3b1760a4d44d76536caa"
+    },
+    {
+      "path": "$PLUGINSDIR/NSISdl.dll",
+      "size_bytes": 15360,
+      "generated_nsis_stub": false,
+      "sha256": "ddf40229dd9d6b268902d8dea88c8a04aacf1af218dd29f6dcd35babc54ac08d"
+    },
+    {
+      "path": "local-store.exe",
+      "size_bytes": 33906176,
+      "generated_nsis_stub": false,
+      "sha256": "ff791afd0f93030930efec2a52897dc56479e572e1a6626e9229763cb382bb18"
+    },
+    {
+      "path": "LICENSE",
+      "size_bytes": 1073,
+      "generated_nsis_stub": false,
+      "sha256": "dcca3ec98bef20be0e21940db087dd496c3a368659c472a646ab958216495409"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "size_bytes": 8884,
+      "generated_nsis_stub": false,
+      "sha256": "c2421f6b2e8773571abaff1a1c0ed78e711d262a7a2a4efda2afc4d567b8e47e"
+    },
+    {
+      "path": "catalog/icons.json",
+      "size_bytes": 1191335,
+      "generated_nsis_stub": false,
+      "sha256": "8c07a657085243d3f4afeebe86f618d338109e0a6ceb50f2d6d6ae63f4b522fd"
+    },
+    {
+      "path": "catalog/notices/awesome-selfhosted/AUTHORS",
+      "size_bytes": 84406,
+      "generated_nsis_stub": false,
+      "sha256": "e751d65ae736326eb17a8986b1d76d35261c240275eb8c833a8c5a9783ad44eb"
+    },
+    {
+      "path": "catalog/notices/awesome-selfhosted/LICENSE",
+      "size_bytes": 21933,
+      "generated_nsis_stub": false,
+      "sha256": "ea66edda4bc711665cc684573588801670d2c6c5b84028da4fdafbcaee213ad1"
+    },
+    {
+      "path": "catalog/notices/caprover/LICENSE",
+      "size_bytes": 11357,
+      "generated_nsis_stub": false,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "catalog/notices/casaos/LICENSE",
+      "size_bytes": 11558,
+      "generated_nsis_stub": false,
+      "sha256": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6"
+    },
+    {
+      "path": "catalog/notices/coolify/LICENSE",
+      "size_bytes": 11545,
+      "generated_nsis_stub": false,
+      "sha256": "046952d7a2609d7407aaf3ee893bf394b9d2429f47d2758d984a60c9380d2a21"
+    },
+    {
+      "path": "catalog/notices/paperclip/LICENSE",
+      "size_bytes": 1090,
+      "generated_nsis_stub": false,
+      "sha256": "526e937d673d264af663f53d3be7118c59840810097d492e1550b363a5c91000"
+    },
+    {
+      "path": "catalog/notices/runtipi/LICENSE",
+      "size_bytes": 35823,
+      "generated_nsis_stub": false,
+      "sha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809"
+    },
+    {
+      "path": "catalog/notices/rust/NOTICES.txt",
+      "size_bytes": 4328639,
+      "generated_nsis_stub": false,
+      "sha256": "cf78d25cbeda288bffc1556cdc58d3b4bece3b88bf91b1b5fbd76af97921a5b8"
+    },
+    {
+      "path": "catalog/notices/rust/inventory.json",
+      "size_bytes": 301633,
+      "generated_nsis_stub": false,
+      "sha256": "2580536c1c8e4d94eebbc2750e68a5bb2b2300651daedbca83ba4d03d131c1aa"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/cssparser-0.36.0.crate",
+      "size_bytes": 56357,
+      "generated_nsis_stub": false,
+      "sha256": "dae61cf9c0abb83bd659dab65b7e4e38d8236824c85f0f804f173567bda257d2"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/cssparser-macros-0.6.1.crate",
+      "size_bytes": 7914,
+      "generated_nsis_stub": false,
+      "sha256": "13b588ba4ac1a99f7f2964d24b3d896ddc6bf847ee3855dbd4366f058cfcd331"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/dtoa-short-0.3.5.crate",
+      "size_bytes": 8287,
+      "generated_nsis_stub": false,
+      "sha256": "cd1511a7b6a56299bd043a9c167a6d2bfb37bf84a6dfceaba651168adfb43c87"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/option-ext-0.2.0.crate",
+      "size_bytes": 7345,
+      "generated_nsis_stub": false,
+      "sha256": "04744f49eae99ab78e0d5c0b603ab218f515ea8cfe5a456d7629ad883a3b6e7d"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source/selectors-0.36.1.crate",
+      "size_bytes": 69832,
+      "generated_nsis_stub": false,
+      "sha256": "c5d9c0c92a92d33f08817311cf3f2c29a3538a8240e94a6a3c622ce652d7e00c"
+    },
+    {
+      "path": "catalog/notices/rust/mpl-source.json",
+      "size_bytes": 1724,
+      "generated_nsis_stub": false,
+      "sha256": "907779a3d8cd06c055c4eefa3baa6d2e9db69f3fcf84e1a16153f31be4227901"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/dropbox--rust-alloc-no-stdlib/ae42d22078b98549e987d2f03d12df7b984fde47/LICENSE",
+      "size_bytes": 1483,
+      "generated_nsis_stub": false,
+      "sha256": "c0c56f26d9c051cac4d200c34c84e7ae9aaa853e01a982a1df08b09931e518ae"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/knurling-rs--defmt/4a8cdb44891ed57b8ff5a023b6bec7137c48708f/LICENSE-APACHE",
+      "size_bytes": 10850,
+      "generated_nsis_stub": false,
+      "sha256": "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/knurling-rs--defmt/4a8cdb44891ed57b8ff5a023b6bec7137c48708f/LICENSE-MIT",
+      "size_bytes": 1053,
+      "generated_nsis_stub": false,
+      "sha256": "2710a622a896bba67356913d4d0492cab5465f61b2ecce6d880aeb483834fb50"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/COPYRIGHT.md",
+      "size_bytes": 608,
+      "generated_nsis_stub": false,
+      "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/COPYRIGHT.md",
+      "size_bytes": 608,
+      "generated_nsis_stub": false,
+      "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-APACHE",
+      "size_bytes": 10847,
+      "generated_nsis_stub": false,
+      "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/LICENSE-APACHE",
+      "size_bytes": 10847,
+      "generated_nsis_stub": false,
+      "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-MIT",
+      "size_bytes": 1023,
+      "generated_nsis_stub": false,
+      "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/open-i18n--rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/LICENSE-MIT",
+      "size_bytes": 1023,
+      "generated_nsis_stub": false,
+      "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/selectors-MPL-2.0.txt",
+      "size_bytes": 16726,
+      "generated_nsis_stub": false,
+      "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE.spdx",
+      "size_bytes": 889,
+      "generated_nsis_stub": false,
+      "sha256": "5e834fe9788c524210deda859c46a550ffa5aa0cba9ea0572f0d81120e97c008"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE_APACHE-2.0",
+      "size_bytes": 10174,
+      "generated_nsis_stub": false,
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/tauri-apps--tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE_MIT",
+      "size_bytes": 1090,
+      "generated_nsis_stub": false,
+      "sha256": "9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055dff1d"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/wravery--webview2-rs/b74dc5e2b394044bea5191052868ce7a106c202c/LICENSE",
+      "size_bytes": 1067,
+      "generated_nsis_stub": false,
+      "sha256": "0dcf41516e608bbcb6cdc5229feb7b86fe4a643b85e7df251133c93408fdac73"
+    },
+    {
+      "path": "catalog/notices/rust/upstream/wravery--webview2-rs/dffa41a8a46d3f5565eefbff2de57d38d399f158/LICENSE",
+      "size_bytes": 1067,
+      "generated_nsis_stub": false,
+      "sha256": "0dcf41516e608bbcb6cdc5229feb7b86fe4a643b85e7df251133c93408fdac73"
+    },
+    {
+      "path": "catalog/notices/rust/upstream-supplements.json",
+      "size_bytes": 12428,
+      "generated_nsis_stub": false,
+      "sha256": "b63c847052635625c5c6e15de124738089dec3c659b5e1d9fbee5f05706294a5"
+    },
+    {
+      "path": "catalog/notices/umbrel-apps-gallery/NOTICE.md",
+      "size_bytes": 1007,
+      "generated_nsis_stub": false,
+      "sha256": "09f0842d646bbb299be4574d0a25d26bba47acc189a4a42d8f308561b11f8f42"
+    },
+    {
+      "path": "catalog/sources.lock.json",
+      "size_bytes": 1143,
+      "generated_nsis_stub": false,
+      "sha256": "e89dd7a78eac5e2ea3b4c52f4909637620ef577dc548f02d0636838f0336bc28"
+    },
+    {
+      "path": "src/assets/LUCIDE-LICENSE",
+      "size_bytes": 3251,
+      "generated_nsis_stub": false,
+      "sha256": "6fc5b7332939dd5c61af3a5f97450f7bc05d4a396dd0bc21ac341716b3b05096"
+    },
+    {
+      "path": "src/assets/apps/LICENSE",
+      "size_bytes": 11593,
+      "generated_nsis_stub": false,
+      "sha256": "82901e105f3248def0daf0d5721e19e11915201d8af93720b43e7b6a177c194e"
+    },
+    {
+      "path": "src/fonts/IBMPlex-OFL.txt",
+      "size_bytes": 4455,
+      "generated_nsis_stub": false,
+      "sha256": "3ff4395aeb203050b3d4e775861cf0b93b598e0a6d2b16f0eb41df3350b15695"
+    },
+    {
+      "path": "src/fonts/InstrumentSans-OFL.txt",
+      "size_bytes": 4495,
+      "generated_nsis_stub": false,
+      "sha256": "d1d978741d28ee9ca0a882b714a8af535f1ed0341afa22a4891f5858e783e13b"
+    },
+    {
+      "path": "src/fonts/OFL.txt",
+      "size_bytes": 4472,
+      "generated_nsis_stub": false,
+      "sha256": "b3195af0fb14368d1b3b10fb9d3fe503b7163ea083859d2ee553bc74da07c320"
+    },
+    {
+      "path": "local-store-mcp.exe",
+      "size_bytes": 9242112,
+      "generated_nsis_stub": false,
+      "sha256": "880a12ac999dc8d8f9aa444998be3be38cb499b86c0f0cef6dd59c5e4114c3b6"
+    },
+    {
+      "path": "uninstall.exe",
+      "size_bytes": 80219,
+      "generated_nsis_stub": true,
+      "sha256": "1f1878d4541b7f645223747d360e01b6ff1f892ea785bad91fad6821fb62e161"
+    }
+  ],
+  "archive_size_discrepancies": [
+    {
+      "path": "$PLUGINSDIR/StartMenu.dll",
+      "listed_size_bytes": 13316,
+      "extracted_size_bytes": 7680
+    }
+  ],
+  "limits": [
+    "Archive extraction does not test installer destination, registry, shortcuts, prerequisite downloads or uninstaller behavior",
+    "NSIS plugin/stub reconstruction is not certified; reader listing/extraction size discrepancies remain explicitly recorded",
+    "Existing WSL-ready host, not clean Windows",
+    "Launcher bundle excludes engine payload and source companions"
+  ]
+}

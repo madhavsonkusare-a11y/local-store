@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04T05:18:36Z",
+  "scope": "Local running-app worker recovery and actual private archive bytes, with no installed/native/clean-host claim",
+  "base_commit": "66fa56551daa70c1c4b491e7581632f32fd3e471",
+  "windows_progress": {
+    "done": 23,
+    "active": 31,
+    "percent": 74.2,
+    "done_ids": [
+      "R01",
+      "R02",
+      "R03",
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q04",
+      "Q05",
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "F01",
+      "F02"
+    ],
+    "remaining_ids": [
+      "E01",
+      "E02",
+      "E03",
+      "E04",
+      "F03",
+      "F04",
+      "R04",
+      "R05"
+    ]
+  },
+  "source_release_percent": 100,
+  "accepted_local_results": {
+    "running_memos_recovery": "docs/evidence/windows-engine-workload-restart-2026-10-04-045856.json",
+    "private_installer_extraction": "docs/evidence/windows-private-installer-extraction-2026-10-04-051651.json",
+    "capture_investigation": "docs/evidence/windows-v2-capture-investigation-2026-10-04.md"
+  },
+  "retained_product_or_capture_changes": false,
+  "remaining_gates": [
+    "Exact upstream engine license/build/source delivery clarification",
+    "Supported fixed-name fresh Windows setup and clean-host acceptance",
+    "Native WebView full workflow and close/sleep-wake workload",
+    "Strict byte-identical capture acceptance",
+    "Installed/shortcut/prerequisite/uninstaller acceptance and any eventual public Windows artifact"
+  ],
+  "source_inputs": [
+    {
+      "path": ".gitattributes",
+      "sha256": "c7b804934ed5e09edd41db38f3ffc372b1adf209464e741931aff78e5aa1bd07"
+    },
+    {
+      "path": "docs/V1_TASKS.md",
+      "sha256": "779a6a4c5e6a5c2a8d18ba496998461c6c72ffcca07993dc371136e9490ad196"
+    },
+    {
+      "path": "docs/agent-handoff.md",
+      "sha256": "9ca95702b96553e9510222d039a3ef5952fb0d2b897d7a19844077574a04d30d"
+    },
+    {
+      "path": "docs/evidence/windows-engine-supervision-check.md",
+      "sha256": "49bfaf444af3b0d38860487307e2dd5fc40c6fe0a3d84df2fb49c61a5edc9c3e"
+    },
+    {
+      "path": "docs/evidence/windows-engine-workload-restart-2026-10-04-045856.json",
+      "sha256": "5db45d71c12a1a67e6ddf5e47868c39ca3ac1f0d52444f58f60d0573ad9f054b"
+    },
+    {
+      "path": "docs/evidence/windows-engine-workload-restart-2026-10-04.json",
+      "sha256": "0b97f7ebab854632facc9f7aaa6a679f1700bddfcaf5d8a65579dcb62547c59b"
+    },
+    {
+      "path": "docs/evidence/windows-private-installer-check.md",
+      "sha256": "d86d88c1c92d1fafbb6bfd16be7fe15312c5f4b1e5352cb74c6d0a0b2221b227"
+    },
+    {
+      "path": "docs/evidence/windows-private-installer-extraction-2026-10-04-051158.json",
+      "sha256": "2c9ef603cb6e1f03f3f380eb77c796a170dc215a7b02823aa04cf50c5c378c57"
+    },
+    {
+      "path": "docs/evidence/windows-private-installer-extraction-2026-10-04-051651.json",
+      "sha256": "00303b1f6ef663a1971fa6b18dbff74705e09dc7b9aa9d68f4427b3a65de8f4b"
+    },
+    {
+      "path": "docs/evidence/windows-security-notices-review-2026-10-03.md",
+      "sha256": "910bacd179b17ba97c64677b85f8b509fa0944a641cd57048fb2aa7352e724ad"
+    },
+    {
+      "path": "docs/evidence/windows-v2-capture-investigation-2026-10-04.md",
+      "sha256": "4574bd20afba5bf0392dd66f14858b993fbac8042d0c3bccdabe9844c9f31dbd"
+    },
+    {
+      "path": "scripts/check-engine-restart.py",
+      "sha256": "ae23bb95d49577c6de25464caf1f8e097cdf2c9717544134b25995f8c828c194"
+    },
+    {
+      "path": "scripts/check-private-installer.py",
+      "sha256": "94d89869c7da3845bc08be36fb785380f2f5df503238f538786ed2f33d8ebd00"
+    }
+  ]
+}

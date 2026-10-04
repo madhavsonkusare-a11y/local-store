@@ -2,7 +2,47 @@
 
 Updated October 4, 2026. Read [V1_TASKS.md](V1_TASKS.md), the sole task ledger.
 
-## Current Windows checkpoint — 74.2%
+## October 4 follow-up — workload recovery and actual installer bytes
+
+**23/31 DONE (74.2%)**; source release remains **100%**. No release gate was
+waived. The new [follow-up checkpoint](evidence/windows-local-followup-2026-10-04.json)
+records exact proof inputs and the remaining acceptance boundaries.
+
+E04 now has a running-app recovery proof, not just an empty engine:
+`python scripts/check-engine-restart.py --run --with-memos` installs Memos in a
+private profile through the product CLI, creates a private memo with the existing
+probe, stops and crashes only its own worker, and recovers one worker through
+three concurrent launcher calls. The memo, container ID and start time remain
+unchanged; normal product uninstall removes only that fixture. Native identity
+files and bystander container state remain unchanged. The [final receipt](evidence/windows-engine-workload-restart-2026-10-04-045856.json)
+matches the retained script. Occupied Memos project/container names refuse;
+cleanup failure still revokes the fixture worker and retains files for review.
+Do not rerun merely for another timestamp; native close/sleep-wake remain open.
+
+R05 now inspects actual private installer contents using a pinned official
+portable archive reader, without running/installing the installer. The
+[extraction receipt](evidence/windows-private-installer-extraction-2026-10-04-051651.json)
+verifies all 41 resources / 39 notices and both entrypoints. Tauri 2.11.5 changes
+only the unique `__TAURI_BUNDLE_TYPE_VAR_UNK` marker to `NSS` inside the packaged
+launcher; the whole extracted binary matches that exact transformation, and
+the connector matches unchanged bytes. NSIS helper/stub reconstruction remains
+explicit: StartMenu.dll's listed size differs from its extracted size. Do not
+claim installed plugin behavior or exact source equality without this marker
+qualification. Review files are ignored; installer remains private/unexecuted.
+
+F03 is still PARTIAL. A [bounded investigation](evidence/windows-v2-capture-investigation-2026-10-04.md)
+tried reference image warmup, independent browser processes and identical inline
+rail paths; full matrices still had failures. Installed Chrome could not launch
+in this environment. All experimental production and harness edits were restored
+to `66fa565` bytes. No changed baselines, tolerance, mask, freeze change or acceptance
+claim. Do not repeat these variants without a concrete new cause.
+
+Next work needs supported native WebView/close/sleep-wake testing, authoritative
+engine license/build clarification, a supported capture environment and eventually
+a clean Windows host. Actual installer extraction removes one local inspection
+gap; installed/uninstaller/shortcut/prerequisite behavior remains unverified.
+
+## October 4 initial Windows checkpoint — 74.2%
 
 **23/31 active rows DONE (74.2%)**; source-only milestone **4/4 (100%)**.
 The owner cannot provide another Windows machine; complete local work without

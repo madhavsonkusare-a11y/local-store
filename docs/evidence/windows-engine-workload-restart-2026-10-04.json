@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "proof": "actual_owner_worker_restart_with_managed_memos_task",
+  "recorded_at": "2026-10-04T04:55:32Z",
+  "launcher_sha256": "9c86749e7e0b243011d9f2b4c640fee2465ce6768c2a0b832ebc734a027eeb0c",
+  "script_sha256": "63119b9304ecb036296f1443dc9914240e514e5dacff11cd5128e039415e481f",
+  "helper_sha256": "014a5edbbc9892f85229aa7b68862000ef937b56fec75acd1ceca86121466d49",
+  "explicit_stop_acknowledged": true,
+  "explicit_restart_acknowledged": true,
+  "exact_owned_child_crash_recovered": true,
+  "concurrent_launcher_count": 3,
+  "same_restarted_singleton_observed": true,
+  "existing_container_count": 0,
+  "container_identities_start_times_unchanged": true,
+  "native_engine_state_unchanged": true,
+  "packaged_payload_preview_verified": true,
+  "supervisor_source_sha256": "137c5ac0128895f9bd0c5eb4956b49b8783fecfbaa21930633fa95d1a9734869",
+  "limits": [
+    "Existing WSL-ready host, not clean Windows",
+    "Crash of a proof-created worker handle, not arbitrary launcher/app processes",
+    "No native WebView close or sleep/wake",
+    "No production engine removal"
+  ],
+  "workload": {
+    "app_id": "memos",
+    "container_count": 1,
+    "private_memo_identical_after_worker_crash": true,
+    "container_identity_and_start_time_unchanged": true,
+    "production_uninstall_cleanup_passed": true
+  },
+  "probe_sha256": "3ae0c9cdb0947814ab24b7e5b7e89229e6f45b55dadae0adb6a70389ccdc38c3",
+  "recipe_sha256": "b87724010c02bc319d406c08a06f6700511aaab639b5fd3cd52dd5468bc43931",
+  "fixture_selection_revocation_stopped_worker": true
+}

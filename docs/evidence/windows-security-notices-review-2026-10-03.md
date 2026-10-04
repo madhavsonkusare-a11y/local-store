@@ -117,8 +117,12 @@ identity from refreshed resource identity.
 ## Exact remaining acceptance gates
 
 1. Current private launcher/sidecar build, unsigned bundle, staged notice bytes
-   and generated NSIS mappings now pass as described above. Archive extraction,
-   installed resources and native application acceptance remain unverified; this
+   and generated NSIS mappings now pass as described above. The [October 4 actual
+   extraction](windows-private-installer-extraction-2026-10-04-051651.json) also
+   verifies all 41 resources / 39 notices and exact entrypoint bytes after the
+   official Tauri NSIS marker transformation. NSIS helper reconstruction is
+   explicitly limited. Installed resources and native application acceptance
+   remain unverified; this
    local packaging receipt does not certify the older retained installer.
 2. R04 needs a supported clean Windows host for install/first launch, prerequisite
    refusal/failure recovery, engine bootstrap, native windows, protocol/shortcut,
