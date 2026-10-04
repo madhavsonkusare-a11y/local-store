@@ -8,13 +8,15 @@
 
 - Apply the approved Local Store logo: 224 px coral tile, top-aligned with the L,
   42 px equal gaps and concentric facing corners. Regenerate every desktop export.
-- Grow discovery from 1,259 to 1,672 projects using four pinned upstream imports,
+- Grow discovery from a prior 1,259-project import to 1,678 projects using four pinned upstream imports,
   stable identities, source provenance, normalized categories and offline build gates.
 - Bundle 508 validated SVG identities; remove browsing-time remote image requests.
 - Add interest collections, combined filters, richer app details and standalone
   Settings/Docker diagnostics, with compact layouts and keyboard/failure checks.
 - Fix protocol shortcuts and native CLI open; use stable IDs for window labels.
 - Label all three install recipes as previews pending real-container verification.
+- The integrated baseline is 52 offerings (3 reviewed recipes and 49 approved templates); catalog
+  presence is not installation or meaningful-task proof.
 - Make the launcher dark-only, with warm gradients, a visual featured app shelf,
   bundled app identities, and refined card, form, and dialog spacing.
 - Add interruptible dialog transitions and immediate keyboard/reduced-motion
